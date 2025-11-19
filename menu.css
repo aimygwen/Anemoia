@@ -1,23 +1,19 @@
 :root {
-  --bg: #f9e5fa;
-  --link-color: #fefaff;
-  --overlay-bg: #131313;
-  --hover-menu: #e3ff53;
+    --link-color: #fefaff;
+    --overlay-bg: #131313;
+    --hover-menu: #e3ff53;
 }
 
 * {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
-html,
-body {
-  width: 100vw;
-  height: 100vh;
-  background: var(--bg);
-  overflow: hidden;
+/* 🛑 WICHTIG: Blockiert das Scrollen der Hauptseite, wenn Menü aktiv ist (wird von JS hinzugefügt) */
+.no-scroll {
+    overflow: hidden;
+    height: 100vh;
 }
-
 @font-face {
     font-family: "Badger";
     src: url("./assets/BadgerRegular.ttf") format("truetype");
@@ -33,32 +29,28 @@ body {
 }
 
 #toggle-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    width: 125px;
-    height: 125px;
+    /* KORREKTUR: Muss FIXED sein, damit der Button beim Scrollen oben rechts bleibt */
+    position: fixed;
+
+    top: 35px;
+    right: 35px;
+    width: clamp(80px, 7vw, 125px);
+    height: clamp(80px, 7vw, 125px);
+
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 2em;
+    /* margin: 2em; <--- ENTFALLEN, um exakte top/right Positionierung zu gewährleisten */
     z-index: 102;
     cursor: pointer;
     transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .btn-outline {
-  position: absolute;
-  width: 125px;
-  height: 125px;
-  border: 1px solid var(--overlay-bg);
-}
-
-.btn-outline-1,
-.btn-outline-2 {
-  position: absolute;
-  border-radius: 100%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 90%);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 0.5px solid var(--overlay-bg);
 }
 
 .btn-outline-1 {
@@ -72,19 +64,19 @@ body {
 }
 
 @keyframes morph1 {
-  0% { border-radius: 50% 50% 55% 45% / 50% 50% 55% 45%; }
-  25% { border-radius: 55% 45% 50% 50% / 55% 45% 50% 50%; }
-  50% { border-radius: 50% 55% 50% 50% / 50% 55% 50% 50%; }
-  75% { border-radius: 55% 50% 55% 50% / 55% 50% 55% 50%; }
-  100% { border-radius: 50% 50% 55% 45% / 50% 50% 55% 45%; }
+    0% { border-radius: 50% 50% 55% 45% / 50% 50% 55% 45%; }
+    25% { border-radius: 55% 45% 50% 50% / 55% 45% 50% 50%; }
+    50% { border-radius: 50% 55% 50% 50% / 50% 55% 50% 50%; }
+    75% { border-radius: 55% 50% 55% 50% / 55% 50% 55% 50%; }
+    100% { border-radius: 50% 50% 55% 45% / 50% 50% 55% 45%; }
 }
 
 @keyframes morph2 {
-  0% { border-radius: 52% 48% 50% 50% / 52% 48% 50% 50%; }
-  25% { border-radius: 50% 52% 50% 48% / 50% 52% 50% 48%; }
-  50% { border-radius: 48% 52% 52% 48% / 48% 52% 52% 48%; }
-  75% { border-radius: 52% 48% 50% 50% / 52% 48% 50% 50%; }
-  100% { border-radius: 52% 48% 50% 50% / 52% 48% 50% 50%; }
+    0% { border-radius: 52% 48% 50% 50% / 52% 48% 50% 50%; }
+    25% { border-radius: 50% 52% 50% 48% / 50% 52% 50% 48%; }
+    50% { border-radius: 48% 52% 52% 48% / 48% 52% 52% 48%; }
+    75% { border-radius: 52% 48% 50% 50% / 52% 48% 50% 50%; }
+    100% { border-radius: 52% 48% 50% 50% / 52% 48% 50% 50%; }
 }
 
 #toggle-btn:hover {
@@ -101,43 +93,43 @@ body {
 }
 
 #hamburger {
-  position: relative;
-  height: 20px;
-  width: 20px;
-  z-index: 2;
+    position: relative;
+    height: 20px;
+    width: 20px;
+    z-index: 2;
 }
 
 #hamburger span {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  display: inline-block;
-  width: 24px;
-  height: 1.25px;
-  background: var(--overlay-bg);
-  transition: transform 0.25s;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-block;
+    width: 24px;
+    height: 1.25px;
+    background: var(--overlay-bg);
+    transition: transform 0.25s;
 }
 
 #hamburger span::before {
-  position: absolute;
-  right: 0;
-  display: inline-block;
-  content: " ";
-  width: 24px;
-  height: 1.25px;
-  background: var(--overlay-bg);
-  transform: rotate(90deg);
-  transition: transform 0.25s;
+    position: absolute;
+    right: 0;
+    display: inline-block;
+    content: " ";
+    width: 24px;
+    height: 1.25px;
+    background: var(--overlay-bg);
+    transform: rotate(90deg);
+    transition: transform 0.25s;
 }
 
 #hamburger.active span {
-  transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 
 #hamburger.active span::before {
-  top: unset;
-  width: 24px;
-  transform: rotate(-90deg);
+    top: unset;
+    width: 24px;
+    transform: rotate(-90deg);
 }
 
 #hamburger span,
@@ -183,41 +175,33 @@ body {
     justify-content: center;
     align-items: center;
     gap: 1rem;
+
+    /* KORREKTUR: Begrenzt die Breite auf Mobil, um Randschnitt zu verhindern */
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto; /* Stellt sicher, dass es zentriert ist */
 }
 
+/* 🛑 KORREKTUR: Die problematische absolute Positionierung wurde entfernt,
+   da die GSAP-Animation (y-Verschiebung) und der Flex-Container die Positionierung übernehmen. */
 .menu-item-about,
 .menu-item-works,
 .menu-item-story {
     position: relative;
-}
-
-.menu-item-about {
-    top: 30%;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.menu-item-works {
-    top: 40%;
-    left: 16%;
-    transform: translateX(-50%);
-}
-
-.menu-item-story {
-    top: 50%;
-    left: 58%;
-    transform: translateX(-50%);
+    /* top, left, transform HIER ENTFERNT */
 }
 
 .primary-container a {
     font-family: 'Badger', serif;
-    font-size: clamp(9vh, 12vw, 16vh);
+    /* KORREKTUR: Reduziere den vw-Wert, um Abschneiden zu vermeiden */
+    font-size: clamp(9vh, 10vw, 16vh);
     text-transform: lowercase;
     text-decoration: none;
     color: var(--link-color);
     position: relative;
     transition: color 0.3s ease;
     transform-origin: center;
+    padding: 0 5px; /* Fügt minimalen Puffer hinzu */
 }
 
 .primary-container a:hover {
@@ -318,16 +302,19 @@ body {
     z-index: 100;
     pointer-events: none;
     opacity: 0;
-    background-color: rgba(213, 200, 216, 0.83); /* Start color (with opacity) */
+    background-color: rgba(213, 200, 216, 0.83);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    transition: all 1.5s cubic-bezier(.22, 1, .36, 1) 1.5s;
+
+    /* KORRIGIERT: CSS-Transition für GSAP-Performance entfernt,
+       um Ruckeln zu reduzieren. GSAP übernimmt die Steuerung. */
+    /* transition: all 1.5s cubic-bezier(.22, 1, .36, 1) 1.5s; */
 }
 
 @keyframes pulse-color {
-    0% { background-color: rgba(213, 200, 216, 0.83); } /* Sanftes Rosa */
-    50% { background-color: rgba(214, 195, 209, 0.85); } /* Lavendel */
-    100% { background-color: rgba(229, 200, 234, 0.85); } /* Zurück zu Rosa */
+    0% { background-color: rgba(213, 200, 216, 0.83); }
+    50% { background-color: rgba(214, 195, 209, 0.85); }
+    100% { background-color: rgba(229, 200, 234, 0.85); }
 }
 
 .hub-fade.active {
@@ -336,5 +323,6 @@ body {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     animation: pulse-color 8s ease-in-out infinite alternate;
-    transition: all 1s cubic-bezier(.22, 1, .36, 1) 0s;
+    /* KORRIGIERT: Transition entfernt */
+    /* transition: all 1s cubic-bezier(.22, 1, .36, 1) 0s; */
 }

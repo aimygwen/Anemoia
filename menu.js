@@ -1,18 +1,7 @@
-// Wähle den Button anhand seiner ID aus
-const toggleBtn = document.getElementById('toggle-btn');
-
-// Füge einen Event Listener hinzu, der auf Klicks wartet
-toggleBtn.addEventListener('click', () => {
-    // Schaltet die Klasse 'menu-open' auf dem Button um.
-    toggleBtn.classList.toggle('menu-open');
-});
-
 // setup
-// Initialize the GSAP timeline, paused by default
 const tl = gsap.timeline({ paused: true });
-let path = document.querySelector("path"); // NOTE: There is no 'path' element in the HTML
+let path = document.querySelector("path");
 var spanBefore = CSSRulePlugin.getRule("#hamburger span:before");
-
 
 gsap.set(".menu", { visibility: "hidden" });
 
@@ -23,45 +12,38 @@ function revealMenu() {
     const hamburger = document.getElementById("hamburger");
     const toggleBtn = document.getElementById("toggle-btn");
 
+    // 🛑 NEU: Fügt die no-scroll Klasse zum Body hinzu/entfernt sie
+    const body = document.body;
+
     // Kombiniere alle Aktionen in einem einzigen Klick-Handler
     toggleBtn.onclick = function (e) {
-        // Fügt die 'active'-Klasse zum hub-fade (für den Blur) hinzu/entfernt sie
-        hubFade.classList.toggle("active");
+        body.classList.toggle('no-scroll'); // <--- Steuert das Scrollen der Hauptseite
 
-        // Fügt die 'active'-Klasse zum hamburger (für die Icon-Animation) hinzu/entfernt sie
+        hubFade.classList.toggle("active");
         hamburger.classList.toggle("active");
 
-        // Kehrt die GSAP-Timeline um (öffnet/schließt das Menü)
         tl.reversed(!tl.reversed());
     };
 }
 
 revealMenu();
 
-// how to reveal
 function revealMenuItems() {
     const power4 = "power4.inOut";
-
-// ... (inside function revealMenuItems)
-
-// Target all primary and secondary menu links
     const menuLinks = ".primary-container a, .secondary-container a";
 
-// 1. **SET Initial State:** Apply blur, opacity, slide, AND SCALE
+    // --- Performance-Fix 1: Initialisierung der Links mit GPU-basiertem y ---
     gsap.set(menuLinks, {
         filter: 'blur(10px)',
         opacity: 0,
-        top: '50px',
+        y: 50, // Ersetzt top: 50px -> nutzt transform: translateY(50px)
         scale: 1.8,
-
-        // ⭐ KEY FIXES ADDED HERE ⭐
-        display: 'inline-block', // Ensure the element behaves correctly for transforms
-        transformOrigin: 'center center' // GSAP version of transform-origin: center;
+        display: 'inline-block',
+        transformOrigin: 'center center',
+        willChange: 'transform, opacity' // Performance Boost
     });
-// ... (rest of the function remains the same)
 
-    // --- Existing Animations (Hamburger & Outline) ---
-
+    // --- Bestehende Animationen (Hamburger & Outline) ---
     tl.to("#hamburger", 1.25, {
         marginTop: "-5px",
         x: -40,
@@ -75,8 +57,7 @@ function revealMenuItems() {
         {
             x: -40,
             y: 40,
-            width: "175px",
-            height: "175px",
+            scale: 1.4,
             ease: power4,
         },
         "<"
@@ -84,22 +65,21 @@ function revealMenuItems() {
 
     tl.to(".menu", 1, { visibility: "visible" }, "-=0.5");
 
-    // --- New/Updated Links Animation: Slide Up, Fade In, AND Scale Down ---
+    // --- Performance-Fix 2: Optimierter Link-Tween ---
     tl.to(
         menuLinks,
         1.25,
         {
-            top: 0,                 // Final position (slides up)
+            y: 0,                   // Final position (slides up to original y)
             filter: 'blur(0px)',    // Final blur (clear)
             opacity: 1,             // Final opacity (visible)
             scale: 1,               // END at normal size (100%)
             ease: "power3.out",
-            stagger: {              // Staggered delay applied to ALL links
-                amount: 0.8,        // Increased stagger amount to span both primary and secondary links
+            stagger: {
+                amount: 0.8,
                 from: "start"
             },
         },
         "-=1"
     ).reverse();
 }
-
