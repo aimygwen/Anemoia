@@ -3,9 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta name="apple-mobile-web-app-capable" content="yes">
-      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Bring Your Heart Here</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="ui.css" />
@@ -60,25 +57,40 @@
       <img src="./assets/kawaiigwen.svg" alt="Logo" />
   </div>
 
-  <div class="branding-overlay" onclick="togglenavi('branding')"></div>
-  <div class="branding-haze"></div>
 
-  <div class="branding" id="branding">
-      <div class="branding-main-navi">
-          <div class="branding-main-container">
-              <div class="branding-content">
-                  <img src="./assets/portrait.png" alt="Portrait" class="portrait">
-                  <img src="./assets/signature.svg" alt="Signature" class="signature">
-              </div>
-              <div class="branding-copyright">
-                  Amélie Gwendolyn Gräbe,<br></br>All Rights Reserved
-              </div>
-              <div class="branding-year">
-                  ©25
-              </div>
-          </div>
+
+
+  <div class="sound-button">
+      <canvas></canvas>
+      <audio id="audio" src="./assets/song.mp3"></audio>
+  </div>
+
+
+  <div class="branding">
+      <div class="branding-layer">
+          <img src="./assets/portraitbw.jpg"
+               alt="Portrait"
+               class="portrait">
+          <img src="./assets/portrait.jpg"
+               alt="Portrait Color"
+               class="portraitcolor">
+          <img src="./assets/signature.svg"
+               alt="Signature"
+               class="signature">
+          <div class="branding-name">Græbe, Amélie Gwendolyn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;αː'meli 'gwɛndə‿lın&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Aimy Gwen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;エイミー・グウェン&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nurture</div>
+          <div class="branding-rights">All Rights Reserved &nbsp;&nbsp; All Rights Reserved</div>
+          <div class="branding-year">©'25</div>
+          <div class="branding-info">All content on this site is my original work and
+              the sole property of me unless otherwise noted. Any use, reproduction,
+              or distribution without my explicit permission is strictly prohibited.</div>
       </div>
   </div>
+
+
+
+
+
+
 
   <div class="btn" id="pond" onclick="togglenavi('main')">
       <div class="ripple drop"></div>

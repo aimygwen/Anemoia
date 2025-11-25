@@ -185,11 +185,10 @@ if (dot && outline) {
     let outlineX = 0, outlineY = 0;
     let lastX = 0, lastY = 0;
 
-    // 💡 KORREKTUR: DELAY ERHÖHT (Mehr als 0.04)
-    // Ein höherer Wert (z.B. 0.12) reduziert das "Hinterherhängen"
+    // Verzögerung für das "Hinterherziehen" der Outline (Echo)
     const delay = 0.12;
 
-    // Variablen für die Glättung des Stretches (unverändert)
+    // Variablen für die Glättung des Stretches
     let currentSpeed = 0;
     const speedLerpFactor = 0.15;
     const speedThreshold = 40;
@@ -203,9 +202,28 @@ if (dot && outline) {
         dot.style.left = mouseX + 'px';
     });
 
+    // ==========================================================
+    // KLICK-LOGIK
+    // ==========================================================
+
+    // Maustaste gedrückt halten (MouseDown)
+    document.addEventListener('mousedown', () => {
+        dot.classList.add('is-clicked');
+        outline.classList.add('is-clicked');
+    });
+
+    // Maustaste losgelassen (MouseUp)
+    document.addEventListener('mouseup', () => {
+        dot.classList.remove('is-clicked');
+        outline.classList.remove('is-clicked');
+    });
+
+    // ==========================================================
+    // ENDE KLICK-LOGIK
+    // ==========================================================
+
     function animate() {
         // 1. Nachziehen des Outline (Echo)
-        // Die Bewegung wird direkter, da 'delay' höher ist
         outlineX += (mouseX - outlineX) * delay;
         outlineY += (mouseY - outlineY) * delay;
 
@@ -213,7 +231,6 @@ if (dot && outline) {
         outline.style.left = outlineX + 'px';
 
         // 2. Berechnung von Geschwindigkeit, Winkel und Dehnung
-        // Wir verwenden die geglättete Outline-Position für die Berechnung
         const dx = outlineX - lastX;
         const dy = outlineY - lastY;
         const speed = Math.sqrt(dx*dx + dy*dy);
@@ -245,9 +262,9 @@ if (dot && outline) {
 
     animate();
 
-    // --- Hover-Logik (unverändert) ---
+    // --- Hover-Logik (KORREKTUR: .sound-button hinzugefügt) ---
     const hoverableElements = document.querySelectorAll(
-        'a, button, input[type="submit"], input[type="button"], input[type="reset"], [role="button"], [onclick], [tabindex]:not([tabindex="-1"])'
+        'a, button, input[type="submit"], input[type="button"], input[type="reset"], [role="button"], [onclick], [tabindex]:not([tabindex="-1"]), .sound-button' // <-- Hinzugefügt!
     );
 
     hoverableElements.forEach(el => {
@@ -262,29 +279,183 @@ if (dot && outline) {
     });
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ... (Ihr PondButton/Menu-Logik bleibt unverändert) ...
 const body = document.body;
 const pondButton = document.getElementById('pond');
-// Wählen Sie das Hauptelement, das die Klasse 'active' bekommt, um den Zustand zu prüfen
-const menuElement = document.querySelector('.navi'); // Oder das Branding-Element
+const menuElement = document.querySelector('.navi');
 
 if (pondButton && menuElement) {
     pondButton.addEventListener('click', () => {
 
-        // 1. Menü öffnen/schließen (muss als erstes passieren, um den Zustand zu ändern)
         menuElement.classList.toggle('active');
-        // Fügen Sie hier alle anderen Klassen-Toggles für das Menü hinzu (z.B. haze.classList.toggle('active'))
 
-        // 2. Zustand prüfen und Z-Index steuern
         if (menuElement.classList.contains('active')) {
-            // MENÜ WIRD GEÖFFNET:
-            // Der Grain Z-Index muss sofort hochgesetzt werden
             body.classList.add('overlay-active');
         } else {
-            // MENÜ WIRD GESCHLOSSEN:
-            // Wir warten 1500 Millisekunden (1.5 Sekunden), bevor der Grain Z-Index zurückgesetzt wird
             setTimeout(() => {
                 body.classList.remove('overlay-active');
-            }, 1500); // 1500ms = 1.5 Sekunden
+            }, 1500);
         }
     });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const button = document.querySelector(".sound-button");
+    const canvas = button.querySelector("canvas");
+    const audio = button.querySelector("#audio");
+    const ctx = canvas.getContext("2d");
+
+    // Set canvas pixels
+    function resizeCanvas() {
+        canvas.width = canvas.offsetWidth * 2;
+        canvas.height = canvas.offsetHeight * 2;
+        ctx.scale(2, 2);
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    let isPlaying = false;
+    let time = 0;
+
+    const INACTIVE_AMPLITUDE = 2;
+    const ACTIVE_AMPLITUDE = 30;
+
+    let targetAmplitude = INACTIVE_AMPLITUDE;
+    let currentAmplitude = targetAmplitude;
+
+    function drawWave() {
+        ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+
+        const w = canvas.offsetWidth;
+        const h = canvas.offsetHeight;
+        const midY = h / 2;
+
+        // Smooth transition logic
+        targetAmplitude = isPlaying ? ACTIVE_AMPLITUDE : INACTIVE_AMPLITUDE;
+        const easeRate = 0.05;
+        currentAmplitude += (targetAmplitude - currentAmplitude) * easeRate;
+
+        // Shared Drawing Parameters
+        const points = 200;
+        const frequency = 0.05; // Amount of waves
+        const speed = 0.05; // Base wave movement speed
+
+        // --- 🌊 1. DRAW THE BACKGROUND (BLURRED) WAVE ---
+
+        // Determine background opacity (max 20%) based on currentAmplitude for smooth fade
+        const maxOpacity = 0.2;
+        const opacity = Math.min(maxOpacity, (currentAmplitude - INACTIVE_AMPLITUDE) / (ACTIVE_AMPLITUDE - INACTIVE_AMPLITUDE) * maxOpacity * 2);
+
+        // Set stroke style with calculated opacity
+        ctx.strokeStyle = `rgba(0, 0, 0, ${opacity})`;
+
+        if (opacity > 0.01) { // Only draw if visible
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = "#ffffff";
+
+            // Slightly smaller amplitude
+            const backgroundAmplitude = currentAmplitude * 0.2;
+
+            // 💡 ADJUSTMENT 1: Increase the phase offset to make it look delayed
+            const offset = 0.5;
+
+            // 💡 ADJUSTMENT 2: Use a slightly slower speed for the time component
+            const backgroundSpeed = speed * 0.75; // 75% of the main wave's speed
+
+            ctx.beginPath();
+
+            for (let i = 0; i <= points; i++) {
+                const x = (w / points) * i;
+
+                // Wave calculation using the new offset and slower speed
+                const y = midY + Math.sin(i * frequency + time * backgroundSpeed + offset) * backgroundAmplitude;
+
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        }
+
+        // --- 🔪 2. DRAW THE FOREGROUND (SHARP) WAVE ---
+
+        // Reset blur and opacity for the foreground wave
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = "#333333";
+        ctx.lineWidth = 1.5;
+
+        ctx.beginPath();
+
+        for (let i = 0; i <= points; i++) {
+            const x = (w / points) * i;
+            // Original wave calculation using base speed
+            const y = midY + Math.sin(i * frequency + time * speed) * currentAmplitude;
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        time++;
+        requestAnimationFrame(drawWave);
+    }
+
+    drawWave();
+
+    canvas.addEventListener("click", () => {
+        if (isPlaying) {
+            audio.pause();
+        } else {
+            audio.currentTime = 0;
+            audio.play();
+        }
+        isPlaying = !isPlaying;
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+

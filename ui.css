@@ -17,7 +17,7 @@
 }
 
 
-/* Brand, branding */
+/* Branding, Copyright */
 
 #brand {
     position: fixed;
@@ -361,90 +361,202 @@
 
 
 
-.branding {
-    visibility: hidden;
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 100%;
-    height: 100%;
-    display: flex;
-    color: var(--hover);
-    z-index: 9998;
-}
 
-.branding-main-navi {
-    position: absolute;
-    inset: 0;
+
+
+
+
+
+.branding {
+    visibility: visible;
+    position: relative;
+    width: 100%;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: "Helvetica Neue", sans-serif;
+    text-align: center;
+    color: #000000;
 }
 
-.branding-main-container {
-    position: absolute;
+.branding-layer {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
+    max-width: 90%;
 }
 
-.branding-content {
+.branding .portrait,
+.branding .portraitcolor {
+    position: absolute;
+    left: clamp(2rem, 10vw, 12rem);   /* gap from left scales */
+    top: clamp(4rem, 20vw, 12rem);  /* top gap scales nicely */
+    height: clamp(100px, 80vh, 800px);  /* min 200px, ideal 50% viewport height, max 500px */
+
+    width: auto;
+    object-fit: contain;
+    transition: opacity 0.5s ease, left 0.5s ease, top 0.5s ease, height 0.5s ease;
+    z-index: 10000;
+}
+
+
+
+/* colored version on top */
+.branding .portraitcolor {
     opacity: 0;
-    transform: scale(3.0);
-    transition: opacity 1.5s, transform 1.5s;
-    position: fixed;
-    width: 100%;
-    height: 100%;
+    z-index: 10000;
 }
 
-.branding-content .portrait {
-    position: fixed;
+/* hover swap */
+.branding .portrait:hover + .portraitcolor,
+.branding .portraitcolor:hover {
+    opacity: 1;
+}
+
+.branding .portrait:hover {
+    opacity: 0;
+}
+
+
+
+
+
+.branding .signature {
+    position: absolute;
+    left: calc(8rem + (24% - 8rem) * 0.7);
+    bottom: 10rem;
+    width: 25vw;
+    height: auto;
+    z-index: 10001;
+}
+
+/* --- CSS STYLES (NO CHANGES HERE) --- */
+.branding-name {
+    /* ... existing styles ... */
+    position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 50vh;
-    z-index: 299;
-}
-
-.branding-content .signature {
-    position: fixed;
-    left: 50%;
-    top: 60%;
-    transform: translate(-50%, -50%);
-    max-width: 700px;
-    width: 50vw;
-    z-index: 300;
-}
-
-.branding-main-container {
-    position: relative;
-    font-family: "Unitea Sans", serif;
-}
-
-.branding-copyright {
-    position: fixed;
-    bottom: 25px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    font-size: clamp(4rem, 8vw, 6rem);
+    font-weight: bold;
+    text-transform: uppercase;
+    z-index: 9999;
     white-space: nowrap;
-    text-align: center;
-    font-size: 1em;
-    color: #c3c3c3;
-    /* NEU: Verringert den vertikalen Abstand/Leading */
-    line-height: 0.8;
-    mix-blend-mode: difference;
+    /* Apply base vertical offset */
+    transform: translateY(-100%);
+    animation: scroll-left 24s linear infinite;
+}
+
+.branding-rights {
+    /* ... existing styles ... */
+    position: absolute;
+    top: 50%;
+    right: 0;
+    font-size: clamp(4rem, 8vw, 6rem);
+    text-transform: uppercase;
+    font-weight: 600;
+    z-index: 9999;
+    color: transparent;
+    -webkit-text-stroke: 1px #000000;
+    text-stroke: 1px #000000;
+    white-space: nowrap;
+    /* Apply base vertical offset */
+    transform: translateY(-50%);
+    animation: scroll-right 24s linear infinite;
+}
+
+/* --- REFINED KEYFRAME DEFINITIONS --- */
+
+/* 1. Animation for the Name (Scrolling Left) */
+@keyframes scroll-left {
+    from {
+        /* Start: First copy visible. Combine vertical offset */
+        transform: translate(0%, -100%);
+    }
+    to {
+        /* End: Move left by exactly 50% of the entire repeated container width.
+           This perfectly aligns the start of the second copy where the first one started. */
+        transform: translate(-50%, -100%);
+    }
+}
+
+/* 2. Animation for the Rights (Scrolling Right) */
+@keyframes scroll-right {
+    from {
+        /* Start: Move element left by 50% so the content is off-screen initially */
+        transform: translate(-50%, -50%);
+    }
+    to {
+        /* End: Move right by 50%. The element moves 50% right, completing the loop. */
+        transform: translate(0%, -50%);
+    }
 }
 
 .branding-year {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    font-size: 1.6em;
-    color: #c3c3c3;
-    mix-blend-mode: difference;
+    position: absolute;
+    bottom: 5rem;
+    right: 5rem;
+    font-size: 5rem;
+    color: #000000;
+    margin-top: 0.3rem;
+    z-index: 9999;
 }
+
+.branding-info {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+    line-height: 1.4;
+    text-align: left;
+    margin-top: 1rem;
+    max-width: 600px;
+    color: #333;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    z-index: 9999;
+}
+
+@media (max-width: 480px) {
+    .branding .portrait,
+    .branding .portraitcolor {
+        left: 50%;
+        transform: translateX(-50%);
+        top: 15%;
+        height: 50%; /* ensure mobile portrait isn’t too small */
+    }
+
+    .signature {
+        top: 60%;
+        left: 50%;
+        transform: translateX(50%);
+        width: 300px;
+    }
+
+    .branding-info {
+        bottom: 2rem;
+        left: 10%;
+        max-width: 60%;
+
+    }
+
+    .branding-year {
+        bottom: 2rem;
+        right: 2rem;
+        font-size: 3rem;
+    }
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -502,7 +614,7 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
     border-radius: 50%;
     pointer-events: none;
     transform: translate(-50%, -50%);
-    z-index: 10001;
+    z-index: 19000;
     mix-blend-mode: difference;
 
     transition: width 0.3s ease-out, height 0.3s ease-out, background-color 0.3s ease;
@@ -538,6 +650,38 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
     backdrop-filter: blur(2px);
     mix-blend-mode: difference;
 }
+
+.drip-drop.is-clicked {
+    width: 24px;
+    height: 24px;
+    background-color: rgba(110, 110, 110, 0.5);
+    transition: width 0.1s ease-out, height 0.1s ease-out, background-color 0.1s ease;
+    mix-blend-mode: normal;
+    backdrop-filter: blur(5px);
+}
+
+.drip-echo.is-clicked {
+    width: 0px;
+    height: 0px;
+    opacity: 0;
+    transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.3s ease;
+}
+
+.drip-drop.is-hovering.is-clicked {
+    width: 16px;
+    height: 16px;
+    background-color: rgba(247, 0, 255, 0.75);
+}
+
+
+
+
+
+
+
+
+
+
 
 
 .grain:after {
@@ -595,4 +739,25 @@ body.overlay-active .grain:after {
     100% {
         transform: translate(-15%, -20%);
     }
+}
+
+
+
+
+
+
+.sound-button {
+    position: fixed;
+    bottom: 200px;
+    right: 50px;
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+    z-index: 10100;
+}
+
+.sound-button canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
 }
