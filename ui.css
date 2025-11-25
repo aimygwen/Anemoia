@@ -42,7 +42,6 @@
 }
 
 #brand:hover {
-    /* Vergrößert das Element um 10% */
     transform: translateX(-50%) scale(1.1);
 }
 
@@ -87,7 +86,7 @@
 .echo {
     animation: morph2 2.5s cubic-bezier(0.68, -0.55, 0.26, 1.55) infinite alternate;
     opacity: 0.5;
-    filter: blur(1px); /* Fügt Tiefe hinzu */
+    filter: blur(1px);
     transform: scale(1);
 }
 
@@ -392,9 +391,9 @@
 .branding .portrait,
 .branding .portraitcolor {
     position: absolute;
-    left: clamp(2rem, 10vw, 12rem);   /* gap from left scales */
-    top: clamp(4rem, 20vw, 12rem);  /* top gap scales nicely */
-    height: clamp(100px, 80vh, 800px);  /* min 200px, ideal 50% viewport height, max 500px */
+    left: clamp(2rem, 10vw, 12rem);
+    top: clamp(4rem, 20vw, 12rem);
+    height: clamp(100px, 80vh, 800px);
 
     width: auto;
     object-fit: contain;
@@ -404,13 +403,11 @@
 
 
 
-/* colored version on top */
 .branding .portraitcolor {
     opacity: 0;
     z-index: 10000;
 }
 
-/* hover swap */
 .branding .portrait:hover + .portraitcolor,
 .branding .portraitcolor:hover {
     opacity: 1;
@@ -433,9 +430,7 @@
     z-index: 10001;
 }
 
-/* --- CSS STYLES (NO CHANGES HERE) --- */
 .branding-name {
-    /* ... existing styles ... */
     position: absolute;
     top: 50%;
     left: 0;
@@ -444,13 +439,11 @@
     text-transform: uppercase;
     z-index: 9999;
     white-space: nowrap;
-    /* Apply base vertical offset */
     transform: translateY(-100%);
     animation: scroll-left 24s linear infinite;
 }
 
 .branding-rights {
-    /* ... existing styles ... */
     position: absolute;
     top: 50%;
     right: 0;
@@ -462,34 +455,25 @@
     -webkit-text-stroke: 1px #000000;
     text-stroke: 1px #000000;
     white-space: nowrap;
-    /* Apply base vertical offset */
     transform: translateY(-50%);
     animation: scroll-right 24s linear infinite;
 }
 
-/* --- REFINED KEYFRAME DEFINITIONS --- */
 
-/* 1. Animation for the Name (Scrolling Left) */
 @keyframes scroll-left {
     from {
-        /* Start: First copy visible. Combine vertical offset */
         transform: translate(0%, -100%);
     }
     to {
-        /* End: Move left by exactly 50% of the entire repeated container width.
-           This perfectly aligns the start of the second copy where the first one started. */
         transform: translate(-50%, -100%);
     }
 }
 
-/* 2. Animation for the Rights (Scrolling Right) */
 @keyframes scroll-right {
     from {
-        /* Start: Move element left by 50% so the content is off-screen initially */
         transform: translate(-50%, -50%);
     }
     to {
-        /* End: Move right by 50%. The element moves 50% right, completing the loop. */
         transform: translate(0%, -50%);
     }
 }
@@ -526,7 +510,7 @@
         left: 50%;
         transform: translateX(-50%);
         top: 15%;
-        height: 50%; /* ensure mobile portrait isn’t too small */
+        height: 50%;
     }
 
     .signature {
@@ -597,8 +581,6 @@
 
 
 
-/* 1. VERSTECKT DEN STANDARD-CURSOR ÜBERALL */
-/* Stellt sicher, dass der normale Cursor (auch der Handschuh) nie erscheint */
 body, html,
 a, button, input[type="submit"], input[type="button"], input[type="reset"], [role="button"], [onclick], [tabindex]:not([tabindex="-1"]) {
     cursor: none !important;
@@ -698,9 +680,7 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
     mix-blend-mode: normal;
 }
 
-/* --- Grain Z-Index Erhöhung (KORRIGIERT) --- */
 body.overlay-active .grain:after {
-    /* 💡 KORREKTUR: Setzt den Z-Index über dem höchsten Haze/Navi-Element (9002) */
     z-index: 9001;
 }
 

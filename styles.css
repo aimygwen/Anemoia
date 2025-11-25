@@ -30,7 +30,6 @@ img {
 
 .splash {
         position: absolute;
-        /* FIX: Muss kleiner als 80% sein, wenn left: 20% verwendet wird */
         width: 60%;
         will-change: transform;
         color: #000000;
@@ -48,7 +47,6 @@ img {
 
 .headline {
     position: absolute;
-    /* FIX: Muss kleiner als 80% sein, wenn left: 20% verwendet wird */
     width: 100%;
     will-change: transform;
     color: #ff00ea;
@@ -63,20 +61,9 @@ img {
     z-index: 3;
 }
 
-/* ===================================== */
-/* E-MAIL STYLING */
-/* ===================================== */
-
-/* ===================================== */
-/* I. CUSTOM CURSOR STYLES */
-/* ===================================== */
 
 
 
-
-/* ===================================== */
-/* II. E-MAIL STYLING (unten zentriert) */
-/* ===================================== */
 
 .email-container {
     position: fixed;
@@ -111,12 +98,10 @@ img {
 }
 
 .email-item:hover img {
-    /* Lässt den Pfeil sanft nach links hüpfen */
     transform: translateX(-10px);
     filter: invert(0.8);
 }
 
-/* Unterstreichungs-Effekt (::after) */
 .email-label::after {
     content: '';
     position: absolute;
@@ -136,9 +121,7 @@ img {
 }
 
 
-/* ===================================== */
-/* III. SOCIALS STYLING (unten zentriert, unter E-Mail) */
-/* ===================================== */
+
 
 .socials {
     position: fixed;
@@ -173,7 +156,6 @@ img {
 }
 
 .social-item:hover img {
-    /* Icon Grow, Shadow und Farbeffekte beim Hover */
     transform: scale(1.2);
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.2)) invert(0.8);
 }
