@@ -27,12 +27,9 @@ img {
 
 
 
-/* --------------------------------- */
-/* BASE STYLING */
-/* --------------------------------- */
+
 h1 {
     color: #0c0c0c;
-    /* Large, distinctive font size */
     font-size: 14vw;
     text-align: left;
     font-weight: normal;
@@ -42,7 +39,6 @@ h1 {
 
 h3 {
     color: #0c0c0c;
-    /* Large, distinctive font size */
     font-size: 12vw;
     text-align: left;
     font-weight: normal;
@@ -51,19 +47,12 @@ h3 {
     font-family: 'Athemi DEMO VERSION', serif;
 }
 
-/* --------------------------------- */
-/* HEADLINE SECTION - Global Base */
-/* Positioned relatively for vertical flow */
-/* --------------------------------- */
 .headline {
     position: relative;
     margin-right: auto;
     margin-top: 5vh;
-
-    /* These values will be overridden by the desktop media query for precise alignment */
     margin-left: 20%;
     width: 60%;
-
     max-width: 100%;
     height: auto;
     left: auto;
@@ -71,20 +60,12 @@ h3 {
     will-change: transform;
 }
 
-/* --------------------------------- */
-/* CONTENT SECTION - Global Base */
-/* Flows immediately after the headline */
-/* --------------------------------- */
+
 .content {
     position: relative;
-
-    /* These values will be overridden by the desktop media query for precise alignment */
     margin-left: 20%;
     width: 60%;
-
-    /* DEFINED GAP: This creates the set vertical gap right below the headline */
     margin-top: 5vh;
-
     margin-right: auto;
     margin-bottom: 100px;
     max-width: 1200px;
@@ -93,7 +74,6 @@ h3 {
     top: auto;
 }
 
-/* Styling for content elements */
 .content h1,
 .content h3,
 .content p,
@@ -130,21 +110,15 @@ h3 {
 }
 
 
-
-/* ---------------------------------------------------- */
-/* DESKTOP STYLING (min-width: 901px) - Explicit 20% Alignment */
-/* ---------------------------------------------------- */
 @media (min-width: 901px) {
     .headline {
-        /* Sets the top distance and the 20% left margin */
         margin-top: 25vh;
         margin-left: 20%;
-        width: 60%; /* 20% left margin + 60% width = 80% used */
+        width: 60%;
     }
 
     .content {
-        /* Flows right below the headline */
-        margin-top: 5vh; /* The fixed gap */
+        margin-top: 5vh;
         margin-left: 20%;
         width: 60%;
         margin-bottom: 10vh;
@@ -156,32 +130,25 @@ h3 {
         width: 100%;
     }
 
-    /* ONLY APPLY HIGH VALUE HERE */
     .bottom-spacer {
         margin-top: 200vh;
     }
 }
 
 
-/* ---------------------------------------------------- */
-/* MOBILE STYLING (max-width: 900px) - Centered Flow */
-/* ---------------------------------------------------- */
 @media (max-width: 900px) {
 
-    /* 1. Headline-Container - Use Auto Margin for centering on mobile */
     .headline {
         position: relative;
         top: 4vh;
         left: auto;
         width: 90%;
         height: auto;
-        /* Center on mobile */
         margin: 10vh auto 0 auto;
         padding-top: 0;
         max-width: 100%;
     }
 
-    /* 2. H1 in der Headline */
     .headline h1 {
         font-size: clamp(6rem, 18vw, 10rem);
     }
@@ -190,23 +157,19 @@ h3 {
         font-size: clamp(5rem, 16vw, 9rem);
     }
 
-    /* 3. Content-Container - Use Auto Margin for centering on mobile */
     .content {
         position: relative;
         top: auto;
         left: auto;
         width: 90%;
         height: auto;
-        /* FIXED GAP after headline */
         margin-top: 5vh;
-        /* Center on mobile */
         margin-left: auto;
         margin-right: auto;
         margin-bottom: 10vh;
         max-width: 100%;
     }
 
-    /* 4. H2 and P in Content (Fluid Text) */
     .content h2,
     .content p {
         position: relative;

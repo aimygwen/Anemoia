@@ -54,10 +54,9 @@ img {
 
     display: flex;
     flex-direction: column;
-    gap: 18px; /* mehr Abstand zwischen allen Elementen */
+    gap: 18px;
 }
 
-/* Basis für Texte */
 .contact-block span,
 .email-item {
     display: flex;
@@ -67,10 +66,9 @@ img {
     position: relative;
     overflow: hidden;
     transition: color 0.3s ease;
-    line-height: 1.3; /* extra breathing room */
+    line-height: 1.3;
 }
 
-/* Größen Desktop */
 .address {
     font-size: 2.5em;
 }
@@ -87,7 +85,6 @@ img {
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Hover-Effects */
 .email-item:hover {
     color: var(--hover);
 }
@@ -115,17 +112,12 @@ img {
     transform-origin: left;
 }
 
-/* TMG + MStV kleiner */
 .tmg,
 .mstv {
     font-size: 1.4em;
     opacity: 0.8;
 }
 
-
-/* ---------------------------------------------------
-   MOBILE + TABLET OPTIMIERUNG
-   --------------------------------------------------- */
 
 @media (max-width: 900px) {
     .contact-block {

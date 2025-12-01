@@ -13,22 +13,13 @@
 }
 
 body {
-    /* Basiseinstellungen */
     width: 100%;
     height: 100%;
     overflow: hidden;
-
-    /* Hintergrundfarbe für die Ränder (wie in Ihrem Google-Beispiel) */
     background-color: var(--bg);
-
-    /* Layout-Anpassungen für iOS Safari (Safe Areas) */
     min-height: 100vh;
-
-    /* Füllt die obere System-UI-Lücke */
-    padding-top: constant(safe-area-inset-top); /* Ältere iOS-Versionen */
-    padding-top: env(safe-area-inset-top); /* Neuere iOS-Versionen */
-
-    /* Füllt die untere System-UI-Lücke */
+    padding-top: constant(safe-area-inset-top);
+    padding-top: env(safe-area-inset-top);
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
 }
@@ -41,15 +32,15 @@ img {
 
 .splash {
     position: absolute;
-    width: 60%; /* Desktop width */
+    width: 60%;
     will-change: transform;
     color: #000000;
-    font-size: 4vw; /* Desktop font size */
+    font-size: 4vw;
     font-weight: 10;
     text-align: center;
     margin: 0;
     left: 50%;
-    top: 40%; /* Desktop top position */
+    top: 40%;
     transform: translate(-50%, -50%);
     font-family: 'Badger', serif;
     z-index: 2;
@@ -61,24 +52,19 @@ img {
     width: 100%;
     will-change: transform;
     color: #ff00c3;
-    font-size: 6vw; /* Desktop font size */
+    font-size: 6vw;
     font-weight: 10;
     text-align: center;
     margin: 0;
     left: 50%;
-    top: 50%; /* Desktop top position */
+    top: 50%;
     transform: translate(-50%, -50%);
     font-family: 'Badger', serif;
     z-index: 3;
 }
 
-/* ===================================== */
-/* II. E-MAIL STYLING (unten zentriert) */
-/* ===================================== */
-
 .email-container {
     position: fixed;
-    /* Desktop bottom position */
     bottom: 20vh;
     left: 50%;
     transform: translateX(-50%);
@@ -90,7 +76,6 @@ img {
     align-items: center;
     text-decoration: none;
     color: var(--href);
-    /* Fluid font size */
     font-size: clamp(1.5em, 6vw, 2.5em);
     font-family: 'Unitea Sans', sans-serif;
     position: relative;
@@ -99,7 +84,6 @@ img {
 }
 
 .email-item img {
-    /* Fluid icon size */
     width: clamp(20px, 5vw, 35px);
     height: clamp(20px, 5vw, 35px);
     margin-right: 5px;
@@ -116,7 +100,6 @@ img {
     filter: invert(0.8);
 }
 
-/* Unterstreichungs-Effekt (::after) */
 .email-label::after {
     content: '';
     position: absolute;
@@ -136,19 +119,12 @@ img {
 }
 
 
-/* ===================================== */
-/* III. SOCIALS STYLING (unten zentriert) */
-/* ===================================== */
-
 .socials {
     position: fixed;
-    /* Desktop bottom position */
     bottom: 5vh;
     left: 50%;
     transform: translateX(-50%);
-    /* Default is horizontal (row) */
     display: flex;
-    /* Fluid gap between items */
     gap: clamp(15px, 6vw, 50px);
     z-index: 99;
 }
@@ -158,14 +134,12 @@ img {
     align-items: center;
     text-decoration: none;
     color: var(--href);
-    /* Fluid font size (adjusted slightly smaller for base) */
     font-size: clamp(1em, 3.5vw, 1.5em);
     font-family: 'Unitea Sans', sans-serif;
     transition: color 0.5s ease;
 }
 
 .socials img {
-    /* Fluid icon size */
     width: clamp(18px, 4vw, 25px);
     height: clamp(18px, 4vw, 25px);
     margin-right: 5px;
@@ -186,44 +160,30 @@ img {
     white-space: nowrap;
 }
 
-/* ===================================== */
-/* MOBILE OVERRIDES (max-width: 600px)   */
-/* ===================================== */
 @media (max-width: 600px) {
-    /* --- HEADLINE/SPLASH POSITIONING --- */
     .splash {
-        /* PULL UP: Move higher on the screen */
         top: 30%;
-        /* Adjusted font size for mobile */
         font-size: 5vw;
         width: 80%;
     }
 
     .headline {
-        /* PULL UP: Move higher on the screen */
         top: 40%;
-        /* Adjusted font size for mobile */
         font-size: 8vw;
     }
 
-    /* --- EMAIL POSITIONING --- */
     .email-container {
-        /* Adjusted font size for mobile */
         font-size: clamp(1.5em, 5vw, 2em);
-        /* Higher position on mobile */
         bottom: 40vh;
     }
 
-    /* --- SOCIALS STYLING --- */
     .socials {
-        /* Vertical stacking */
         flex-direction: column;
         bottom: 6vh;
         gap: 15px;
     }
 
     .social-item {
-        /* Increased minimum size for better clickability */
         font-size: clamp(1.8em, 5vw, 2.4em);
     }
 }

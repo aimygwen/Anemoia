@@ -4,7 +4,6 @@
     box-sizing: border-box;
 }
 
-/* --- VARIABLEN --- */
 :root {
     --bg: rgb(0, 0, 0);
     --navi: #ededed;
@@ -37,7 +36,6 @@ img {
     image-rendering: crisp-edges;
 }
 
-/* --- GRAIN OVERLAY (Ganze Seite) --- */
 .grain-overlay {
     position: fixed;
     top: 0;
@@ -50,7 +48,6 @@ img {
     z-index: 100;
 }
 
-/* --- HEADER & FOOTER --- */
 .gallery-header {
     position: fixed;
     top: 30px;
@@ -74,7 +71,6 @@ img {
 
 
 
-/* --- VIDEO FRAME & JITTER EFFEKT (Container) --- */
 .video-player {
     position: fixed;
     top: 50%;
@@ -97,13 +93,11 @@ img {
     z-index: 10;
 }
 
-/* WICHTIG: Das Video wird leicht vergrößert und mit negativer Marge überlappt */
 .video-player video {
     position: absolute;
     top: 0;
     left: 0;
 
-    /* KORREKTUR: Vergrößert das Video um 2px und zentriert es mit -1px Marge */
     width: calc(100% + 2px);
     height: calc(100% + 2px);
     margin: -1px;
@@ -113,10 +107,9 @@ img {
     filter: brightness(1.2) contrast(1.1);
 
     z-index: 1;
-    transform: none; /* Entfernt die Skalierung */
+    transform: none;
 }
 
-/* Keyframes für den Jitter-Effekt */
 @keyframes jitter {
     0%   { transform: translate(0.3px, 0.5px); }
     25%  { transform: translate(-0.4px, 0.7px); }
@@ -132,13 +125,12 @@ img {
 
 
 
-/* --- SOFT BORDER BLUR / VIGNETTE (Unschärfe am Rand) --- */
 .film-border-blur {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%; /* Zurück auf 100% */
-    height: 100%; /* Zurück auf 100% */
+    width: 100%;
+    height: 100%;
     pointer-events: none;
 
     z-index: 25;
@@ -152,19 +144,18 @@ img {
     outline: 3px solid #000000;
 }
 
-/* --- VIDEO ÜBERGANGS-OVERLAY (Filmstreifen-Effekt) --- */
 .video-transition-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 29; /* Muss über Video, aber unter Controls sein */
-    pointer-events: none; /* Klicks durchlassen */
+    z-index: 29;
+    pointer-events: none;
 
-    background-color: rgb(0, 0, 0); /* Startet schwarz */
-    background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px); /* Etwas stärker */
-    background-size: 100% 12px; /* Vertikaler Abstand der Linien */
+    background-color: rgb(0, 0, 0);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 100% 12px;
 
     opacity: 0; /* Startet unsichtbar */
     transform: none; /* Keine initiale Transformation */
