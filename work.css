@@ -1,0 +1,474 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: rgb(237, 237, 237);
+    --navi: #000000;
+    --href: rgb(5, 5, 5);
+    --hover: #7a267e;
+    --fade: rgba(255, 255, 255, 0.75);
+}
+
+body {
+    background: var(--bg);
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+
+img {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+
+
+
+
+
+.contact-block {
+    position: fixed;
+    bottom: 20%;
+    left: 10%;
+    z-index: 99;
+
+    display: flex;
+    flex-direction: column;
+    gap: 18px; /* mehr Abstand zwischen allen Elementen */
+}
+
+/* Basis für Texte */
+.contact-block span,
+.email-item {
+    display: flex;
+    align-items: center;
+    color: var(--href);
+    font-family: 'Unitea Sans', sans-serif;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s ease;
+    line-height: 1.3; /* extra breathing room */
+}
+
+/* Größen Desktop */
+.address {
+    font-size: 2.5em;
+}
+
+.email-item {
+    font-size: 2.5em;
+}
+
+.email-item img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    filter: invert(0);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Hover-Effects */
+.email-item:hover {
+    color: var(--hover);
+}
+
+.email-item:hover img {
+    transform: translateX(-10px);
+    filter: invert(0.8);
+}
+
+.email-label::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.email-item:hover .email-label::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* TMG + MStV kleiner */
+.tmg,
+.mstv {
+    font-size: 1.4em;
+    opacity: 0.8;
+}
+
+
+/* ---------------------------------------------------
+   MOBILE + TABLET OPTIMIERUNG
+   --------------------------------------------------- */
+
+@media (max-width: 900px) {
+    .contact-block {
+        bottom: 15%;
+        left: 5%;
+        gap: 14px;
+    }
+
+    .address,
+    .email-item {
+        font-size: 2em;
+    }
+
+    .email-item img {
+        width: 40px;
+        height: 40px;
+        margin-right: 8px;
+    }
+
+    .tmg,
+    .mstv {
+        font-size: 1.2em;
+    }
+}
+
+@media (max-width: 600px) {
+    .contact-block {
+        bottom: 12%;
+        left: 4%;
+        gap: 12px;
+    }
+
+    .address,
+    .email-item {
+        font-size: 1.6em;
+    }
+
+    .email-item img {
+        width: 32px;
+        height: 32px;
+        margin-right: 6px;
+    }
+
+    .tmg,
+    .mstv {
+        font-size: 1em;
+    }
+}
+
+
+
+
+
+body {
+    line-height: 1.6;
+    padding: 2rem;
+}
+/* Generelle Anpassung für Parallax & Basis-Stil */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    /* WICHTIG: Sollten Sie eine helle Seite haben, müssen Sie die Textfarbe anpassen */
+    color: #333;
+    /* Optional: Globaler Reset, falls nicht bereits vorhanden */
+    margin: 0;
+    padding: 0;
+}
+
+/* --- PARALLAX OPTIMIERUNG --- */
+[data-speed] {
+    transition: transform 0.05s ease-out;
+    will-change: transform;
+}
+
+/* --- INTRO SECTION (HERO) STYLES --- */
+
+.hero {
+    /* REDUZIERT: Die Höhe war sehr groß. Reduzieren Sie diese, um den ersten Gap zu verkleinern. */
+    height: 1500px;
+    position: relative;
+    /* margin-bottom ist nicht mehr nötig */
+}
+
+/* Allgemeine Positionierung */
+.headline, .signature, .glasses, .intro {
+    position: absolute;
+}
+
+.headline {
+    top: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    /* HINWEIS 1: 'transform: translateX(-50%);' sollte vom JS gesteuert werden, wenn Parallax aktiv ist! */
+    /* Wenn Sie das JS NICHT korrigieren wollen, muss es hier bleiben. */
+    font-size: clamp(8rem, 14vw, 12rem);
+    font-weight: bold;
+    text-align: center;
+    line-height: 0.9;
+    z-index: 10;
+    width: 60%;
+    font-family: 'Aesthetic', sans-serif;
+}
+
+.glasses {
+    top: 800px;
+    left: 18%;
+    /* 'transform: none;' ist redundant, wenn nicht überschrieben */
+    width: 250px;
+    height: auto;
+    z-index: 5;
+}
+
+.signature {
+    top: 500px;
+    left: 72%;
+    transform: translateX(-50%);
+    /* HINWEIS 1: 'transform: translateX(-50%);' sollte vom JS gesteuert werden, wenn Parallax aktiv ist! */
+    width: 350px;
+    z-index: 0;
+}
+
+.intro {
+    top: 950px;
+    left: 50%;
+    transform: translateX(-50%);
+    /* HINWEIS 1: 'transform: translateX(-50%);' sollte vom JS gesteuert werden, wenn Parallax aktiv ist! */
+    font-size: 2rem;
+    max-width: 800px;
+    margin: 0;
+    z-index: 10;
+}
+
+/* --- CRAFTS SECTION STYLES --- */
+
+.section-crafts {
+    max-width: 1400px;
+    /* REDUZIERT: Große Margins am Anfang/Ende entfernt, um Gap zu verkleinern */
+    margin: 0 auto;
+    padding: 20px 20px 50px 20px; /* Padding unten für Abstand zum nächsten Element */
+    /* 'min-height: 100vh;' entfernt, da dies unnötige Lücken erzeugen kann, wenn der Inhalt kurz ist. */
+    position: relative;
+}
+
+.section-crafts h2 {
+    font-size: 4rem;
+    margin-bottom: 50px;
+    text-align: center;
+    font-family: 'Aesthetic', sans-serif;
+}
+
+.craft-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+/* Stil für das Vorschau-Bild */
+.work-preview {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 100;
+    font-family: 'Aesthetic', sans-serif;
+}
+
+/* Stil für einzelne Projekte (Work Item) */
+.work-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 0;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid rgba(122, 122, 122, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: 'Helvetica Neue', sans-serif;
+    /* KORREKTUR: Sehr hoher z-index korrigiert.
+       Wenn Sie einen Overlay-Effekt verwenden, stellen Sie sicher, dass dieser Wert über dem Overlay liegt. */
+    z-index: 103;
+}
+
+.craft-grid a:first-child {
+    border-top: 1px solid rgba(120, 120, 120, 0.1);
+}
+
+.work-item:hover {
+    background-color: rgba(255, 255, 255, 0); /* Angepasst für hellen Hintergrund */
+    color: #7a267e;
+}
+
+.work-title {
+    font-size: 5rem;
+    font-weight: 700;
+    transition: transform 0.3s ease;
+    font-family: 'Aesthetic', sans-serif;
+}
+
+.work-info {
+    font-size: 1.2rem;
+    color: rgba(46, 46, 46, 0.6);
+}
+
+.work-item:hover .work-title {
+    transform: translateX(20px);
+}
+
+/* --- PROCESS SECTION STYLES --- */
+.process {
+    max-width: 1100px;
+    /* REDUZIERT: Margin-top entfernt. Abstand wird von craft-section padding kontrolliert. */
+    margin: 0 auto 150px auto;
+    padding: 20px;
+    font-size: 2rem;
+    line-height: 1.8;
+}
+
+.process-headline {
+    max-width: 1100px;
+    /* REDUZIERT: Margin-top entfernt. Abstand wird von craft-section padding kontrolliert. */
+    margin: 100px auto 50px auto; /* 50px Margin unten für Abstand zum Prozess-Text */
+    padding: 20px;
+    font-size: 6rem;
+    font-family: 'Aesthetic', sans-serif;
+    font-weight: bold;
+    line-height: 1.1;
+}
+
+.macintosh {
+    position: absolute;
+    left: 50%;
+    transform: translate(-110%);
+    width: 500px;
+    height: auto;
+}
+
+
+
+
+
+/* --- MEDIA QUERIES --- */
+
+@media (max-width: 480px) {
+
+    /* --- BASIS & ABSTÄNDE --- */
+    body {
+        /* Verhindert horizontales Scrollen durch feste Größen */
+        overflow-x: hidden;
+    }
+
+    /* Reduziert die globale Breite für zentrierten Inhalt */
+    .section-crafts {
+        max-width: 95%;
+        padding: 0 10px; /* Weniger horizontaler Rand */
+    }
+
+    /* --- INTRO/HERO ANPASSUNGEN --- */
+
+    .hero {
+        /* Reduziert die Gesamthöhe, um das Scrollen zu verkürzen */
+        height: 1200px;
+    }
+
+    /* H1 HEADLINE (Schriftgröße und Positionierung) */
+    .headline {
+        top: 150px;
+        /* Nutzen Sie clamp() für die Mindestgröße (z.B. 2.5rem) */
+        font-size: clamp(2.5rem, 8vw, 6rem);
+        width: 90%; /* Nimmt mehr Platz in der Breite ein */
+    }
+
+    /* INTRO TEXT ANPASSUNG */
+    .intro {
+        top: 950px; /* Position näher an der Headline */
+        font-size: 1rem; /* Kleinerer Text für Lesbarkeit */
+        max-width: 90%;
+    }
+
+    /* GLÄSER (oder Ihr Parallax-Bild) ANPASSUNG */
+    .glasses {
+        top: 400px; /* Position weiter oben */
+        left: 50%;
+        transform: translateX(-50%); /* Zentralisieren */
+        width: 150px; /* Verkleinern */
+        right: auto; /* right: 500px entfernen */
+    }
+
+    /* ... Andere Stile ... */
+
+    @media (max-width: 768px) {
+        /* MOBILE: width: 150px; */
+        .signature { width: 150px; }
+    }
+
+    /* DESKTOP-Regel, die später kommt und MOBILE überschreibt! */
+    .signature { width: 350px; }
+
+    /* --- CRAFTS SECTION ANPASSUNGEN --- */
+
+    .section-crafts h2 {
+        font-size: 2.5rem;
+    }
+
+    .work-item {
+        /* Kleineres Padding */
+        padding: 20px 0;
+    }
+
+    .work-title {
+        /* Schriftgröße für Work Items verkleinern */
+        font-size: 2.5rem;
+    }
+
+    .work-info {
+        /* Kleinerer Infotext */
+        font-size: 0.8rem;
+    }
+
+    .work-item:hover .work-title {
+        /* Weniger Verschiebung beim Hover */
+        transform: translateX(10px);
+    }
+
+    /* VORSCHAU-BILD (MUSS OFT AUF MOBILEN GERÄTEN ENTFERNT WERDEN) */
+    .work-preview {
+        display: none;
+    }
+
+    /* --- PROCESS SECTION ANPASSUNGEN --- */
+
+    .process {
+        max-width: 90%;
+        margin: 80px auto; /* Kleinere Margins */
+        font-size: 1.1rem;
+    }
+
+    .process-headline {
+        max-width: 90%;
+        margin: 50px auto 30px auto;
+        font-size: 3rem;
+    }
+}
+
+.macintosh {
+    position: absolute;
+    width: 800px; /* The container width */
+    top: 3750px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* --- ADD THIS RULE --- */
+.macintosh img {
+    width: 100%;
+    height: auto;
+    display: block;
+}

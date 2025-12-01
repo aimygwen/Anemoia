@@ -1,0 +1,341 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* --- VARIABLEN --- */
+:root {
+    --bg: rgb(0, 0, 0);
+    --navi: #ededed;
+    --href: rgb(255, 255, 255);
+    --hover: #7a267e;
+    --fade: rgba(18, 18, 18, 0.75);
+    --bg-color: #1a1a1a;
+    --text-color: #c6c6c6;
+    --accent-color: #ffffff;
+}
+
+body {
+    background: var(--bg);
+    width: 100%;
+    overflow-x: hidden;
+    color: var(--text-color);
+    font-family: 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+img {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* --- GRAIN OVERLAY (Ganze Seite) --- */
+.grain-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWc9/wAAAADklEQVQIW2NgYGAgAAAABQABf5JpQAAAAABJRU5ErkJggg==');
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* --- HEADER & FOOTER --- */
+.gallery-header {
+    position: fixed;
+    top: 30px;
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 50;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.gallery-footer {
+    position: fixed;
+    bottom: 30px;
+    right: 5%;
+    font-size: 0.8rem;
+    opacity: 0.5;
+}
+
+
+
+
+/* --- VIDEO FRAME & JITTER EFFEKT (Container) --- */
+.video-player {
+    position: fixed;
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%) scale(1.1);
+
+    width: 100%;
+    max-width: 1500px;
+
+    height: auto;
+    padding-bottom: min(calc(90vw * 9 / 16), 843.75px);
+
+    overflow: hidden;
+    background: black;
+    border-radius: 75px;
+
+    box-shadow: inset 0 0 100px rgb(0, 0, 0),
+    inset 0 0 0 2px black;
+
+    z-index: 10;
+}
+
+/* WICHTIG: Das Video wird leicht vergrößert und mit negativer Marge überlappt */
+.video-player video {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    /* KORREKTUR: Vergrößert das Video um 2px und zentriert es mit -1px Marge */
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+    margin: -1px;
+
+    object-fit: cover;
+    display: block;
+    filter: brightness(1.2) contrast(1.1);
+
+    z-index: 1;
+    transform: none; /* Entfernt die Skalierung */
+}
+
+/* Keyframes für den Jitter-Effekt */
+@keyframes jitter {
+    0%   { transform: translate(0.3px, 0.5px); }
+    25%  { transform: translate(-0.4px, 0.7px); }
+    50%  { transform: translate(0.6px, -0.2px); }
+    75%  { transform: translate(-0.8px, 0.3px); }
+    100% { transform: translate(0.3px, 0.5px); }
+}
+
+.video-player.is-jittering {
+    animation: jitter 0.2s infinite steps(4);
+}
+
+
+
+
+/* --- SOFT BORDER BLUR / VIGNETTE (Unschärfe am Rand) --- */
+.film-border-blur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Zurück auf 100% */
+    height: 100%; /* Zurück auf 100% */
+    pointer-events: none;
+
+    z-index: 25;
+    border-radius: 75px;
+
+    transform: none;
+    margin: 0;
+
+    box-shadow: inset 0 0 50px 40px rgb(0, 0, 0),
+    inset 0 0 10px 5px rgb(0, 0, 0);
+    outline: 3px solid #000000;
+}
+
+/* --- VIDEO ÜBERGANGS-OVERLAY (Filmstreifen-Effekt) --- */
+.video-transition-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 29; /* Muss über Video, aber unter Controls sein */
+    pointer-events: none; /* Klicks durchlassen */
+
+    background-color: rgb(0, 0, 0); /* Startet schwarz */
+    background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px); /* Etwas stärker */
+    background-size: 100% 12px; /* Vertikaler Abstand der Linien */
+
+    opacity: 0; /* Startet unsichtbar */
+    transform: none; /* Keine initiale Transformation */
+    filter: brightness(1) contrast(1); /* Reset */
+
+    /* Übergänge für Opacity und Transform */
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out, filter 0.4s ease-out;
+}
+
+/* Zustand, wenn das Overlay aktiv ist und das Durchblättern beginnt */
+.video-transition-overlay.is-active {
+    opacity: 1; /* Sofort sichtbar */
+    filter: brightness(1.2) contrast(1.1); /* Leichtes Film-Feeling */
+}
+
+/* Keyframes für den Jitter-Effekt auf dem Overlay */
+@keyframes overlayJitter {
+    0%   { transform: translate(0.5px, 0.8px); }
+    25%  { transform: translate(-0.7px, 1.2px) rotate(0.1deg); }
+    50%  { transform: translate(1px, -0.5px); }
+    75%  { transform: translate(-1.2px, 0.9px) rotate(-0.2deg); }
+    100% { transform: translate(0.5px, 0.8px); }
+}
+
+/* Wenn das Overlay jittert */
+.video-transition-overlay.is-jittering {
+    animation: overlayJitter 0.15s infinite steps(4); /* Schneller, aggressiver Jitter */
+    background-size: 100% 10px; /* Leichte Variation der Linien */
+    filter: brightness(1.5) contrast(1.3) hue-rotate(5deg); /* Noch mehr Film-Feeling */
+}
+
+/* Zustand, wenn das Overlay ausgeblendet wird (nach dem Einrasten) */
+.video-transition-overlay.is-fading-out {
+    opacity: 0;
+    transform: scale(1.05); /* Leichte Skalierung beim Ausblenden */
+    filter: brightness(0.8) contrast(1.0); /* Leichter Dimm-Effekt */
+}
+
+/* --- NAVIGATION / CONTROLS --- */
+/* --- NAVIGATION / CONTROLS --- */
+.gallery-controls {
+    position: fixed;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    /* NEU: Erhöhter Abstand zwischen den Elementen */
+    gap: 100px;
+
+    /* NEU: Erhöhter z-index */
+    z-index: 30000;
+}
+
+.counter-display {
+    /* NEU: Font-Familie (Stellen Sie sicher, dass 'Aesthetic' geladen ist) */
+    font-family: 'Aesthetic', cursive;
+    color: var(--accent-color);
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 5px;
+}
+
+/* Der aktuell ausgewählte Zähler wird größer und fetter */
+.counter-display .current-number {
+    font-size: 3.6rem; /* Deutlich größer */
+    font-weight: 800;  /* Sehr fett, um hervorzustechen */
+    line-height: 1;    /* Verhindert unnötigen vertikalen Abstand */
+}
+
+/* Der Rest (' / 03') bleibt kleiner */
+.counter-display .total-number {
+    font-size: 2rem; /* Kleiner als der Standard */
+    opacity: 0.7;
+    font-weight: 400;
+}
+
+/* --- ANIMATION SETUP: Der Container für die gleitenden Ziffern --- */
+
+/* Der Container (#currentVideo) muss den Überlauf der Ziffern verstecken */
+.counter-display .current-number {
+    /* (Bestehende Stile wie font-size, font-weight bleiben hier) */
+
+    display: inline-block;
+    vertical-align: top;
+
+    /* WICHTIG: Definiert die sichtbare Fläche und versteckt den Rest */
+    overflow: hidden;
+    height: 1em; /* Setzt die Höhe auf die Höhe der Schrift */
+    position: relative;
+}
+
+/* Das Element, das die eigentliche Ziffer hält und animiert wird */
+.counter-display .animated-num {
+    display: block;
+    will-change: transform; /* Performance-Optimierung */
+
+    /* Die Transition wird im JavaScript für Dynamik gesetzt */
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.arrow-btn {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-color);
+    cursor: pointer;
+
+    /* Längere und sanftere Transition */
+    transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    border-radius: 50%;
+
+    /* NEU: Stark erhöhtes Padding für größere Fläche */
+    padding: 60px;
+
+    /* SVG STYLING */
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    /* Beibehaltung der SVG-Größe */
+    background-size: 60%;
+    font-size: 0;
+}
+
+/* Pfeil hoch (prevBtn) */
+.arrow-btn.up {
+    background-image: url('./assets/arrowup.svg');
+}
+
+.arrow-btn.up:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+
+    /* Bewegt nach oben und skaliert */
+    transform: translateY(-20px) scale(1.1);
+}
+
+/* Pfeil runter (nextBtn) */
+.arrow-btn.down {
+    background-image: url('./assets/arrowdown.svg');
+}
+
+.arrow-btn.down:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+
+    /* Bewegt nach unten und skaliert */
+    transform: translateY(20px) scale(1.1);
+}
+
+/* --- RESPONSIFTE ANPASSUNGEN --- */
+@media (max-width: 600px) {
+    .video-player {
+        width: 90vw;
+        height: 0;
+        padding-bottom: calc(90vw * 9 / 16);
+        border-radius: 10px;
+    }
+    .gallery-controls {
+        top: auto;
+        bottom: 5%;
+        right: 50%;
+        transform: translateX(50%);
+        flex-direction: row;
+    }
+    .gallery-header, .gallery-footer {
+        font-size: 0.9rem;
+    }
+}
+
+
+

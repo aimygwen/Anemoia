@@ -29,7 +29,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
+    z-index: 1000000;
     cursor: pointer;
     transition: transform 0.5s ease-in-out;
     mix-blend-mode: normal;
@@ -367,8 +367,14 @@
 
 
 .branding {
+    overflow-x: hidden;
+    /* *** CRITICAL FIX: Anchor the entire overlay to the viewport *** */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000; /* Ensure the menu overlays everything else */
+
     visibility: visible;
-    position: relative;
     width: 100%;
     height: 100vh;
     display: flex;
@@ -391,17 +397,22 @@
 .branding .portrait,
 .branding .portraitcolor {
     position: absolute;
-    left: clamp(2rem, 10vw, 12rem);
-    top: clamp(4rem, 20vw, 12rem);
-    height: clamp(100px, 80vh, 800px);
+    /* Korrektur: Dynamische, zentrierte Position */
+    left: calc(50% - 12vw);
+    bottom: 0; /* Positions relative to the bottom of the fixed .branding container */
 
+    /* Beibehalten: Adaptive Höhe mit clamp() */
+    height: clamp(500px, 90vh, 1050px);
+
+    /* Beibehalten: Zentrierung durch Verschiebung der Hälfte der Bildeigenbreite */
+    transform: translateX(-50%);
+
+    /* Beibehalten: Restliche Eigenschaften */
     width: auto;
     object-fit: contain;
     transition: opacity 0.5s ease, left 0.5s ease, top 0.5s ease, height 0.5s ease;
     z-index: 10000;
 }
-
-
 
 .branding .portraitcolor {
     opacity: 0;
@@ -417,120 +428,148 @@
     opacity: 0;
 }
 
-
-
-
-
 .branding .signature {
-    position: absolute;
-    left: calc(8rem + (24% - 8rem) * 0.7);
-    bottom: 10rem;
-    width: 25vw;
+    /* Already correctly fixed to the viewport */
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 10rem;
+    width: 12vw;
     height: auto;
     z-index: 10001;
 }
 
 .branding-name {
     position: absolute;
-    top: 50%;
-    left: 0;
-    font-size: clamp(4rem, 8vw, 6rem);
-    font-weight: bold;
-    text-transform: uppercase;
-    z-index: 9999;
+    top: 40%; /* Positions relative to the 50% mark of the fixed .branding container */
+    right: 20%;
+    text-align: right;
+    font-size: clamp(4rem, 12vw, 9rem);
+    font-weight: normal;
+    line-height: 1;
+    text-transform: normal;
+    z-index: 10001;
     white-space: nowrap;
-    transform: translateY(-100%);
     animation: scroll-left 24s linear infinite;
+    font-family: 'Athemi DEMO VERSION', serif;
 }
 
+
+/* -------------------------------------------------------------------------- */
+/* Corner elements (already fixed, just ensuring Z-index is high)             */
+/* -------------------------------------------------------------------------- */
 .branding-rights {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    font-size: clamp(4rem, 8vw, 6rem);
+    position: fixed;
+    z-index: 99999;
+
+    /* Responsive Positionierung: Skaliert zwischen 1rem (Mobil) und 5rem (Desktop) */
+    bottom: clamp(1rem, 5vh, 5rem);
+    left: clamp(1rem, 5vw, 5rem);
+
+    /* Responsive Schriftgröße: Skaliert zwischen 0.75rem (Mobil) und 2rem (Desktop) */
+    font-size: clamp(0.75rem, 3vw, 2rem);
+
     text-transform: uppercase;
-    font-weight: 600;
-    z-index: 9999;
-    color: transparent;
-    -webkit-text-stroke: 1px #000000;
-    text-stroke: 1px #000000;
+    font-weight: 500;
+    color: #000000;
     white-space: nowrap;
-    transform: translateY(-50%);
     animation: scroll-right 24s linear infinite;
 }
 
-
-@keyframes scroll-left {
-    from {
-        transform: translate(0%, -100%);
-    }
-    to {
-        transform: translate(-50%, -100%);
-    }
-}
-
-@keyframes scroll-right {
-    from {
-        transform: translate(-50%, -50%);
-    }
-    to {
-        transform: translate(0%, -50%);
-    }
-}
-
+/* -------------------------------------------------------------------------- */
+/* .branding-year: Große Jahreszahl                                            */
+/* -------------------------------------------------------------------------- */
 .branding-year {
-    position: absolute;
-    bottom: 5rem;
-    right: 5rem;
-    font-size: 5rem;
+    position: fixed;
+    z-index: 99999;
+
+    /* Responsive Positionierung: Skaliert zwischen 1rem (Mobil) und 5rem (Desktop) */
+    bottom: clamp(1rem, 5vh, 5rem);
+    right: clamp(1rem, 5vw, 5rem);
+
+    /* Responsive Schriftgröße: Skaliert zwischen 2rem (Mobil) und 5rem (Desktop) */
+    font-size: clamp(2rem, 8vw, 5rem);
+
     color: #000000;
     margin-top: 0.3rem;
-    z-index: 9999;
 }
 
 .branding-info {
     position: absolute;
-    top: 70%;
-    left: 50%;
-    font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+    top: 70%; /* Positions relative to the 70% mark of the fixed .branding container */
+    right: 20%;
+    font-size: clamp(0.8rem, 2vw, 1.4rem);
     line-height: 1.4;
-    text-align: left;
+    text-align: right;
     margin-top: 1rem;
     max-width: 600px;
     color: #333;
     font-weight: 400;
     letter-spacing: 0.02em;
     text-transform: uppercase;
-    z-index: 9999;
+    z-index: 10001;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
+    /* 1. Portrait/Image Repositioning & Scaling */
     .branding .portrait,
     .branding .portraitcolor {
+        /* Move image to be more centered horizontally */
+        left: 50%;
+        bottom: 0;
+
+        /* Reduce the max height to keep it from dominating small screens */
+        height: clamp(250px, 68vh, 600px);
+        max-width: 768px;
+
+    }
+
+    /* 2. Signature (Fixed Logo/Text at Top) */
+    .branding .signature {
+        top: auto;
+        bottom: 5rem;
+        width: 30vw;
         left: 50%;
         transform: translateX(-50%);
-        top: 15%;
-        height: 50%;
     }
 
-    .signature {
-        top: 60%;
-        left: 50%;
-        transform: translateX(50%);
-        width: 300px;
-    }
-
-    .branding-info {
-        bottom: 2rem;
+    /* 3. Main Name Text (branding-name) */
+    .branding-name {
+        right: auto;
         left: 10%;
-        max-width: 60%;
-
+        text-align: left;
+        top: 20vh; /* Position it above the portrait image */
+        font-size: clamp(1.5rem, 8vw, 2.5rem);
+        animation-duration: 16s;
+        white-space: normal;
     }
 
+    /* 4. Secondary Info Text (branding-info) */
+    .branding-info {
+        right: auto;
+        left: 10%;
+        transform: none;
+        top: 29vh;
+        text-align: left;
+        width: 80%;
+        font-size: clamp(0.7rem, 3vw, 1rem);
+    }
+
+    /* 5. Rights Text (branding-rights) */
+    .branding-rights {
+        left: 1rem;
+        bottom: 1rem;
+        animation: none;
+        white-space: normal;
+        max-width: 50%;
+        font-size: 0.75rem;
+    }
+
+    /* 6. Year Text (branding-year) */
     .branding-year {
-        bottom: 2rem;
-        right: 2rem;
-        font-size: 3rem;
+        right: 1rem;
+        bottom: 1rem;
+        font-size: 2rem;
     }
 }
 
@@ -605,6 +644,12 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
 .drip-drop.is-hovering {
     width: 12px;
     height: 12px;
+    background-color: rgba(110, 110, 110, 0.5);
+    transition: width 0.1s ease-out, height 0.1s ease-out, background-color 0.1s ease;
+    mix-blend-mode: normal;
+    backdrop-filter: blur(5px);
+    opacity: 1;
+
 }
 
 .drip-echo {
@@ -624,9 +669,9 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
 }
 
 .drip-echo.is-hovering {
-    width: 100px;
-    height: 100px;
-    opacity: 1;
+    width: 0;
+    height: 0;
+    opacity: 0;
     border-color: #00ffea;
     background-color: rgb(255, 255, 255);
     backdrop-filter: blur(2px);
@@ -643,8 +688,8 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
 }
 
 .drip-echo.is-clicked {
-    width: 0px;
-    height: 0px;
+    width: 0;
+    height: 0;
     opacity: 0;
     transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.3s ease;
 }
@@ -676,8 +721,9 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
     left: 0;
     opacity: 0.1;
     animation: animateGrain 8s steps(10) infinite;
-    z-index: 98;
+    z-index: 1000;
     mix-blend-mode: normal;
+    pointer-events: none;
 }
 
 body.overlay-active .grain:after {
@@ -728,16 +774,140 @@ body.overlay-active .grain:after {
 
 .sound-button {
     position: fixed;
-    bottom: 200px;
-    right: 50px;
-    width: 120px;
-    height: 120px;
+    bottom: 35px;
+    right: 35px;
+    width: clamp(80px, 7vw, 125px);
+    height: clamp(80px, 7vw, 125px);
     cursor: pointer;
-    z-index: 10100;
+    z-index: 100;
 }
 
 .sound-button canvas {
     width: 100%;
     height: 100%;
     display: block;
+}
+
+
+
+header {
+    --header-height: 5rem; /* Example height */
+    --gradient-height: 6rem; /* Definiert die Höhe des Verlaufs */
+
+    height: var(--header-height);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+    /* REMOVED background-image HERE */
+}
+
+/* ------------------------------------------- */
+/* Dedicated Color Background Layer (Z-index: 1) */
+/* ------------------------------------------- */
+header .header-bg-color {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900; /* Lowest layer in the header */
+
+    /* Apply the color gradient here */
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), transparent);
+}
+
+
+/* ------------------------------------------- */
+/* Blur Layers (Overlap, mask determines visibility, Z-index: 10) */
+/* ------------------------------------------- */
+header .gradualblur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* Fill only the height of the gradient */
+    height: var(--gradient-height);
+    z-index: 900; /* Above the color background, below the content/nav */
+}
+
+/* Blur 1: Lightest Blur */
+header .gradualblur:nth-child(1) {
+    -webkit-backdrop-filter: blur(0.5px);
+    backdrop-filter: blur(0.5px);
+
+    /* Mask: From transparent (0%) to black (1/5th height) */
+    mask-image: linear-gradient(to top,
+    transparent 0%,
+    black calc(100% / 5 * 1));
+
+    -webkit-mask-image: linear-gradient(to top,
+    transparent 0%,
+    black calc(100% / 5 * 1));
+}
+
+/* Blur 2 */
+header .gradualblur:nth-child(2) {
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
+
+    /* Mask: From transparent (0%) to black (2/5th height) */
+    mask-image: linear-gradient(to top,
+    transparent 0%,
+    black calc(100% / 5 * 2));
+    -webkit-mask-image: linear-gradient(to top,
+    transparent 0%,
+    black calc(100% / 5 * 2));
+}
+
+/* Blur 3 */
+header .gradualblur:nth-child(3) {
+    -webkit-backdrop-filter: blur(1.75px);
+    backdrop-filter: blur(1.75px);
+
+    /* Mask: From transparent (0%) to black (3/5th height) */
+    mask-image: linear-gradient(to top,
+    transparent 0%,
+    black calc(100% / 5 * 3));
+    -webkit-mask-image: linear-gradient(to top,
+    transparent 0%,
+    black calc(100% / 5 * 3));
+}
+
+/* Blur 4 */
+header .gradualblur:nth-child(4) {
+    -webkit-backdrop-filter: blur(2.5px);
+    backdrop-filter: blur(2.5px);
+
+    /* Mask: From transparent (0%) to black (4/5th height) */
+    mask-image: linear-gradient(to top,
+    transparent 0%,
+    black calc(100% / 5 * 4));
+    -webkit-mask-image: linear-gradient(to top,
+    transparent 0%,
+    black calc(100% / 5 * 4));
+}
+
+/* Blur 5: Heaviest Blur at the Top */
+header .gradualblur:nth-child(5) {
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+
+    /* Mask: From transparent (0%) to black (5/5th height - 100%) */
+    mask-image: linear-gradient(to top,
+    transparent 0%,
+    black 100%);
+    -webkit-mask-image: linear-gradient(to top,
+    transparent 0%,
+    black 100%);
+}
+
+header .content {
+    z-index: 900; /* Ensure content is above blur layers and background */
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 2rem;
 }
