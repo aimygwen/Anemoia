@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Yaaaawn... Booooring</title>
+    <link rel="icon" href="./assets/favicon.png" type="image/svg+xml">
+    <link rel="stylesheet" href="legal.css" />
+    <link rel="stylesheet" href="ui.css" />
+</head>
+<body>
+
+
+<main>
+<div class="container">
+
+    <section class="headline">
+        <h1>Privacy Policy</h1>
+    </section>
+
+    <section class="content">
+        <h2>Personal Info</h2>
+        <p>Græbe, Amélie Gwendolyn<br>
+            <a href="mailto:hello@aimygwen.art" class="email-link">hello@aimygwen.art</a>
+        </p>
+
+        <h2>1. What gets logged</h2>
+        <p>My hosting provider automatically stores your IP address, timestamp, and the file you requested. It’s basic server security. Nothing dramatic, nothing personal. (Art. 6(1)(f) GDPR)</p>
+
+        <h2>2. External stuff</h2>
+        <p>This site loads GSAP from a CDN. Yes, that means your IP touches their server. That's it. No, I’m not using any other third-party services, trackers, or nonsense.</p>
+
+        <h2>3. No cookies, no stalking</h2>
+        <p>I don’t track you. I don’t profile you. I don’t care what toaster you’re browsing on. No analytics, no ads, no hidden data parties.</p>
+
+        <h2>4. Contact</h2>
+        <p>If you email me, I’ll read it and reply. That’s the only time your data is actually used.</p>
+
+        <h2>5. Your rights</h2>
+        <p>You can ask for access, correction, deletion, or restriction of your data anytime. It’s your data, not mine. Just send me a message.</p>
+
+        <h2>6. Updates to this policy</h2>
+        <p>If anything changes legally, technically, or cosmically, this policy will be updated here. No secret edits. You’ll always see the current version.</p>
+
+        <div class="info">Last updated on Tuesday, 2 December 2025, 2PM CET</div>
+    </section>
+</div>
+</main>
+
+
+
+
+
+  <div class="branding-btn" id="brand" onclick="togglenavi('branding')">
+      <img src="./assets/kawaiigwen.svg" alt="Logo" />
+  </div>
+
+  <div class="branding">
+      <div class="branding-layer">
+          <img src="./assets/portraitbw.png"
+               alt="Portrait"
+               class="portrait">
+          <img src="./assets/portrait.png"
+               alt="Portrait Color"
+               class="portraitcolor">
+          <img src="./assets/signature.svg"
+               alt="Signature"
+               class="signature">
+
+          <div class="branding-name">Græbe,<br>Amélie Gwendolyn</div>
+          <div class="branding-rights">All Rights Reserved</div>
+          <div class="branding-year">©'25</div>
+          <div class="branding-info">All content on this site is my original work and
+              the sole property of me unless otherwise noted. Any use, reproduction,
+              or distribution without my explicit permission is strictly prohibited.</div>
+      </div>
+  </div>
+
+  <div class="sound-button">
+      <canvas></canvas>
+      <audio id="audio" src="./assets/song.mp3"></audio>
+  </div>
+
+  <div class="btn" id="pond" onclick="togglenavi('main')">
+      <div class="ripple drop"></div>
+      <div class="ripple echo"></div>
+      <div id="mark"><span></span>
+      </div>
+  </div>
+
+  <div class="navi" id="main-navi">
+      <div class="main-navi">
+          <div class="main-container">
+              <div class="navi-item-about">
+                  <a href="index.html"><span></span>About</a>
+                  <div class="navi-item-revealer"></div>
+              </div>
+
+              <div class="navi-item-works">
+                  <a href="work.html"><span></span>Work</a>
+                  <div class="navi-item-revealer"></div>
+              </div>
+
+              <div class="navi-item-story">
+                  <a href="story.html"><span></span>Story</a>
+                  <div class="navi-item-revealer"></div>
+              </div>
+          </div>
+      </div>
+
+      <div class="side-navi">
+          <div class="side-container">
+              <div class="wrapper-legal">
+                  <div class="navi-item-imprint">
+                      <a href="imprint.html">Imprint</a>
+                      <div class="navi-item-revealer"></div>
+                  </div>
+
+                  <div class="navi-item-terms">
+                      <a href="terms.html">Terms</a>
+                      <div class="navi-item-revealer"></div>
+                  </div>
+              </div>
+
+              <div class="wrapper-contact">
+                  <div class="navi-item">
+                      <a href="contact.html">Contact</a>
+                      <div class="navi-item-revealer"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="overlay" onclick="togglenavi('main')"></div>
+  <div class="haze"></div>
+  <div class="grain"></div>
+  <div class="drip-drop"></div>
+  <div class="drip-echo"></div>
+
+
+  <header>
+      <div class="header-bg-color"></div> <div class="gradualblur"></div>
+      <div class="gradualblur"></div>
+      <div class="gradualblur"></div>
+      <div class="gradualblur"></div>
+      <div class="gradualblur"></div>
+
+      <div class="gradient-wrp">
+          <div class="header gradient-clothoid"></div>
+      </div>
+  </header>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CSSRulePlugin.min.js"></script>
+<script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+<script src="imprint.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>
+

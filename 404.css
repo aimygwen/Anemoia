@@ -1,0 +1,224 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: rgb(255, 187, 187);
+    --ui: #ffffff;
+    --link: rgb(232, 255, 23);
+    --hover: #ff00c6;
+    --fade: rgba(7, 7, 7, 0.75);
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: 'Courier New', monospace;
+}
+
+body {
+    background: var(--bg);
+    overflow-x: hidden;
+}
+
+img {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* --- CONTAINER --- */
+#labyrinth-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* --- BASE PAGE BEHAVIOR & GLITCH PREP --- */
+.labyrinth-page {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+
+    /* Start state: invisible and out of flow */
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+
+    display: block; /* flexible for page content */
+    overflow: visible; /* allow content to move freely */
+    filter: url(#glitch-filter);
+}
+
+/* --- ACTIVE PAGE & ANIMATION TRIGGERS --- */
+.labyrinth-page.active {
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto;
+    opacity: 1;
+    z-index: 10;
+
+    animation: glitchIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.labyrinth-page.glitch-out {
+    animation: glitchOut 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    z-index: 15;
+}
+
+/* --- PAGE-SPECIFIC STYLES (BACKGROUNDS) --- */
+.page-1 { background: url("./assets/2.png") center/cover no-repeat; }
+.page-2 { background: url("./assets/1.png") center/cover no-repeat; }
+.page-3 { background: #2609ff; }
+.page-4 { background: black;
+    /*background-image: url("./assets/4.png");
+    background-position: top left;
+    background-repeat: repeat;
+    background-size: 200px;         /* keep original texture size */
+}
+
+/* --- BUTTON STYLING --- */
+.next-button {
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    background: #0ff;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    transition: 0.3s ease;
+    z-index: 9999;
+}
+.next-button:hover { background: #0aa; }
+
+/* --- KEYFRAMES --- */
+@keyframes glitchIn {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+    10% { opacity: 0.1; filter: saturate(3); transform: translate(-50%, -50%) scale(1.05) translate(3px, -3px); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: none; }
+}
+
+@keyframes glitchOut {
+    0% { opacity: 1; filter: none; transform: translate(-50%, -50%) scale(1); clip-path: inset(0 0 0 0); }
+    50% { opacity: 0.5; filter: saturate(2) hue-rotate(90deg); transform: translate(-50%, -50%) scale(1.05) translate(-10px, 5px); clip-path: inset(5% 5% 5% 5%); }
+    100% { opacity: 0; filter: brightness(0.5); transform: translate(-50%, -50%) scale(1.2) translate(0, 0); clip-path: inset(30% 60% 70% 20%); }
+}
+
+/* --- RGB SPLIT EFFECT FOR GLITCH OUT --- */
+.labyrinth-page.glitch-out::before,
+.labyrinth-page.glitch-out::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    z-index: 1000;
+    pointer-events: none;
+    overflow: hidden;
+    mix-blend-mode: difference;
+    background: inherit;
+}
+
+.labyrinth-page.glitch-out::before {
+    clip-path: inset(0 0 50% 0);
+    transform: translate(3px, -3px);
+}
+
+.labyrinth-page.glitch-out::after {
+    clip-path: inset(50% 0 0 0);
+    transform: translate(-3px, 3px);
+}
+
+/* --- PAGE CONTENT: UNIQUE LAYOUTS --- */
+.page-content {
+    position: absolute; /* allows free positioning */
+}
+
+/* Example positions for each page */
+.page-1 .page-content {
+    top: 20%;
+    left: 10%;
+    text-align: left;
+    color: #fff;
+    font-family: "Inter", sans-serif;
+}
+
+.page-2 .page-content {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #0ff;
+    font-family: "Inter", sans-serif;
+}
+
+.page-3 .page-content {
+    top: 10%;
+    left: 10%;
+    text-align: left;
+    color: #fff;
+    font-family: "JetBrains Mono", sans-serif;
+    font-size: 1rem;
+}
+
+.page-3 .bsod-headline {
+    font-family: 'JetBrains Mono', monospace; /* match page style */
+    font-size: 10rem; /* <-- this controls the size of the 404 */
+    color: #ffffff;   /* or whatever color you want */
+    margin-bottom: 1.5rem;
+    text-align: left; /* align with page content */
+}
+
+.page-3 .next-button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    background: #ffffff;
+    color: #4c32ff;
+    border: none;
+    border-radius: 0;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    margin-top: 2rem;
+    transition: 0.3s ease;
+}
+.page-3 .next-button:hover {
+    background: #0aa;
+}
+
+
+
+
+.page-4 .page-content {
+    top: 30%;
+    left: 15%;
+    text-align: left;
+    color: #fff;
+    font-family: "PP Editorial New", sans-serif;
+    font-size: 3rem;
+
+}
+
+
+.page-4 .next-button {
+    font-family: 'PP Editorial New', monospace;
+    font-size: 3rem;
+    background: #ff00fb;
+    color: #000000;
+    border: none;
+    border-radius: 0;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    margin-top: 2rem;
+    transition: 0.3s ease;
+}
+.page-4 .next-button:hover {
+    background: #0aa;
+}

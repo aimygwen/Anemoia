@@ -1,0 +1,170 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: rgb(239, 239, 239);
+    --ui: #000000;
+    --link: rgb(255, 58, 0);
+    --hover: #ff00c6;
+    --fade: rgba(234, 234, 234, 0.75);
+}
+
+body {
+    background: var(--bg);
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+
+img {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+
+
+
+.splash {
+        position: fixed;
+        width: 80%;
+        will-change: transform;
+        font-weight: 10;
+        text-align: center;
+        margin: 0;
+        left: 50%;
+        top: 40%;
+        transform: translate(-50%, -50%);
+        font-family: 'Badger', serif;
+        z-index: 2;
+    }
+
+
+
+
+
+.contact-block {
+    position: fixed;
+    bottom: 20%;
+    left: 10%;
+    z-index: 99;
+
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.contact-block span,
+.email-item {
+    display: flex;
+    align-items: center;
+    color: var(--link);
+    font-family: 'Unitea Sans', sans-serif;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s ease;
+    line-height: 1.3;
+}
+
+.address {
+    font-size: 2.5em;
+}
+
+.email-item {
+    font-size: 2.5em;
+}
+
+.email-item img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    filter: invert(0);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.email-item:hover {
+    color: var(--hover);
+}
+
+.email-item:hover img {
+    transform: translateX(-10px);
+    filter: invert(0.8);
+}
+
+.email-label::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.email-item:hover .email-label::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.tmg,
+.mstv {
+    font-size: 1.4em;
+    opacity: 0.8;
+}
+
+
+@media (max-width: 900px) {
+    .contact-block {
+        bottom: 15%;
+        left: 5%;
+        gap: 14px;
+    }
+
+    .address,
+    .email-item {
+        font-size: 2em;
+    }
+
+    .email-item img {
+        width: 40px;
+        height: 40px;
+        margin-right: 8px;
+    }
+
+    .tmg,
+    .mstv {
+        font-size: 1.2em;
+    }
+}
+
+@media (max-width: 600px) {
+    .contact-block {
+        bottom: 12%;
+        left: 4%;
+        gap: 12px;
+    }
+
+    .address,
+    .email-item {
+        font-size: 1.6em;
+    }
+
+    .email-item img {
+        width: 32px;
+        height: 32px;
+        margin-right: 6px;
+    }
+
+    .tmg,
+    .mstv {
+        font-size: 1em;
+    }
+}
+
+

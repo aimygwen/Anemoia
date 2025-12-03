@@ -1,0 +1,476 @@
+/* --- GLOBAL RESET & VARIABLES --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: rgb(0, 0, 0);
+    --ui: #ededed;
+    --uifade: #888888;
+    --link: rgb(255, 255, 255);
+    --hover: #ff0d54;
+    --fade: rgba(18, 18, 18, 0.75);
+    --bg-color: #1a1a1a;
+    --text-color: #c6c6c6;
+    --accent-color: #ffffff;
+    --credits: #ededed;
+    --credits-sub: rgba(126, 126, 126, 0.5);
+}
+
+html {
+    /* CRITICAL: Prevents scroll jumping/ghost scrolling on mobile */
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+body {
+    background: var(--bg);
+    width: 100%;
+    overflow-x: hidden;
+    color: var(--text-color);
+    font-family: 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    /* Ensure no vertical overflow can be triggered */
+    overflow: hidden;
+
+    height: 100vh;
+    /* --- FULLSCREEN CHANGE: Removed centering flex properties --- */
+    /* display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; */
+}
+
+img {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* --- GLOBAL GRAIN OVERLAY (For the main body) --- */
+.grain-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWc9/wAAAADklEQVQIW2NgYGAgAAAABQABf5JpQAAAAABJRU5ErkJggg==');
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* --- GLOBAL FILM GRAIN (If the body class is used) --- */
+.film:after {
+    content: "";
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png");
+    height: 200%;
+    width: 200%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0.1;
+    animation: animateGrain 8s steps(10) infinite;
+    z-index: 1000;
+    mix-blend-mode: normal;
+    pointer-events: none;
+}
+
+body.overlay-active .film:after {
+    z-index: 9001;
+}
+
+@keyframes animateGrain {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+    10% {
+        transform: translate(-5%, -10%);
+    }
+    20% {
+        transform: translate(-15%, -20%);
+    }
+    30% {
+        transform: translate(-5%, -10%);
+    }
+    40% {
+        transform: translate(-15%, -20%);
+    }
+    50% {
+        transform: translate(-5%, -10%);
+    }
+    60% {
+        transform: translate(-15%, -20%);
+    }
+    70% {
+        transform: translate(-5%, -10%);
+    }
+    80% {
+        transform: translate(-15%, -20%);
+    }
+    90% {
+        transform: translate(-5%, -10%);
+    }
+    100% {
+        transform: translate(-15%, -20%);
+    }
+}
+
+/* -------------------------------------- */
+/* 1. HEADER & FOOTER ELEMENTS            */
+/* -------------------------------------- */
+
+.gallery-header {
+    position: fixed;
+    top: 30px;
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 50;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.gallery-footer {
+    position: fixed;
+    bottom: 30px;
+    right: 5%;
+    font-size: 0.8rem;
+    opacity: 0.5;
+}
+
+/* -------------------------------------- */
+/* 2. VIDEO PLAYER (.video-player)        */
+/* -------------------------------------- */
+
+.video-player {
+    /* --- FULLSCREEN CHANGES START HERE --- */
+    position: fixed; /* Keep fixed so it stays in place relative to the viewport */
+    top: 0;
+    left: 0;
+    transform: none; /* Remove transform offset and scale */
+
+    width: 100vw; /* Full viewport width */
+    max-width: none; /* Remove max-width constraint */
+
+    height: 100vh; /* Full viewport height */
+    padding-bottom: 0; /* Remove aspect ratio padding */
+
+    overflow: hidden;
+    background: black;
+    border-radius: 0; /* Remove border-radius */
+
+    box-shadow: inset 0 0 100px rgb(0, 0, 0),
+    inset 0 0 0 2px black;
+
+    z-index: 10;
+    transition: filter 0.1s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.video-player video {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%; /* Changed from calc(100% + 2px) to 100% */
+    height: 100%; /* Changed from calc(100% + 2px) to 100% */
+    margin: 0; /* Changed from -1px to 0 */
+
+    object-fit: cover; /* CRITICAL: Ensures video covers the entire screen */
+    display: block;
+    filter: brightness(1.2) contrast(1.1);
+
+    z-index: 1;
+    transform: none;
+}
+
+/* --- GLITCH / STATIC CHANNEL SWITCH EFFECT --- */
+
+@keyframes static-flicker {
+    0%   { clip-path: inset(0 0 0% 0); }
+    10%  { clip-path: inset(5% 0 5% 0); }
+    20%  { clip-path: inset(1% 0 1% 0); }
+    30%  { clip-path: inset(8% 0 8% 0); }
+    40%  { clip-path: inset(2% 0 2% 0); }
+    50%  { clip-path: inset(10% 0 10% 0); }
+    60%  { clip-path: inset(4% 0 4% 0); }
+    70%  { clip-path: inset(1% 0 1% 0); }
+    80%  { clip-path: inset(7% 0 7% 0); }
+    90%  { clip-path: inset(3% 0 3% 0); }
+    100% { clip-path: inset(0 0 0% 0); }
+}
+
+.video-player.is-jittering {
+    /* Step 1: Heavy filters for noise */
+    filter:
+            saturate(0.5)
+            contrast(2)
+            brightness(1.5)
+            hue-rotate(10deg);
+
+    /* Step 2: Rapid animation */
+    animation: static-flicker 0.1s steps(1) infinite;
+    transform: rotate(0.1deg); /* Simplified transform for fullscreen */
+}
+
+/* -------------------------------------- */
+/* 3. FILM BORDER AND OVERLAY             */
+/* -------------------------------------- */
+
+.film-border-blur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+
+    z-index: 25;
+
+    border-radius: 0;
+
+    transform: none;
+    margin: 0;
+
+    box-shadow: inset 0 0 100px 80px rgba(46, 46, 46, 0.25),
+    inset 0 0 0 0 rgb(0, 0, 0);
+    outline: none;
+}
+
+.video-transition-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 29;
+    pointer-events: none;
+
+    background-color: rgb(0, 0, 0);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 100% 12px;
+
+    opacity: 0;
+    transform: none;
+    filter: brightness(1) contrast(1);
+
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out, filter 0.4s ease-out;
+}
+
+/* Zustand, wenn das Overlay aktiv ist und das Durchblättern beginnt */
+.video-transition-overlay.is-active {
+    opacity: 1;
+    filter: brightness(1.2) contrast(1.1);
+}
+
+/* Keyframes für den Jitter-Effekt auf dem Overlay */
+@keyframes overlayJitter {
+    0%   { transform: translate(0.5px, 0.8px); }
+    25%  { transform: translate(-0.7px, 1.2px) rotate(0.1deg); }
+    50%  { transform: translate(1px, -0.5px); }
+    75%  { transform: translate(-1.2px, 0.9px) rotate(-0.2deg); }
+    100% { transform: translate(0.5px, 0.8px); }
+}
+
+/* Wenn das Overlay jittert */
+.video-transition-overlay.is-jittering {
+    animation: overlayJitter 0.15s infinite steps(4);
+    background-size: 100% 10px;
+    filter: brightness(1.5) contrast(1.3) hue-rotate(5deg);
+}
+
+/* Zustand, wenn das Overlay ausgeblendet wird (nach dem Einrasten) */
+.video-transition-overlay.is-fading-out {
+    opacity: 0;
+    transform: scale(1.05);
+    filter: brightness(0.8) contrast(1.0);
+}
+
+/* -------------------------------------- */
+/* 4. NAVIGATION / CONTROLS & COUNTER     */
+/* -------------------------------------- */
+
+.gallery-controls {
+    position: fixed;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 100px;
+
+    z-index: 98;
+}
+
+/* --- BASE COUNTER STYLES --- */
+.counter-display {
+    font-family: 'Aesthetic', cursive;
+    color: var(--accent-color);
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 5px;
+    z-index: 97;
+}
+
+.counter-display .current-number {
+    font-size: 3.6rem;
+    font-weight: 800;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: top;
+    z-index: 97;
+}
+
+.counter-display .total-number {
+    font-size: 2rem;
+    opacity: 0.7;
+    font-weight: 400;
+    z-index: 97;
+}
+
+
+/* --- ROLLING DIGIT MECHANISM --- */
+
+/* The Wrapper Span (The "Window") */
+.counter-display .current-number .digit-wrapper {
+    display: inline-block;
+    vertical-align: top;
+    overflow: hidden; /* CRITICAL: Hides the numbers outside the viewport */
+    height: 1em; /* Sets the visible height to one digit's height */
+    position: relative; /* Positioning context for the inner animated strip */
+    margin: 0 -0.05em; /* Small negative margin to bring digits closer */
+    z-index: 97;
+}
+
+/* The Animated Number Strip (Holds 0123456789 vertically) */
+.counter-display .current-number .digit-wrapper .animated-num {
+    display: block;
+    will-change: transform;
+
+    /* Height of 10em stacks 10 digits vertically */
+    height: 10em;
+
+    /* Transition for the smooth roll */
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    /* FIX: FORCE VERTICAL STACKING */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    line-height: 1;
+    z-index: 97;
+}
+
+
+/* --- ARROW BUTTONS --- */
+.arrow-btn {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-color);
+    cursor: pointer;
+
+    transition: all 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    border-radius: 50%;
+
+    padding: 60px;
+
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    background-size: 60%;
+    font-size: 0;
+    z-index: 97;
+}
+
+.controlshadow {
+    position: absolute;
+    top: 50%;
+    left: 50%; /* <-- Start the left edge at 50% */
+    height: 900px;
+    /* Combine both vertical (-50% of height) and horizontal (-50% of width) adjustments */
+    transform: translate(-50%, -50%);
+    z-index: 96;
+}
+
+.arrow-btn.up {
+    background-image: url('./assets/arrowup.svg');
+}
+
+.arrow-btn.up:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+
+    transform: translateY(-20px) scale(1.1);
+}
+
+.arrow-btn.down {
+    background-image: url('./assets/arrowdown.svg');
+}
+
+.arrow-btn.down:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+
+    transform: translateY(20px) scale(1.1);
+}
+
+/* -------------------------------------- */
+/* 5. RESPONSIFTE ANPASSUNGEN             */
+/* -------------------------------------- */
+@media (max-width: 600px) {
+
+    /* ADD THIS: Disables common swipe/elastic scrolling behaviors on mobile */
+    body {
+        touch-action: pan-y; /* Allows vertical scrolling, but often stabilizes the layout */
+        overscroll-behavior: none; /* Prevents bounce scroll at the edges */
+    }
+
+    .video-player {
+        position: fixed; /* Keep fixed for consistent overlaying */
+        left: 0;
+        top: 0;
+        /* --- FULLSCREEN MOBILE CHANGE --- */
+        transform: none; /* Reset transform */
+        width: 100vw;
+        height: 100vh;
+        padding-bottom: 0; /* Reset padding */
+        border-radius: 0; /* Reset border radius */
+    }
+
+    /* Ensure fixed headers/footers don't contribute to overflow */
+    .gallery-header, .gallery-footer {
+        width: 100%; /* Ensure it's contained */
+        box-sizing: border-box;
+    }
+
+    .film-border-blur {
+        /* --- FULLSCREEN MOBILE CHANGE --- */
+        border-radius: 0;
+    }
+
+    .gallery-controls {
+        top: auto;
+        bottom: 5%;
+        right: 50%;
+        transform: translateX(50%);
+        flex-direction: row;
+        gap: 30px;
+    }
+
+    .arrow-btn {
+        padding: 40px;
+    }
+
+    .gallery-header, .gallery-footer {
+        font-size: 0.9rem;
+    }
+}

@@ -6,25 +6,57 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Welcome To This Mess</title>
+    <title>Stories Told In Motion</title>
     <link rel="icon" href="./assets/favicon.png" type="image/svg+xml">
-    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="motion.css" />
     <link rel="stylesheet" href="ui.css" />
 </head>
 <body>
 
-<header class="hero">
-    <h1 class="headline" data-speed="0.8">Meet Aimy Gwen.</h1>
-    <img src="./assets/splashpose.png" alt="glasses" class="glasses" data-speed="1.2">
-    <img src="./assets/signature.svg" alt="Signature" class="signature" data-speed="0.5">
 
-</header>
+
+<main class="gallery-content">
+    <div class="video-frame-wrapper">
+        <div id="videoPlayer" class="video-player">
+
+            <a id="videoLink" href="#" target="_blank" rel="noopener noreferrer">
+                <video id="galleryVideo" src="./assets/video-1.mp4" loop muted autoplay></video>
+            </a>
+
+            <div id="videoTransitionOverlay" class="video-transition-overlay"></div>
+
+            <div class="film-dust-overlay"></div>
+            <div class="film-border-blur"></div>
+        </div>
+    </div>
+
+
+
+
+    <div class="gallery-controls">
+        <button id="prevBtn" class="arrow-btn up"></button>
+        <img src="./assets/controlshadow.svg" alt="Shadow" class="controlshadow"/>
+        <span class="counter-display">
+            <span id="currentVideo" class="current-number"></span>
+
+            <span id="totalVideos" class="total-number"> /03</span>
+        </span>
+
+        <button id="nextBtn" class="arrow-btn down"></button>
+    </div>
+</main>
+
+
+
+
+
+
 
 
 
 
 <div class="branding-btn" id="brand" onclick="togglenavi('branding')">
-    <img src="./assets/kawaiigwen.svg" alt="Logo" />
+    <img src="./assets/kawaiigwen3.svg" alt="Logo" />
 </div>
 
 <div class="branding">
@@ -35,7 +67,7 @@
         <img src="./assets/portrait.png"
              alt="Portrait Color"
              class="portraitcolor">
-        <img src="./assets/signature.svg"
+        <img src="./assets/signaturewhite.svg"
              alt="Signature"
              class="signature">
 
@@ -66,6 +98,11 @@
 <div class="navi" id="main-navi">
     <div class="main-navi">
         <div class="main-container">
+            <div class="navi-item-about">
+                <a href="index.html"><span></span>About</a>
+                <div class="navi-item-revealer"></div>
+            </div>
+
             <div class="navi-item-works">
                 <a href="work.html"><span></span>Work</a>
                 <div class="navi-item-revealer"></div>
@@ -109,31 +146,15 @@
 
 <div class="overlay" onclick="togglenavi('main')"></div>
 <div class="haze"></div>
-<div class="grain"></div>
+<div class="film"></div>
 <div class="drip-drop"></div>
 <div class="drip-echo"></div>
-
-
-<header>
-    <div class="header-bg-color"></div> <div class="gradualblur"></div>
-    <div class="gradualblur"></div>
-    <div class="gradualblur"></div>
-    <div class="gradualblur"></div>
-    <div class="gradualblur"></div>
-
-    <div class="gradient-wrp">
-        <div class="header gradient-clothoid"></div>
-    </div>
-</header>
-
-
-
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.1.2/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CSSRulePlugin.min.js"></script>
 <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-<script src="index.js"></script>
+<script src="motion.js"></script>
 <script src="ui.js"></script>
 </body>
 </html>

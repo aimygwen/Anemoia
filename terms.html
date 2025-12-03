@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Rules and Regrets</title>
+    <link rel="icon" href="./assets/favicon.png" type="image/svg+xml">
+    <link rel="stylesheet" href="legal.css" />
+    <link rel="stylesheet" href="ui.css" />
+</head>
+<body>
+
+<main>
+<div class="container">
+
+    <section class="headline">
+        <h1>Terms</h1>
+    </section>
+
+    <section class="content">
+        <h2>Personal Info</h2>
+        <p>Græbe, Amélie Gwendolyn<br>
+            <a href="mailto:hello@aimygwen.art" class="email-link">hello@aimygwen.art</a>
+        </p>
+
+        <h2>1. Intellectual Property</h2>
+        <p>All you see here, the unique assembly, art, images, text, and overall vibe presented are my own original creation unless otherwise stated.
+            The design framework and layout draw inspiration from award-winning industry leaders. You may not copy, steal, repost without credit,
+            or parade my work around like you made it, claim ownership, modify or warp my pieces into something unrecognizable, or pretend any part
+            of this site is open-source just because you wish it was. You get a personal, non-commercial pass to look at my work and enjoy it.
+            Nothing more.</p>
+
+        <h2>2. Prohibited Use</h2>
+        <p>Do not tamper with the site, try to hack it, scrape it, spam it, break it, or unleash anything on it you wouldn’t aim at your own computer.
+            Automated scraping tools, bots, and other digital gremlins are forbidden unless I explicitly say otherwise.</p>
+
+        <h2>3. Third-Party Links</h2>
+        <p>Sometimes I link out to other places on the internet. Those places are not me. I don’t control them, I don’t babysit them, and I’m not responsible for whatever chaos they contain.</p>
+
+        <h2>4. Disclaimer</h2>
+        <p>The site is offered as is. No promises of flawless uptime, smooth loading, or cosmic enlightenment. If something glitches, breaks, or behaves like a haunted toaster, that’s life.</p>
+
+        <h2>5. Limitation of Liability</h2>
+        <p>I am not responsible for lost data, emotional damage, technical disasters, existential crisies, or any other fallout from using this site.
+            Use it at your own risk.</p>
+
+        <h2>6. Use of Content for AI Training</h2>
+        <p>My art is not your dataset. Do not scrape it, train AI on it, feed it into machine-learning models, or use it for any automated “creative pipeline.”
+            No “but it’s open on the internet,” no excuses, no sneaky tech-bro definitions of fair use.
+            If you want to involve my work in anything AI-related, you need explicit written permission from me. If permission is denied, that’s the end of it.
+            Unauthorized AI use is strictly forbidden.</p>
+
+        <h2>7. Sharing and Attribution</h2>
+        <p>Sharing my work for strictly non-commercial purposes (e.g., social media or blogs) is welcome, provided you credit me properly.
+            To comply, you must visibly use my name, Aimy Gwen, and/or link back to my site or original post whenever possible.
+            Do not remove signatures, watermarks, or distort the piece. All commercial use—including prints, merch, NFTs,
+            or use in AI training/styles—is strictly forbidden and requires my explicit written permission first.</p>
+
+        <h2>8. Governing Law</h2>
+        <p>These Terms are governed by German law and the applicable laws of the European Union. Should a legal dispute arise, that is the rulebook.</p>
+
+        <h2>9. Changes to These Terms</h2>
+        <p>I can update these Terms whenever I feel like it. The date below tells you when I last did. If you stick around after changes go live, that means you accept them.</p>
+
+        <div class="info">Last updated on Tuesday, 2 December 2025, 2PM CET</div>
+    </section>
+</div>
+</main>
+
+
+
+
+
+<div class="branding-btn" id="brand" onclick="togglenavi('branding')">
+    <img src="./assets/kawaiigwen.svg" alt="Logo" />
+</div>
+
+  <div class="branding">
+      <div class="branding-layer">
+          <img src="./assets/portraitbw.png"
+               alt="Portrait"
+               class="portrait">
+          <img src="./assets/portrait.png"
+               alt="Portrait Color"
+               class="portraitcolor">
+          <img src="./assets/signature.svg"
+               alt="Signature"
+               class="signature">
+
+          <div class="branding-name">Græbe,<br>Amélie Gwendolyn</div>
+          <div class="branding-rights">All Rights Reserved</div>
+          <div class="branding-year">©'25</div>
+          <div class="branding-info">All content on this site is my original work and
+              the sole property of me unless otherwise noted. Any use, reproduction,
+              or distribution without my explicit permission is strictly prohibited.</div>
+      </div>
+  </div>
+
+<div class="sound-button">
+    <canvas></canvas>
+    <audio id="audio" src="./assets/song.mp3"></audio>
+</div>
+
+<div class="btn" id="pond" onclick="togglenavi('main')">
+    <div class="ripple drop"></div>
+    <div class="ripple echo"></div>
+    <div id="mark"><span></span>
+    </div>
+</div>
+
+<div class="navi" id="main-navi">
+    <div class="main-navi">
+        <div class="main-container">
+            <div class="navi-item-about">
+                <a href="index.html"><span></span>About</a>
+                <div class="navi-item-revealer"></div>
+            </div>
+
+            <div class="navi-item-works">
+                <a href="work.html"><span></span>Work</a>
+                <div class="navi-item-revealer"></div>
+            </div>
+
+            <div class="navi-item-story">
+                <a href="story.html"><span></span>Story</a>
+                <div class="navi-item-revealer"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="side-navi">
+        <div class="side-container">
+            <div class="wrapper-legal">
+                <div class="navi-item-imprint">
+                    <a href="imprint.html">Imprint</a>
+                    <div class="navi-item-revealer"></div>
+                </div>
+
+                <div class="navi-item-policy">
+                    <a href="policy.html">Policy</a>
+                    <div class="navi-item-revealer"></div>
+                </div>
+            </div>
+
+            <div class="wrapper-contact">
+                <div class="navi-item">
+                    <a href="contact.html">Contact</a>
+                    <div class="navi-item-revealer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" onclick="togglenavi('main')"></div>
+<div class="haze"></div>
+<div class="grain"></div>
+<div class="drip-drop"></div>
+<div class="drip-echo"></div>
+
+
+
+  <header>
+      <div class="header-bg-color"></div> <div class="gradualblur"></div>
+      <div class="gradualblur"></div>
+      <div class="gradualblur"></div>
+      <div class="gradualblur"></div>
+      <div class="gradualblur"></div>
+
+      <div class="gradient-wrp">
+          <div class="header gradient-clothoid"></div>
+      </div>
+  </header>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CSSRulePlugin.min.js"></script>
+<script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>
+

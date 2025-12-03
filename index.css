@@ -5,11 +5,11 @@
 }
 
 :root {
-    --bg: rgb(248, 51, 255);
-    --navi: #000000;
-    --href: rgb(0, 0, 0);
+    --bg: rgb(255, 84, 208);
+    --ui: #000000;
+    --link: rgb(0, 0, 0);
     --hover: #f5ff6b;
-    --fade: rgba(248, 51, 255, 0.76);
+    --fade: rgba(255, 84, 208, 0.75);
 }
 
 body {
@@ -45,7 +45,7 @@ img {
 .email-item {
     display: flex;
     align-items: center;
-    color: var(--href);
+    color: var(--link);
     font-family: 'Unitea Sans', sans-serif;
     position: relative;
     overflow: hidden;

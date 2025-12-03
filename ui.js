@@ -89,10 +89,10 @@ function revealnaviitems() {
 
 
 
-
 const brandingTl = gsap.timeline({ paused: true });
 
-gsap.set(".branding", { visibility: "hidden" });
+// The GSAP .set for visibility: "hidden" is no longer needed here
+// because we fixed it in the CSS.
 
 function revealbrandingnavi() {
     revealbrandingContent();
@@ -121,33 +121,85 @@ function revealbrandingnavi() {
 revealbrandingnavi();
 
 function revealbrandingContent() {
-    const naviContent = ".branding-content";
+    // Select individual elements for staged animation
+    const contentElements = [
+        '.branding-name',
+        '.branding .signature',
+        '.branding-info',
+        '.branding-rights',
+        '.branding-year'
+    ];
 
+    // Select the main visual element separately
+    const portrait = '.branding .portrait';
 
-    gsap.set(naviContent, {
+    // 1. Initial State Setup (All elements blurred/out of sight)
+    gsap.set(contentElements, {
         filter: 'blur(10px)',
         opacity: 0,
-        scale: 1.05,
-        y: 20,
+        y: 30, // Start slightly below their final position
         willChange: 'transform, opacity, filter'
     });
 
+    gsap.set(portrait, {
+        opacity: 0,
+        y: 100, // Start the portrait way down
+        willChange: 'transform, opacity'
+    });
 
+    // 2. Timeline Construction
+
+    // Step 0: Make the main branding container visible immediately
     brandingTl.to(".branding", 0.01, { visibility: "visible" });
 
+    // Step 1: Animate the large Portrait visual element
     brandingTl.to(
-        naviContent,
+        portrait,
         0.8,
         {
-            filter: 'blur(0px)',
-            y: 0,
             opacity: 1,
-            scale: 1,
+            y: 0,
             ease: "expo.out",
         },
-        "<"
+        "<" // Start at the same time as visibility
+    );
+
+    // Step 2: Animate the core text content (name, signature, info)
+    // using a stagger for a stylish, sequential appearance.
+    brandingTl.to(
+        [
+            '.branding-name',
+            '.branding .signature',
+            '.branding-info'
+        ],
+        0.7,
+        {
+            filter: 'blur(0px)',
+            opacity: 1,
+            y: 0,
+            ease: "power3.out",
+            stagger: 0.1 // Sequential delay between elements
+        },
+        "-=0.5" // Start 0.5 seconds before Step 1 finishes
+    );
+
+    // Step 3: Animate the static bottom elements (copyright/year) last
+    brandingTl.to(
+        [
+            '.branding-rights',
+            '.branding-year'
+        ],
+        0.5,
+        {
+            filter: 'blur(0px)',
+            opacity: 1,
+            y: 0,
+            ease: "power2.out",
+        },
+        "-=0.3" // Start slightly before Step 2 finishes
     ).reverse();
 }
+
 
 
 
@@ -297,6 +349,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const audio = button.querySelector("#audio");
     const ctx = canvas.getContext("2d");
 
+    // --- NEU: Farben aus CSS laden ---
+
+    // 1. Hole die computed styles vom Root-Element
+    const rootStyles = getComputedStyle(document.documentElement);
+
+    // 2. Rufe die Werte ab und speichere sie
+    const WAVE_COLOR = rootStyles.getPropertyValue('--ui').trim() || "#333333";
+    const SHADOW_COLOR = rootStyles.getPropertyValue('--uifade').trim() || "#FFF";
+
+    // ----------------------------------
+
+
     function resizeCanvas() {
         canvas.width = canvas.offsetWidth * 2;
         canvas.height = canvas.offsetHeight * 2;
@@ -329,31 +393,27 @@ document.addEventListener("DOMContentLoaded", () => {
         const frequency = 0.05;
         const speed = 0.05;
 
-
-
+        // Opazität wird weiterhin berechnet (rgba(0,0,0, opacity))
 
         const maxOpacity = 0.2;
         const opacity = Math.min(maxOpacity, (currentAmplitude - INACTIVE_AMPLITUDE) / (ACTIVE_AMPLITUDE - INACTIVE_AMPLITUDE) * maxOpacity * 2);
 
-        ctx.strokeStyle = `rgba(0, 0, 0, ${opacity})`;
+        // HINTERGRUNDWELLE (mit Schatten)
+        ctx.strokeStyle = `rgba(0, 0, 0, ${opacity})`; // Opazität bleibt schwarz für den "glow" Effekt
 
         if (opacity > 0.01) {
             ctx.shadowBlur = 8;
-            ctx.shadowColor = "#ffffff";
+            ctx.shadowColor = SHADOW_COLOR; // <-- HIER: Schattenfarbe aus CSS
 
 
             const backgroundAmplitude = currentAmplitude * 0.2;
-
-
             const offset = 0.5;
-
             const backgroundSpeed = speed * 0.75;
 
             ctx.beginPath();
 
             for (let i = 0; i <= points; i++) {
                 const x = (w / points) * i;
-
                 const y = midY + Math.sin(i * frequency + time * backgroundSpeed + offset) * backgroundAmplitude;
 
                 if (i === 0) {
@@ -367,8 +427,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
+        // HAUPTWELLE (ohne Schatten)
         ctx.shadowBlur = 0;
-        ctx.strokeStyle = "#333333";
+        ctx.strokeStyle = WAVE_COLOR; // <-- HIER: Wellenfarbe aus CSS
         ctx.lineWidth = 1.5;
 
         ctx.beginPath();

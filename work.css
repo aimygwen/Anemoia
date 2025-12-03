@@ -1,0 +1,421 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: rgb(243, 243, 243);
+    --ui: #000000;
+    --href: rgb(0, 0, 0);
+    --hover: #7a267e;
+    --fade: rgba(255, 255, 255, 0.75);
+
+    --gap-small: 50px;
+    --gap-medium: 10px;
+    --gap-large: 2px; /* Space between sections/major elements */
+    --gap-huge: 10px;
+
+    --hero-padding-top: 15vh;
+    --hero-padding-bottom: 200px;
+}
+
+body {
+    background: var(--bg, #f7f7f7); /* Use a default light color */
+    color: var(--text, #333);
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Image optimization for crispness */
+img {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/*
+ * --------------------------------------
+ * 0. SCALABLE CORE (CSS VARIABLES)
+ * --------------------------------------
+ */
+
+
+/* Global Content Wrapper */
+.content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto; /* Center the main content */
+    padding: 0 20px;
+}
+
+/* OLD GAPS REMOVED: .section-gap and .section-gap-large are obsolete.
+   New gaps are applied directly to the top padding/margin of each major section
+   using the --gap variables (e.g., padding-top: var(--gap-huge);).
+*/
+
+/* Parallax optimization (Keep this for JS performance) */
+[data-speed] {
+    transition: transform 0.05s ease-out;
+    will-change: transform;
+}
+
+
+/* -------------------------------------- */
+/* 1. INTRO SECTION (HERO - PARALLAX)     */
+/* -------------------------------------- */
+
+.hero {
+    /* Ensures parallax items have room */
+    min-height: 100vh;
+    position: relative;
+    /* Uses variables for responsive and editable top/bottom padding */
+    padding-top: var(--hero-padding-top);
+    padding-bottom: var(--hero-padding-bottom);
+
+    /* Flexbox for vertical flow and centering of main content (headline, intro) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*
+ * --------------------------------------
+ * 0. SCALABLE CORE (CSS VARIABLES)
+ * --------------------------------------
+ */
+
+
+/* -------------------------------------- */
+/* 1. INTRO SECTION (HERO - PARALLAX)     */
+/* -------------------------------------- */
+
+.hero {
+    min-height: 100vh;
+    position: relative;
+    padding-top: var(--hero-padding-top);
+    padding-bottom: var(--hero-padding-bottom);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Headline */
+.headline {
+    position: relative;
+    margin: 0 auto;
+    font-size: clamp(8rem, 14vw, 18rem);
+    font-weight: lighter;
+    text-align: center;
+    line-height: 0.9;
+    z-index: 10;
+    width: 90%;
+    color: black;
+    font-family: 'Athemi DEMO VERSION', sans-serif;
+    /* Increased margin-bottom to make room for the signature */
+    margin-bottom: calc(var(--gap-large) + 100px); /* Creates enough flow space for signature */
+}
+
+.signature {
+    /* CRITICAL CHANGE: Move down visually to be below the headline */
+    /* top: 35vh was too high. Let's use a higher value to push it below the massive headline font size. */
+    left: 50%;
+    top: 975px;
+    transform: translateX(-50%);
+    width: clamp(200px, 25vw, 300px);
+    z-index: 0;
+    padding-bottom: var(--hero-padding-bottom);
+}
+
+
+/* Intro Text */
+.intro {
+    position: relative;
+    margin: 0 auto;
+    font-size: clamp(1.2rem, 2vw, 2rem);
+    max-width: 800px;
+    z-index: 10;
+    text-align: center;
+    /* Gap below Intro to separate it from the next section */
+    padding-top: var(--hero-padding-top);
+    padding-bottom: var(--hero-padding-bottom);
+}
+
+/* General Parallax Item Positioning (Kept absolute for movement) */
+.visionportrait, .signature {
+    position: absolute;
+    will-change: transform;
+}
+
+.visionportrait {
+    /* CRITICAL CHANGE: Move higher and left to be out of the main text column */
+    top: 25vh;
+    left: 10%;
+    width: clamp(175px, 18vw, 300px);
+    height: auto;
+    z-index: 5;
+}
+
+
+
+
+/* -------------------------------------- */
+/* 2. CRAFTS SECTION (Interactive Grid)   */
+/* -------------------------------------- */
+.section-crafts {
+    position: relative;
+    /* Apply the gap variable directly to the top of the section */
+    padding-top: 600px;
+    padding-bottom: var(--gap-huge);
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.section-crafts h2 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: var(--gap-medium);
+    text-align: center;
+    font-family: 'Aesthetic', sans-serif;
+}
+
+.craft-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    max-width: 1350px;
+    margin: 0 auto;
+}
+
+/* Work Item Link */
+.work-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--gap-small) 0; /* Uses a variable for vertical padding */
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid rgba(122, 122, 122, 0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: 'Helvetica Neue', sans-serif;
+    z-index: 1;
+}
+
+.craft-grid a:first-child {
+    border-top: 1px solid rgba(120, 120, 120, 0.1);
+}
+
+.work-item:hover {
+    color: #7a267e;
+}
+
+.work-title {
+    font-size: clamp(3rem, 7vw, 5rem);
+    font-weight: 700;
+    transition: transform 0.3s ease;
+    font-family: 'Aesthetic', sans-serif;
+}
+
+.work-info {
+    font-size: clamp(0.8rem, 2vw, 1.2rem);
+    color: rgba(46, 46, 46, 0.6);
+    text-transform: uppercase;
+    text-align: right;
+}
+
+.work-item:hover .work-title {
+    transform: translateX(20px);
+}
+
+/* Preview Image (Fixed positioning for interactive hover) */
+.work-preview {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 400px;
+    height: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 100;
+    will-change: opacity, transform;
+}
+
+
+/* -------------------------------------- */
+/* 3. PROCESS SECTION                     */
+/* -------------------------------------- */
+.process-section {
+    max-width: 1350px;
+    margin: 0 auto;
+    padding-top: var(--gap-huge) 400px; /* Apply gap variable for vertical spacing */
+}
+
+.process-headline {
+    margin: 0 0 var(--gap-medium) 0;
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-family: 'Aesthetic', sans-serif;
+    font-weight: bold;
+    line-height: 1.1;
+    max-width: 800px;
+    position: absolute;
+    top: 3000px;
+}
+
+.quotes {
+    width: 600px;
+    height: auto;
+    left: -4%;
+    margin-top: var(--gap-large); /* Uses variable for top margin */
+    top: 3750px;
+    position: absolute;
+}
+
+.quote {
+    font-size: clamp(3rem, 12vw, 16rem);
+    font-family: "Athemi DEMO VERSION", sans-serif;
+    font-weight: lighter;
+    line-height: 0.9;
+    max-width: 1500px;
+    text-align: left;
+    margin: 20vh 0; /* Keep responsive vertical spacing */
+    top: 3750px;
+    position: absolute;
+}
+
+.process-subline {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    line-height: 1.8;
+    max-width: 900px;
+    top: 3250px;
+    position: absolute;
+}
+
+.process-description {
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    line-height: 1.8;
+    text-align: right;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: 0;
+    margin-top: var(--gap-large);
+    margin-bottom: var(--gap-large);
+    top: 4650px;
+    position: absolute;
+}
+
+/* -------------------------------------- */
+/* 4. MACINTOSH IMAGE                     */
+/* -------------------------------------- */
+
+.macintosh-wrapper {
+    top: 5250px;
+    position: absolute;
+    max-width: 1100px;
+    margin: 0 auto;
+    /* Uses variables for surrounding space */
+    padding: var(--gap-huge) 20px;
+    padding-bottom: var(--gap-large);
+}
+
+.macintosh-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    padding: var(--gap-huge) 20px;
+    padding-bottom: var(--gap-large);
+
+}
+
+
+/* -------------------------------------- */
+/* 5. MEDIA QUERIES (Mobile Optimization) */
+/* -------------------------------------- */
+
+@media (max-width: 768px) {
+    /* Re-define variables for mobile context to override desktop settings */
+    :root {
+        --gap-small: 20px;
+        --gap-medium: 30px;
+        --gap-large: 50px;
+        --gap-huge: 80px;
+
+        --hero-padding-top: 10vh;
+        --hero-padding-bottom: 50px;
+    }
+
+    /* Gaps are now automatically smaller because the variables were redefined! */
+
+    .content-wrapper {
+        padding: 0 10px;
+    }
+
+    /* --- HERO --- */
+    .hero {
+        min-height: 80vh;
+        /* Padding is now controlled by redefined variables */
+    }
+
+    .headline {
+        font-size: clamp(2.5rem, 8vw, 6rem);
+        width: 90%;
+        text-align: left;
+        /* Margin is now controlled by redefined variables */
+    }
+
+    .intro {
+        font-size: 1rem;
+        max-width: 90%;
+        text-align: left;
+        /* Margin is now controlled by redefined variables */
+    }
+
+    .visionportrait {
+        top: 60vh;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+    }
+
+    .signature {
+        display: none;
+    }
+
+    /* --- CRAFTS --- */
+    .section-crafts h2 {
+        font-size: 2.5rem;
+        margin-bottom: var(--gap-medium);
+    }
+
+    .work-item {
+        padding: var(--gap-medium) 0;
+    }
+
+    .work-title {
+        font-size: 2.5rem;
+    }
+
+    .work-info {
+        font-size: 0.8rem;
+    }
+
+    .work-item:hover .work-title {
+        transform: translateX(10px);
+    }
+
+    .work-preview {
+        display: none;
+    }
+
+    /* --- PROCESS --- */
+    .process-headline {
+        margin: 0 0 var(--gap-medium) 0;
+        font-size: 3rem;
+    }
+
+    .process-subline, .process-description {
+        font-size: 1.1rem;
+    }
+}

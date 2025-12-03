@@ -17,7 +17,17 @@
 }
 
 
+img {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+
 /* Branding, Copyright */
+
+/* -------------------------------------- */
+/* 5. COPYRIGHT DISCLAIMER STYLES (BRANDING) */
+/* -------------------------------------- */
 
 #brand {
     position: fixed;
@@ -45,6 +55,274 @@
     transform: translateX(-50%) scale(1.1);
 }
 
+.branding {
+    overflow-x: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+
+    /* 👇 CRITICAL FIX: Hide the element by default to prevent FOUC */
+    visibility: hidden;
+
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Helvetica Neue", sans-serif;
+    text-align: center;
+    color: var(--credits);
+}
+
+.branding-layer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 90%;
+}
+
+.branding .portrait,
+.branding .portraitcolor {
+    /* Ensure they are both absolutely positioned relative to the .branding parent */
+    position: absolute;
+
+    /* Ensure left is identical for both */
+    left: calc(50% - 12vw);
+
+    bottom: 0;
+    height: clamp(500px, 90vh, 1050px);
+
+    /* Ensure transform is identical for both */
+    transform: translateX(-50%);
+
+    width: auto;
+    object-fit: contain;
+    transition: opacity 0.5s ease, left 0.5s ease, top 0.5s ease, height 0.5s ease;
+    z-index: 10000;
+}
+
+.branding .portraitcolor {
+    /* The only difference should be opacity and transition-related z-index if needed */
+    opacity: 0;
+    z-index: 10000;
+}
+
+.branding .portrait:hover + .portraitcolor,
+.branding .portraitcolor:hover {
+    opacity: 1;
+}
+
+.branding .portrait:hover {
+    opacity: 0;
+}
+
+.branding .signature {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 10rem;
+    width: 12vw;
+    height: auto;
+    z-index: 10001;
+}
+
+.branding-name {
+    position: absolute;
+    top: 40%;
+    right: 20%;
+    text-align: right;
+    font-size: clamp(4rem, 12vw, 9rem);
+    font-weight: normal;
+    line-height: 1;
+    z-index: 10001;
+    white-space: nowrap;
+    animation: scroll-left 24s linear infinite;
+    font-family: 'Athemi DEMO VERSION', serif;
+}
+
+
+.branding-rights {
+    position: fixed;
+    z-index: 99999;
+    bottom: clamp(1rem, 5vh, 5rem);
+    left: clamp(1rem, 5vw, 5rem);
+    font-size: clamp(0.75rem, 3vw, 2rem);
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--credits);
+    white-space: nowrap;
+    animation: scroll-right 24s linear infinite;
+}
+
+.branding-year {
+    position: fixed;
+    z-index: 99999;
+    bottom: clamp(1rem, 5vh, 5rem);
+    right: clamp(1rem, 5vw, 5rem);
+    font-size: clamp(2rem, 8vw, 5rem);
+    color: var(--credits);
+    margin-top: 0.3rem;
+}
+
+.branding-info {
+    position: absolute;
+    top: 70%;
+    right: 20%;
+    font-size: clamp(0.8rem, 2vw, 1.4rem);
+    line-height: 1.4;
+    text-align: right;
+    margin-top: 1rem;
+    max-width: 600px;
+    color: var(--credits-sub);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    z-index: 10001;
+}
+
+
+
+
+
+@media (max-width: 768px) {
+    /* * --- DISCLAIMER CONTAINER ---
+     * Adjust the core layer to use Flexbox on mobile.
+     */
+    .branding-layer {
+        /* Reset absolute positioning inherited from desktop/original styles */
+        position: relative;
+
+        /* Enable Flexbox for primary stacking */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start; /* Stack content at the top */
+        align-items: center;
+
+        /* Give the layer some top padding so content isn't flush with the top edge */
+        padding-top: 5vh;
+        width: 100%;
+        height: 100%; /* Fill the whole branding viewport */
+    }
+
+    /* * --- PORTRAIT IMAGE ---
+     * Anchor portrait to the bottom, centering it horizontally.
+     */
+    .branding .portrait,
+    .branding .portraitcolor {
+        /* Keep all your existing positioning styles */
+        position: fixed;
+        left: 50%;
+        bottom: 0;
+        height: clamp(350px, 75vh, 600px);
+        width: auto;
+        transform: translateX(-50%);
+
+        /* Ensures image is treated as a block element */
+        display: block;
+    }
+
+    /* If the portrait is an <img> tag, you might need to target it directly */
+    .branding .portrait img,
+    .branding .portraitcolor img {
+        display: block;
+    }
+
+    /* * --- BRANDING NAME ---
+     * Make it relatively large and align it inside the flex flow.
+     */
+    /* * --- BRANDING NAME ---
+    * Make it relatively large and align it inside the flex flow.
+    */
+    .branding-name {
+        position: relative;
+        left: auto;
+        right: auto;
+        top: 16%;
+        text-align: center;
+        font-size: clamp(4rem, 15vw, 10rem);
+        margin-bottom: 2rem;
+        animation-duration: 16s;
+        white-space: normal;
+        max-width: 90%;
+    }
+
+    /* * --- SIGNATURE ---
+     * Position it in the top-left corner.
+     */
+    .branding .signature {
+        position: absolute;
+
+        top: 3rem;
+        left: 1rem;
+
+        bottom: auto;
+        transform: none;
+
+        width: 30vw;
+        margin-bottom: 0;
+    }
+
+    /* * --- BRANDING INFO TEXT ---
+     * Place it anchored to the bottom.
+     */
+    .branding-info {
+        position: absolute;
+
+        left: 50%; /* Center the element */
+        right: auto;
+        top: auto;
+
+        bottom: 10vh;
+        color: white;
+        mix-blend-mode: difference;
+        transform: translateX(-50%);
+
+        text-align: center;
+        width: 85%;
+
+        font-size: clamp(0.8rem, 3vw, 1.1rem);
+        line-height: 1.5;
+
+        margin-bottom: 0;
+    }
+
+    /* * --- RIGHTS & YEAR (Bottom Fixed Text) ---
+     * These remain fixed, but we tighten up the spacing.
+     */
+    .branding-rights {
+        left: 1rem;
+        bottom: 1rem;
+        animation: none;
+        white-space: normal;
+        max-width: 50%;
+        font-size: 1.5rem;
+        color: white;
+        mix-blend-mode: difference;
+    }
+
+    .branding-year {
+        right: 1rem;
+        bottom: 1rem;
+        font-size: 3rem;
+        color: white;
+        mix-blend-mode: difference;
+    }
+
+} /* <-- This closing brace was missing and caused the error! */
+
+
+
+
+
+
+
+
+
+
+
 
 /* Pond, Navi */
 
@@ -66,12 +344,12 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 0.5px solid var(--navi);
+    border: 0.5px solid var(--ui);
 }
 
 .ripple {
     transition: border-color 0.4s ease-out;
-    border: 1px solid var(--navi);
+    border: 1px solid var(--ui);
 }
 
 .drop, .echo {
@@ -134,10 +412,10 @@
 
 
 #mark.active {
-    --navi: rgb(251, 37, 37);
+    color: var(--hover);
 }
 #mark.active:hover {
-    --navi: rgb(22, 193, 255);
+    color: var(--hover);
 }
 #mark {
     position: relative;
@@ -152,7 +430,7 @@
     display: inline-block;
     width: 24px;
     height: 1.25px;
-    background: var(--navi);
+    background: var(--ui);
     transition: transform 0.25s;
 }
 
@@ -163,7 +441,7 @@
     content: " ";
     width: 24px;
     height: 1.25px;
-    background: var(--navi);
+    background: var(--ui);
     transform: rotate(90deg);
     transition: transform 0.25s;
 }
@@ -247,7 +525,7 @@
     font-size: clamp(9vh, 10vw, 16vh);
     text-transform: lowercase;
     text-decoration: none;
-    color: var(--href);
+    color: var(--link);
     position: relative;
     transition: color 0.3s ease;
     transform-origin: center;
@@ -283,7 +561,7 @@
     justify-content: center;
     align-items: center;
     font-family: 'Unitea Sans', serif;
-    color: var(--href);
+    color: var(--link);
     text-align: center;
 }
 
@@ -309,7 +587,7 @@
 
 .side-navi a {
     text-decoration: none;
-    color: var(--href);
+    color: var(--link);
     font-size: 1.5rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
@@ -366,177 +644,7 @@
 
 
 
-.branding {
-    overflow-x: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10000;
 
-    visibility: visible;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: "Helvetica Neue", sans-serif;
-    text-align: center;
-    color: #000000;
-}
-
-.branding-layer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-    max-width: 90%;
-}
-
-.branding .portrait,
-.branding .portraitcolor {
-    position: absolute;
-    left: calc(50% - 12vw);
-    bottom: 0;
-    height: clamp(500px, 90vh, 1050px);
-    transform: translateX(-50%);
-    width: auto;
-    object-fit: contain;
-    transition: opacity 0.5s ease, left 0.5s ease, top 0.5s ease, height 0.5s ease;
-    z-index: 10000;
-}
-
-.branding .portraitcolor {
-    opacity: 0;
-    z-index: 10000;
-}
-
-.branding .portrait:hover + .portraitcolor,
-.branding .portraitcolor:hover {
-    opacity: 1;
-}
-
-.branding .portrait:hover {
-    opacity: 0;
-}
-
-.branding .signature {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 10rem;
-    width: 12vw;
-    height: auto;
-    z-index: 10001;
-}
-
-.branding-name {
-    position: absolute;
-    top: 40%;
-    right: 20%;
-    text-align: right;
-    font-size: clamp(4rem, 12vw, 9rem);
-    font-weight: normal;
-    line-height: 1;
-    text-transform: normal;
-    z-index: 10001;
-    white-space: nowrap;
-    animation: scroll-left 24s linear infinite;
-    font-family: 'Athemi DEMO VERSION', serif;
-}
-
-
-.branding-rights {
-    position: fixed;
-    z-index: 99999;
-    bottom: clamp(1rem, 5vh, 5rem);
-    left: clamp(1rem, 5vw, 5rem);
-    font-size: clamp(0.75rem, 3vw, 2rem);
-    text-transform: uppercase;
-    font-weight: 500;
-    color: #000000;
-    white-space: nowrap;
-    animation: scroll-right 24s linear infinite;
-}
-
-.branding-year {
-    position: fixed;
-    z-index: 99999;
-    bottom: clamp(1rem, 5vh, 5rem);
-    right: clamp(1rem, 5vw, 5rem);
-    font-size: clamp(2rem, 8vw, 5rem);
-    color: #000000;
-    margin-top: 0.3rem;
-}
-
-.branding-info {
-    position: absolute;
-    top: 70%;
-    right: 20%;
-    font-size: clamp(0.8rem, 2vw, 1.4rem);
-    line-height: 1.4;
-    text-align: right;
-    margin-top: 1rem;
-    max-width: 600px;
-    color: #333;
-    font-weight: 400;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    z-index: 10001;
-}
-
-@media (max-width: 768px) {
-    .branding .portrait,
-    .branding .portraitcolor {
-        left: 50%;
-        bottom: 0;
-        height: clamp(250px, 68vh, 600px);
-        max-width: 768px;
-    }
-
-    .branding .signature {
-        top: auto;
-        bottom: 5rem;
-        width: 30vw;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .branding-name {
-        right: auto;
-        left: 10%;
-        text-align: left;
-        top: 20vh; /* Position it above the portrait image */
-        font-size: clamp(1.5rem, 8vw, 2.5rem);
-        animation-duration: 16s;
-        white-space: normal;
-    }
-
-    .branding-info {
-        right: auto;
-        left: 10%;
-        transform: none;
-        top: 29vh;
-        text-align: left;
-        width: 80%;
-        font-size: clamp(0.7rem, 3vw, 1rem);
-    }
-
-    .branding-rights {
-        left: 1rem;
-        bottom: 1rem;
-        animation: none;
-        white-space: normal;
-        max-width: 50%;
-        font-size: 0.75rem;
-    }
-
-    .branding-year {
-        right: 1rem;
-        bottom: 1rem;
-        font-size: 2rem;
-    }
-}
 
 
 
@@ -661,7 +769,7 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
 .drip-drop.is-hovering.is-clicked {
     width: 16px;
     height: 16px;
-    background-color: rgba(247, 0, 255, 0.75);
+    background-color: var(--hover); /* Korrekt: Keine unnötigen Klammern */
 }
 
 
@@ -677,7 +785,7 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
 
 .grain:after {
     content: "";
-    background-image: url("https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png");
+    background-image: url("https://cdn.discordapp.com/attachments/1283387731048927355/1445326078578131105/Untitled.png?ex=692ff04d&is=692e9ecd&hm=4cf7adf782fd9a2aab20a6c72319d9954098d73de7fad8bada37976b9b2ec7ff");
     height: 200%;
     width: 200%;
     position: fixed;
@@ -686,7 +794,7 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
     opacity: 0.1;
     animation: animateGrain 8s steps(10) infinite;
     z-index: 1000;
-    mix-blend-mode: normal;
+    mix-blend-mode: multiply;
     pointer-events: none;
 }
 
