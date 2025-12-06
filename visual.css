@@ -42,13 +42,10 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    overflow-x: hidden; /* Explicitly prevent horizontal scrolling */
-    overflow-y: hidden; /* Explicitly prevent vertical scrolling - **Crucial for mobile fix** */
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
-
-
-/* Montserrat */
 @font-face {
     font-family: 'Montserrat';
     src: url('./fonts/Montserrat.ttf') format('opentype');
@@ -56,15 +53,13 @@ body {
     font-style: normal;
 }
 
-/* Athemi */
 @font-face {
-    font-family: 'Athemi'; /* Giving it a descriptive name */
+    font-family: 'Athemi';
     src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
-/* Aesthetic */
 @font-face {
     font-family: 'Aesthetic';
     src: url('./fonts/Aesthetic.ttf') format('truetype');
@@ -72,7 +67,6 @@ body {
     font-style: normal;
 }
 
-/* Remington Noiseless */
 @font-face {
     font-family: 'Remington';
     src: url('./fonts/Remington Noiseless.ttf') format('truetype');
@@ -104,7 +98,7 @@ body {
     transform-origin: left top;
     padding: 1.5em 3em;
     font-family: "PP Neue Montreal";
-    position: fixed; /* Ensures it is fixed to the viewport */
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 10;
@@ -132,22 +126,21 @@ p#header {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    touch-action: pan-x; /* **Crucial mobile fix**: Allows horizontal drag, prevents vertical */
+    touch-action: pan-x;
 }
 
 .slider-wrapper {
     position: absolute;
     top: 0;
-    /* width: 8000px; - Removed or left flexible in HTML */
     padding: 0 800px;
-    height: min-content; /* **KEY MOBILE FIX**: Constrains vertical size to content height */
+    height: min-content;
     display: flex;
     align-items: center;
     gap: 150px;
 }
 
 .slide {
-    width: 800px; /* Increased slide width for larger images */
+    width: 800px;
     background: #e3e3e3;
     display: flex;
     align-items: center;
@@ -155,7 +148,7 @@ p#header {
 
 img {
     width: 100%;
-    height: auto; /* Maintains original aspect ratio */
+    height: auto;
     object-fit: cover;
 }
 
@@ -163,6 +156,6 @@ img {
         width: 100%;
         height: 100vh;
         overflow: hidden;
-        overflow-x: hidden; /* Explicitly prevent horizontal scrolling */
-        overflow-y: hidden; /* Explicitly prevent vertical scrolling - **Crucial for mobile fix** */
+        overflow-x: hidden;
+        overflow-y: hidden;
     }
