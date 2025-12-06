@@ -65,9 +65,6 @@ img {
 
 
 
-
-
-/* Montserrat */
 @font-face {
     font-family: 'Montserrat';
     src: url('./fonts/Montserrat.ttf') format('opentype');
@@ -75,15 +72,13 @@ img {
     font-style: normal;
 }
 
-/* Athemi */
 @font-face {
-    font-family: 'Athemi'; /* Giving it a descriptive name */
+    font-family: 'Athemi';
     src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
-/* Aesthetic */
 @font-face {
     font-family: 'Aesthetic';
     src: url('./fonts/Aesthetic.ttf') format('truetype');
@@ -91,7 +86,6 @@ img {
     font-style: normal;
 }
 
-/* Remington Noiseless */
 @font-face {
     font-family: 'Remington';
     src: url('./fonts/Remington Noiseless.ttf') format('truetype');
