@@ -5,18 +5,12 @@
 
 
 
-/* :root {
-
-    --logo: url('./assets/kawaiigwen.svg'); /* 👈 Light mode logo source
-} */
-
 @media (prefers-color-scheme: dark) {
     :root {
-        --logo: url('./assets/kawaiigwenwhite.svg'); /* 👈 Dark mode logo source */
+        --logo: url('./assets/kawaiigwenwhite.svg');
     }
 }
 
-/* Montserrat */
 @font-face {
     font-family: 'Montserrat';
     src: url('./fonts/Montserrat.ttf') format('opentype');
@@ -24,15 +18,13 @@
     font-style: normal;
 }
 
-/* Athemi */
 @font-face {
-    font-family: 'Athemi'; /* Giving it a descriptive name */
+    font-family: 'Athemi';
     src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
-/* Aesthetic */
 @font-face {
     font-family: 'Aesthetic';
     src: url('./fonts/Aesthetic.ttf') format('truetype');
@@ -40,7 +32,6 @@
     font-style: normal;
 }
 
-/* Remington Noiseless */
 @font-face {
     font-family: 'Remington';
     src: url('./fonts/Remington Noiseless.ttf') format('truetype');
@@ -53,9 +44,6 @@ img {
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 }
-
-
-/* Branding, Copyright */
 
 #brand {
     position: fixed;
@@ -289,16 +277,6 @@ img {
     }
 }
 
-
-
-
-
-
-
-
-
-/* Pond, Navi */
-
 #pond {
     position: fixed;
     top: 35px;
@@ -434,10 +412,6 @@ img {
     transition: transform 0.25s, background 0.4s ease-out;
 }
 
-
-
-/* Navi */
-
 .navi {
     visibility: hidden;
 }
@@ -524,8 +498,6 @@ img {
 .main-container a:hover + .navi-item-revealer {
     width: 100%;
 }
-
-
 
 .side-navi {
     position: absolute;
@@ -794,7 +766,7 @@ body.overlay-active .grain:after {
     right: 35px;
     width: clamp(80px, 7vw, 125px);
     height: clamp(80px, 7vw, 125px);
-    cursor: pointer; /* Initial pointer cursor */
+    cursor: pointer;
     z-index: 100;
 }
 
@@ -805,7 +777,6 @@ body.overlay-active .grain:after {
 }
 
 .sound-button:hover {
-    /* ADDED: Change cursor on hover */
     cursor: none;
 }
 
