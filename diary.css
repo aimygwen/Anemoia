@@ -17,7 +17,7 @@
     --credits: #ededed;
     --credits-sub: rgba(255, 255, 255, 0.5);
 
-    --logo: url('./assets/kawaiigwenwhite.svg'); /* 👈 Light mode logo source */
+    --logo: url('./assets/kawaiigwenwhite.svg');
 
 }
 
@@ -36,7 +36,7 @@
         --credits-sub: rgba(255, 255, 255, 0.5);
 
 
-        --logo: url('./assets/kawaiigwenwhite.svg'); /* 👈 Dark mode logo source */
+        --logo: url('./assets/kawaiigwenwhite.svg');
     }
 }
 
@@ -59,9 +59,6 @@ img {
     image-rendering: crisp-edges;
 }
 
-
-
-/* Montserrat */
 @font-face {
     font-family: 'Montserrat';
     src: url('./fonts/Montserrat.ttf') format('opentype');
@@ -69,15 +66,13 @@ img {
     font-style: normal;
 }
 
-/* Athemi */
 @font-face {
-    font-family: 'Athemi'; /* Giving it a descriptive name */
+    font-family: 'Athemi';
     src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
-/* Aesthetic */
 @font-face {
     font-family: 'Aesthetic';
     src: url('./fonts/Aesthetic.ttf') format('truetype');
@@ -85,7 +80,6 @@ img {
     font-style: normal;
 }
 
-/* Remington Noiseless */
 @font-face {
     font-family: 'Remington';
     src: url('./fonts/Remington Noiseless.ttf') format('truetype');
@@ -93,17 +87,6 @@ img {
     font-style: normal;
 }
 
-
-
-/* ====================================
-   Basis-Styling (für alle Größen)
-   ==================================== */
-
-/* Main */
-
-/* ====================================
-   Basis-Styling (für alle Größen)
-   ==================================== */
 
 h1 {
     color: var(--text-color);
@@ -125,11 +108,8 @@ h3 {
     font-family: 'Remington', serif;
 }
 
-/* Zentriert den headline-Container.
-   Der margin-top wird hier auf 5vh gesetzt, aber durch die @media (min-width: 901px) Regel auf 25vh überschrieben. */
 .headline {
     position: relative;
-    /* Zentriert den Block horizontal (auto links/rechts) */
     margin: 5vh auto 0 auto;
     color: var(--text-color);
     width: 60%;
@@ -141,11 +121,8 @@ h3 {
 }
 
 
-/* Zentriert den content-Container */
 .content {
     position: relative;
-    /* Zentriert den Block horizontal (auto links/rechts) */
-    /* Der margin-top wird hier auf 5vh gesetzt, was auch für Desktop gewünscht ist */
     margin: 5vh auto 100px auto;
 
     width: 60%;
@@ -155,7 +132,6 @@ h3 {
     top: auto;
 }
 
-/* Stellt sicher, dass alle inneren Elemente zentriert sind */
 .content h1,
 .content h3,
 .content p,
@@ -228,18 +204,13 @@ h3 {
 }
 
 
-/* ====================================
-   Media Query: Größer als 900px (Desktop)
-   ==================================== */
 
 @media (min-width: 901px) {
-    /* WICHTIG: Stellt den ursprünglichen 25vh Abstand nach oben wieder her. */
     .headline {
         margin: 25vh auto 0 auto;
         width: 60%;
     }
 
-    /* content bleibt auf 5vh Abstand zum oberen Element (der headline) */
     .content {
         margin: 5vh auto 10vh auto;
         width: 60%;
@@ -253,10 +224,6 @@ h3 {
 }
 
 
-/* ====================================
-   Media Query: Kleiner oder gleich 900px (Mobile)
-   ==================================== */
-
 @media (max-width: 900px) {
 
     .headline {
@@ -265,7 +232,6 @@ h3 {
         left: auto;
         width: 90%;
         height: auto;
-        /* Behält den 10vh Abstand für Mobile bei (standardmäßig 5vh, hier 10vh) */
         margin: 10vh auto 0 auto;
         padding-top: 0;
         max-width: 100%;
