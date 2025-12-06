@@ -33,8 +33,6 @@ img {
 
 
 
-
-/* Montserrat */
 @font-face {
     font-family: 'Montserrat';
     src: url('./fonts/Montserrat.ttf') format('opentype');
@@ -42,15 +40,13 @@ img {
     font-style: normal;
 }
 
-/* Athemi */
 @font-face {
-    font-family: 'Athemi'; /* Giving it a descriptive name */
+    font-family: 'Athemi';
     src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
-/* Aesthetic */
 @font-face {
     font-family: 'Aesthetic';
     src: url('./fonts/Aesthetic.ttf') format('truetype');
@@ -58,7 +54,6 @@ img {
     font-style: normal;
 }
 
-/* Remington Noiseless */
 @font-face {
     font-family: 'Remington';
     src: url('./fonts/Remington Noiseless.ttf') format('truetype');
@@ -68,33 +63,28 @@ img {
 
 
 
-/* --- CONTAINER --- */
 #labyrinth-container {
     position: relative;
     width: 100vw;
     height: 100vh;
 }
 
-/* --- BASE PAGE BEHAVIOR & GLITCH PREP --- */
 .labyrinth-page {
     position: absolute;
     top: 50%;
     left: 50%;
     width: 100vw;
     height: 100vh;
-
-    /* Start state: invisible and out of flow */
     transform: translate(-50%, -50%) scale(0);
     opacity: 0;
     pointer-events: none;
     z-index: 1;
 
-    display: block; /* flexible for page content */
-    overflow: visible; /* allow content to move freely */
+    display: block;
+    overflow: visible;
     filter: url(#glitch-filter);
 }
 
-/* --- ACTIVE PAGE & ANIMATION TRIGGERS --- */
 .labyrinth-page.active {
     transform: translate(-50%, -50%) scale(1);
     pointer-events: auto;
@@ -109,18 +99,13 @@ img {
     z-index: 15;
 }
 
-/* --- PAGE-SPECIFIC STYLES (BACKGROUNDS) --- */
 .page-1 { background: url("./assets/2.png") center/cover no-repeat; }
 .page-2 { background: url("./assets/1.png") center/cover no-repeat; }
 .page-3 { background: #2609ff; }
 .page-4 { background: black;
-    /*background-image: url("./assets/4.png");
-    background-position: top left;
-    background-repeat: repeat;
-    background-size: 200px;         /* keep original texture size */
+
 }
 
-/* --- BUTTON STYLING --- */
 .next-button {
     margin-top: 1rem;
     padding: 0.6rem 1.2rem;
@@ -135,7 +120,6 @@ img {
 }
 .next-button:hover { background: #0aa; }
 
-/* --- KEYFRAMES --- */
 @keyframes glitchIn {
     0% { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
     10% { opacity: 0.1; filter: saturate(3); transform: translate(-50%, -50%) scale(1.05) translate(3px, -3px); }
@@ -148,7 +132,6 @@ img {
     100% { opacity: 0; filter: brightness(0.5); transform: translate(-50%, -50%) scale(1.2) translate(0, 0); clip-path: inset(30% 60% 70% 20%); }
 }
 
-/* --- RGB SPLIT EFFECT FOR GLITCH OUT --- */
 .labyrinth-page.glitch-out::before,
 .labyrinth-page.glitch-out::after {
     content: '';
@@ -175,12 +158,10 @@ img {
     transform: translate(-3px, 3px);
 }
 
-/* --- PAGE CONTENT: UNIQUE LAYOUTS --- */
 .page-content {
-    position: absolute; /* allows free positioning */
+    position: absolute;
 }
 
-/* Example positions for each page */
 .page-1 .page-content {
     top: 20%;
     left: 10%;
@@ -208,11 +189,11 @@ img {
 }
 
 .page-3 .bsod-headline {
-    font-family: 'JetBrains Mono', monospace; /* match page style */
-    font-size: 10rem; /* <-- this controls the size of the 404 */
-    color: #ffffff;   /* or whatever color you want */
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10rem;
+    color: #ffffff;
     margin-bottom: 1.5rem;
-    text-align: left; /* align with page content */
+    text-align: left;
 }
 
 .page-3 .next-button {
