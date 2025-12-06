@@ -5,8 +5,8 @@
 }
 
 :root {
-    --bg: rgb(255, 187, 187);
-    --ui: #ffffff;
+    --bg: rgba(38, 9, 255, 0);
+    --ui: rgba(74, 74, 74, 0.55);
     --link: rgb(232, 255, 23);
     --hover: #ff00c6;
     --fade: rgba(7, 7, 7, 0.75);
@@ -16,7 +16,7 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #000;
+    background: rgba(0, 0, 0, 0);
     font-family: 'Courier New', monospace;
 }
 
@@ -29,6 +29,44 @@ img {
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 }
+
+
+
+
+
+/* Montserrat */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('./fonts/Montserrat.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Athemi */
+@font-face {
+    font-family: 'Athemi'; /* Giving it a descriptive name */
+    src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Aesthetic */
+@font-face {
+    font-family: 'Aesthetic';
+    src: url('./fonts/Aesthetic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Remington Noiseless */
+@font-face {
+    font-family: 'Remington';
+    src: url('./fonts/Remington Noiseless.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 
 /* --- CONTAINER --- */
 #labyrinth-container {
@@ -192,6 +230,139 @@ img {
 .page-3 .next-button:hover {
     background: #0aa;
 }
+
+
+
+
+.css-typing p {
+    border-right: .15em solid orange;
+    font-family: "Courier";
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.css-typing p:nth-child(1) {
+    width: 7.3em;
+    -webkit-animation: type 2s steps(40, end);
+    animation: type 2s steps(40, end);
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+.css-typing p:nth-child(2) {
+    width: 11.5em;
+    opacity: 0;
+    -webkit-animation: type2 2s steps(40, end);
+    animation: type2 2s steps(40, end);
+    -webkit-animation-delay: 2s;
+    animation-delay: 2s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+.css-typing p:nth-child(3) {
+    width: 7.3em;
+    opacity: 0;
+    -webkit-animation: type3 5s steps(20, end), blink .5s step-end infinite alternate;
+    animation: type3 5s steps(20, end), blink .5s step-end infinite alternate;
+    -webkit-animation-delay: 4s;
+    animation-delay: 4s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+@keyframes type {
+    0% {
+        width: 0;
+    }
+    99.9% {
+        border-right: .15em solid orange;
+    }
+    100% {
+        border: none;
+    }
+}
+
+@-webkit-keyframes type {
+    0% {
+        width: 0;
+    }
+    99.9% {
+        border-right: .15em solid orange;
+    }
+    100% {
+        border: none;
+    }
+}
+
+@keyframes type2 {
+    0% {
+        width: 0;
+    }
+    1% {
+        opacity: 1;
+    }
+    99.9% {
+        border-right: .15em solid orange;
+    }
+    100% {
+        opacity: 1;
+        border: none;
+    }
+}
+
+@-webkit-keyframes type2 {
+    0% {
+        width: 0;
+    }
+    1% {
+        opacity: 1;
+    }
+    99.9% {
+        border-right: .15em solid orange;
+    }
+    100% {
+        opacity: 1;
+        border: none;
+    }
+}
+
+@keyframes type3 {
+    0% {
+        width: 0;
+    }
+    1% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes type3 {
+    0% {
+        width: 0;
+    }
+    1% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}
+@-webkit-keyframes blink {
+    50% {
+        border-color: tranparent;
+    }
+}
+
+
 
 
 

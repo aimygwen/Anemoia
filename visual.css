@@ -4,16 +4,38 @@
     box-sizing: border-box;
 }
 
-
-
 :root {
-    --bg: rgb(255, 243, 251);
+    --bg: rgb(241, 241, 241);
     --ui: #000000;
-    --href: rgb(5, 5, 5);
+    --uifade: rgba(234, 234, 234, 0.8);
+    --link: rgb(0, 0, 0);
     --hover: #efd005;
-    --fade: rgba(255, 243, 251, 0.73);
-    --link: #000000;
+    --fade: rgba(232, 232, 232, 0.75);
+    --text: #000000;
+    --subtext: #3e3e3e;
+    --accent: rgba(126, 126, 126, 0.5);
+    --credits: #090909;
+    --credits-sub: rgba(0, 0, 0, 0.5);
 }
+
+
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: rgb(0, 0, 0);
+        --ui: #ffffff;
+        --uifade: rgba(44, 44, 44, 0.8);
+        --link: rgb(255, 255, 255);
+        --hover: #efd005;
+        --fade: rgba(0, 0, 0, 0.75);
+        --text: #ffffff;
+        --subtext: #bcbcbc;
+        --accent: rgba(126, 126, 126, 0.5);
+        --credits: #ffffff;
+        --credits-sub: rgba(255, 255, 255, 0.5);
+    }
+}
+
 
 body {
     background: var(--bg);
@@ -26,7 +48,37 @@ body {
 
 
 
+/* Montserrat */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('./fonts/Montserrat.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
 
+/* Athemi */
+@font-face {
+    font-family: 'Athemi'; /* Giving it a descriptive name */
+    src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Aesthetic */
+@font-face {
+    font-family: 'Aesthetic';
+    src: url('./fonts/Aesthetic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Remington Noiseless */
+@font-face {
+    font-family: 'Remington';
+    src: url('./fonts/Remington Noiseless.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 
 

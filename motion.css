@@ -50,6 +50,40 @@ img {
     image-rendering: crisp-edges;
 }
 
+/* Montserrat */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('./fonts/Montserrat.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Athemi */
+@font-face {
+    font-family: 'Athemi'; /* Giving it a descriptive name */
+    src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Aesthetic */
+@font-face {
+    font-family: 'Aesthetic';
+    src: url('./fonts/Aesthetic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Remington Noiseless */
+@font-face {
+    font-family: 'Remington';
+    src: url('./fonts/Remington Noiseless.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
 /* --- GLOBAL GRAIN OVERLAY (For the main body) --- */
 .grain-overlay {
     position: fixed;
@@ -311,10 +345,10 @@ body.overlay-active .film:after {
 
 /* --- BASE COUNTER STYLES --- */
 .counter-display {
-    font-family: 'Aesthetic', cursive;
+    font-family: 'Athemi', cursive;
     color: var(--accent-color);
     font-size: 2rem;
-    font-weight: bold;
+    font-weight: lighter;
     letter-spacing: 5px;
     z-index: 97;
 }
@@ -473,4 +507,59 @@ body.overlay-active .film:after {
     .gallery-header, .gallery-footer {
         font-size: 0.9rem;
     }
+}
+
+
+/* --- Video Details Container (Pinned to Bottom-Left) --- */
+.video-details {
+    position: fixed;
+    /* UPDATED: Increased space from bottom edge */
+    bottom: 80px;
+    /* UPDATED: Increased space from left edge */
+    left: 80px;
+
+    /* UPDATED: Increased width to give the horizontal details more room */
+    width: clamp(280px, 45vw, 600px);
+
+    padding: 0;
+    z-index: 103;
+}
+
+/* --- Project Title --- */
+.project-title-container {
+    font-family: "Athemi", sans-serif;
+    font-size: clamp(4rem, 6vw, 7rem);
+    font-weight: lighter;
+    margin-bottom: 25px;
+    color: rgb(255, 255, 255);
+    mix-blend-mode: screen;
+}
+
+/* --- Description --- */
+.project-description {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: clamp(1rem, 1.5vw, 1.1rem);
+    line-height: 1.6;
+    margin-bottom: 60px;
+    color: rgb(128, 128, 128);
+    mix-blend-mode: screen;
+}
+
+
+/* --- Creation Details List (No changes needed here, as the parent controls the space) --- */
+.creation-details-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 70px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: rgb(158, 158, 158);
+    font-size: 1.05rem;
+    mix-blend-mode: screen;
+}
+
+/* Style for each individual detail item */
+.detail-item {
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
 }

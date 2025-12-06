@@ -5,36 +5,44 @@
 }
 
 :root {
-    --bg: rgb(241, 241, 241);
-    --ui: #000000;
-    --uifade: rgba(234, 234, 234, 0.8);
-    --link: rgb(0, 0, 0);
-    --hover: #a126ae;
-    --fade: rgba(241, 241, 241, 0.75);
-    --text: #000000;
-    --subtext: #3e3e3e;
-    --accent: rgba(126, 126, 126, 0.5);
-    --credits: #090909;
-    --credits-sub: rgba(0, 0, 0, 0.5);
+    --bg: rgb(229, 153, 255);
+    --fade: rgba(229, 153, 255, 0.6);
+    --ui: #ffffff;
+    --uifade: #888888;
+    --link: rgb(255, 255, 255);
+    --hover: #ab02ff;
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --accent-color: #ffffff;
+    --credits: #ededed;
+    --credits-sub: rgba(255, 255, 255, 0.5);
+
+    --logo: url('./assets/kawaiigwenwhite.svg'); /* 👈 Light mode logo source */
+
 }
-
-
 
 @media (prefers-color-scheme: dark) {
     :root {
         --bg: rgb(0, 0, 0);
-        --ui: #ffffff;
-        --uifade: rgba(44, 44, 44, 0.8);
+        --fade: rgba(0, 0, 0, 0.6);
+        --ui: #e599ff;
+        --uifade: #888888;
         --link: rgb(255, 255, 255);
-        --hover: #a126ae;
-        --fade: rgba(0, 0, 0, 0.75);
-        --text: #ffffff;
-        --subtext: #bcbcbc;
-        --accent: rgba(126, 126, 126, 0.5);
-        --credits: #ffffff;
+        --hover: #ab02ff;
+        --bg-color: #1a1a1a;
+        --text-color: #e599ff;
+        --accent-color: #ffffff;
+        --credits: #ededed;
         --credits-sub: rgba(255, 255, 255, 0.5);
+
+
+        --logo: url('./assets/kawaiigwenwhite.svg'); /* 👈 Dark mode logo source */
     }
 }
+
+
+
+
 
 
 body {
@@ -43,6 +51,14 @@ body {
     height: 100%;
     overflow-x: hidden;
 }
+
+
+
+img {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
 
 
 /* Montserrat */
@@ -78,12 +94,21 @@ body {
 }
 
 
+
+/* ====================================
+   Basis-Styling (für alle Größen)
+   ==================================== */
+
 /* Main */
 
+/* ====================================
+   Basis-Styling (für alle Größen)
+   ==================================== */
+
 h1 {
-    color: var(--text);
+    color: var(--text-color);
     font-size: 14vw;
-    text-align: left;
+    text-align: center;
     font-weight: normal;
     margin: 0;
     font-family: 'Athemi', serif;
@@ -91,20 +116,22 @@ h1 {
 }
 
 h3 {
-    color: var(--text);
+    color: var(--text-color);
     font-size: 12vw;
-    text-align: left;
+    text-align: center;
     font-weight: normal;
     line-height: 1;
     margin: 0;
-    font-family: 'Athemi', serif;
+    font-family: 'Remington', serif;
 }
 
+/* Zentriert den headline-Container.
+   Der margin-top wird hier auf 5vh gesetzt, aber durch die @media (min-width: 901px) Regel auf 25vh überschrieben. */
 .headline {
     position: relative;
-    margin-right: auto;
-    margin-top: 5vh;
-    margin-left: 20%;
+    /* Zentriert den Block horizontal (auto links/rechts) */
+    margin: 5vh auto 0 auto;
+    color: var(--text-color);
     width: 60%;
     max-width: 100%;
     height: auto;
@@ -114,19 +141,21 @@ h3 {
 }
 
 
+/* Zentriert den content-Container */
 .content {
     position: relative;
-    margin-left: 20%;
+    /* Zentriert den Block horizontal (auto links/rechts) */
+    /* Der margin-top wird hier auf 5vh gesetzt, was auch für Desktop gewünscht ist */
+    margin: 5vh auto 100px auto;
+
     width: 60%;
-    margin-top: 5vh;
-    margin-right: auto;
-    margin-bottom: 100px;
     max-width: 1200px;
     height: auto;
     left: auto;
     top: auto;
 }
 
+/* Stellt sicher, dass alle inneren Elemente zentriert sind */
 .content h1,
 .content h3,
 .content p,
@@ -136,8 +165,8 @@ h3 {
     left: 0;
     width: 100%;
     max-width: none;
-    font-family: 'Helvetica Neue', serif;
-    text-align: left;
+    font-family: 'Remington', serif;
+    text-align: center;
     line-height: 1.6;
 }
 
@@ -145,16 +174,16 @@ h3 {
     font-size: 4rem;
     margin-top: 4rem;
     margin-bottom: 0.8rem;
-    font-family: 'Aesthetic', serif;
+    font-family: 'Remington', serif;
     font-weight: bold;
-    color: var(--text);
+    color: #fff;
 }
 
 .content p {
     font-size: 2.2rem;
     margin-bottom: 3rem;
     line-height: 1.8;
-    color: var(--subtext);
+    color: #ffffff;
 }
 
 .content .info {
@@ -162,10 +191,11 @@ h3 {
     font-family: 'Helvetica Neue', serif;
     font-weight: normal;
     font-size: 1.4rem;
-    color: var(--accent);
+    color: #ffffff;
     line-height: 1.5;
     margin-top: 1rem;
     margin-bottom: 3rem;
+    text-align: center;
 }
 
 .content h2 + p + .info-note {
@@ -198,21 +228,21 @@ h3 {
 }
 
 
-
-
+/* ====================================
+   Media Query: Größer als 900px (Desktop)
+   ==================================== */
 
 @media (min-width: 901px) {
+    /* WICHTIG: Stellt den ursprünglichen 25vh Abstand nach oben wieder her. */
     .headline {
-        margin-top: 25vh;
-        margin-left: 20%;
+        margin: 25vh auto 0 auto;
         width: 60%;
     }
 
+    /* content bleibt auf 5vh Abstand zum oberen Element (der headline) */
     .content {
-        margin-top: 5vh;
-        margin-left: 20%;
+        margin: 5vh auto 10vh auto;
         width: 60%;
-        margin-bottom: 10vh;
     }
 
     .content h1,
@@ -223,6 +253,10 @@ h3 {
 }
 
 
+/* ====================================
+   Media Query: Kleiner oder gleich 900px (Mobile)
+   ==================================== */
+
 @media (max-width: 900px) {
 
     .headline {
@@ -231,6 +265,7 @@ h3 {
         left: auto;
         width: 90%;
         height: auto;
+        /* Behält den 10vh Abstand für Mobile bei (standardmäßig 5vh, hier 10vh) */
         margin: 10vh auto 0 auto;
         padding-top: 0;
         max-width: 100%;

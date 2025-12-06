@@ -2,18 +2,50 @@
     overflow: hidden;
     height: 100vh;
 }
-@font-face {
-    font-family: "Badger";
-    src: url("./assets/BadgerRegular.ttf") format("truetype");
-    font-style: normal;
-    font-weight: normal;
+
+
+
+/* :root {
+
+    --logo: url('./assets/kawaiigwen.svg'); /* 👈 Light mode logo source
+} */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --logo: url('./assets/kawaiigwenwhite.svg'); /* 👈 Dark mode logo source */
+    }
 }
 
+/* Montserrat */
 @font-face {
-    font-family: "UniteaSans";
-    src: url("./assets/unitea-sans.medium.otf") format("opentype");
+    font-family: 'Montserrat';
+    src: url('./fonts/Montserrat.ttf') format('opentype');
+    font-weight: normal;
     font-style: normal;
-    font-weight: 500;
+}
+
+/* Athemi */
+@font-face {
+    font-family: 'Athemi'; /* Giving it a descriptive name */
+    src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Aesthetic */
+@font-face {
+    font-family: 'Aesthetic';
+    src: url('./fonts/Aesthetic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Remington Noiseless */
+@font-face {
+    font-family: 'Remington';
+    src: url('./fonts/Remington Noiseless.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 
@@ -24,10 +56,6 @@ img {
 
 
 /* Branding, Copyright */
-
-/* -------------------------------------- */
-/* 5. COPYRIGHT DISCLAIMER STYLES (BRANDING) */
-/* -------------------------------------- */
 
 #brand {
     position: fixed;
@@ -46,13 +74,16 @@ img {
 }
 
 #brand img {
+    content: var(--logo);
     width: 100%;
     height: 100%;
     object-fit: contain;
+    transition: filter 0.5s ease-in-out;
+    filter: none;
 }
 
-#brand:hover {
-    transform: translateX(-50%) scale(1.1);
+#brand:hover img {
+    filter: invert(34%) sepia(91%) saturate(2250%) hue-rotate(293deg) brightness(87%) contrast(100%);
 }
 
 .branding {
@@ -61,10 +92,7 @@ img {
     top: 0;
     left: 0;
     z-index: 10000;
-
-    /* 👇 CRITICAL FIX: Hide the element by default to prevent FOUC */
     visibility: hidden;
-
     width: 100%;
     height: 100vh;
     display: flex;
@@ -86,18 +114,11 @@ img {
 
 .branding .portrait,
 .branding .portraitcolor {
-    /* Ensure they are both absolutely positioned relative to the .branding parent */
     position: absolute;
-
-    /* Ensure left is identical for both */
     left: calc(50% - 12vw);
-
     bottom: 0;
     height: clamp(500px, 90vh, 1050px);
-
-    /* Ensure transform is identical for both */
     transform: translateX(-50%);
-
     width: auto;
     object-fit: contain;
     transition: opacity 0.5s ease, left 0.5s ease, top 0.5s ease, height 0.5s ease;
@@ -105,7 +126,6 @@ img {
 }
 
 .branding .portraitcolor {
-    /* The only difference should be opacity and transition-related z-index if needed */
     opacity: 0;
     z-index: 10000;
 }
@@ -140,9 +160,8 @@ img {
     z-index: 10001;
     white-space: nowrap;
     animation: scroll-left 24s linear infinite;
-    font-family: 'Athemi DEMO VERSION', serif;
+    font-family: 'Athemi', serif;
 }
-
 
 .branding-rights {
     position: fixed;
@@ -183,59 +202,34 @@ img {
     z-index: 10001;
 }
 
-
-
-
-
 @media (max-width: 768px) {
-    /* * --- DISCLAIMER CONTAINER ---
-     * Adjust the core layer to use Flexbox on mobile.
-     */
     .branding-layer {
-        /* Reset absolute positioning inherited from desktop/original styles */
         position: relative;
-
-        /* Enable Flexbox for primary stacking */
         display: flex;
         flex-direction: column;
-        justify-content: flex-start; /* Stack content at the top */
+        justify-content: flex-start;
         align-items: center;
-
-        /* Give the layer some top padding so content isn't flush with the top edge */
         padding-top: 5vh;
         width: 100%;
-        height: 100%; /* Fill the whole branding viewport */
+        height: 100%;
     }
 
-    /* * --- PORTRAIT IMAGE ---
-     * Anchor portrait to the bottom, centering it horizontally.
-     */
     .branding .portrait,
     .branding .portraitcolor {
-        /* Keep all your existing positioning styles */
         position: fixed;
         left: 50%;
         bottom: 0;
         height: clamp(350px, 75vh, 600px);
         width: auto;
         transform: translateX(-50%);
-
-        /* Ensures image is treated as a block element */
         display: block;
     }
 
-    /* If the portrait is an <img> tag, you might need to target it directly */
     .branding .portrait img,
     .branding .portraitcolor img {
         display: block;
     }
 
-    /* * --- BRANDING NAME ---
-     * Make it relatively large and align it inside the flex flow.
-     */
-    /* * --- BRANDING NAME ---
-    * Make it relatively large and align it inside the flex flow.
-    */
     .branding-name {
         position: relative;
         left: auto;
@@ -249,49 +243,32 @@ img {
         max-width: 90%;
     }
 
-    /* * --- SIGNATURE ---
-     * Position it in the top-left corner.
-     */
     .branding .signature {
         position: absolute;
-
         top: 3rem;
         left: 1rem;
-
         bottom: auto;
         transform: none;
-
         width: 30vw;
         margin-bottom: 0;
     }
 
-    /* * --- BRANDING INFO TEXT ---
-     * Place it anchored to the bottom.
-     */
     .branding-info {
         position: absolute;
-
-        left: 50%; /* Center the element */
+        left: 50%;
         right: auto;
         top: auto;
-
         bottom: 10vh;
         color: white;
         mix-blend-mode: difference;
         transform: translateX(-50%);
-
         text-align: center;
         width: 85%;
-
         font-size: clamp(0.8rem, 3vw, 1.1rem);
         line-height: 1.5;
-
         margin-bottom: 0;
     }
 
-    /* * --- RIGHTS & YEAR (Bottom Fixed Text) ---
-     * These remain fixed, but we tighten up the spacing.
-     */
     .branding-rights {
         left: 1rem;
         bottom: 1rem;
@@ -310,11 +287,7 @@ img {
         color: white;
         mix-blend-mode: difference;
     }
-
-} /* <-- This closing brace was missing and caused the error! */
-
-
-
+}
 
 
 
@@ -344,21 +317,17 @@ img {
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 0.5px solid var(--ui);
-}
-
-.ripple {
-    transition: border-color 0.4s ease-out;
     border: 1px solid var(--ui);
 }
 
-.drop, .echo {
-    transition: background 0.4s ease-out, border-color 0.4s ease-out;
+.ripple, .drop, .echo {
+    transition: border-color 0.4s ease-out, background 0.4s ease-out;
 }
-
 
 .drop {
     animation: morph1 4s ease-in-out infinite;
+    border: 1px solid var(--ui);
+    background: transparent;
 }
 
 .echo {
@@ -366,6 +335,24 @@ img {
     opacity: 0.5;
     filter: blur(1px);
     transform: scale(1);
+    border: 1px solid var(--ui);
+    background: transparent;
+}
+
+#pond:hover {
+    transform: scale(1.1);
+}
+
+#pond:hover .ripple,
+#pond:hover .drop,
+#pond:hover .echo {
+    border-color: var(--hover);
+    background: transparent;
+}
+
+#pond:hover #mark span,
+#pond:hover #mark span::before {
+    background: var(--hover);
 }
 
 @keyframes morph1 {
@@ -404,19 +391,6 @@ img {
     }
 }
 
-#pond:hover {
-    color: var(--hover);
-    transform: scale(1.1);
-}
-
-
-
-#mark.active {
-    color: var(--hover);
-}
-#mark.active:hover {
-    color: var(--hover);
-}
 #mark {
     position: relative;
     height: 20px;
@@ -521,7 +495,7 @@ img {
 }
 
 .main-container a {
-    font-family: 'Badger', serif;
+    font-family: 'Athemi', serif;
     font-size: clamp(9vh, 10vw, 16vh);
     text-transform: lowercase;
     text-decoration: none;
@@ -551,6 +525,8 @@ img {
     width: 100%;
 }
 
+
+
 .side-navi {
     position: absolute;
     bottom: 5%;
@@ -560,7 +536,7 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Unitea Sans', serif;
+    font-family: 'Montserrat', serif;
     color: var(--link);
     text-align: center;
 }
@@ -588,7 +564,7 @@ img {
 .side-navi a {
     text-decoration: none;
     color: var(--link);
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     position: relative;
@@ -631,40 +607,11 @@ img {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .haze {
     position: fixed;
     opacity: 0;
     background-color: var(--fade);
     backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
     inset: 0;
     z-index: 9001;
     pointer-events: none;
@@ -676,7 +623,6 @@ img {
     opacity: 1;
     pointer-events: auto;
     backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     animation: pulse-color 8s ease-in-out infinite alternate;
     transition: all 1s cubic-bezier(.22, 1, .36, 1) 0s;
 }
@@ -709,7 +655,6 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
     transform: translate(-50%, -50%);
     z-index: 19000;
     mix-blend-mode: difference;
-
     transition: width 0.3s ease-out, height 0.3s ease-out, background-color 0.3s ease;
 }
 
@@ -717,7 +662,7 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
     width: 12px;
     height: 12px;
     background-color: rgba(110, 110, 110, 0.5);
-    transition: width 0.1s ease-out, height 0.1s ease-out, background-color 0.1s ease;
+    transition: width 0.3s ease-out, height 0.3s ease-out, background-color 0.3s ease;
     mix-blend-mode: normal;
     backdrop-filter: blur(5px);
     opacity: 1;
@@ -769,7 +714,7 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
 .drip-drop.is-hovering.is-clicked {
     width: 16px;
     height: 16px;
-    background-color: var(--hover); /* Korrekt: Keine unnötigen Klammern */
+    background-color: var(--hover);
 }
 
 
@@ -843,14 +788,13 @@ body.overlay-active .grain:after {
 
 
 
-
 .sound-button {
     position: fixed;
     bottom: 35px;
     right: 35px;
     width: clamp(80px, 7vw, 125px);
     height: clamp(80px, 7vw, 125px);
-    cursor: pointer;
+    cursor: pointer; /* Initial pointer cursor */
     z-index: 100;
 }
 
@@ -860,6 +804,10 @@ body.overlay-active .grain:after {
     display: block;
 }
 
+.sound-button:hover {
+    /* ADDED: Change cursor on hover */
+    cursor: none;
+}
 
 
 header {
@@ -956,4 +904,21 @@ header .content {
     justify-content: center;
     align-items: center;
     padding: 0 2rem;
+}
+
+
+
+
+
+.build {
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+    z-index: 100000;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1rem;
+    color: #a0a0a0;
+    opacity: 0.7;
+    padding: 5px 10px;
+    mix-blend-mode: multiply;
 }

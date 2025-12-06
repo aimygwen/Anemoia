@@ -5,12 +5,36 @@
 }
 
 :root {
-    --bg: rgb(255, 218, 240);
+    --bg: rgb(255, 179, 213);
     --ui: #000000;
+    --uifade: rgb(255, 2, 108);
     --link: #000000;
-    --hover: #ff0089;
-    --fade: rgba(255, 197, 237, 0.75);
+    --hover: #ff026c;
+    --fade: rgba(255, 179, 213, 0.75);
+
+
+    --logo: url('./assets/kawaiigwen.svg'); /* 👈 Dark mode logo source */
 }
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: rgb(0, 0, 0);
+        --ui: #ff026c;
+        --uifade: rgb(255, 2, 108);
+        --link: rgb(255, 2, 108);
+        --hover: #ffffff;
+        --fade: rgba(0, 0, 0, 0.75);
+        --text-color: #c6c6c6;
+        --accent-color: #ffffff;
+        --credits: #090909;
+        --credits-sub: rgba(0, 0, 0, 0.5);
+
+
+        --logo: url('./assets/kawaiigwenpink.svg'); /* 👈 Dark mode logo source */
+    }
+}
+
+
 
 body {
     width: 100%;
@@ -30,18 +54,53 @@ img {
 }
 
 
+/* Montserrat */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('./fonts/Montserrat.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Athemi */
+@font-face {
+    font-family: 'Athemi'; /* Giving it a descriptive name */
+    src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Aesthetic */
+@font-face {
+    font-family: 'Aesthetic';
+    src: url('./fonts/Aesthetic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Remington Noiseless */
+@font-face {
+    font-family: 'Remington';
+    src: url('./fonts/Remington Noiseless.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+
 .splash {
     position: absolute;
-    width: 25%;
+    width: 40%;
     will-change: transform;
     color: #000000;
     font-size: 4vw;
     font-weight: 10;
     text-align: center;
     margin: 0;
-    left: 25%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 10%;
+    transform: translateX(-50%);
     font-family: 'Badger', serif;
     z-index: 2;
 }
@@ -49,7 +108,7 @@ img {
 
 .headline {
     position: absolute;
-    width: 100%;
+    width: 85%;
     will-change: transform;
     color: #ff0089;
     font-size: 6vw;
@@ -57,7 +116,7 @@ img {
     text-align: center;
     margin: 0;
     left: 50%;
-    top: 45%;
+    top: 50%;
     transform: translate(-50%, -50%);
     font-family: 'Badger', serif;
     z-index: 3;
@@ -65,7 +124,7 @@ img {
 
 .email-container {
     position: fixed;
-    bottom: 25vh;
+    bottom: 16vh;
     left: 50%;
     transform: translateX(-50%);
     z-index: 99;
@@ -74,10 +133,10 @@ img {
 .email-item {
     display: flex;
     align-items: center;
-    color: rgba(14, 14, 14, 0.75);
+    color: var(--link);
     text-decoration: none;
     font-size: clamp(1.5em, 8vw, 4em);
-    font-family: 'Athemi DEMO VERSION', sans-serif;
+    font-family: 'Athemi', sans-serif;
     position: relative;
     font-weight: lighter;
     letter-spacing: 3px;

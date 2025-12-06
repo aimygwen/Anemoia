@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- DATA ---
     const videoSources = [
-        './assets/video-1.mp4',
-        './assets/video-2.mp4',
-        './assets/video-3.mp4',
+        './films/mov1.mp4',
+        './films/mov2.mp4',
+        './films/mov3.mp4',
     ];
     let currentVideoIndex = 0; // Start at the first video (index 0)
 
