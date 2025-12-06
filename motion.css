@@ -1,4 +1,3 @@
-/* --- GLOBAL RESET & VARIABLES --- */
 * {
     margin: 0;
     padding: 0;
@@ -20,7 +19,6 @@
 }
 
 html {
-    /* CRITICAL: Prevents scroll jumping/ghost scrolling on mobile */
     overflow: hidden;
     height: 100vh;
     width: 100vw;
@@ -34,15 +32,9 @@ body {
     font-family: 'Helvetica Neue', sans-serif;
     margin: 0;
     padding: 0;
-    /* Ensure no vertical overflow can be triggered */
     overflow: hidden;
 
     height: 100vh;
-    /* --- FULLSCREEN CHANGE: Removed centering flex properties --- */
-    /* display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; */
 }
 
 img {
@@ -50,7 +42,6 @@ img {
     image-rendering: crisp-edges;
 }
 
-/* Montserrat */
 @font-face {
     font-family: 'Montserrat';
     src: url('./fonts/Montserrat.ttf') format('opentype');
@@ -58,15 +49,13 @@ img {
     font-style: normal;
 }
 
-/* Athemi */
 @font-face {
-    font-family: 'Athemi'; /* Giving it a descriptive name */
+    font-family: 'Athemi';
     src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
-/* Aesthetic */
 @font-face {
     font-family: 'Aesthetic';
     src: url('./fonts/Aesthetic.ttf') format('truetype');
@@ -74,7 +63,6 @@ img {
     font-style: normal;
 }
 
-/* Remington Noiseless */
 @font-face {
     font-family: 'Remington';
     src: url('./fonts/Remington Noiseless.ttf') format('truetype');
@@ -82,9 +70,6 @@ img {
     font-style: normal;
 }
 
-
-
-/* --- GLOBAL GRAIN OVERLAY (For the main body) --- */
 .grain-overlay {
     position: fixed;
     top: 0;
@@ -97,7 +82,6 @@ img {
     z-index: 100;
 }
 
-/* --- GLOBAL FILM GRAIN (If the body class is used) --- */
 .film:after {
     content: "";
     background-image: url("https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png");
@@ -154,10 +138,6 @@ body.overlay-active .film:after {
     }
 }
 
-/* -------------------------------------- */
-/* 1. HEADER & FOOTER ELEMENTS            */
-/* -------------------------------------- */
-
 .gallery-header {
     position: fixed;
     top: 30px;
@@ -178,26 +158,21 @@ body.overlay-active .film:after {
     opacity: 0.5;
 }
 
-/* -------------------------------------- */
-/* 2. VIDEO PLAYER (.video-player)        */
-/* -------------------------------------- */
-
 .video-player {
-    /* --- FULLSCREEN CHANGES START HERE --- */
-    position: fixed; /* Keep fixed so it stays in place relative to the viewport */
+    position: fixed;
     top: 0;
     left: 0;
-    transform: none; /* Remove transform offset and scale */
+    transform: none;
 
-    width: 100vw; /* Full viewport width */
-    max-width: none; /* Remove max-width constraint */
+    width: 100vw;
+    max-width: none;
 
-    height: 100vh; /* Full viewport height */
-    padding-bottom: 0; /* Remove aspect ratio padding */
+    height: 100vh;
+    padding-bottom: 0;
 
     overflow: hidden;
     background: black;
-    border-radius: 0; /* Remove border-radius */
+    border-radius: 0;
 
     box-shadow: inset 0 0 100px rgb(0, 0, 0),
     inset 0 0 0 2px black;
@@ -211,11 +186,11 @@ body.overlay-active .film:after {
     top: 0;
     left: 0;
 
-    width: 100%; /* Changed from calc(100% + 2px) to 100% */
-    height: 100%; /* Changed from calc(100% + 2px) to 100% */
-    margin: 0; /* Changed from -1px to 0 */
+    width: 100%;
+    height: 100%;
+    margin: 0;
 
-    object-fit: cover; /* CRITICAL: Ensures video covers the entire screen */
+    object-fit: cover;
     display: block;
     filter: brightness(1.2) contrast(1.1);
 
@@ -223,7 +198,6 @@ body.overlay-active .film:after {
     transform: none;
 }
 
-/* --- GLITCH / STATIC CHANNEL SWITCH EFFECT --- */
 
 @keyframes static-flicker {
     0%   { clip-path: inset(0 0 0% 0); }
@@ -240,21 +214,17 @@ body.overlay-active .film:after {
 }
 
 .video-player.is-jittering {
-    /* Step 1: Heavy filters for noise */
     filter:
             saturate(0.5)
             contrast(2)
             brightness(1.5)
             hue-rotate(10deg);
 
-    /* Step 2: Rapid animation */
     animation: static-flicker 0.1s steps(1) infinite;
-    transform: rotate(0.1deg); /* Simplified transform for fullscreen */
+    transform: rotate(0.1deg);
 }
 
-/* -------------------------------------- */
-/* 3. FILM BORDER AND OVERLAY             */
-/* -------------------------------------- */
+
 
 .film-border-blur {
     position: absolute;
@@ -296,13 +266,11 @@ body.overlay-active .film:after {
     transition: opacity 0.4s ease-out, transform 0.4s ease-out, filter 0.4s ease-out;
 }
 
-/* Zustand, wenn das Overlay aktiv ist und das Durchblättern beginnt */
 .video-transition-overlay.is-active {
     opacity: 1;
     filter: brightness(1.2) contrast(1.1);
 }
 
-/* Keyframes für den Jitter-Effekt auf dem Overlay */
 @keyframes overlayJitter {
     0%   { transform: translate(0.5px, 0.8px); }
     25%  { transform: translate(-0.7px, 1.2px) rotate(0.1deg); }
@@ -311,23 +279,17 @@ body.overlay-active .film:after {
     100% { transform: translate(0.5px, 0.8px); }
 }
 
-/* Wenn das Overlay jittert */
 .video-transition-overlay.is-jittering {
     animation: overlayJitter 0.15s infinite steps(4);
     background-size: 100% 10px;
     filter: brightness(1.5) contrast(1.3) hue-rotate(5deg);
 }
 
-/* Zustand, wenn das Overlay ausgeblendet wird (nach dem Einrasten) */
 .video-transition-overlay.is-fading-out {
     opacity: 0;
     transform: scale(1.05);
     filter: brightness(0.8) contrast(1.0);
 }
-
-/* -------------------------------------- */
-/* 4. NAVIGATION / CONTROLS & COUNTER     */
-/* -------------------------------------- */
 
 .gallery-controls {
     position: fixed;
@@ -343,7 +305,6 @@ body.overlay-active .film:after {
     z-index: 98;
 }
 
-/* --- BASE COUNTER STYLES --- */
 .counter-display {
     font-family: 'Athemi', cursive;
     color: var(--accent-color);
@@ -370,31 +331,24 @@ body.overlay-active .film:after {
 }
 
 
-/* --- ROLLING DIGIT MECHANISM --- */
-
-/* The Wrapper Span (The "Window") */
 .counter-display .current-number .digit-wrapper {
     display: inline-block;
     vertical-align: top;
-    overflow: hidden; /* CRITICAL: Hides the numbers outside the viewport */
-    height: 1em; /* Sets the visible height to one digit's height */
-    position: relative; /* Positioning context for the inner animated strip */
-    margin: 0 -0.05em; /* Small negative margin to bring digits closer */
+    overflow: hidden;
+    height: 1em;
+    position: relative;
+    margin: 0 -0.05em;
     z-index: 97;
 }
 
-/* The Animated Number Strip (Holds 0123456789 vertically) */
 .counter-display .current-number .digit-wrapper .animated-num {
     display: block;
     will-change: transform;
 
-    /* Height of 10em stacks 10 digits vertically */
     height: 10em;
 
-    /* Transition for the smooth roll */
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-    /* FIX: FORCE VERTICAL STACKING */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -403,8 +357,6 @@ body.overlay-active .film:after {
     z-index: 97;
 }
 
-
-/* --- ARROW BUTTONS --- */
 .arrow-btn {
     background: none;
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -428,9 +380,8 @@ body.overlay-active .film:after {
 .controlshadow {
     position: absolute;
     top: 50%;
-    left: 50%; /* <-- Start the left edge at 50% */
+    left: 50%;
     height: 900px;
-    /* Combine both vertical (-50% of height) and horizontal (-50% of width) adjustments */
     transform: translate(-50%, -50%);
     z-index: 96;
 }
@@ -457,37 +408,30 @@ body.overlay-active .film:after {
     transform: translateY(20px) scale(1.1);
 }
 
-/* -------------------------------------- */
-/* 5. RESPONSIFTE ANPASSUNGEN             */
-/* -------------------------------------- */
 @media (max-width: 600px) {
 
-    /* ADD THIS: Disables common swipe/elastic scrolling behaviors on mobile */
     body {
-        touch-action: pan-y; /* Allows vertical scrolling, but often stabilizes the layout */
-        overscroll-behavior: none; /* Prevents bounce scroll at the edges */
+        touch-action: pan-y;
+        overscroll-behavior: none;
     }
 
     .video-player {
-        position: fixed; /* Keep fixed for consistent overlaying */
+        position: fixed;
         left: 0;
         top: 0;
-        /* --- FULLSCREEN MOBILE CHANGE --- */
-        transform: none; /* Reset transform */
+        transform: none;
         width: 100vw;
         height: 100vh;
-        padding-bottom: 0; /* Reset padding */
-        border-radius: 0; /* Reset border radius */
+        padding-bottom: 0;
+        border-radius: 0;
     }
 
-    /* Ensure fixed headers/footers don't contribute to overflow */
     .gallery-header, .gallery-footer {
-        width: 100%; /* Ensure it's contained */
+        width: 100%;
         box-sizing: border-box;
     }
 
     .film-border-blur {
-        /* --- FULLSCREEN MOBILE CHANGE --- */
         border-radius: 0;
     }
 
@@ -509,23 +453,16 @@ body.overlay-active .film:after {
     }
 }
 
-
-/* --- Video Details Container (Pinned to Bottom-Left) --- */
 .video-details {
     position: fixed;
-    /* UPDATED: Increased space from bottom edge */
     bottom: 80px;
-    /* UPDATED: Increased space from left edge */
     left: 80px;
-
-    /* UPDATED: Increased width to give the horizontal details more room */
     width: clamp(280px, 45vw, 600px);
 
     padding: 0;
     z-index: 103;
 }
 
-/* --- Project Title --- */
 .project-title-container {
     font-family: "Athemi", sans-serif;
     font-size: clamp(4rem, 6vw, 7rem);
@@ -535,7 +472,6 @@ body.overlay-active .film:after {
     mix-blend-mode: screen;
 }
 
-/* --- Description --- */
 .project-description {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: clamp(1rem, 1.5vw, 1.1rem);
@@ -545,8 +481,6 @@ body.overlay-active .film:after {
     mix-blend-mode: screen;
 }
 
-
-/* --- Creation Details List (No changes needed here, as the parent controls the space) --- */
 .creation-details-list {
     display: flex;
     flex-wrap: wrap;
@@ -557,7 +491,6 @@ body.overlay-active .film:after {
     mix-blend-mode: screen;
 }
 
-/* Style for each individual detail item */
 .detail-item {
     margin: 0;
     padding: 0;
