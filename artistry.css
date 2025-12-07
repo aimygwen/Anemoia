@@ -29,6 +29,7 @@
 
 
     --logo: url('./assets/kawaiigwen.svg'); /* 👈 Light mode logo source */
+    --quotes: url('./assets/quotes.svg'); /* 👈 Dark mode logo source */
 }
 
 
@@ -46,7 +47,9 @@
         --credits: #ffffff;
         --credits-sub: rgba(255, 255, 255, 0.5);
 
+
         --logo: url('./assets/kawaiigwenwhite.svg');
+        --quotes: url('./assets/quoteswhite.svg'); /* 👈 Dark mode logo source */
     }
 }
 
@@ -441,6 +444,7 @@ img {
 
 /* --- .quotes (Parallax Target Image) --- */
 .quotes {
+    content: var(--quotes);
     position: absolute;
     top: 10vh;
     left: -15%;
