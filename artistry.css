@@ -453,6 +453,7 @@ img {
     z-index: 0;
     opacity: 0.15;
     will-change: transform;
+    overflow: hidden;
 }
 
 /* --- .quote (The Text) --- */
