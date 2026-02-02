@@ -87,8 +87,6 @@ function revealnaviitems() {
 
 
 
-
-
 const brandingTl = gsap.timeline({ paused: true });
 
 function revealbrandingnavi() {
@@ -118,17 +116,27 @@ function revealbrandingnavi() {
 revealbrandingnavi();
 
 function revealbrandingContent() {
-    const contentElements = [
-        '.branding-name',
-        '.branding .signature',
-        '.branding-info',
+    // UPDATED: Selectors target the first section (#section-branding) for initial animation
+    const contentElementsSection1 = [
+        '#section-branding .branding-name',
+        '#section-branding .signature',
+        '#section-branding .branding-info',
         '.branding-rights',
         '.branding-year'
     ];
 
-    const portrait = '.branding .portrait';
+    const portrait = '#section-branding .portrait';
 
-    gsap.set(contentElements, {
+    // NEW: Selectors for the second section's content (#section-credits)
+    const contentElementsSection2 = [
+        '#section-credits .credits-title',
+        '#section-credits .credits-list',
+        '#section-credits .credits-info'
+    ];
+
+
+    // Initial state for Section 1 (Branding)
+    gsap.set(contentElementsSection1, {
         filter: 'blur(10px)',
         opacity: 0,
         y: 30,
@@ -141,9 +149,19 @@ function revealbrandingContent() {
         willChange: 'transform, opacity'
     });
 
+    // NEW: Initial state for Section 2 (Credits)
+    gsap.set(contentElementsSection2, {
+        opacity: 0,
+        y: 30,
+        filter: 'blur(5px)',
+        willChange: 'transform, opacity, filter'
+    });
 
+
+    // Timeline starts
     brandingTl.to(".branding", 0.01, { visibility: "visible" });
 
+    // Animation for Portrait (Section 1)
     brandingTl.to(
         portrait,
         0.8,
@@ -155,11 +173,12 @@ function revealbrandingContent() {
         "<"
     );
 
+    // Animation for Name, Signature, Info (Section 1)
     brandingTl.to(
         [
-            '.branding-name',
-            '.branding .signature',
-            '.branding-info'
+            '#section-branding .branding-name',
+            '#section-branding .signature',
+            '#section-branding .branding-info'
         ],
         0.7,
         {
@@ -172,6 +191,7 @@ function revealbrandingContent() {
         "-=0.5"
     );
 
+    // Animation for Rights and Year (Fixed elements)
     brandingTl.to(
         [
             '.branding-rights',
@@ -185,6 +205,20 @@ function revealbrandingContent() {
             ease: "power2.out",
         },
         "-=0.3"
+    );
+
+    // NEW: Animation for Credits Section (Section 2 content)
+    brandingTl.to(
+        contentElementsSection2,
+        0.7,
+        {
+            filter: 'blur(0px)',
+            opacity: 1,
+            y: 0,
+            ease: "power3.out",
+            stagger: 0.1
+        },
+        "<" // Start simultaneously with the rights/year animation
     ).reverse();
 }
 
@@ -479,8 +513,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+// This animates the "ripples" in the cloth
+gsap.to("feTurbulence", {
+    duration: 10,
+    attr: { baseFrequency: "0.02 0.01" }, // Animates the stretch horizontally/vertically
+    repeat: -1,
+    yoyo: true,
+    ease: "sine.inOut"
+});
+
+// This makes the "folds" of the cloth shift position
+gsap.to("feTurbulence", {
+    duration: 20,
+    attr: { seed: 100 },
+    repeat: -1,
+    ease: "none"
+});
 
 
 
 
 
+
+// Falls du noch kein Parallax-Script hast, hier ein schneller Weg:
+window.addEventListener("scroll", () => {
+    const depthElements = document.querySelectorAll('[data-speed]');
+    let scrollY = window.pageYOffset;
+
+    depthElements.forEach(el => {
+        const speed = el.getAttribute('data-speed');
+        const yPos = -(scrollY * (speed - 1));
+        gsap.to(el, { y: yPos, duration: 0.5, ease: "power1.out" });
+    });
+});
