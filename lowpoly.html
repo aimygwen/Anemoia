@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Into The Pixelverse</title>
+    <link rel="icon" href="./assets/favicon.png" type="image/svg+xml">
+    <link rel="stylesheet" href="lowpoly.css" />
+    <link rel="stylesheet" href="ui.css" />
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+</head>
+<body>
+
+<main>
+    <section class="splashcover">
+        <img src="./lowpoly/overlay1.png" alt="overlay 1" class="splash-img img-1" />
+        <img src="./lowpoly/overlay2.png" alt="overlay 2" class="splash-img img-2" />
+        <img src="./lowpoly/overlay3.png" alt="overlay 3" class="splash-img img-3" />
+    </section>
+
+    <section class="hero-section">
+        <div class="intro-block">
+            <h3 class="intro-title">Hello, Orbis!</h3>
+            <h2 class="intro-subtitle">Just me, some cubes, and too many ideas.</h2>
+            <p class="intro-description">
+                Too many ideas that insist on becoming something fun. This is my personal collection of Hytale crafts and beyond. From voxel worlds and unique avatars to low-poly cozy decor and small technical mod experiments. Take a look at what’s on my workbench!
+            </p>
+        </div>
+
+        <div class="hero-model-container">
+            <model-viewer
+                    src="./lowpoly/model.glb"
+                    alt="Hytale 3D Model"
+                    auto-rotate
+                    camera-controls
+                    disable-zoom
+                    shadow-intensity="1"
+                    camera-orbit="0deg 75deg auto"
+                    exposure="1.2">
+            </model-viewer>
+        </div>
+    </section>
+
+    <section id="works-bento">
+        <h2 class="section-title">Blocks & Bits</h2>
+        <div class="bento-grid">
+            <div class="work-item featured">
+                <img src="./lowpoly/work1.png" class="work-img">
+                <div class="work-overlay"><h3>Miku Hatsune Anniversary</h3><p>Custom Avatar</p></div>
+            </div>
+            <div class="work-item wide">
+                <img src="./lowpoly/work2.png" class="work-img">
+                <div class="work-overlay"><h3>Enoden Train</h3><p>Railway Mod</p></div>
+            </div>
+            <div class="work-item">
+                <img src="./lowpoly/work2.jpg" class="work-img">
+                <div class="work-overlay"><h3>Plushies</h3><p>Sprite Collection</p></div>
+            </div>
+            <div class="work-item">
+                <img src="./lowpoly/work3.png" class="work-img">
+                <div class="work-overlay"><h3>Gachapon</h3><p>Lucky Drop</p></div>
+            </div>
+            <div class="work-item">
+                <img src="./lowpoly/work4.png" class="work-img">
+                <div class="work-overlay"><h3>Gameboy</h3><p>Minigame Select</p></div>
+            </div>
+            <div class="work-item">
+                <img src="./lowpoly/work5.png" class="work-img">
+                <div class="work-overlay"><h3>Arcade Machine</h3><p>Game Center</p></div>
+            </div>
+            <div class="work-item">
+                <img src="./lowpoly/work6.png" class="work-img">
+                <div class="work-overlay"><h3>Mac</h3><p>Tech Devices</p></div>
+            </div>
+            <div class="work-item">
+                <img src="./lowpoly/work7.png" class="work-img">
+                <div class="work-overlay"><h3>Valoran City Hub</h3><p>Community Server</p></div>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+
+ <div class="branding-btn" id="brand" onclick="togglenavi('branding')">
+     <img src="./assets/Evergwen.png" alt="Logo" />
+ </div>
+
+<div class="branding scroll-container">
+    <section class="branding-section branding-credits-section-1" id="section-branding">
+        <div class="branding-layer">
+            <img src="./assets/portrait.png"
+                 alt="Portrait Color"
+                 class="portrait">
+            <img src="./assets/signaturewhite.svg"
+                 alt="Signature"
+                 class="signature">
+
+            <div class="branding-name">Græbe,<br>Amélie Gwendolyn</div>
+            <div class="branding-rights">All Rights Reserved</div>
+            <div class="branding-year">©'25</div>
+            <div class="branding-info">Designed and directed by me. All of the content on this site is my original work and property. I poured a lot of myself into this, so please respect that by not using or distributing them without my permission.</div>
+        </div>
+    </section>
+
+
+
+
+    <section class="branding-section branding-credits-section-2" id="section-credits">
+        <div class="branding-layer">
+            <h2 class="credits-title">Special Thanks &amp; Credits</h2>
+
+            <div class="credits-grid">
+                <div class="credit-item">
+                    <span class="credit-category">Design Inspiration</span>
+                    <div class="credit-links">
+                        <a href="https://porterrobinson.com" target="_blank">Chiarra Luzanna</a><br>
+                        <a href="https://www.chiaraluzzana.com" target="_blank">Porter Robinson</a><br>
+                        <a href="https://www.vippori.com/about" target="_blank">Violet Schofield</a>
+                    </div>
+                </div>
+
+                <div class="credit-item">
+                    <span class="credit-category">Fonts Used</span>
+                    <div class="credit-links">
+                        <a href="https://www.myfonts.com/de/collections/athemi-font-jafar07?srsltid=AfmBOop3qeZdZ3dAQpEBTH0SVgoa-RIlZAgS5BCRCT1nYsWjx_rdR8fB" target="_blank">Athemi by Bakhrudin Ja'far</a>
+                    </div>
+                </div>
+
+                <div class="credit-item">
+                    <span class="credit-category">Libraries</span>
+                    <div class="credit-links">
+                        <a href="https://greensock.com/gsap/" target="_blank">GSAP (GreenSock)</a>
+                    </div>
+                </div>
+
+                <div class="credit-item">
+                    <span class="credit-category">Creative Direction</span>
+                    <div class="credit-links">
+                        <span>Self-Directed</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="credits-info">Thank you to all the creators who inspire and enable beautiful web experiences.</div>
+        </div>
+    </section>
+</div>
+
+ <div class="sound-button">
+     <canvas></canvas>
+     <audio id="audio" src="./assets/song.mp3"></audio>
+ </div>
+
+ <div class="btn" id="pond" onclick="togglenavi('main')">
+     <div class="ripple drop"></div>
+     <div class="ripple echo"></div>
+     <div id="mark"><span></span>
+     </div>
+ </div>
+
+ <div class="navi" id="main-navi">
+     <div class="main-navi">
+         <div class="main-container">
+             <div class="navi-item-about">
+                 <a href="index.html"><span></span>About</a>
+                 <div class="navi-item-revealer"></div>
+             </div>
+
+             <div class="navi-item-works">
+                 <a href="artistry.html"><span></span>Work</a>
+                 <div class="navi-item-revealer"></div>
+             </div>
+
+             <div class="navi-item-story">
+                 <a href="diary.html"><span></span>Diary</a>
+                 <div class="navi-item-revealer"></div>
+             </div>
+         </div>
+     </div>
+
+     <div class="side-navi">
+         <div class="side-container">
+             <div class="wrapper-legal">
+                 <div class="navi-item-terms">
+                     <a href="terms.html">Terms</a>
+                     <div class="navi-item-revealer"></div>
+                 </div>
+
+                 <div class="navi-item-policy">
+                     <a href="policy.html">Policy</a>
+                     <div class="navi-item-revealer"></div>
+                 </div>
+             </div>
+
+             <div class="wrapper-contact">
+                 <div class="navi-item">
+                     <a href="contact.html">Contact</a>
+                     <div class="navi-item-revealer"></div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
+
+ <div class="overlay" onclick="togglenavi('main')"></div>
+ <div class="haze"></div>
+ <div class="grain"></div>
+ <div class="drip-drop"></div>
+ <div class="drip-echo"></div>
+
+
+ <header>
+     <div class="header-bg-color"></div> <div class="gradualblur"></div>
+     <div class="gradualblur"></div>
+     <div class="gradualblur"></div>
+     <div class="gradualblur"></div>
+     <div class="gradualblur"></div>
+
+     <div class="gradient-wrp">
+         <div class="header gradient-clothoid"></div>
+     </div>
+ </header>
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CSSRulePlugin.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <script src="lowpoly.js"></script>
+  <script src="ui.js"></script>
+
+<div class="build">
+    α 1.0
+</div>
+
+</body>
+</html>
+
