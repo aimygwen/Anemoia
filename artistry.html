@@ -13,10 +13,32 @@
 </head>
 <body>
 
-<header class="spacer-header" data-speed="1.0">
-</header>
+
 
 <main data-speed="1.0">
+
+    <section class="pixel-workspace">
+
+        <div class="bg-preview-layer">
+            <img src="./assets/default-view.png" class="full-bg is-default">
+
+            <img src="./assets/prev1.png" id="img-eyecandy" class="full-bg">
+            <img src="./assets/prev2.png" id="img-anima" class="full-bg">
+            <img src="./assets/voxelworld.png" id="img-lowpoly" class="full-bg">
+
+            <div class="vignette"></div>
+        </div>
+
+        <div class="pixel-frame-overlay"></div>
+
+        <nav class="pixel-nav">
+            <a href="visual.html" class="nav-item" data-id="img-eyecandy">Gallery</a>
+            <a href="motion.html" class="nav-item" data-id="img-anima">Anima</a>
+            <a href="lowpoly.html" class="nav-item" data-id="img-lowpoly">Lowpoly</a>
+        </nav>
+
+    </section>
+
     <h1 class="headline" data-speed="0.8">&nbsp;&nbsp;&nbsp;&nbsp;Born from <br>Vision, shaped<br>by Noise.</h1>
 
     <img src="./assets/glasscutout.jpg" alt="Vision Portrait" class="visionportrait" data-speed="1.2">
@@ -31,50 +53,8 @@
         What you see here is the trail they leave behind.<br>
         And how they come to be.
     </p>
-    <section id="crafts-section" class="section-crafts" data-speed="1.0">
-        <h2 data-speed="1.0">This is what those<br>unruly ideas grow into.</h2>
 
-        <div class="craft-grid" data-speed="1.0">
-            <a href="visual.html" class="work-item visual" data-count="14" data-speed="1.0">
-                <div class="work-image-container" data-speed="1.0">
-                    <img src="./assets/prev1.png" alt="Preview for Visual Arts">
-                </div>
-                <div class="work-content">
-                    <h3 class="work-title">
-                        Visual
-                        <span class="work-count">20</span>
-                    </h3>
-                    <p class="work-description">DIGITAL ART, PORTRAITS & ILLUSTRATION</p>
-                </div>
-            </a>
 
-            <a href="motion.html" class="work-item motion" data-count="5" data-speed="1.0">
-                <div class="work-image-container">
-                    <img src="./assets/prev2.png" alt="Preview for Motion Graphics">
-                </div>
-                <div class="work-content">
-                    <h3 class="work-title">
-                        Motion
-                        <span class="work-count">3</span>
-                    </h3>
-                    <p class="work-description">2D ANIMATION & SHORT FILMS</p>
-                </div>
-            </a>
-
-            <a href="404.html" class="work-item design" data-count="8" data-speed="1.0">
-                <div class="work-image-container">
-                    <img src="./assets/prev3.png" alt="Preview for Design">
-                </div>
-                <div class="work-content">
-                    <h3 class="work-title">
-                        Design
-                        <span class="work-count">X</span>
-                    </h3>
-                    <p class="work-description">UI/UX & BRANDING</p>
-                </div>
-            </a>
-
-        </div>
         <p class="crafts-description" data-speed="1.0">
             Visual worlds that don’t sit still, even when they look like they do.
             Illustrations, portraits, characters, environments, concept art… all stitched

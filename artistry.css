@@ -4,19 +4,26 @@
     box-sizing: border-box;
 }
 
+
+
+
 :root {
-    --bg: rgb(241, 241, 241);
+    --bg: rgb(230, 230, 230);
     --ui: #000000;
     --uifade: rgba(234, 234, 234, 0.8);
     --link: rgb(0, 0, 0);
     --hover: #a126ae;
-    --fade: rgba(241, 241, 241, 0.75);
+    --fade: rgba(255, 235, 249, 0.75);
     --text: #000000;
     --subtext: #3e3e3e;
     --accent: rgba(126, 126, 126, 0.5);
     --credits: #090909;
     --credits-sub: rgba(0, 0, 0, 0.5);
-
+    --vignette-start: transparent;
+    --vignette-end: rgba(255, 255, 255, 0.7); /* Hier ist dein Light-Gradient */
+    --img-brightness: 0.6;
+    --img-hover-brightness: 0.9;
+    --img-opacity: 0.4;
     /* --- FIXED GAP VARIABLES (Logical Scaling) --- */
     --gap-small: 20px;   /* Smallest spacing */
     --gap-medium: 40px;  /* Standard spacing (used for H2 margin-bottom) */
@@ -46,7 +53,11 @@
         --accent: rgba(126, 126, 126, 0.5);
         --credits: #ffffff;
         --credits-sub: rgba(255, 255, 255, 0.5);
-
+        --vignette-start: transparent;
+        --vignette-end: rgba(0, 0, 0, 0.85);
+        --img-brightness: 0.4;
+        --img-hover-brightness: 0.7;
+        --img-opacity: 0.4;
 
         --logo: url('./assets/kawaiigwenwhite.svg');
         --quotes: url('./assets/quoteswhite.svg'); /* 👈 Dark mode logo source */
@@ -86,10 +97,10 @@ img {
     font-style: normal;
 }
 
-/* Aesthetic */
+/* Alkhemikal */
 @font-face {
-    font-family: 'Aesthetic';
-    src: url('./fonts/Aesthetic.ttf') format('truetype');
+    font-family: 'Alkhemikal';
+    src: url('./fonts/Alkhemikal.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -220,152 +231,128 @@ img {
 }
 
 
-/* -------------------------------------- */
-/* 2. CRAFTS SECTION (Floating Cards - Minimalist) */
-/* -------------------------------------- */
-.section-crafts {
-    padding-top: var(--gap-huge);
-    padding-bottom: var(--gap-huge);
+/* --- Basis Setup --- */
+.pixel-workspace {
     position: relative;
-    background-color: transparent;
-
-    /* FULL-WIDTH BREAKOUT TRICK */
-    padding-left: 0;
-    padding-right: 0;
     width: 100vw;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.section-crafts h2 {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    margin-bottom: var(--gap-medium);
-    text-align: center;
-    font-family: 'Aesthetic', sans-serif;
-}
-
-/* --- Craft Grid Layout --- */
-.craft-grid {
-    display: grid;
-    /* Set explicit 3x 1fr columns for max size */
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10%;
-    margin: 0 auto;
-    max-width: 2000px;
-    align-items: start;
-
-    /* Re-apply the side padding here to create the gutter inside the full-width section */
-    padding-left: 5vw;
-    padding-right: 5vw;
-
-    margin-bottom: 60px;
-}
-
-/* Work Item Link (Now Borderless) */
-.work-item {
+    height: 100vh;
     display: flex;
-    flex-direction: column;
-    text-decoration: none;
-    color: inherit;
-    background-color: transparent;
-    padding: 0;
-    border-radius: 0;
-    box-shadow: none;
-    transition: transform 0.3s ease;
-    font-family: 'Helvetica Neue', sans-serif;
-}
-
-.work-item:hover {
-    color: initial;
-    transform: translateY(-2px);
-    box-shadow: none;
-}
-
-/* --- Adjusted Varying Card Sizes --- */
-.work-item.visual {
-    grid-column: span 1;
-    margin-top: 0;
-}
-
-.work-item.motion {
-    grid-column: span 1;
-    margin-top: 20px;
-}
-
-.work-item.design {
-    grid-column: span 1;
-    margin-top: 40px;
-}
-
-/* --- Image Styling (B&W to Color Swap) --- */
-.work-image-container {
-    width: 100%;
-    margin-bottom: 10px;
-    position: relative;
-    padding-top: calc(4 / 3 * 100%);
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
 }
 
-.work-image-container img {
+/* --- Der Pixel-Rahmen mit Monitor-Flackern --- */
+.pixel-frame-overlay {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    pointer-events: none;
+    z-index: 40;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+
+    /* Pixel-Ecken-Clip-Path */
+    clip-path: polygon(
+            0 16px, 4px 16px, 4px 8px, 8px 8px, 8px 4px, 16px 4px, 16px 0,
+            calc(100% - 16px) 0, calc(100% - 16px) 4px, calc(100% - 8px) 4px, calc(100% - 8px) 8px, calc(100% - 4px) 8px, calc(100% - 4px) 16px, 100% 16px,
+            100% calc(100% - 16px), calc(100% - 4px) calc(100% - 16px), calc(100% - 4px) calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) calc(100% - 4px), calc(100% - 16px) calc(100% - 4px), calc(100% - 16px) 100%,
+            16px 100%, 16px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 16px), 0 calc(100% - 16px)
+    );
+
+    /* Dezente Flackern-Animation */
+    animation: monitor-glow 4s infinite;
+}
+
+@keyframes monitor-glow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+    52% { opacity: 0.9; }
+    54% { opacity: 0.7; }
+}
+
+/* --- Hintergrundbilder & "Retro-Lag" --- */
+.bg-preview-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.full-bg {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
     object-fit: cover;
-    filter: grayscale(100%);
-    transition: filter 0.5s ease, transform 0.5s ease;
+    opacity: 0;
+
+    /* RETRO-LAG: Kurzer, stufiger Fade-In simuliert Ladezeit */
+    transition: opacity 0.25s steps(8);
+    will-change: opacity;
 }
 
-.work-item:hover .work-image-container img {
-    filter: grayscale(0%);
-    transform: scale(1.02);
+/* Default Bild: Immer als Basis präsent */
+.full-bg.is-default {
+    opacity: var(--img-opacity);
+    z-index: 2;
+    filter: brightness(var(--img-brightness));
 }
 
-/* --- Text Content Styling --- */
-.work-content {
-    padding: 0;
+/* Hover-Bilder: Blenden sich "ruckelig" darüber ein */
+#img-eyecandy, #img-anima, #img-lowpoly {
+    z-index: 5;
 }
 
-.work-title {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    font-weight: 700;
-    font-family: 'Aesthetic', sans-serif;
+/* --- Navigation (Zentriert & Vertikal) --- */
+.pixel-nav {
+    position: relative;
+    z-index: 50;
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 5px;
-    transition: transform 0.3s ease, color 0.3s ease;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
 }
 
-.work-item:hover .work-title {
-    transform: translateX(10px);
-    color: var(--hover);
-}
-
-
-.work-count {
-    font-size: 1.5rem;
-    font-weight: 400;
-    color: var(--accent, #7a267e);
-    margin-left: 10px;
-    transition: color 0.3s ease;
-}
-
-.work-description {
-    font-size: clamp(0.75rem, 1.5vw, 1rem);
-    color: #666;
+.nav-item {
+    font-family: 'Yoster', sans-serif;
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    color: var(--link);
+    text-decoration: none;
     text-transform: uppercase;
-    text-align: left;
-    margin-top: 0;
-    transition: transform 0.3s ease;
+
+    /* Schnelles Feedback beim Hover */
+    transition: transform 0.1s ease-out, color 0.1s ease;
 }
 
-.work-item:hover .work-description {
-    transform: translateX(5px);
-    color: #333;
+.nav-item:hover {
+    color: #fff;
+    /* Versatz-Effekt wie bei alten UI-Buttons */
+    transform: translate(4px, -4px);
+    text-shadow: -4px 4px 0px rgba(255, 255, 255, 0.2);
 }
+
+/* --- Hover Logik --- */
+.pixel-workspace:has(.nav-item[data-id="img-eyecandy"]:hover) #img-eyecandy,
+.pixel-workspace:has(.nav-item[data-id="img-anima"]:hover) #img-anima,
+.pixel-workspace:has(.nav-item[data-id="img-lowpoly"]:hover) #img-lowpoly {
+    opacity: 1;
+    filter: brightness(0.7);
+}
+
+/* Die Vignette sorgt dafür, dass die Ecken dunkler sind */
+.vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    background: radial-gradient(circle, var(--vignette-start) 30%, var(--vignette-end) 100%);
+    pointer-events: none;
+}
+
+
+
+
+
 
 /* --- NEW: Mission Statement Styling (Class .crafts-description) --- */
 .crafts-description {
@@ -410,9 +397,7 @@ img {
     background-position: right 95%;
 }
 
-/* -------------------------------------- */
-/* 3. PROCESS SECTION                     */
-/* -------------------------------------- */
+
 .process-section {
     max-width: 1400px;
     margin: 0 auto;
@@ -426,23 +411,20 @@ img {
     position: relative;
     margin: 0 0 var(--gap-medium) 0;
     font-size: clamp(3rem, 7vw, 6rem);
-    font-family: 'Aesthetic', sans-serif;
+    font-family: 'Alkhemikal', sans-serif;
     font-weight: bold;
     line-height: 1.1;
     max-width: 800px;
 }
 
 
-/* --- Quote Wrapper (Positioning Context) --- */
 .quote-wrapper {
     position: relative;
     margin: 0 auto;
-    /* FIX: Reduced padding from HUGE to LARGE/MEDIUM */
     padding: var(--gap-large) 0;
     overflow: visible;
 }
 
-/* --- .quotes (Parallax Target Image) --- */
 .quotes {
     content: var(--quotes);
     position: absolute;
@@ -456,7 +438,6 @@ img {
     overflow: hidden;
 }
 
-/* --- .quote (The Text) --- */
 .quote {
     position: relative;
     z-index: 1;
@@ -466,8 +447,6 @@ img {
     line-height: 0.9;
     margin: 0 auto;
     text-align: left;
-
-    /* FIX: Reduced excessive vertical margin */
     margin-top: 10vh;
     margin-bottom: 10vh;
 }
@@ -491,10 +470,6 @@ img {
     margin-right: 0;
 }
 
-/* -------------------------------------- */
-/* 4. MACINTOSH IMAGE                     */
-/* -------------------------------------- */
-
 .macintosh-wrapper {
     position: relative;
     max-width: 1100px;
@@ -513,10 +488,6 @@ img {
     padding: 0;
 }
 
-
-/* -------------------------------------- */
-/* 5. COMPANIONS/WORKSPACE SECTION        */
-/* -------------------------------------- */
 .section-workspace {
     padding: var(--gap-huge) 0;
     text-align: center;
@@ -531,13 +502,12 @@ img {
 }
 
 
-/* Styling for the new Apple Ecosystem Description */
 .apple-ecosystem-note {
-    font-family: 'Helvetica Neue', sans-serif; /* Using a cleaner font for functional description */
+    font-family: 'Helvetica Neue', sans-serif;
     font-size: clamp(1.2rem, 2vw, 2rem);
     line-height: 1.6;
     max-width: 800px;
-    margin: var(--gap-small) auto var(--gap-large) auto; /* Adjust vertical spacing */
+    margin: var(--gap-small) auto var(--gap-large) auto;
     color: var(--subtext);
     opacity: 0.85;
 }
@@ -548,14 +518,13 @@ img {
 
 
 .workspace-subtitle {
-    font-family: 'Aesthetic', sans-serif;
+    font-family: 'Alkhemikal', sans-serif;
     font-size: clamp(3rem, 4vw, 4rem);
     font-weight: 300;
     margin-bottom: var(--gap-large);
     color: var(--subtext);
 }
 
-/* --- Companion Block (Flex Layout) --- */
 .companion-block {
     display: flex;
     justify-content: flex-start;
@@ -569,7 +538,6 @@ img {
     position: relative;
 }
 
-/* --- Image Styling (Pinned Left) --- */
 .companion-image {
     flex-shrink: 0;
     width: 55%;
@@ -585,7 +553,6 @@ img {
     display: block;
 }
 
-/* --- Text Details (Right Side Content) --- */
 .companion-details {
     width: 45%;
     max-width: 600px;
@@ -615,7 +582,6 @@ img {
     margin-top: 20px;
 }
 
-/* --- Flexibility Note --- */
 .flexibility-note {
     font-family: 'Helvetica Neue', sans-serif;
     font-size: clamp(1.2rem, 2.5vw, 2rem);
@@ -629,17 +595,13 @@ img {
     color: var(--text);
 }
 
-/* -------------------------------------- */
-/* 6. SOFTWARE SKILLS (CHAOTIC CLUSTER) - REVISED */
-/* -------------------------------------- */
-
 .section-software {
     padding: var(--gap-huge) 0;
     text-align: center;
 }
 
 .software-title {
-    font-family: 'Aesthetic', sans-serif;
+    font-family: 'Alkhemikal', sans-serif;
     font-size: clamp(3rem, 5vw, 4.5rem);
     margin-bottom: var(--gap-large);
     color: var(--text);
@@ -647,7 +609,6 @@ img {
 
 .software-cluster {
     position: relative;
-    /* FIX: Reduced height to prevent a huge gap below the elements */
     min-height: 450px;
     max-width: 900px;
     margin: 0 auto;
@@ -675,7 +636,6 @@ img {
     transform: scale(1.05) rotate(0deg) !important;
 }
 
-/* --- NEW: Icon Styling --- */
 .app-icon {
     width: 0.5em;
     height: 0.5em;
@@ -691,7 +651,6 @@ img {
     line-height: 1;
 }
 
-/* --- Specific Icon Placement (You MUST set these to your actual icon files) --- */
 .icon-affinity { background-image: url('./assets/affinity.svg'); }
 .icon-photoshop { background-image: url('./assets/photoshop.svg'); }
 .icon-procreate { background-image: url('./assets/procreate.svg'); }
@@ -700,8 +659,6 @@ img {
 .icon-finalcut { background-image: url('./assets/finalcut.svg'); }
 .icon-illustrator { background-image: url('./assets/illustrator.svg'); }
 
-
-/* --- Positioning and Styling Individual Apps (CRAMPED CHAOS) --- */
 .app-affinity {
     font-size: clamp(2.5rem, 4vw, 5rem);
     top: 0;
@@ -775,7 +732,6 @@ img {
     transform: rotate(-12deg);
 }
 
-/* --- NEW: Centered "and more..." text below the cluster --- */
 .app-more-centered {
     font-family: 'Montserrat', sans-serif;
     font-size: clamp(1.2rem, 2vw, 2rem);
@@ -785,7 +741,6 @@ img {
     color: var(--subtext);
 }
 
-/* --- 7. SOFTWARE PROFICIENCY TEXT --- */
 .software-proficiency-text {
     max-width: 900px;
     margin: var(--gap-huge) auto 0 auto;
@@ -795,7 +750,7 @@ img {
 }
 
 .proficiency-title {
-    font-family: 'Aesthetic', sans-serif;
+    font-family: 'Alkhemikal', sans-serif;
     font-size: clamp(2.5rem, 4vw, 3.5rem);
     margin-bottom: var(--gap-medium);
     text-align: center;
@@ -817,12 +772,8 @@ img {
     color: var(--text);
 }
 
-/* -------------------------------------- */
-/* 8. MEDIA QUERIES (Mobile Optimization) */
-/* -------------------------------------- */
 
 @media (max-width: 800px) {
-    /* --- VARIABLE OVERRIDES FOR MOBILE --- */
     :root {
         --gap-small: 20px;
         --gap-medium: 30px;
@@ -837,7 +788,6 @@ img {
         padding: 0 10px;
     }
 
-    /* --- HERO --- */
     .hero {
         min-height: 80vh;
     }
@@ -847,42 +797,34 @@ img {
     }
 
     .signature {
-        /* Reset top/position for mobile flow or smaller viewport */
         top: 450px;
         width: clamp(150px, 40vw, 200px);
     }
 
     .visionportrait {
-        /* Adjust image position for smaller screens */
         top: 15vh;
         left: 5%;
         width: clamp(120px, 20vw, 180px);
     }
 
     .intro {
-        /* Ensure intro text is contained */
         padding-top: var(--gap-large);
         padding-bottom: var(--gap-large);
     }
 
 
-    /* --- CRAFTS SECTION (Grid) --- */
     .craft-grid {
-        /* FIX: Stack items vertically (single column) */
         grid-template-columns: 1fr;
-        gap: var(--gap-large); /* Vertical gap between stacked items */
         padding-left: var(--gap-medium);
         padding-right: var(--gap-medium);
         max-width: 600px;
     }
 
-    /* Remove vertical offset for stacked items */
     .work-item.motion,
     .work-item.design {
         margin-top: 0;
     }
 
-    /* --- PROCESS SECTION --- */
     .quote {
         font-size: clamp(3rem, 15vw, 8rem);
         margin-top: 5vh;
@@ -890,12 +832,10 @@ img {
     }
 
     .quotes {
-        /* Push the background quotes image further left to stay hidden */
         left: -50%;
     }
 
     .process-description {
-        /* Center text on mobile or align left */
         text-align: left;
         margin-left: 0;
     }
