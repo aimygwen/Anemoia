@@ -9,13 +9,13 @@
 
 
 :root {
-    --bg: rgb(255, 111, 199);
+    --bg: rgb(224, 201, 253);
     --ui: #000000;
     --uifade: rgba(234, 234, 234, 0.8);
     --link: rgb(0, 0, 0);
     --hover: #f5ff6b;
-    --fade: rgba(247, 138, 255, 0.75);
-    --text: #000000;
+    --fade: rgba(235, 204, 237, 0.75);
+    --text: #ffa0d9;
     --subtext: #3e3e3e;
     --accent: rgba(126, 126, 126, 0.5);
     --credits: #090909;
@@ -30,7 +30,7 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg: rgb(0, 0, 0);
+        --bg: rgb(41, 32, 53);
         --ui: #ffffff;
         --uifade: rgba(44, 44, 44, 0.8);
         --link: rgb(255, 255, 255);
@@ -48,7 +48,10 @@
 
 
 
-
+.no-scroll {
+    overflow: hidden !important;
+    height: 100vh !important;
+}
 
 body {
     background: var(--bg);
@@ -65,6 +68,15 @@ img {
 
 
 
+/* Remington Noiseless */
+@font-face {
+    font-family: 'Brick';
+    src: url('./fonts/NTBrickSans.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Montserrat */
 @font-face {
     font-family: 'Montserrat';
     src: url('./fonts/Montserrat.ttf') format('opentype');
@@ -72,13 +84,15 @@ img {
     font-style: normal;
 }
 
+/* Athemi */
 @font-face {
-    font-family: 'Athemi';
+    font-family: 'Athemi'; /* Giving it a descriptive name */
     src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
+/* Aesthetic */
 @font-face {
     font-family: 'Aesthetic';
     src: url('./fonts/Aesthetic.ttf') format('truetype');
@@ -86,6 +100,7 @@ img {
     font-style: normal;
 }
 
+/* Remington Noiseless */
 @font-face {
     font-family: 'Remington';
     src: url('./fonts/Remington Noiseless.ttf') format('truetype');
@@ -93,152 +108,57 @@ img {
     font-style: normal;
 }
 
-
-
-
-.contact-block {
-    position: fixed;
-    bottom: 20%;
-    left: 10%;
-    z-index: 99;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+/* Montserrat */
+@font-face {
+    font-family: 'Kawaii Bubble';
+    src: url('./fonts/Kawaii Bubble.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 
-.contact-block span,
-.email-item {
-    display: flex;
-    align-items: center;
-    color: var(--link);
-    font-family: 'Unitea Sans', sans-serif;
-    position: relative;
-    overflow: hidden;
-    transition: color 0.3s ease;
-    line-height: 1.3;
+@font-face {
+    font-family: 'Alkhemikal';
+    src: url('./fonts/Alkhemikal.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
 }
 
-
-.address {
-    font-size: 2.5em;
-}
-
-.email-item {
-    font-size: 2.5em;
-}
-
-.email-item img {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-    filter: invert(0);
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.email-item:hover {
-    color: var(--hover);
-}
-
-.email-item:hover img {
-    transform: translateX(-10px);
-    filter: invert(0.8);
-}
-
-.email-label::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 0;
-    height: 3px;
-    width: 100%;
-    background-color: currentColor;
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.email-item:hover .email-label::after {
-    transform: scaleX(1);
-    transform-origin: left;
-}
-
-.tmg,
-.mstv {
-    font-size: 1.4em;
-    opacity: 0.8;
-}
-
-
-
-
-@media (max-width: 900px) {
-    .contact-block {
-        bottom: 15%;
-        left: 5%;
-        gap: 14px;
-    }
-
-    .address,
-    .email-item {
-        font-size: 2em;
-    }
-
-    .email-item img {
-        width: 40px;
-        height: 40px;
-        margin-right: 8px;
-    }
-
-    .tmg,
-    .mstv {
-        font-size: 1.2em;
-    }
-}
-
-@media (max-width: 600px) {
-    .contact-block {
-        bottom: 12%;
-        left: 4%;
-        gap: 12px;
-    }
-
-    .address,
-    .email-item {
-        font-size: 1.6em;
-    }
-
-    .email-item img {
-        width: 32px;
-        height: 32px;
-        margin-right: 6px;
-    }
-
-    .tmg,
-    .mstv {
-        font-size: 1em;
-    }
+/* Remington Noiseless */
+@font-face {
+    font-family: 'Yoster';
+    src: url('./fonts/yoster.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 
 
 
 
-body {
-    line-height: 1.6;
-    padding: 2rem;
-}
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    color: #000000;
-    margin: 0;
-    padding: 0;
-}
 
 [data-speed] {
     transition: transform 0.05s ease-out;
     will-change: transform;
+}
+
+.title {
+    height: 1600px;
+    position: relative;
+}
+
+.title-name {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 300px;
+    font-family: 'Athemi', sans-serif;
+    font-size: clamp(8rem, 38vw, 38rem);
+    text-align: center;
+    z-index: 5;
+
+    /* Der Filter wird hier verknüpft */
+    filter: url(#pixelate);
 }
 
 
@@ -280,10 +200,20 @@ body {
 
 
 .glasses {
-    top: 400px;
+    top: 1280px;
     left: 50%;
     transform: translateX(-50%);
-    width: 80%;
+    width: 1028px;
+    max-width: 80%;
+    height: auto;
+    z-index: 11;
+}
+
+.evilcutekawaii {
+    position: absolute;
+    top: 250px;
+    right: 8%;
+    width: 200px;
     height: auto;
     z-index: 5;
 }
@@ -396,4 +326,483 @@ body {
     width: 100%;
     height: auto;
     display: block;
+}
+
+
+
+
+.hero-text-block {
+    position: absolute;
+    font-family: 'Remington', serif; /* Oder 'Athemi', je nach Wunsch */
+    font-size: clamp(1rem, 1.5vw, 1.5rem);
+    color: #1e1e1e;
+    line-height: 1.4;
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 12;
+}
+
+/* Positionierung der einzelnen Sätze - Passe diese Werte an dein Layout an */
+
+.perpetrator {
+    top: 60%;
+    right: 25%;
+    max-width: 700px;
+    font-family: 'Yoster', serif; /* Kontrast-Schriftart */
+    font-size: clamp(1.5rem, 4vw, 4rem);
+    color: #8c00ff;
+    text-align: right;
+}
+
+.welcome {
+    top: 85%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: left;
+    max-width: 700px;
+    font-family: 'Alkhemikal', serif; /* Kontrast-Schriftart */
+    font-size: clamp(1.5rem, 4vw, 4rem);
+
+    /* Schritt 1: Hintergrund mit Blur erstellen */
+    background: rgba(117, 117, 117, 0.5); /* Deine Pinke Farbe mit Transparenz */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px); /* Wichtig für Safari/Mac */
+
+    /* Schritt 2: Den Text als Maske verwenden */
+    /* Wir nutzen den Text selbst, um den Rest der Box unsichtbar zu machen */
+    -webkit-mask-image: linear-gradient(black, black); /* Dummy-Gradient */
+    -webkit-mask-clip: text;
+    mask-clip: text;
+
+    /* Schritt 3: Die eigentliche Textfarbe auf transparent stellen */
+    color: transparent;
+
+    /* Fallback für Browser, die das nicht unterstützen */
+    -webkit-text-fill-color: transparent;
+}
+
+
+
+
+/* Update the Hero container */
+.hero {
+    position: relative;
+    width: 100%;
+    min-height: 180vh; /* Increased to account for the 'sorry' block at top: 140% */
+    overflow: visible; /* Allow the content to lead into the next section */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Adjust the 'Sorry' block to be the anchor point */
+.maker {
+    position: absolute;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* Breite & Umbruch */
+    width: 90%;            /* Nutzt 90% des Screens auf Mobile */
+    max-width: 2560px;     /* Deine Begrenzung */
+    white-space: normal;   /* Erlaubt Umbruch, falls max-width erreicht wird */
+    word-wrap: break-word; /* Verhindert das Herausragen bei extrem langen Wörtern */
+    color: #232323;
+    /* Typografie */
+    font-family: 'Alkhemikal', sans-serif;
+    text-align: center;
+    text-transform: none;
+    /* Größere Schrift & kompakte Höhe */
+    font-size: clamp(4rem, 18vw, 18rem); /* Startwert und Max-Wert erhöht */
+    line-height: 1;                  /* Verringert den vertikalen Abstand */
+
+    z-index: 10;
+
+}
+
+.philosophy {
+    position: relative;
+    width: 75%;
+    margin-top: 10vh; /* This pushes the section down so it starts AFTER the 'sorry' text */
+    padding-bottom: 10vh;
+    z-index: 20;
+    font-family: 'Yoster', serif; /* Using your elegant font for the core */
+    font-size: clamp(1.5rem, 4vw, 3.4rem);
+    line-height: 1.2;
+    margin-bottom: 6rem;
+    color: var(--text);
+    text-align: center;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+
+/* The About Section */
+#about {
+    position: relative;
+    width: 100%;
+    background: var(--bg); /* Keeps the pink/black background */
+    margin-top: 60vh; /* This pushes the section down so it starts AFTER the 'sorry' text */
+    padding-bottom: 10vh;
+    z-index: 20;
+}
+
+#about .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 8rem;
+}
+
+
+
+#about .story,
+#about .emotion,
+#about .skills {
+    font-family: 'Yoster', serif; /* Using your elegant font for the core */
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    line-height: 1.2;
+    margin-bottom: 3rem;
+    color: var(--text);
+}
+
+#shaped {
+    position: relative;    /* WICHTIG: Erlaubt .world sich hieraus zu orientieren */
+    width: 100%;
+    min-height: 100vh;     /* Zwingt die Sektion auf volle Bildschirmhöhe */
+    display: flex;         /* Hilft bei der Zentrierung von .influence */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;      /* Verhindert Scrollbalken durch den Riesentext */
+}
+
+.world {
+    position: relative;
+    top: 50%;
+    left: 50%;
+
+    /* Deine Font-Styles */
+    font-family: 'Alkhemikal', sans-serif;
+    font-size: clamp(5rem, 18vw, 18rem);
+    line-height: 1;
+    color: #232323;
+    opacity: 1;          /* Sehr dezent, damit man .influence lesen kann */
+    z-index: 100;
+}
+
+.influence {
+    position: relative;    /* Damit es über .world liegt */
+    z-index: 2;
+    width: 60%;
+    max-width: 900px;
+    text-align: center;
+    font-family: 'Yoster', serif;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    line-height: 1.4;
+    color: #232323;
+}
+
+/* Die Sektion nimmt die volle Breite und passt sich der Höhe an */
+.tidbits-section {
+    display: flex;
+    justify-content: flex-start; /* Geändert, damit wir die Abstände manuell steuern können */
+    padding: 150px 8%;
+    min-height: 100vh;
+    height: auto;
+}
+
+.tidbits-left {
+    width: 35%;          /* Leicht schmaler für das 30%-Layout der rechten Seite */
+    position: sticky;
+    top: 50vh;
+    transform: translateY(-50%);
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+}
+
+.main-title {
+    font-family: 'Alkhemikal', serif;
+    font-size: clamp(4rem, 10vw, 11rem);
+    line-height: 1;
+    margin: 0;
+    text-align: center;
+}
+
+.main-title span {
+    font-family: 'Yoster', serif;
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+    display: block;
+    margin-top: 20px;
+}
+
+/* Rechte Spalte für die Liste - Neu positioniert */
+.tidbits-right {
+    width: 60%;          /* Breite angepasst */
+    margin-left: 5%;     /* 25% (links) + 5% (Abstand) = Liste startet bei 30% */
+}
+
+.tidbit-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tidbit-item {
+    display: flex;
+    align-items: center;
+    padding: 100px 0;
+    border-top: 1px solid #bcbaae;
+    font-family: 'Yoster', serif;
+}
+
+.tidbit-item:first-child {
+    border-top: 1px solid #bcbaae;
+}
+
+.tidbit-badge {
+    width: 70px;
+    height: 70px;
+    /* Nutzt die Variable, Standard ist Schwarz */
+    background: var(--badge-color, #000);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin-right: 50px;
+    flex-shrink: 0;
+}
+
+.tidbit-content h3 {
+    font-family: 'Alkhemikal', serif;
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    margin: 0 0 15px 0;
+    margin-right: 50px;
+}
+
+.tidbit-content {
+    max-width: 70%;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+.tidbit-content p {
+    font-size: 2rem;
+    line-height: 1.8;
+    color: #333;
+}
+
+.tidbit-date {
+    margin-left: auto;       /* Schiebt die Box weiterhin nach rechts */
+    width: 200px;            /* Gibt der Box eine feste Breite (anpassen nach Bedarf) */
+    text-align: left;        /* Jetzt hat der Text Platz, um links zu stehen */
+
+    font-size: 1.5rem;
+    font-family: 'Alkhemikal', serif;
+
+    /* Optional: Ein kleiner Abstand zum Inhalt links davon */
+    padding-left: 20px;
+    color: rgba(78, 78, 78, 0.76);
+}
+
+#whats-next {
+    padding: 200px 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 80vh;
+}
+
+.next-title {
+    font-family: 'Alkhemikal', serif;
+    font-size: clamp(4rem, 12vw, 10rem);
+    line-height: 0.9;
+    margin-bottom: 60px;
+    color: #1a1a1a;
+    text-transform: uppercase;
+}
+
+.next-text {
+    font-family: 'Yoster', serif;
+    font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+    line-height: 1.6;
+    max-width: 900px; /* Hält die Zeilenlänge lesbar */
+    color: #333;
+    margin: 0 auto;
+}
+
+/* Ein kleiner grafischer Akzent am Ende */
+.next-footer {
+    margin-top: 100px;
+    font-family: 'Brick', serif;
+    font-size: 1.2rem;
+    letter-spacing: 5px;
+    opacity: 0.5;
+}
+
+
+#the-mess {
+    padding: 150px 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    overflow: hidden;
+}
+
+#the-mess {
+    padding: 150px 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 80px;
+    position: relative; /* Wichtig, damit die Kreuze innerhalb der Sektion bleiben */
+    overflow: hidden;    /* Verhindert, dass Bilder aus der Sektion herausragen */
+}
+
+/* Die gigantische Pixel-Bubble mit Treppen-Ecken */
+.pixel-bubble.flashy {
+    background: white;
+    color: black;
+    padding: 3rem 4rem;
+    max-width: 900px;
+    position: relative;
+    font-family: 'Alkhemikal', serif;
+
+    /* Pixel-Ecken durch Box-Shadow-Manipulation */
+    border: 4px solid black;
+    box-shadow:
+            -8px 0 0 0 black,
+            8px 0 0 0 black,
+            0 -8px 0 0 black,
+            0 8px 0 0 black,
+                /* Der äußere fette Schatten für den "Flashy" Look */
+            15px 15px 0px rgba(0,0,0,0.1);
+
+    margin: 20px;
+    animation: float 4s ease-in-out infinite;
+}
+
+/* Der kleine dreieckige Sprechblasen-Zipfel (Pixel-Style) */
+.pixel-bubble.flashy::after {
+    content: "";
+    position: absolute;
+    bottom: -12px;
+    left: 40px;
+    width: 12px;
+    height: 12px;
+    background: white;
+    box-shadow:
+            4px 4px 0 0 black,
+            8px 8px 0 0 black,
+            -4px 4px 0 0 white; /* kaschiert die Kante */
+}
+
+.pixel-bubble p {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1.1;
+    margin: 0;
+}
+
+.highlight {
+    color: #ff029a;
+    /* Retro Text-Schatten */
+    text-shadow: 4px 4px 0px #000;
+}
+
+.jp-text {
+    font-family: 'Yoster', serif;
+    font-size: 2rem;
+    margin-top: 30px;
+    display: block;
+    background: black;
+    color: white;
+    padding: 10px 20px;
+    width: fit-content;
+}
+
+/* Die fetten Pixel-Buttons */
+.pixel-links {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pixel-btn-bold {
+    font-family: 'Yoster', serif;
+    text-decoration: none;
+    color: white;
+    background: #000;
+    padding: 20px 40px;
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
+
+    /* Klassische 8-Bit Ecken */
+    box-shadow:
+            -4px 0 0 0 #000,
+            4px 0 0 0 #000,
+            0 -4px 0 0 #000,
+            0 4px 0 0 #000;
+
+    transition: all 0.8s;
+    cursor: pointer;
+}
+
+.pixel-btn-bold:hover {
+    /* Wichtig: Filter brauchen eine Basis-Farbe ungleich Schwarz, um zu wirken */
+    background: #808080;
+    color: white;
+
+    /* Dein exakter Brand-Filter */
+    filter: invert(34%) sepia(91%) saturate(2250%) hue-rotate(293deg) brightness(87%) saturate(2250%);
+
+    /* Die Pixel-Ecken färben sich durch den Filter automatisch mit */
+    box-shadow:
+            -4px 0 0 0 #808080,
+            4px 0 0 0 #808080,
+            0 -4px 0 0 #808080,
+            0 4px 0 0 #808080,
+            8px 8px 0 0 black;
+
+    transform: translate(-4px, -4px);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+
+
+.deco-cross {
+    position: absolute;
+    image-rendering: pixelated; /* Erhält den scharfen Pixel-Look für deine Hytale-Assets */
+    z-index: 1; /* Damit sie hinter oder vor dem Text liegen, je nach Wunsch */
+    pointer-events: none; /* Man kann durch die Bilder hindurchklicken */
+}
+
+.cross-left {
+    bottom: 0;
+    left: 0;
+    width: 300px; /* Breite nach Bedarf anpassen */
+}
+
+.cross-right {
+    bottom: 0;
+    right: 0;
+    width: 600px;
+}
+
+.cross-stop {
+    bottom: 15%; /* Ein wenig vom Boden weg */
+    left: 75%;
+    transform: translateX(-50%); /* Zentriert es genau in der Mitte */
+    width: 250px;
 }
