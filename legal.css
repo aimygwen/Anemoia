@@ -8,9 +8,9 @@
     --bg: rgb(241, 241, 241);
     --ui: #000000;
     --uifade: rgba(234, 234, 234, 0.8);
-    --link: rgb(0, 0, 0);
+    --link: rgb(184, 228, 49);
     --hover: #a126ae;
-    --fade: rgba(241, 241, 241, 0.75);
+    --fade: rgba(42, 85, 8, 0.89);
     --text: #000000;
     --subtext: #3e3e3e;
     --accent: rgba(126, 126, 126, 0.5);
@@ -44,6 +44,8 @@ body {
     overflow-x: hidden;
 }
 
+
+/* Montserrat */
 @font-face {
     font-family: 'Montserrat';
     src: url('./fonts/Montserrat.ttf') format('opentype');
@@ -51,13 +53,15 @@ body {
     font-style: normal;
 }
 
+/* Athemi */
 @font-face {
-    font-family: 'Athemi';
+    font-family: 'Athemi'; /* Giving it a descriptive name */
     src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
+/* Aesthetic */
 @font-face {
     font-family: 'Aesthetic';
     src: url('./fonts/Aesthetic.ttf') format('truetype');
@@ -65,12 +69,30 @@ body {
     font-style: normal;
 }
 
+/* Remington Noiseless */
 @font-face {
     font-family: 'Remington';
     src: url('./fonts/Remington Noiseless.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'Alkhemikal';
+    src: url('./fonts/Alkhemikal.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Remington Noiseless */
+@font-face {
+    font-family: 'Yoster';
+    src: url('./fonts/yoster.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Main */
 
 h1 {
     color: var(--text);
@@ -128,7 +150,7 @@ h3 {
     left: 0;
     width: 100%;
     max-width: none;
-    font-family: 'Helvetica Neue', serif;
+    font-family: 'Alkhemikal', serif;
     text-align: left;
     line-height: 1.6;
 }
@@ -137,7 +159,7 @@ h3 {
     font-size: 4rem;
     margin-top: 4rem;
     margin-bottom: 0.8rem;
-    font-family: 'Aesthetic', serif;
+    font-family: 'Alkhemikal', serif;
     font-weight: bold;
     color: var(--text);
 }
