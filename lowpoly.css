@@ -1,0 +1,254 @@
+/* --- CORE STYLES --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root {
+    --bg: rgb(197, 214, 234);
+    --bgsection: rgba(244, 244, 244, 0.89);
+    --ui: #e31654;
+    --uifade: rgba(234, 234, 234, 0.8);
+    --link: rgb(255, 106, 225);
+    --hover: #ebff6a;
+    --fade: rgba(197, 214, 234, 0.76);
+    --text: #ff8faf;
+    --title: #280f2c;
+    --subtext: #5c666c;
+    --accent: rgba(126, 126, 126, 0.5);
+    --credits: #090909;
+    --credits-sub: rgba(0, 0, 0, 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: rgb(37, 34, 39);
+        --bgsection: rgb(48, 41, 53);
+        --ui: #e31654;
+        --uifade: rgba(65, 52, 66, 0.72);
+        --link: rgb(255, 106, 225);
+        --hover: #ebff6a;
+        --fade: rgba(44, 26, 50, 0.76);
+        --text: #ff8faf;
+        --title: #fd8cdd;
+        --subtext: #5c666c;
+        --accent: rgba(126, 126, 126, 0.5);
+        --credits: #090909;
+        --credits-sub: rgba(0, 0, 0, 0.5);
+    }
+}
+
+
+body {
+    background: var(--bg);
+    overflow-x: hidden; /* Horizontal sperren */
+    overflow-y: auto;   /* Vertikal erlauben */
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+main {
+    width: 100%;
+    display: block; /* Standard Block-Flow */
+}
+
+section {
+    width: 100%;
+    min-height: 100vh;
+    padding: 10vh 8vw; /* Slightly reduced horizontal padding to allow more width */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* --- HERO SECTION --- */
+.hero-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4vw;
+}
+
+.intro-block {
+    flex: 1.6; /* Increased from 1 to give the text significantly more width */
+}
+
+.intro-title {
+    font-family: 'Athemi', serif;
+    font-size: 16vw;
+    font-weight: lighter;
+    color: var(--title);
+    line-height: 0.85;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    white-space: nowrap;
+    /* Added margin-bottom */
+    margin-bottom: 5rem;
+}
+
+.intro-subtitle {
+    font-family: 'Alkhemikal', sans-serif;
+    font-size: 4rem;
+    color: var(--subtext);
+    /* Adjusted margins */
+    margin-top: 0;
+    margin-bottom: 3rem;
+}
+
+.intro-description {
+    font-family: 'Yoster', sans-serif;
+    font-size: 1.8rem;
+    max-width: 90%;
+    color: var(--text);
+    line-height: 1.4;
+    /* Adjusted margins */
+    margin-top: 0;
+    margin-bottom: 6rem; /* Extra space before the next section or button */
+}
+
+.hero-model-container {
+    flex: 1; /* Model takes up slightly less room to favor the wide text */
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+model-viewer {
+    width: 100%;
+    height: 100%;
+    outline: none;
+}
+
+/* Responsive adjustment for smaller screens */
+@media (max-width: 1024px) {
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    .intro-title {
+        font-size: 20vw;
+    }
+    .intro-subtitle {
+        font-size: 6vw;
+    }
+}
+
+/* --- BENTO GRID (Vertikal optimiert) --- */
+#works-bento {
+    background-color: var(--bgsection);
+}
+
+.section-title {
+    font-family: 'Alkhemikal', serif;
+    font-size: 5vw;
+    margin-bottom: 5vh;
+
+}
+
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 500px;
+    gap: 20px;
+}
+
+.work-item {
+    position: relative;
+    background: #000;
+    overflow: hidden;
+    clip-path: polygon(
+            0 15px, 15px 15px, 15px 0,
+            calc(100% - 15px) 0, calc(100% - 15px) 15px, 100% 15px,
+            100% calc(100% - 15px), calc(100% - 15px) calc(100% - 15px), calc(100% - 15px) 100%,
+            15px 100%, 15px calc(100% - 15px), 0 calc(100% - 15px)
+    );
+}
+
+/* Bento Spanning */
+.work-item.featured { grid-column: span 2; grid-row: span 2; }
+.work-item.wide { grid-column: span 2; }
+
+.work-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.3s ease;
+}
+
+.work-item:hover .work-img {
+    filter: invert(34%) sepia(91%) saturate(2250%) hue-rotate(293deg) brightness(87%) saturate(2250%);
+}
+
+.work-overlay {
+    position: absolute;
+    bottom: 50px;
+    left: 50px;
+    pointer-events: none;
+}
+
+.work-overlay h3 {
+    font-family: 'Alkhemikal', serif;
+    font-size: 4rem;
+    /* Schritt 1: Hintergrund mit Blur erstellen */
+    background: var(--bgsection); /* Deine Pinke Farbe mit Transparenz */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px); /* Wichtig für Safari/Mac */
+
+    /* Schritt 2: Den Text als Maske verwenden */
+    /* Wir nutzen den Text selbst, um den Rest der Box unsichtbar zu machen */
+    -webkit-mask-image: linear-gradient(black, black); /* Dummy-Gradient */
+    -webkit-mask-clip: text;
+    mask-clip: text;
+
+    /* Schritt 3: Die eigentliche Textfarbe auf transparent stellen */
+    color: transparent;
+
+    /* Fallback für Browser, die das nicht unterstützen */
+    -webkit-text-fill-color: transparent;
+}
+
+.work-overlay p {
+    font-family: 'Yoster', serif;
+    font-size: 2.2rem;
+    /* Schritt 1: Hintergrund mit Blur erstellen */
+    background: rgba(117, 117, 117, 0.5); /* Deine Pinke Farbe mit Transparenz */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px); /* Wichtig für Safari/Mac */
+
+    /* Schritt 2: Den Text als Maske verwenden */
+    /* Wir nutzen den Text selbst, um den Rest der Box unsichtbar zu machen */
+    -webkit-mask-image: linear-gradient(black, black); /* Dummy-Gradient */
+    -webkit-mask-clip: text;
+    mask-clip: text;
+
+    /* Schritt 3: Die eigentliche Textfarbe auf transparent stellen */
+    color: transparent;
+
+    /* Fallback für Browser, die das nicht unterstützen */
+    -webkit-text-fill-color: transparent;
+}
+
+/* --- SPLASH OVERLAYS --- */
+.splashcover {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 901;
+}
+
+.splash-img {
+    position: absolute;
+    width: 15vw;
+    height: auto;
+}
+
+.img-1 { bottom: 0; left: 0; width: 16vw; }
+.img-2 { top: 0; left: 0; width: 16vw; }
+.img-3 { top: 0; left: 0; opacity: 0.7; width: 16vw; }
+
+/* --- MOBILE --- */
+@media (max-width: 900px) {
+    .hero-section { flex-direction: column; text-align: center; }
+    .bento-grid { grid-template-columns: 1fr; grid-auto-rows: 300px; }
+    .work-item.featured, .work-item.wide { grid-column: span 1; }
+}
