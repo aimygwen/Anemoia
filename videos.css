@@ -1,0 +1,236 @@
+/* ----------------------------------------------------
+   MOTION DESIGN & VIDEOS STYLE SYSTEM
+   Cinematic dark-mode, borderless, high-contrast.
+   ---------------------------------------------------- */
+
+:root {
+    --ui-bg: var(--paper);
+    --ui-ink: var(--ink);
+    --ui-active: var(--accent);
+    --ui-border: var(--ui-border-color, rgba(207, 162, 255, 0.08));
+
+    /* Custom palette overrides for Videos (cinematic violet / neon cyan) */
+    --paper: #daefe1;             /* Milky lilac white background */
+    --ink: #3b0764;               /* Deep royal purple ink */
+    --accent: #a855f7;            /* Vibrant purple accent */
+    --ui-active: #06b6d4;         /* Cyan hover glow */
+    --color-cream: #ffffff;       /* Pure white card backdrop */
+    --color-yellow: #f3e8ff;      /* Soft lavender secondary */
+    --color-purple-light: #e9d5ff; /* Bright purple secondary */
+    --ui-border-color: rgba(59, 7, 100, 0.08);
+
+    /* Background gradient variables */
+    --color-blush: #f3e8ff;
+    --color-lavender: #e9d5ff;
+    --color-mauve: #d8b4fe;
+
+    /* Bento Card Media wrappers */
+    --card-media-bg: rgba(255, 255, 255, 0.5);
+    --card-media-border: rgba(255, 255, 255, 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --paper: #190b28;             /* Pure obsidian-violet background */
+        --ink: rgb(255, 153, 98);               /* Bright lilac text */
+        --accent: #c084fc;            /* Neon purple accent */
+        --ui-active: #22eea7;         /* Neon cyan hover active */
+        --color-cream: #150d1a;       /* Deep purple-black card backdrop */
+        --color-yellow: #3b0764;      /* Royal purple secondary */
+        --color-purple-light: #2e1065; /* Deep space violet secondary */
+        --ui-border-color: rgba(233, 213, 255, 0.08);
+
+        /* Background gradient variables */
+        --color-blush: #150d1a;
+        --color-lavender: #09050d;
+        --color-mauve: #2e1065;
+
+        /* Bento Card Media wrappers */
+        --card-media-bg: rgba(21, 13, 26, 0.6);
+        --card-media-border: rgba(255, 255, 255, 0.06);
+    }
+}
+
+.videos-page-body {
+    background-color: var(--ui-bg);
+    min-height: 100vh;
+    color: var(--ui-ink);
+}
+
+#videos-page-content {
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+}
+
+#videos-page-content.active {
+    opacity: 1;
+}
+
+.smooth-scroll-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: min(1600px, 95vw);
+    margin: 0 auto;
+    height: auto;
+    will-change: transform;
+    padding: clamp(6rem, 10vw, 8.5rem) var(--page-pad-x) 2rem var(--page-pad-x);
+    box-sizing: border-box;
+}
+
+.scroll-spacer {
+    width: 100%;
+    pointer-events: none;
+}
+
+/* --- Vertical Parallax Gallery --- */
+.vertical-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(6rem, 15vh, 12rem);
+    width: 100%;
+    margin-top: 4rem;
+}
+
+.gallery-item {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.gallery-item-media {
+    position: relative;
+    height: 65vh;
+    width: auto;
+    max-width: 100%;
+    max-height: 65vh;
+    aspect-ratio: inherit;
+    overflow: hidden;
+    border-radius: 28px;
+    will-change: transform;
+    transition: box-shadow 0.4s ease;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+}
+
+.gallery-item-media video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* 100% height to match container aspect ratio exactly */
+    object-fit: cover;
+    pointer-events: none;
+    border-radius: 28px;
+}
+
+.gallery-item:hover .gallery-item-media {
+    box-shadow: 0 20px 45px rgba(34, 211, 238, 0.08); /* Outer glow on parent media container */
+}
+
+/* Explicit absolute border overlay layer sitting on top of video stream */
+.video-border-overlay {
+    position: absolute;
+    inset: 0;
+    border: 3.5px solid transparent;
+    border-radius: 28px;
+    pointer-events: none;
+    z-index: 5; /* stacks on top of absolute video and grid wrappers */
+    transform: translate3d(0, 0, 0); /* Force compositing layer to prevent hardware-accelerated video from rendering on top */
+    transition: border-color 0.3s ease;
+}
+
+.gallery-item:hover .video-border-overlay {
+    animation: rainbow-border-shift 3s linear infinite;
+}
+
+@keyframes rainbow-border-shift {
+    0% { border-color: #ff7eb6; }    /* Pink */
+    25% { border-color: #ffeab0; }   /* Yellow */
+    50% { border-color: #2dd4bf; }   /* Teal */
+    75% { border-color: #cfa2ff; }   /* Lilac */
+    100% { border-color: #ff7eb6; }  /* Pink */
+}
+
+@media (max-width: 880px) {
+    .gallery-item-media {
+        width: 100%;
+        height: auto;
+        max-height: 65vh;
+    }
+}
+
+/* Ambient light/theater mode glow effects */
+.ambient-glow-container {
+    position: absolute;
+    height: 65vh;
+    width: auto;
+    max-width: 100%;
+    max-height: 65vh;
+    aspect-ratio: inherit;
+    pointer-events: none;
+    z-index: -1;
+    will-change: transform;
+    display: flex;
+    justify-content: center;
+}
+
+.ambient-glow-video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 28px;
+    filter: blur(80px) saturate(2.2); /* heavy blur & saturation for atmospheric light spill */
+    opacity: 0.65;
+    pointer-events: none;
+    will-change: transform, opacity;
+    animation: ambient-pulsate 5s ease-in-out infinite;
+}
+
+@keyframes ambient-pulsate {
+    0%, 100% {
+        opacity: 0.45;
+        filter: blur(80px) saturate(2.0);
+    }
+    50% {
+        opacity: 0.75;
+        filter: blur(95px) saturate(2.6); /* pulsate blur/saturation intensity */
+    }
+}
+
+/* Wonky low-poly clickable techtangle badge */
+.techtangle-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8) rotate(3deg);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+    background-color: var(--ui-active);
+    color: var(--paper);
+    border: 2px solid var(--ui-ink);
+    box-shadow: 4px 4px 0px var(--ui-ink);
+    padding: 0.65rem 1.35rem;
+    font-family: 'Alkhemikal', monospace;
+    font-size: clamp(0.9rem, 1.2vw, 1.15rem);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    clip-path: polygon(2% 8%, 98% 3%, 96% 92%, 4% 95%);
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.gallery-item:hover .techtangle-badge {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(-1.5deg);
+}

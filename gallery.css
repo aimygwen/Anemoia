@@ -1,0 +1,372 @@
+/* ----------------------------------------------------
+   2D ART GALLERY STYLE SYSTEM
+   Sleek, borderless, warm cream aesthetic.
+   ---------------------------------------------------- */
+
+:root {
+    --ui-bg: var(--paper);
+    --ui-ink: var(--ink);
+    --ui-active: var(--accent);
+    --ui-border: var(--ui-border-color, rgba(45, 18, 61, 0.06));
+
+    /* Custom palette overrides for Gallery (warm terracotta/rose) */
+    --paper: #f7edff;             /* Eggshell paper background */
+    --ink: #1f1927;               /* Dark terracotta/cocoa ink */
+    --accent: #371f37;            /* Rich rust orange accent */
+    --ui-active: #7548cf;         /* Rose pink hover active */
+    --color-cream: #fafaf9;       /* Stone white card backdrop */
+    --color-yellow: #fed7aa;      /* Soft peach */
+    --color-purple-light: #ffedd5; /* Soft cream-orange secondary */
+    --ui-border-color: rgba(67, 43, 36, 0.08);
+
+    /* Background gradient variables */
+    --color-blush: #ffedd5;
+    --color-lavender: #fed7aa;
+    --color-mauve: #fdba74;
+
+    /* Bento Card Media wrappers */
+    --card-media-bg: rgba(255, 255, 255, 0.5);
+    --card-media-border: rgba(255, 255, 255, 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --paper: #0c1120;             /* Deep charcoal-terracotta background */
+        --ink: #55e19b;               /* Bright peach-cream text */
+        --accent: #f97316;            /* Neon rust orange accent */
+        --ui-active: #ec56bd;         /* Neon rose highlight */
+        --color-cream: #2d1e18;       /* Dark rust-brown card backdrop */
+        --color-yellow: #7c2d12;      /* Deep burnt orange */
+        --color-purple-light: #451a03; /* Eggplant brown secondary */
+        --ui-border-color: rgba(255, 237, 213, 0.08);
+
+        /* Background gradient variables */
+        --color-blush: #2d1e18;
+        --color-lavender: #1c120e;
+        --color-mauve: #451a03;
+
+        /* Bento Card Media wrappers */
+        --card-media-bg: rgba(45, 30, 24, 0.6);
+        --card-media-border: rgba(255, 255, 255, 0.06);
+    }
+}
+
+.gallery-page-body {
+    background-color: var(--ui-bg);
+    min-height: 100vh;
+    color: var(--ui-ink);
+}
+
+#gallery-page-content {
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+}
+
+#gallery-page-content.active {
+    opacity: 1;
+}
+
+.smooth-scroll-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: min(1600px, 95vw);
+    margin: 0 auto;
+    height: auto;
+    will-change: transform;
+    padding: clamp(6rem, 10vw, 8.5rem) var(--page-pad-x) 2rem var(--page-pad-x);
+    box-sizing: border-box;
+}
+
+.scroll-spacer {
+    width: 100%;
+    pointer-events: none;
+}
+
+/* --- Hero Banner Section (Museum style) --- */
+.gallery-hero {
+    position: relative;
+    padding: clamp(5rem, 10vw, 8rem) 0 clamp(3rem, 6vw, 4rem) 0;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--ui-border);
+    margin-bottom: clamp(4rem, 8vw, 6rem);
+}
+
+.gallery-hero-badge {
+    font-family: 'Alkhemikal', monospace;
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+    font-weight: bold;
+    color: var(--ui-ink);
+    opacity: 0.5;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+.gallery-title-large {
+    font-family: 'Yoster Island', monospace;
+    font-size: clamp(3rem, 7.5vw, 5.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--ui-ink);
+    text-transform: uppercase;
+    margin: 0 0 1.5rem 0;
+}
+
+.gallery-museum-desc {
+    font-family: var(--font, "Plus Jakarta Sans"), sans-serif;
+    font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+    line-height: 1.65;
+    max-width: 620px;
+    color: var(--ui-ink);
+    opacity: 0.75;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* --- Vertical Parallax Gallery --- */
+.vertical-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(6rem, 15vh, 12rem);
+    width: 100%;
+    margin-top: 4rem;
+}
+
+.gallery-item {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.gallery-item-media {
+    position: relative;
+    height: 65vh;
+    width: auto;
+    max-width: 100%;
+    max-height: 65vh;
+    aspect-ratio: inherit;
+    overflow: hidden;
+    border-radius: 28px;
+    will-change: transform;
+    transition: box-shadow 0.4s ease;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+}
+
+.gallery-item-media img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* 100% height to match container aspect ratio exactly */
+    object-fit: cover;
+    pointer-events: none;
+    border-radius: 28px;
+}
+
+
+
+.gallery-item:hover .gallery-item-media {
+    box-shadow: 0 20px 45px rgba(43, 31, 29, 0.08);
+}
+
+/* Caption details */
+.gallery-item-info {
+    margin-top: 1.5rem;
+    text-align: center;
+    transition: transform 0.4s ease;
+}
+
+.gallery-item:hover .gallery-item-info {
+    transform: translateY(2px);
+}
+
+.gallery-item-title {
+    font-family: 'Yoster Island', monospace;
+    font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+    color: var(--ui-ink);
+    margin: 0 0 0.3rem 0;
+}
+
+.gallery-item-category {
+    font-family: 'Alkhemikal', monospace;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--badge-color, var(--accent));
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.gallery-item.cat-illustration { --badge-color: #b478df; }
+.gallery-item.cat-sketches { --badge-color: #f97316; }
+.gallery-item.cat-paintings { --badge-color: #cfa2ff; }
+
+/* Lightbox Badges and Types */
+.card-badge {
+    align-self: center;
+    font-family: 'Alkhemikal', monospace;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--ui-ink);
+    background: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.2rem 0.65rem;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.lightbox.cat-illustration .card-badge { color: #b478df; background: rgba(180, 120, 223, 0.08); }
+.lightbox.cat-sketches .card-badge { color: #2d123d; background: #ffeab0; }
+.lightbox.cat-paintings .card-badge { color: #2d123d; background: #cfa2ff; }
+.lightbox {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(20, 15, 14, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 1000;
+    display: none;
+    place-items: center;
+    padding: clamp(1rem, 4vw, 2.5rem);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.lightbox[aria-hidden="false"] {
+    display: grid;
+}
+
+.lightbox.active {
+    opacity: 1;
+}
+
+.lightbox-close {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--ui-ink);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    font-size: 2.2rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.25s ease;
+    z-index: 1010;
+}
+
+.lightbox-close:hover {
+    background: #ffffff;
+    color: var(--ui-active);
+    transform: scale(1.05) rotate(90deg);
+    box-shadow: 0 10px 30px rgba(198, 141, 176, 0.15);
+}
+
+.lightbox-content {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 28px;
+    max-width: 800px;
+    width: 100%;
+    max-height: calc(100vh - 4rem);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+    transform: scale(0.95);
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.lightbox.active .lightbox-content {
+    transform: scale(1);
+}
+
+.lightbox-image-wrapper {
+    position: relative;
+    background: rgba(38, 27, 48, 0.02);
+    padding: 3rem clamp(1rem, 4vw, 3rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 250px;
+    overflow: hidden;
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    height: auto;
+    max-height: 50vh;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 15px 30px rgba(38, 27, 48, 0.12));
+    z-index: 5;
+}
+
+.lightbox .corner-bracket {
+    opacity: 1;
+    transform: translate(0, 0) !important;
+}
+
+.lightbox-info {
+    padding: 1.8rem 2.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
+    background: transparent;
+}
+
+.lightbox-info h3 {
+    font-family: 'Yoster Island', monospace;
+    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    color: var(--ui-ink);
+    margin-bottom: 0.5rem;
+}
+
+.lightbox-info .card-badge {
+    margin-bottom: 0.8rem;
+    display: inline-block;
+}
+
+.lightbox-info p {
+    font-family: var(--font, "Plus Jakarta Sans"), sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: #5c4b47;
+}
+
+
+@media (max-width: 880px) {
+    .gallery-item-media {
+        width: 100%;
+        height: auto;
+        max-height: 65vh;
+    }
+}
+
+@media (max-width: 600px) {
+    .gallery-hero {
+        padding: 3rem 0 2rem 0;
+    }
+    .bento-grid {
+        grid-auto-rows: 220px;
+        gap: 1rem;
+    }
+}
