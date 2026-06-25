@@ -1,0 +1,3126 @@
+@font-face {
+    font-family: 'Yoster Island';
+    src: url('fonts/yoster.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Alkhemikal';
+    src: url('fonts/Alkhemikal.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Athemi';
+    src: url('fonts/Athemi.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --ink: #2d123d;             /* Dark eggplant ink */
+    --paper: #ffe6f4;           /* Light pastel lavender background */
+    --accent: #b478df;          /* Deeper warm purple accent */
+    --ui-active: #0d9488;       /* Vibrant teal hover accent for the homepage navbar links */
+    --color-cream: #fffdf5;     /* Warm cream */
+    --color-yellow: #ffeab0;    /* Warm pastel yellow */
+    --color-purple-light: #cfa2ff; /* Bright pastel purple */
+    --ui-border-color: rgba(45, 18, 61, 0.06);
+    --font: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --hero-font: "DM Sans", system-ui, -apple-system, sans-serif;
+
+    --page-pad-x: clamp(1.25rem, 4vw, 4rem);
+    --page-pad-y: clamp(1.25rem, 2.75vw, 2.5rem);
+
+    --hero-size: clamp(1.5rem, 4vw, 3.75rem);
+    --nav-size: clamp(1.05rem, 1.35vw, 1.45rem);
+    --hero-line: 1.15;
+
+    --about-body-size: clamp(1rem, 1.25vw, 1.25rem);
+
+    /* Shared vertical rhythm for sections + cards overhang. */
+    --section-py: 60px;
+    --collaborations-overhang: 10vw;
+}
+
+
+/*2D123DFF*/
+
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+/* Soft pink + a little yellow that gently drifts at the bottom of the
+   page. A masked, slowly-animated gradient band behind all content. */
+body { position: relative; background-color: transparent; }
+body::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 1500px;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(115deg, var(--color-cream) 0%, var(--color-yellow) 28%, var(--color-purple-light) 55%, var(--accent) 78%, var(--paper) 100%);
+    background-size: 300% 100%;
+    background-position: 0% 50%;
+    -webkit-mask-image: linear-gradient(to top, #000 0%, #000 52%, transparent 92%);
+    mask-image: linear-gradient(to top, #000 0%, #000 52%, transparent 92%);
+    animation: bg-drift 26s ease-in-out infinite alternate;
+}
+@keyframes bg-drift {
+    from { background-position: 0% 50%; }
+    to   { background-position: 100% 50%; }
+}
+@media (prefers-reduced-motion: reduce) { body::before { animation: none; } }
+/* Custom cursor. A JS-positioned follower (.cursor-plane)
+   replaces the native cursor, which is hidden via .plane-cursor on
+   <html>. The tip (transform-origin 4.2% 7.7%) is the click
+   hotspot. Over any interactive element it tips forward and shrinks
+   slightly. Fine pointers only — touch keeps the default cursor. */
+@media (hover: hover) and (pointer: fine) {
+    html.plane-cursor, html.plane-cursor * { cursor: none !important; }
+}
+.cursor-plane {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 48px;
+    height: 48px;
+    pointer-events: none;
+    z-index: 99999999 !important;
+    will-change: transform;
+    transition: opacity 0.2s ease;
+}
+.cursor-plane img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform-origin: 4.2% 7.7%; /* pivot at the pointer's tip */
+    scale: 1;
+    rotate: 0deg;
+    transition: scale 0.18s ease, rotate 0.18s ease;
+}
+/* Hovering something clickable: shrink + tip the pointer forward. */
+.cursor-plane.is-pointing img { scale: 0.8; rotate: 18deg; }
+@media (prefers-reduced-motion: reduce) {
+    .cursor-plane img { transition: none; }
+}
+
+
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* The about page is a normal scrolling document with multiple
+   full-viewport sections (about, experience), a fixed header that
+   stays anchored across scroll & page transitions, and a footer
+   that arrives in flow at the end. */
+
+/* Header styling has been extracted to ui.css for per-page customization */
+
+/* Hero section — fills first viewport with the image+text pair
+   centered. Padding-top reserves room for the fixed header. */
+.page {
+    position: relative;
+    min-height: 100vh;
+    padding:
+            calc(var(--page-pad-y) * 2 + clamp(48px, 4.5vw, 72px))
+            var(--page-pad-x)
+            var(--page-pad-y);
+    background: var(--paper);
+    display: grid;
+    place-items: center;
+}
+
+/* Scroll-down cue pinned to the bottom of the full-viewport hero.
+   Gentle bob to draw the eye; fades out once the page is scrolled. */
+.scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(1.25rem, 4vh, 2.75rem);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font);
+    font-size: clamp(0.72rem, 0.85vw, 0.85rem);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: 0.65;
+    pointer-events: none;
+    transform: translateX(-50%);
+    animation: scroll-bob 1.8s ease-in-out infinite;
+    transition: opacity 0.4s ease;
+}
+.scroll-cue svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+body.is-scrolled .scroll-cue {
+    opacity: 0;
+}
+@keyframes scroll-bob {
+    0%, 100% { transform: translate(-50%, 0); }
+    50%      { transform: translate(-50%, 6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .scroll-cue { animation: none; }
+}
+
+/* -----------------------------------------------------------------
+   About content: image + text centered vertically AND horizontally.
+----------------------------------------------------------------- */
+.about-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: clamp(4rem, 8vw, 10rem);
+    min-height: 0;
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.about-left {
+    flex: 0 0 auto;
+    width: clamp(400px, 38vw, 620px);
+    position: relative;
+    transform: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.about-image-tilt-wrap {
+    position: relative;
+    width: 100%;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.about-image {
+    width: 100%;
+    position: relative;
+}
+
+.about-lead-text {
+    width: 100%;
+    max-width: 60rem;
+    margin: clamp(5rem, 8vw, 9rem) auto 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.about-lead-text h2 {
+    font-family: var(--hero-font);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+    line-height: var(--hero-line);
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+}
+.about-lead-text p {
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+    line-height: 1.55;
+    color: #1c2334;
+    max-width: 48rem;
+    margin: 0 auto;
+}
+
+/* Sticker placeholders surrounding portrait */
+.sticker-deco {
+    position: absolute;
+    z-index: 3;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    cursor: pointer;
+}
+.sticker-deco img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.sticker-1 {
+    animation: sticker-wiggle-1 1.4s infinite step-end;
+    animation-delay: -0.2s;
+}
+.sticker-2 {
+    animation: sticker-wiggle-2 1.6s infinite step-end;
+    animation-delay: -0.5s;
+}
+.sticker-3 {
+    animation: sticker-wiggle-3 1.3s infinite step-end;
+    animation-delay: -0.8s;
+}
+
+@keyframes sticker-wiggle-1 {
+    0%, 100% { transform: rotate(-12deg); }
+    50% { transform: rotate(-7deg); }
+}
+@keyframes sticker-wiggle-2 {
+    0%, 100% { transform: rotate(8deg); }
+    50% { transform: rotate(13deg); }
+}
+@keyframes sticker-wiggle-3 {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(-10deg); }
+}
+.about-image-frame {
+    display: block;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    position: relative;
+}
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+/* Sticker doodles overhanging the edges of the Aimy + Pixel photo.
+   Higher specificity than `.about-image img` so they keep their
+   natural aspect ratio instead of stretching to the frame. */
+.about-image img.photo-deco {
+    position: absolute; z-index: 2; height: auto; pointer-events: none; object-fit: contain;
+    animation: hero-float 8s ease-in-out infinite;
+    will-change: translate, rotate;
+}
+@media (prefers-reduced-motion: reduce) {
+    .about-image img.photo-deco { animation: none; }
+}
+/* Caption styled as a little torn strip of tape, tilted, sitting just
+   below the photo. */
+.about-image { text-align: center; }
+.about-caption {
+    display: inline-block;
+    margin-top: clamp(0.9rem, 1.7vw, 1.25rem);
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: clamp(0.72rem, 0.95vw, 0.85rem);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    padding: 0.45rem 0.95rem;
+    transform: rotate(-2.5deg);
+    clip-path: polygon(
+            0% 0%, 100% 0%,
+            97% 25%, 100% 50%, 97% 75%, 100% 100%,
+            0% 100%,
+            3% 75%, 0% 50%, 3% 25%
+    );
+}
+
+.about-text {
+    flex: 1 1 50rem;
+    max-width: 54rem;
+    transform: translateY(3vw);
+}
+
+.about-text h1 {
+    font-family: var(--hero-font);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: var(--hero-line);
+    letter-spacing: -0.025em;
+    margin-bottom: 1.5rem;
+}
+
+/* Per-letter pop-in for any heading split by JS. JS wraps text
+   in <span class="word"><span class="letter">...</span></span>
+   structures and sets --letter-i on each letter. The parent
+   heading gets `.letters-ready` (added on load for above-the-fold
+   headings or via IntersectionObserver for scroll-triggered ones)
+   to start the cascade. .word stays inline-block with no
+   wrapping so letters within a word never break mid-word; between
+   words the browser still wraps normally on text-node spaces. */
+.word {
+    display: inline-block;
+}
+.letter {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.5em) rotate(-7deg) scale(0.7);
+    transform-origin: 50% 75%;
+    transition:
+            opacity 0.7s cubic-bezier(0.34, 1.56, 0.64, 1),
+            transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition-delay: calc(var(--letter-i, 0) * 22ms);
+}
+.letters-ready .letter {
+    opacity: 1;
+    transform: translateY(0) rotate(0) scale(1);
+}
+@media (prefers-reduced-motion: reduce) {
+    .letter {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* Large headings carry a subtle currentColor stroke for a touch
+   of extra weight. */
+.about-text h1,
+.career-label-word,
+.collaborations-heading,
+.specialty-heading,
+.footer-links a {
+    -webkit-text-stroke: 0.5px currentColor;
+}
+
+
+.about-text p {
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: var(--about-body-size);
+    line-height: 1.45;
+    color: #1c2334;
+    margin-top: clamp(1.25rem, 2.2vw, 1.75rem);
+}
+.about-text .lead-link {
+    display: inline-flex; align-items: center; gap: 0.55em;
+    margin-top: clamp(1.25rem, 2.2vw, 1.6rem);
+    font-weight: 700; font-size: clamp(1.25rem, 1.8vw, 1.6rem); color: var(--ink);
+    background: transparent; border: 1px solid var(--ink); border-radius: 999px;
+    padding: 0.85em 1.7em;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.about-text .lead-link svg { width: 1.3em; height: auto; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+/* Lifts with the cards' hard offset black box; background stays transparent. */
+.about-text .lead-link:hover { transform: translate(-4px, -4px); box-shadow: 7px 7px 0 0 var(--ink); }
+.about-text .lead-link:hover svg { transform: translateX(4px); }
+
+/* Reveal animations for about content */
+.about-image,
+.about-text h1,
+.about-text p {
+    opacity: 0;
+    transform: translateY(0.6em);
+    transition:
+            opacity 0.7s ease,
+            transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.about-image {
+    transform: translateY(0) scale(0.97);
+}
+.about-text .lead-link {
+    opacity: 0;
+    transform: translateY(0.6em);
+}
+
+body.about-revealed .about-image {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition-delay: 100ms;
+}
+body.about-revealed .about-text h1 {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 300ms;
+}
+body.about-revealed .about-text p:nth-of-type(1) {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 500ms;
+}
+body.about-revealed .about-text p:nth-of-type(2) {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 650ms;
+}
+body.about-revealed .about-text .lead-link {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition-delay: 800ms;
+}
+body.about-revealed .about-text .lead-link:hover {
+    transition-delay: 0s;
+    transition-duration: 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .about-image,
+    .about-text h1,
+    .about-text p,
+    .about-text .lead-link {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
+/* Generic scroll reveal — anything tagged .reveal-on-scroll fades
+   and slides up when it enters the viewport. Optional per-element
+   stagger via inline --reveal-delay. */
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+            opacity 0.8s ease,
+            transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal-on-scroll.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Opacity-only variant for things with their own transform
+   (like the rotated squiggle). */
+.reveal-fade {
+    opacity: 0;
+    transition: opacity 1.2s ease;
+    transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal-fade.is-revealed {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal-on-scroll,
+    .reveal-fade {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
+/* Parallax: uses the CSS `translate` property (separate from
+   `transform`) so it composes cleanly with existing reveal/hover
+   animations. JS sets --parallax-y based on each element's distance
+   from viewport center × its speed multiplier. */
+[data-parallax],
+[data-parallax-up] {
+    translate: 0 var(--parallax-y, 0px);
+    will-change: translate;
+}
+@media (prefers-reduced-motion: reduce) {
+    [data-parallax],
+    [data-parallax-up] {
+        translate: 0 0 !important;
+    }
+}
+
+/* -----------------------------------------------------------------
+   Experience section — full-width bg, content centered.
+----------------------------------------------------------------- */
+.experience {
+    position: relative;
+    background: transparent;
+    color: var(--ink);
+    margin-top: clamp(1.5rem, 4vw, 3rem);
+    padding: clamp(2rem, 4vw, 3.5rem) var(--page-pad-x) clamp(1.5rem, 3vw, 2.5rem);
+    overflow: hidden; /* keep the drifting background shapes from spilling */
+}
+.experience-inner {
+    max-width: 1320px;
+    width: 100%;
+    margin: 0 auto;
+}
+.career-heading {
+    margin: 0 0 clamp(0.25rem, 0.8vw, 0.5rem);
+}
+/* Shorter viewports (laptops, MacBooks) — the about hero is
+   min-height: 100vh and fills the whole screen, so the experience
+   section ends up sitting right under it. margin-top pushes the
+   WHOLE section (label included) down past the hero so the label
+   doesn't crowd the bottom of the viewport. Keyed on height (not
+   width) since the issue is hero-fills-viewport, which can happen
+   on a 14" or 16" MacBook at any browser width. min-width: 881px
+   excludes the mobile single-column layout. */
+
+/* "Career Overview" heading sits in normal flow at the top-left. */
+.career-label-word {
+    font-family: var(--hero-font);
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+}
+/* Collage stage — staggered cards float on top of two slowly
+   drifting shapes (yellow blob + orange nested squares) behind. */
+.career-stage { position: relative; }
+.career-bg {
+    position: absolute;
+    z-index: 0;
+    height: auto;
+    pointer-events: none;
+    will-change: transform;
+}
+.career-bg--blob {
+    top: -6%;
+    right: 5%;
+    width: clamp(280px, 42%, 520px);
+    animation: career-blob 15s ease-in-out infinite alternate;
+}
+.career-bg--squares {
+    bottom: -8%;
+    left: 3%;
+    width: clamp(150px, 17%, 220px);
+    animation: career-squares 19s ease-in-out infinite;
+}
+@keyframes career-blob {
+    from { transform: translate(0, 0) scale(1) rotate(0deg); }
+    to   { transform: translate(-2.5%, 2.5%) scale(1.05) rotate(3deg); }
+}
+@keyframes career-squares {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-4%) rotate(-4deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .career-bg { animation: none; }
+}
+
+.career-cards {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(430px, 1fr)); /* Wide columns for horizontal alignment */
+    gap: clamp(1.2rem, 2.5vw, 2rem);
+    row-gap: clamp(2rem, 4vw, 3rem);
+    width: 100%;
+    padding: clamp(0.85rem, 2vw, 1.25rem) 0 clamp(1.75rem, 3.5vw, 2.75rem);
+}
+.career-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    border: none;
+    padding: 0;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* Soft, slow float — uses the `translate` property so it composes with
+       the reveal/hover `transform`. Staggered per card below. */
+    animation: career-float 8s ease-in-out infinite;
+    will-change: translate;
+}
+.career-card-shape {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--ink); /* Border color backing */
+    box-shadow: 6px 6px 0 0 var(--ink);
+    border-radius: 28px; /* Even more rounded corners for an extra organic sticker feel */
+    padding: 2.2px; /* Border thickness */
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-sizing: border-box;
+    /* Removed overflow: hidden so images can protrude over the card borders */
+}
+.career-card-inner {
+    flex: 1;
+    background: var(--color-cream);
+    padding: clamp(1.2rem, 1.8vw, 1.6rem);
+    border-radius: 25px; /* Inner rounding matching outer border-radius */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row; /* Display side-by-side on desktop */
+    align-items: center; /* Vertically center content */
+    gap: clamp(1.2rem, 2vw, 1.8rem);
+    height: 100%;
+    transition: flex-direction 0.3s ease;
+}
+
+/* Pure customizable PNG image element styles */
+.personal-card-image-wrap {
+    flex: 0 0 clamp(170px, 16vw, 215px); /* Even bigger square container for image emphasis */
+    height: clamp(170px, 16vw, 215px);
+    margin-left: clamp(-45px, -4vw, -25px); /* Further pop out and overlap the left border */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0; /* Reset bottom margin */
+    z-index: 2; /* Ensure image sits on top of card borders */
+    overflow: visible;
+}
+.personal-card-png {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.personal-card-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.career-card:hover .personal-card-png {
+    transform: scale(1.1) rotate(-1.5deg);
+}
+@keyframes career-float {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -10px; }
+}
+@media (prefers-reduced-motion: reduce) { .career-card { animation: none; } }
+/* Vertical stagger float timing + random static sticker placement (tilts and translations) */
+.career-card:nth-child(1) { transform: rotate(-2deg) translateY(6px) translateX(-4px); animation-duration: 7s; animation-delay: 0s; }
+.career-card:nth-child(2) { transform: rotate(1.8deg) translateY(-8px) translateX(5px); animation-duration: 8.5s; animation-delay: -2.2s; }
+.career-card:nth-child(3) { transform: rotate(-1.5deg) translateY(12px) translateX(-6px); animation-duration: 9.5s; animation-delay: -4.4s; }
+.career-card:nth-child(4) { transform: rotate(2.5deg) translateY(-4px) translateX(6px); animation-duration: 8s; animation-delay: -1.1s; }
+.career-card:nth-child(5) { transform: rotate(-1.2deg) translateY(7px) translateX(-5px); animation-duration: 9s; animation-delay: -3.3s; }
+.career-card:nth-child(6) { transform: rotate(2deg) translateY(-9px) translateX(4px); animation-duration: 7.5s; animation-delay: -5.5s; }
+
+.career-card:hover {
+    transform: scale(1.05) rotate(0deg) translateY(-12px) translateX(0) !important;
+    z-index: 10;
+}
+.career-card:hover .career-card-shape {
+    transform: translate(-5px, -5px);
+    box-shadow: 11px 11px 0 0 var(--ink); /* Deepened shadow on hover */
+}
+
+/* Fall back to vertical stacking on narrow phone displays */
+@media (max-width: 580px) {
+    .career-card-inner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: clamp(1.4rem, 2.5vw, 1.8rem) clamp(1.2rem, 2vw, 1.5rem);
+    }
+    .personal-card-image-wrap {
+        flex: 0 0 185px;
+        width: 185px;
+        height: 185px;
+        margin-left: 0; /* Reset left overlap on mobile */
+        margin-top: -45px; /* Further pop out and overlap the top border on mobile */
+        margin-bottom: 1rem;
+    }
+    .career-pill {
+        align-self: center !important;
+    }
+}
+
+.career-pill {
+    align-self: flex-start;
+    margin-top: auto; /* Push pills to exact bottom of cards to align them across rows */
+    display: inline-block;
+    padding: 0.42rem 0.8rem;
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: clamp(0.62rem, 0.8vw, 0.72rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+}
+/* A torn strip of tape across the top-left of each card, carrying the
+   years. Jagged short ends read like it was ripped off a roll; a small
+   per-card tilt keeps it looking hand-applied. */
+.career-tape {
+    position: absolute;
+    top: -13px;
+    left: clamp(0.9rem, 2vw, 1.5rem);
+    z-index: 5;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: clamp(0.7rem, 0.85vw, 0.82rem);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    padding: 0.42rem 0.85rem;
+    white-space: nowrap;
+    clip-path: polygon(
+            0% 0%, 100% 0%,
+            97% 25%, 100% 50%, 97% 75%, 100% 100%,
+            0% 100%,
+            3% 75%, 0% 50%, 3% 25%
+    );
+}
+.career-card:nth-child(1) .career-tape { transform: rotate(-3deg); }
+.career-card:nth-child(2) .career-tape { transform: rotate(2.5deg); }
+.career-card:nth-child(3) .career-tape { transform: rotate(-2deg); }
+.career-card:nth-child(4) .career-tape { transform: rotate(1.8deg); }
+.career-card:nth-child(5) .career-tape { transform: rotate(-2.5deg); }
+.career-card:nth-child(6) .career-tape { transform: rotate(3deg); }
+.career-card-meta {
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: clamp(0.82rem, 0.95vw, 0.98rem);
+    color: var(--ink-2);
+    margin: 0 0 0.5rem;
+}
+.career-card-role {
+    font-family: 'Yoster Island', var(--font); /* Playful pixel font matching bento headers */
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1.6vw, 1.55rem); /* Larger title sizes */
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    margin: 0 0 clamp(0.7rem, 1.2vw, 1rem);
+    color: var(--ink);
+}
+.career-card p {
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: clamp(0.88rem, 0.98vw, 1.02rem);
+    line-height: 1.45;
+    color: var(--ink-2);
+    margin: 0 0 clamp(0.6rem, 1vw, 0.95rem);
+}
+.career-card p:last-child { margin-bottom: 0; }
+
+/* -----------------------------------------------------------------
+   Cozy banner — line-art video that plays on loop between the
+   career overview and the specializing-in sections. No frame,
+   border, shadow or background — sits clean on the page paper.
+   Section padding uses --section-py so it matches the rhythm of
+   every other section; inner container caps at 1180px to align
+   with the rest of the page's content columns.
+----------------------------------------------------------------- */
+.komorebi-promo-banner {
+    padding: clamp(2rem, 4vw, 4rem) var(--page-pad-x);
+    max-width: 1320px;
+    margin: 0 auto var(--section-py) auto;
+}
+
+.komorebi-promo-inner {
+    position: relative;
+    width: 100%;
+    min-height: 420px;
+    border-radius: 32px;
+    overflow: hidden;
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.5s cubic-bezier(0.3, 2.2, 0.4, 0.95);
+}
+
+/* Full-bleed cover image */
+.komorebi-promo-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.komorebi-promo-inner:hover .komorebi-promo-img {
+    transform: scale(1.04);
+}
+
+/* Gradient overlay so text is always legible */
+.komorebi-promo-inner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(13, 6, 25, 0.88) 0%,
+        rgba(13, 6, 25, 0.45) 50%,
+        rgba(13, 6, 25, 0.0) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+    border-radius: inherit;
+}
+
+/* Rainbow border on hover — sits above everything */
+.komorebi-promo-inner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 10px solid transparent;
+    border-radius: 32px;
+    pointer-events: none;
+    z-index: 10;
+    box-sizing: border-box;
+}
+
+.komorebi-promo-inner:hover::before {
+    animation: rainbow-border-shift 3s linear infinite;
+}
+
+.komorebi-promo-inner:hover {
+    transform: scale(1.01);
+}
+
+/* Text content — pinned to bottom-left over the gradient */
+.komorebi-promo-content {
+    position: relative;
+    z-index: 2;
+    padding: clamp(2rem, 5vw, 3.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    min-height: 420px;
+    color: #ffffff;
+}
+
+.promo-tag {
+    display: inline-block;
+    font-family: var(--font-secondary), sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 0.35rem 0.95rem;
+    border-radius: 50px;
+    margin-bottom: 1.2rem;
+}
+
+.promo-title {
+    font-family: var(--font-display, "Plus Jakarta Sans"), sans-serif;
+    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+}
+
+.promo-desc {
+    font-family: var(--font-secondary), sans-serif;
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    line-height: 1.5;
+    margin-bottom: 1.8rem;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 560px;
+}
+
+@media (max-width: 880px) {
+    .komorebi-promo-inner {
+        min-height: 340px;
+    }
+    .komorebi-promo-content {
+        min-height: 340px;
+        padding: 1.8rem 1.5rem;
+    }
+}
+
+.promo-button {
+    display: inline-block;
+    font-family: var(--font-display), sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: #ffeab0;
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    padding: 0.85rem 1.6rem;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+}
+
+.promo-button:hover {
+    background: #ffffff;
+    transform: translateY(-2px) translate3d(-1px, -1px, 0);
+    box-shadow: 6px 6px 0 var(--ink);
+}
+
+.promo-button:active {
+    transform: translateY(0) translate3d(0, 0, 0);
+    box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* -----------------------------------------------------------------
+   Specialty section — "Specializing in" + list of focus areas.
+   White bg, big red squiggle decoration in the bottom-left.
+----------------------------------------------------------------- */
+.specialty {
+    position: relative;
+    background: transparent;
+    color: #1c2334;
+    min-height: 0;
+    padding: var(--section-py) var(--page-pad-x);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+}
+
+.specialty-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1320px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.specialty-heading {
+    font-family: var(--hero-font);
+    font-weight: 700;
+    /* Matches .career-label-word and .collaborations-heading sizing so the
+       three section titles read as one type system. */
+    font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+}
+
+.specialty-list {
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: clamp(2rem, 4.5vw, 4.25rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    /* Credit-roll viewport: clip a fixed height and fade top/bottom
+       so items appear/disappear gracefully instead of being clipped
+       on a hard edge. */
+    height: clamp(20rem, 38vw, 30rem);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
+}
+.specialty-list-track {
+    display: flex;
+    flex-direction: column;
+    /* Translate by -50% (= one full group) so the loop seam lands
+       exactly where the second group starts the first one again. */
+    animation: specialty-credits 45s linear infinite;
+}
+.specialty-list-group {
+    flex-shrink: 0;
+}
+.specialty-list-group p {
+    margin: 0;
+}
+@keyframes specialty-credits {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .specialty-list-track { animation: none; }
+}
+
+@media (max-width: 880px) {
+    .specialty-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* -----------------------------------------------------------------
+   Collaborations section — big heading, 2 custom cards
+   that overhang the boundary into the Tools section below.
+----------------------------------------------------------------- */
+.collaborations {
+    background: transparent;
+    padding: var(--section-py) var(--page-pad-x) calc(var(--section-py) * 0.6);
+    position: relative;
+}
+.collaborations-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+}
+.collaborations-heading,
+.tools-heading {
+    font-family: var(--hero-font);
+    font-weight: 700;
+    font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin: 0 0 clamp(2rem, 4vw, 4rem);
+}
+.collaborations-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 1100px;
+    margin: 0 auto;
+    gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    position: relative;
+    z-index: 2;
+    margin-bottom: calc(-1 * var(--collaborations-overhang));
+}
+.collab-card {
+    position: relative;
+    border-radius: 0;
+    border: 1px solid var(--ink);
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform 0.5s cubic-bezier(0.3, 2.2, 0.4, 0.95);
+    z-index: 1;
+}
+.collab-card:hover {
+    transform: scale(1.05);
+    z-index: 5;
+}
+.collab-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 18px solid transparent;
+    pointer-events: none;
+    z-index: 10;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+    border-radius: 0;
+}
+.collab-card:hover::before {
+    animation: rainbow-border-shift 3s linear infinite;
+}
+.collab-card-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    display: block;
+}
+.collab-card-media img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.collab-card:hover .collab-card-media img {
+    transform: scale(1.05);
+}
+.collab-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(18, 7, 26, 0.95) 0%, rgba(18, 7, 26, 0.45) 55%, rgba(18, 7, 26, 0.1) 100%);
+    z-index: 2;
+    transition: opacity 0.35s ease;
+}
+.collab-card:hover .collab-card-overlay {
+    background: linear-gradient(to top, rgba(18, 7, 26, 0.98) 0%, rgba(18, 7, 26, 0.6) 55%, rgba(18, 7, 26, 0.2) 100%);
+}
+.collab-card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: clamp(1.5rem, 2.2vw, 2.5rem);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.6rem, 1vw, 1rem);
+    justify-content: flex-end;
+    pointer-events: none;
+}
+.collab-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.collab-card-tag {
+    border-radius: 6px;
+    font-family: 'Alkhemikal', monospace;
+    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+    letter-spacing: 0.05em;
+    padding: 0.38rem 0.72rem;
+    color: #f5f1e6;
+    background: rgba(245, 241, 230, 0.08);
+    border: 1px solid rgba(245, 241, 230, 0.25);
+    text-transform: uppercase;
+}
+.collab-card:hover .collab-card-tag {
+    background: rgba(245, 241, 230, 0.15);
+    border-color: rgba(245, 241, 230, 0.4);
+}
+.collab-card-title {
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1.6vw, 1.75rem);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: #f5f1e6;
+}
+.collab-card-desc {
+    font-family: var(--font);
+    font-size: clamp(0.85rem, 1vw, 1rem);
+    line-height: 1.45;
+    color: #e0dcd3;
+    opacity: 0.85;
+    transform: translateY(8px);
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.35s ease;
+}
+.collab-card:hover .collab-card-desc {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* -----------------------------------------------------------------
+   Tools section — purple background, big heading, row of logos.
+   Top padding leaves room for the talk cards overhanging from above.
+----------------------------------------------------------------- */
+.tools {
+    background: transparent;
+    /* Top padding = the collaborations-cards overhang + a tight buffer so
+       the logos sit close to the cards. Bottom matches the shared
+       60px section rhythm. */
+    padding:
+            calc(var(--collaborations-overhang) + clamp(0.75rem, 1.5vw, 1.5rem))
+            var(--page-pad-x)
+            var(--section-py);
+    position: relative;
+}
+.tools-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+}
+.tools-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+/* Each logo is rendered as a CSS mask over a solid var(--ink)
+   background — that way the paint is *exactly* the same color as
+   the section heading, regardless of the logo's native palette. */
+.tool-icon {
+    display: inline-block;
+    width: clamp(2rem, 3.4vw, 3.25rem);
+    height: clamp(2rem, 3.4vw, 3.25rem);
+    background-color: var(--ink);
+    -webkit-mask-image: var(--src);
+    mask-image: var(--src);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+
+@media (max-width: 880px) {
+    .collaborations-cards {
+        display: flex;
+        grid-template-columns: none;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 0;
+        padding-bottom: 12px;
+        scrollbar-width: none;
+    }
+    .collaborations-cards::-webkit-scrollbar { display: none; }
+    .collaborations-cards > * { flex: 0 0 80%; }
+    .tools {
+        padding-top: clamp(1.25rem, 3vw, 2.5rem);
+    }
+    .collaborations-heading,
+    .tools-heading {
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+}
+
+/* -----------------------------------------------------------------
+   Footer — sits in normal flow at the end of the document.
+----------------------------------------------------------------- */
+
+
+/* Brand row + Music player (shared shell) */
+.brands {
+    position: fixed;
+    bottom: clamp(1rem, 2vw, 1.75rem);
+    left: var(--page-pad-x);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: clamp(0.85rem, 1.6vw, 1.4rem);
+    color: var(--ink);
+    transition: opacity 0.4s ease;
+}
+.brands > * {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+            opacity 0.6s ease,
+            transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+body.is-scrolled .brands,
+body.is-scrolled .player {
+    opacity: 0;
+    pointer-events: none;
+}
+/* When music is playing the player overrides the scroll-fade and
+   stays visible regardless of scroll position. */
+body.is-scrolled .player.is-playing {
+    opacity: 1;
+    pointer-events: auto;
+}
+.brands.is-revealed > * {
+    opacity: 0.55;
+    transform: translateY(0);
+}
+.brands > *:hover { opacity: 1 !important; }
+.brands img {
+    height: 1.3rem;
+    width: auto;
+    display: block;
+}
+
+.player {
+    position: fixed;
+    bottom: clamp(1rem, 2vw, 1.75rem);
+    right: var(--page-pad-x);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.85rem 0.4rem 0.4rem;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 999px;
+    font: 500 0.78rem/1 var(--font);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+            opacity 0.6s ease,
+            transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.player.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+.player button {
+    background: var(--paper);
+    color: var(--ink);
+    border: 0;
+    width: 1.85rem;
+    height: 1.85rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.18s ease;
+}
+.player button:hover { transform: scale(1.08); }
+.player button svg { width: 0.95rem; height: 0.95rem; fill: currentColor; }
+.player-next {
+    background: transparent !important;
+    color: var(--paper) !important;
+    width: 1.4rem !important;
+    height: 1.4rem !important;
+}
+.player-next svg { width: 0.85rem !important; height: 0.85rem !important; }
+.player-toggle .icon-pause { display: none; }
+.player.is-playing .player-toggle .icon-play { display: none; }
+.player.is-playing .player-toggle .icon-pause { display: block; }
+.player-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 5rem;
+    max-width: 10rem;
+}
+.player-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
+.player-track {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.eq {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 1.5px;
+    height: 0.55rem;
+}
+.eq i {
+    display: block;
+    width: 1.5px;
+    height: 100%;
+    background: currentColor;
+    border-radius: 1px;
+    transform-origin: bottom center;
+    transform: scaleY(0.35);
+}
+.player.is-playing .eq i {
+    animation: eq-bar 0.9s ease-in-out infinite;
+}
+.player.is-playing .eq i:nth-child(2) { animation-delay: 0.15s; }
+.player.is-playing .eq i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes eq-bar {
+    0%, 100% { transform: scaleY(0.35); }
+    50%      { transform: scaleY(1); }
+}
+
+/* Page transition: the main content (about + experience) and the
+   footer slide together. The header, brand row, and music player
+   stay anchored. */
+body.is-sliding-out main,
+body.is-sliding-out .footer-reveal {
+    transform: translateX(-100vw);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body.is-entering main,
+body.is-entering .footer-reveal {
+    transform: translateX(100vw);
+    transition: none;
+}
+body.is-entering.is-entered main,
+body.is-entering.is-entered .footer-reveal {
+    transform: translateX(0);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 880px) {
+    /* Header and nav queries extracted to ui.css */
+    .about-content {
+        flex-direction: column;
+        gap: clamp(2rem, 5vw, 3rem);
+        transform: none;
+    }
+    /* Bigger logo on mobile. */
+    .brand img, .brand svg { width: 64px; }
+    .about-left { width: 75%; max-width: 380px; }
+    .about-text { max-width: 100%; flex-basis: auto; }
+    .about-left,
+    .about-text {
+        transform: none;
+    }
+}
+
+/* ===================================================================
+   Mobile: hamburger menu + full-screen nav overlay. The toggle is
+   fixed top-right; tapping it adds .menu-open to <body>, which
+   slides the nav overlay in. Hidden on desktop. The music player
+   is hidden on mobile.
+=================================================================== */
+/* Nav toggle and social icons extracted to ui.css */
+@media (max-width: 880px) {
+    .player { display: none !important; }
+}
+
+/* ===================================================================
+   Mobile: uniform section rhythm. The about hero stops being a
+   full-viewport block (which left a big empty gap before the
+   career section) and instead hugs its content, and every section
+   gets the same top/bottom padding so the gaps between them match.
+   Stacked cards also get a bit more room to breathe.
+=================================================================== */
+@media (max-width: 880px) {
+    .page {
+        min-height: auto;
+        padding-bottom: 44px;
+    }
+    .experience,
+    .cozy-banner,
+    .specialty,
+    .collaborations,
+    .tools {
+        margin-top: 0;
+        padding-top: 44px;
+        padding-bottom: 44px;
+    }
+    .collaborations-cards { gap: 14px; }
+
+    /* Career cards (mobile): stack full-width and drop the stagger. */
+    .career-cards {
+        grid-template-columns: 1fr;
+        gap: clamp(1.1rem, 4vw, 1.6rem);
+        padding-top: clamp(1rem, 4vw, 1.5rem);
+    }
+    .career-card {
+        width: 100%;
+        margin: 0 !important;
+        transform: none !important; /* Disable sticker tilt/offset on mobile */
+    }
+    .career-bg--blob { width: 64%; top: -2%; right: -8%; }
+    .career-bg--squares { width: 110px; bottom: -2%; left: -5%; }
+
+    /* Disable scroll parallax on mobile. Stacked vertically, the
+       image (speed 0.08) and text (0.04) drift toward each other and
+       overlap. Parallax is a subtle desktop flourish anyway. */
+    [data-parallax],
+    [data-parallax-up] {
+        translate: none;
+    }
+
+    /* Hero hugs its content on mobile (not a full viewport), so a
+       bottom-pinned scroll cue would float awkwardly — hide it. */
+    .scroll-cue {
+        display: none;
+    }
+}
+/* ================================================================
+   MERGED HOME — hero (homepage) + work section layered on top of
+   the about-page content. The hero is a normal-flow full-viewport
+   section (the homepage's fixed-page footer trick is dropped); the
+   work + visual grids follow, then the about content. In-page nav
+   (#work / #about) smooth-scrolls, offset to clear the fixed header.
+   ================================================================ */
+html { scroll-behavior: smooth; }
+#work,
+#about,
+#collaborations {
+    scroll-margin-top: calc(var(--page-pad-y) * 2 + clamp(48px, 4.5vw, 72px));
+}
+
+/* ---- Hero ---- */
+.hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 0 clamp(1.5rem, 4vw, 4rem);
+    padding: calc(var(--page-pad-y) * 2 + clamp(48px, 4.5vw, 72px)) var(--page-pad-x) 0;
+    overflow: hidden;
+}
+.hero {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: clamp(0rem, 2vw, 2rem);
+    padding-bottom: clamp(2rem, 6vw, 6rem);
+    position: relative;
+    z-index: 5;
+}
+.hero h1,
+.hero h2 {
+    font-family: var(--hero-font);
+    font-weight: 700;
+    font-size: var(--hero-size);
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    -webkit-text-stroke: 0.5px var(--ink);
+}
+.hero h2 { margin-top: 0.08em; }
+/* On larger screens, scale the hero copy up so the left-hand text
+   reads bigger and more present. */
+@media (min-width: 1100px) {
+    .hero h1,
+    .hero h2 {
+        font-size: clamp(3.5rem, 4.6vw, 5rem);
+    }
+}
+/* "delightful experiences" — set in a hand-drawn script (Caveat) so
+   the phrase reads like a quick, personal note in the headline. */
+.hero h2 .word-outline {
+    font-family: "Caveat", var(--hero-font);
+    font-weight: 700;
+    font-size: 1.34em;
+    line-height: 0.8;
+    letter-spacing: 0;
+    -webkit-text-fill-color: var(--ink);
+    -webkit-text-stroke: 0;
+}
+.hero .cta {
+    opacity: 0;
+    transition:
+            opacity 0.7s ease,
+            transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+            box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.hero.is-revealed .cta { opacity: 1; }
+.cta {
+    margin-top: calc(var(--hero-size) * 0.5);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    color: var(--ink);
+    background: var(--color-cream);
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    padding: 0.85em 1.7em;
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1.8vw, 1.6rem);
+    line-height: var(--hero-line);
+    width: fit-content;
+    transition:
+            transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+            box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.cta:hover { transform: translate(-4px, -4px); box-shadow: 7px 7px 0 0 var(--ink); }
+.cta svg { width: 1.2em; height: auto; flex-shrink: 0; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.cta:hover svg { transform: translateX(5px); }
+@media (prefers-reduced-motion: reduce) {
+    .hero .cta { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
+/* ---- Hero video stage ---- */
+.stage {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    position: relative;
+    min-height: 0;
+    width: 100%;
+    height: 100%;
+}
+.stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+    background: linear-gradient(to right, var(--paper) 20%, rgba(255, 255, 255, 0) 47%);
+}
+/* Solid paper backdrop + isolation so the video's multiply and the
+   ink lighten overlay always composite against cream — even while
+   the stage is transformed during a page transition (otherwise the
+   blends lose their backdrop and flash a dark box). */
+.stage-inner { position: absolute; inset: 0 0 0 24%; background: var(--paper); isolation: isolate; }
+.stage-inner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    mix-blend-mode: lighten;
+    pointer-events: none;
+    z-index: 3;
+}
+.stage video,
+.stage .poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: right center;
+    display: block;
+    background: transparent;
+    /* Blend the hero clip's white field into the paper page. */
+    mix-blend-mode: multiply;
+    transform: scale(0.9);
+    transform-origin: right center;
+}
+.stage video { opacity: 0; transition: opacity 0.18s ease; pointer-events: none; }
+.stage video.is-active { opacity: 1; z-index: 2; }
+.stage .poster { z-index: 1; }
+
+/* Hero slides out on page transitions, matching the about content. */
+body.is-sliding-out .hero,
+body.is-sliding-out .stage {
+    transform: translateX(-100vw);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body.is-sliding-out .stage {
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+}
+
+@media (max-width: 880px) {
+    .hero-section {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+    .hero {
+        grid-column: 1;
+        grid-row: 1;
+        padding-right: var(--page-pad-x);
+        padding-top: clamp(1rem, 4vw, 2rem);
+        padding-bottom: clamp(1.5rem, 5vw, 2.5rem);
+    }
+    .hero h1,
+    .hero h2 {
+        font-size: clamp(1.9rem, 8vw, 2.7rem);
+    }
+    /* Floating hero stickers overlaid on the video on mobile — rainbow
+       bottom-right (as on desktop), spark + clover on the left. The
+       .hero-section prefix outranks the base `display:none` rule. */
+    .hero-section .hero-deco-row {
+        display: block;
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        pointer-events: none;
+    }
+    .hero-deco-row img { position: absolute; height: auto; }
+    .hero-deco-row .hd-rainbow { bottom: 7%; right: 5%; width: clamp(74px, 23vw, 116px); }
+    .hero-deco-row .hd-spark { top: 12%; left: 6%; width: clamp(54px, 16vw, 84px); }
+    .hero-deco-row .hd-clover { top: 41%; left: 13%; width: clamp(50px, 15vw, 76px); }
+    .stage {
+        grid-column: 1;
+        grid-row: 2;
+        aspect-ratio: 16 / 9;
+        height: auto;
+        width: 100vw;
+        margin-left: calc(-1 * var(--page-pad-x));
+    }
+    .stage::before { display: none; }
+    .stage-inner { inset: 0; }
+    .stage video,
+    .stage .poster { object-position: center; transform: none; }
+    /* The sticky note is a desktop flourish; hide it on the stacked
+       mobile hero so it doesn't collide. */
+    .hero-craft { display: none; }
+}
+
+/* ---- Paper-craft hero accents ---- */
+.hero-craft {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+}
+/* Playful sticker doodles over the hero illustration. They drift gently
+   on a slow loop; the float uses the `translate`/`rotate` properties so
+   it composes with each sticker's inline `transform` base tilt. */
+.hero-deco {
+    position: absolute; height: auto; pointer-events: none;
+    animation: hero-float 8s ease-in-out infinite;
+    will-change: translate, rotate;
+}
+@keyframes hero-float {
+    0%   { translate: 0 0;        rotate: 0deg; }
+    33%  { translate: 4px -9px;   rotate: 4deg; }
+    66%  { translate: -3px -4px;  rotate: -3deg; }
+    100% { translate: 0 0;        rotate: 0deg; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero-deco { animation: none; }
+}
+/* Mobile-only row of the floating stickers (hidden on desktop, where the
+   .hero-craft versions sit over the illustration instead). */
+.hero-deco-row { display: none; pointer-events: none; }
+.hero-deco-row img {
+    height: auto;
+    animation: hero-float 8s ease-in-out infinite;
+    will-change: translate, rotate;
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero-deco-row img { animation: none; }
+}
+/* Sticky note, tilted, held by a strip of washi tape. */
+.sticky-note {
+    position: absolute;
+    top: clamp(8.5rem, 19vh, 12rem);
+    right: clamp(2rem, 6vw, 5.5rem);
+    width: clamp(128px, 12vw, 168px);
+    padding: 1.2rem 1rem 1.05rem;
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+    font-family: "Caveat", var(--font);
+    font-weight: 700;
+    font-size: clamp(1.15rem, 1.55vw, 1.5rem);
+    line-height: 1.05;
+    text-align: center;
+    transform: rotate(3deg);
+}
+/* Washi tape — translucent striped strips. */
+.washi { position: absolute; display: block; border-radius: 1px; }
+.washi--note {
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-5deg);
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1;
+    padding: 0.42rem 0.95rem;
+    white-space: nowrap;
+    /* Jagged, roughly-cut short ends — like a torn strip of tape. */
+    clip-path: polygon(
+            0% 0%, 100% 0%,
+            96% 25%, 100% 50%, 96% 75%, 100% 100%,
+            0% 100%,
+            4% 75%, 0% 50%, 4% 25%
+    );
+}
+/* Torn bottom edge — the hero reads as a sheet of paper whose lower
+   edge is ripped, casting a soft shadow on the section below. */
+.paper-tear {
+    position: relative;
+    height: 22px;
+    margin-top: -22px;
+    background: var(--paper);
+    z-index: 4;
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='22'><path d='M0 0 H48 V11 L44 16 L40 9 L36 17 L32 10 L28 16 L24 9 L20 17 L16 10 L12 16 L8 9 L4 15 L0 10 Z' fill='black'/></svg>") repeat-x top / 48px 22px;
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='22'><path d='M0 0 H48 V11 L44 16 L40 9 L36 17 L32 10 L28 16 L24 9 L20 17 L16 10 L12 16 L8 9 L4 15 L0 10 Z' fill='black'/></svg>") repeat-x top / 48px 22px;
+    filter: drop-shadow(0 5px 4px rgba(0, 0, 0, 0.10));
+}
+/* ---- Work section ---- */
+.work {
+    width: 100%;
+    padding: clamp(1.5rem, 3vw, 3rem) 0 0 0;
+    position: relative;
+    z-index: 10; /* Float above the hero stage artwork and paper tear line */
+    overflow: visible;
+    margin-top: -140px; /* Overlaps bottom of hero section artwork */
+}
+.work-heading {
+    font-family: var(--hero-font);
+    font-weight: 700;
+    font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin: 0 var(--page-pad-x) clamp(1.5rem, 3vw, 3rem);
+}
+#work-physics-canvas {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 1000 / 280;
+    height: auto;
+    margin: clamp(2rem, 4vw, 4rem) auto;
+    cursor: pointer;
+    background: transparent;
+    touch-action: none;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    box-sizing: border-box;
+}
+
+.work-fallback {
+    display: none;
+}
+
+.work-banner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: var(--ink);
+    transform: skewX(-8deg); /* Slant the card columns horizontally */
+    margin: clamp(2rem, 4vw, 4rem) 0;
+    border: none;
+}
+.work-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    transform: skewX(8deg) scaleX(1.1); /* Unskew elements and scale horizontally to cover outer corners */
+    transform-origin: center;
+}
+/* Prevent the native long-press image/link "lift" on touch devices.
+   Without this, holding a card on iOS drops it into a drag session,
+   which hijacks the swipe (scroll feels stuck) and lets the card be
+   dragged freely in 2D. We want cards to scroll, never drag. */
+.work-card, .visual-card, .talk-card,
+.work-card img, .visual-card img, .talk-card img,
+.work-card video, .visual-card video, .talk-card video {
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+/* Every video on the page is decorative (autoplay/muted/loop or
+   JS-controlled) — none are tapped. Making them transparent to pointer
+   events lets touches fall through to scrolling, so the page never
+   sticks when a finger passes over a video. */
+video { pointer-events: none; }
+.work-card img, .visual-card img, .talk-card img { pointer-events: none; }
+.work-card {
+    position: relative;
+    height: clamp(400px, 50vw, 650px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: none;
+    overflow: visible; /* Prevent clipping of text content */
+    background: var(--ink);
+    border: none;
+    box-sizing: border-box;
+    isolation: isolate;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.work-card:hover {
+    transform: scale(1.025); /* Springy lift/pop hover effect */
+    z-index: 5;
+    box-shadow: 0 20px 40px rgba(18, 7, 26, 0.35);
+}
+.work-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 14px solid transparent;
+    pointer-events: none;
+    z-index: 10;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+.work-card:hover::before {
+    animation: rainbow-border-shift 3s linear infinite;
+}
+@keyframes rainbow-border-shift {
+    0% { border-color: #ff7eb6; }    /* Pink */
+    25% { border-color: #ffeab0; }   /* Yellow */
+    50% { border-color: #2dd4bf; }   /* Teal */
+    75% { border-color: #cfa2ff; }   /* Lilac */
+    100% { border-color: #ff7eb6; }  /* Pink */
+}
+.work-card:last-child {
+    border: none;
+}
+.work-card::after {
+    display: none !important;
+}
+/* Scattered instant-photos: each case-study card rests tilted and
+   nudged (per-card --tilt / --shx / --shy / --z set inline),
+   overlapping its neighbours like Polaroids dropped on the floor.
+   Hover "picks one up" — it straightens, scales, lifts, and rises
+   above the rest. */
+/* Hidden + lifted above its resting spot until scrolled into view. */
+.visual-card.reveal-on-scroll {
+    opacity: 0;
+    transform: rotate(calc(var(--tilt, 0deg) + 8deg)) translateY(-44px) scale(1.04);
+}
+/* On reveal, each card drops into its scattered resting place with a
+   little overshoot, staggered by --reveal-delay so they fall in one
+   after another like photos tossed onto the pile. */
+.visual-card.reveal-on-scroll.is-revealed {
+    opacity: 1;
+    transform: rotate(var(--tilt, 0deg)) translate(var(--shx, 0px), var(--shy, 0px));
+    z-index: var(--z, 1);
+    transition:
+            opacity 0.5s ease var(--reveal-delay, 0ms),
+            transform 0.72s cubic-bezier(0.34, 1.56, 0.64, 1) var(--reveal-delay, 0ms);
+}
+/* Hover "picks one up" — straighten, scale, lift, and rise above the
+   rest, with the hard offset "black box" of the talk cards. Its own
+   snappy (delay-free) transition so hovering is instant. */
+.visual-card.reveal-on-scroll:hover {
+    transform: rotate(0deg) scale(1.06) translate(-8px, -8px);
+    box-shadow: 18px 18px 0 0 var(--ink);
+    z-index: 60;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@media (max-width: 880px) {
+    #work-physics-canvas {
+        display: none;
+    }
+    .work-fallback {
+        display: block;
+    }
+    /* Stacked single column on mobile — straighten + simple fade-up. */
+    .visual-card.reveal-on-scroll { transform: translateY(28px); }
+    .visual-card.reveal-on-scroll.is-revealed { transform: none; z-index: auto; }
+    .visual-card.reveal-on-scroll:hover { transform: scale(1.02) translateY(-4px); transition: transform 0.3s ease; }
+    
+    .work-banner {
+        transform: skewY(-4.5deg) skewX(0deg);
+    }
+    .work-grid {
+        grid-template-columns: 1fr;
+        transform: skewY(4.5deg) skewX(0deg) scale(1.15);
+    }
+    .work-card {
+        height: clamp(320px, 50vw, 420px);
+        border: none;
+    }
+    .work-card:last-child {
+        border: none;
+    }
+    .work-card-desc {
+        display: none; /* hide descriptions on mobile for layout height neatness */
+    }
+}
+/* Hand-cut strips of black tape stuck onto a few cards — overhang the
+   edges, each positioned/tilted per-instance via inline styles. The
+   jagged short ends read like the tape was torn off a roll. */
+.card-tape {
+    position: absolute;
+    width: clamp(56px, 6vw, 92px);
+    height: clamp(19px, 2vw, 27px);
+    background: var(--ink);
+    z-index: 7;
+    pointer-events: none;
+    clip-path: polygon(
+            0% 0%, 100% 0%,
+            94% 17%, 100% 34%, 94% 50%, 100% 66%, 94% 83%, 100% 100%,
+            0% 100%,
+            6% 83%, 0% 66%, 6% 50%, 0% 34%, 6% 17%
+    );
+}
+/* Playful sticker doodles (sunburst / flower / waves) scattered so they
+   peek off the corners of a few cards. Position + tilt + size are set
+   per-instance via inline styles; purely decorative. */
+.card-deco {
+    position: absolute;
+    z-index: 8;
+    pointer-events: none;
+    height: auto;
+}
+.work-card-media {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    background: var(--color-cream);
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid var(--ink);
+}
+.work-card .work-card-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0;
+    z-index: 1;
+    background: transparent;
+    overflow: hidden;
+}
+.work-card-media img,
+.work-card-media video {
+    width: 100%;
+    height: 125%;
+    object-fit: cover;
+    display: block;
+    position: absolute;
+    top: -12.5%;
+    left: 0;
+    transform: scale(1.12);
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
+    will-change: transform, translate;
+}
+.work-card:hover .work-card-media img,
+.work-card:hover .work-card-media video {
+    transform: scale(1.15) translate(calc(var(--mouse-x, 0) * -24px), calc(var(--mouse-y, 0) * -24px));
+}
+@media (prefers-reduced-motion: reduce) {
+    .work-card-media img,
+    .work-card-media video {
+        transition: none !important;
+        transform: none !important;
+    }
+}
+
+/* --- Seamless Angled Case Study Card Redesign --- */
+.work-card-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(to top, rgba(18, 7, 26, 0.95) 0%, rgba(18, 7, 26, 0.45) 50%, rgba(18, 7, 26, 0) 100%);
+    transition: backdrop-filter 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    pointer-events: none;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+}
+
+.work-card-overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    opacity: 0;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+
+    /* Chunky pixel art checkerboard dithering mask (8x8px blocks within 16x16px grid) */
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect width='8' height='8' fill='white'/%3E%3Crect x='8' y='8' width='8' height='8' fill='white'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect width='8' height='8' fill='white'/%3E%3Crect x='8' y='8' width='8' height='8' fill='white'/%3E%3C/svg%3E");
+    -webkit-mask-size: 16px 16px;
+    mask-size: 16px 16px;
+    -webkit-mask-repeat: repeat;
+    mask-repeat: repeat;
+}
+
+/* Base Foreground Content Layout */
+.work-card-fg-content {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    width: 100%;
+    padding: clamp(1.5rem, 3vw, 3rem);
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+.work-card .work-card-title {
+    font-family: var(--font, sans-serif);
+    font-weight: 700;
+    font-size: clamp(1.15rem, 1.6vw, 1.55rem);
+    line-height: 1.25;
+    color: #f5f1e6 !important;
+    margin: 0.5rem 0;
+    transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    text-transform: uppercase;
+}
+
+.work-card .work-card-desc {
+    font-family: var(--font);
+    font-weight: 500;
+    font-size: clamp(0.82rem, 1.05vw, 0.98rem);
+    line-height: 1.55;
+    color: rgba(245, 241, 230, 0.8) !important;
+    margin: 0;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s ease;
+    max-width: 100%;
+}
+
+.work-card .card-tags {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.work-card .card-tag {
+    font-family: var(--font, sans-serif);
+    font-size: clamp(0.72rem, 0.9vw, 0.82rem);
+    font-weight: bold;
+    color: #f5f1e6 !important;
+    border: 1px solid rgba(245, 241, 230, 0.3) !important;
+    background: rgba(18, 7, 26, 0.35) !important;
+    border-radius: 6px;
+    padding: 0.25rem 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: all 0.4s ease;
+}
+
+/* Prevent text cut-offs on the outer edges of the viewport due to grid scale & skew */
+@media (min-width: 881px) {
+    .work-card--hytale .work-card-fg-content {
+        padding-left: calc(clamp(1.5rem, 3vw, 3rem) + 4.5vw);
+    }
+    .work-card--bts .work-card-fg-content {
+        padding-right: calc(clamp(1.5rem, 3vw, 3rem) + 4.5vw);
+    }
+}
+
+/* Individual Card Hover Theme Overlays (rgba shades mapping) */
+.work-card--hytale {
+    --hover-bg-color: rgba(255, 234, 176, 0.94);
+}
+.work-card--gallery {
+    --hover-bg-color: rgba(180, 120, 223, 0.94);
+}
+.work-card--videos {
+    --hover-bg-color: rgba(138, 227, 214, 0.94);
+}
+.work-card--bts {
+    --hover-bg-color: rgba(207, 162, 255, 0.94);
+}
+
+.work-card:hover .work-card-overlay {
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+.work-card:hover .work-card-overlay::after {
+    animation: 
+        card-rainbow-glow 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+        card-mask-shimmer 0.4s steps(6) forwards;
+}
+
+@keyframes card-rainbow-glow {
+    0% {
+        opacity: 0;
+        background-color: rgba(255, 64, 128, 0.85); /* Pink */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+    15% {
+        opacity: 1;
+        background-color: rgba(255, 64, 128, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+    40% {
+        background-color: rgba(255, 204, 0, 0.85); /* Yellow */
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+    65% {
+        background-color: rgba(0, 240, 200, 0.85); /* Teal */
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+    }
+    85% {
+        background-color: rgba(180, 120, 255, 0.85); /* Lilac */
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        opacity: 0.85;
+    }
+    100% {
+        background-color: transparent;
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+        opacity: 0;
+    }
+}
+
+@keyframes card-mask-shimmer {
+    0% {
+        -webkit-mask-position: 0px 0px;
+        mask-position: 0px 0px;
+    }
+    16% {
+        -webkit-mask-position: 8px 4px;
+        mask-position: 8px 4px;
+    }
+    33% {
+        -webkit-mask-position: -4px 12px;
+        mask-position: -4px 12px;
+    }
+    50% {
+        -webkit-mask-position: 12px -8px;
+        mask-position: 12px -8px;
+    }
+    66% {
+        -webkit-mask-position: -12px 8px;
+        mask-position: -12px 8px;
+    }
+    83% {
+        -webkit-mask-position: 4px -4px;
+        mask-position: 4px -4px;
+    }
+    100% {
+        -webkit-mask-position: -8px -12px;
+        mask-position: -8px -12px;
+    }
+}
+
+/* Text Contrast & Slide-Up Transitions on Hover */
+.work-card:hover .work-card-title {
+    color: #f5f1e6 !important;
+    transform: translateY(-8px);
+}
+.work-card:hover .work-card-desc {
+    opacity: 1;
+    transform: translateY(0);
+    color: rgba(245, 241, 230, 0.8) !important;
+}
+.work-card:hover .card-tags {
+    transform: translateY(-8px);
+}
+.work-card:hover .card-tag {
+    color: #f5f1e6 !important;
+    border-color: rgba(245, 241, 230, 0.4) !important;
+    background: rgba(18, 7, 26, 0.4) !important;
+}
+
+/* Force original cover art colors by hiding the lighten overlay */
+.work-card--hytale .work-card-media::after,
+.work-card--gallery .work-card-media::after,
+.work-card--videos .work-card-media::after,
+.work-card--bts .work-card-media::after {
+    display: none !important;
+}
+/* Line-art case-study clips blend into the paper; the Fisher-Price
+   card is real footage, so it keeps its solid frame. */
+.work-card:not(.work-card--fisher):not(.work-card--bridge):not(.work-card--orders):not(.work-card--send) .work-card-media video { mix-blend-mode: multiply; }
+/* ACV Drops + Bridging cards use real footage (no paper blend), with
+   a brand logo overlaid bottom-left over a soft bottom veil. */
+.work-card--acv .work-card-media img:not(.acv-logo) { width: 100%; height: 100%; object-fit: cover; display: block; }
+.work-card--bulk .work-card-media img:not(.bridge-logo), .work-card--send .work-card-media img:not(.bridge-logo) { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Order Management + Send to Auction — looping video preview with a play
+   button (the cards link out to the full walkthrough video). */
+.work-card-play { position: absolute; inset: 0; z-index: 3; display: grid; place-items: center; pointer-events: none; }
+.work-card-play::before {
+    content: ""; position: absolute; width: clamp(52px, 27%, 74px); aspect-ratio: 1;
+    background: var(--color-cream); border: 2px solid var(--ink); border-radius: 50%;
+    transition: transform 0.4s cubic-bezier(0.2,0.8,0.2,1);
+}
+.work-card-play svg { position: relative; width: clamp(18px, 9%, 26px); height: auto; color: var(--ink); transform: translateX(8%); }
+.work-card:hover .work-card-play::before { transform: scale(1.09); }
+/* Designing With AI — dark "quote" card (links to the case-study page). */
+.work-card--ai .work-card-media, .work-card--ds .work-card-media { background: var(--ink); display: flex; flex-direction: column; justify-content: center; gap: clamp(0.6rem, 1.4vw, 0.9rem); padding: clamp(1.2rem, 2.8vw, 2rem); }
+.work-card--ai .work-card-media::after, .work-card--ds .work-card-media::after { display: none; }
+.ai-card-eyebrow { font-family: var(--font); font-size: clamp(0.6rem, 0.9vw, 0.72rem); font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(245,241,230,0.55); }
+.ai-card-quote { font-family: var(--hero-font); font-weight: 600; font-size: clamp(1.1rem, 2.1vw, 1.6rem); line-height: 1.18; letter-spacing: -0.015em; color: var(--paper); }
+.work-card--ai .work-card-media::before, .work-card--ds .work-card-media::before { content: "“"; position: absolute; top: clamp(-0.2rem, 0vw, 0.1rem); right: clamp(0.6rem, 1.5vw, 1.1rem); font-family: var(--hero-font); font-size: clamp(3rem, 7vw, 5rem); line-height: 1; color: rgba(245,241,230,0.12); pointer-events: none; }
+.work-card--acv .work-card-media::after,
+.work-card--bridge .work-card-media::after,
+.work-card--orders .work-card-media::after,
+.work-card--bulk .work-card-media::after,
+.work-card--send .work-card-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.14) 28%, rgba(0,0,0,0) 52%);
+    mix-blend-mode: normal;
+    pointer-events: none;
+}
+.acv-logo {
+    position: absolute;
+    bottom: clamp(0.7rem, 1.2vw, 1.05rem);
+    left: clamp(0.7rem, 1.2vw, 1.05rem);
+    z-index: 2;
+    width: 48%;
+    max-width: 158px;
+    height: auto;
+    pointer-events: none;
+}
+.bridge-logo {
+    position: absolute;
+    bottom: clamp(0.75rem, 1.3vw, 1.1rem);
+    left: clamp(0.85rem, 1.4vw, 1.2rem);
+    z-index: 2;
+    width: 26%;
+    max-width: 88px;
+    height: auto;
+    pointer-events: none;
+}
+.work-card-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    mix-blend-mode: lighten;
+    pointer-events: none;
+}
+.work-card-title {
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: clamp(1.2rem, 1.6vw, 1.6rem);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--color-cream);
+    text-transform: none;
+    position: relative;
+    z-index: 3;
+}
+.work-card-desc {
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: clamp(0.85rem, 1.05vw, 1rem);
+    line-height: 1.5;
+    color: rgba(255, 253, 245, 0.85); /* Light cream muted */
+    margin: 0;
+    position: relative;
+    z-index: 3;
+}
+.work-card--fisher .work-card-media::after { background: rgba(0, 0, 0, 0.34); mix-blend-mode: normal; }
+.fisher-logo {
+    position: absolute;
+    bottom: clamp(0.6rem, 1.1vw, 0.95rem);
+    left: clamp(0.6rem, 1.1vw, 0.95rem);
+    z-index: 2;
+    width: 38%;
+    max-width: 130px;
+    height: auto;
+    pointer-events: none;
+}
+.card-tags { order: 99; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.work-card .card-tags {
+    order: unset; /* Let tags flow to top of text overlay block */
+    position: relative;
+    z-index: 3;
+}
+.card-tag {
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: clamp(0.6rem, 0.8vw, 0.72rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    padding: 0.34rem 0.7rem;
+}
+.work-card .card-tag {
+    color: var(--ink);
+    background: var(--color-cream);
+    border-color: var(--ink);
+    position: relative;
+    z-index: 3;
+}
+@media (max-width: 880px) {
+    /* Swipeable horizontal carousel instead of a long stack. */
+    .work-grid {
+        display: flex;
+        grid-template-columns: none;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        align-items: flex-start;
+        gap: 14px;
+        max-width: none;
+        margin-inline: 0;
+        /* Vertical room so the cards' overhanging sticker shapes (sunburst,
+           flower, waves) aren't clipped by the scroll container. The negative
+           top margin pulls the carousel up under the heading so the cards sit
+           close to it — the shape-room padding then overlaps the heading
+           (which is fine, the shapes are meant to sit over it). */
+        padding: 52px 0 40px;
+        margin-top: -40px;
+        scrollbar-width: none;
+    }
+    .work-grid::-webkit-scrollbar { display: none; }
+    .work-grid > * { flex: 0 0 82%; }
+    /* In the swipe carousel the cards sit flat, aligned, and fully static
+       — no scatter (per-card tilt + --shy offset) and no reveal animation,
+       so nothing moves vertically as new cards swipe into view. */
+    .work-grid > :is(.work-card, .visual-card).reveal-on-scroll,
+    .work-grid > :is(.work-card, .visual-card).reveal-on-scroll.is-revealed {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+    .work-heading { margin-bottom: 0.4rem; }
+}
+
+/* ---- Visual / featured cards ---- */
+.visual { width: 100%; padding: clamp(0.5rem, 1.4vw, 1.4rem) var(--page-pad-x) clamp(4rem, 8vw, 8rem); position: relative; z-index: 1; }
+.visual-inner { max-width: 1320px; margin: 0 auto; }
+.visual-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.75rem, 2vw, 1.75rem); align-items: start; }
+/* "View more" — on desktop, show the first 6 featured cards and collapse
+   the rest behind a button. Mobile is unaffected (the cards merge into the
+   swipe carousel via JS, so this only applies above the mobile breakpoint). */
+.visual-more { display: none; }
+@media (min-width: 881px) {
+    .visual-grid:not(.is-expanded) > a:nth-child(n+7) { display: none; }
+    .visual-more { display: flex; justify-content: center; margin-top: clamp(1.5rem, 3vw, 2.5rem); }
+    .visual-more button {
+        font-family: var(--font); font-weight: 700; font-size: clamp(1rem, 1.15vw, 1.1rem);
+        color: var(--ink); background: var(--paper); border: 1.5px solid var(--ink); border-radius: 999px;
+        padding: 0.7em 1.6em; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5em;
+        transition: transform 0.25s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.25s cubic-bezier(0.2,0.8,0.2,1);
+    }
+    .visual-more button:hover { transform: translate(-3px,-3px); box-shadow: 6px 6px 0 0 var(--ink); }
+    .visual-more button svg { width: 1.1em; height: auto; transition: transform 0.25s ease; }
+    .visual-grid.is-expanded ~ .visual-more button svg { transform: rotate(180deg); }
+}
+.visual-card {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    border: 1px solid var(--ink);
+    background: #f5f3ed;
+    display: grid;
+    place-items: center;
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: clamp(0.8rem, 1vw, 0.95rem);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #a8a59b;
+    will-change: transform;
+    transition:
+            transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+            box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+            opacity 0.5s ease;
+}
+.visual-card:hover { transform: translate(-8px, -8px); box-shadow: 14px 14px 0 0 var(--ink); }
+/* Touch devices have no real hover — :hover sticks after a tap and the
+   card lift/scale fights the scroll. Cancel the movement hovers there. */
+@media (hover: none), (pointer: coarse) {
+    :is(.work-card, .visual-card).reveal-on-scroll:hover,
+    .work-card:hover,
+    .visual-card:hover,
+    .career-card:hover,
+    .talk-card:hover,
+    .cta:hover,
+    .about-text .lead-link:hover {
+        transform: none !important;
+        box-shadow: none !important;
+        z-index: auto !important;
+    }
+    .work-card:hover .work-card-play::before { transform: none !important; }
+}
+.visual-card--vanta,
+.visual-card--harbor,
+.visual-card--indent {
+    position: relative;
+    background: var(--color-cream);
+    padding: clamp(1.25rem, 1.8vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.85rem, 1.4vw, 1.35rem);
+    align-items: stretch;
+}
+.vanta-videos { position: relative; flex: 1; min-height: 0; background: #111; overflow: hidden; }
+.vanta-videos video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+.vanta-videos video.is-active { opacity: 1; }
+.vanta-videos::after { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.42); pointer-events: none; z-index: 1; }
+.vanta-logo,
+.harbor-logo {
+    position: absolute;
+    bottom: clamp(0.6rem, 1.1vw, 0.95rem);
+    left: clamp(0.6rem, 1.1vw, 0.95rem);
+    z-index: 2;
+    width: 38%;
+    max-width: 130px;
+    height: auto;
+    pointer-events: none;
+}
+.harbor-media { position: relative; flex: 1; min-height: 0; background: #0b3c5d; overflow: hidden; }
+.harbor-media > img:not(.harbor-logo) { width: 100%; height: 100%; object-fit: cover; display: block; }
+.harbor-media::after { content: ""; position: absolute; inset: 0; background: rgba(11, 60, 93, 0.32); pointer-events: none; z-index: 1; }
+.indent-media { position: relative; flex: 1; min-height: 0; background: #1a1815; overflow: hidden; }
+.indent-media > img:not(.indent-logo) { width: 100%; height: 100%; object-fit: cover; display: block; }
+.indent-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(26,24,21,0.20) 0%, rgba(208,92,8,0.32) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+.indent-logo {
+    position: absolute;
+    bottom: clamp(0.6rem, 1.1vw, 0.95rem);
+    left: clamp(0.6rem, 1.1vw, 0.95rem);
+    z-index: 2;
+    width: 50%;
+    max-width: 200px;
+    height: auto;
+    pointer-events: none;
+}
+@media (max-width: 880px) {
+    /* Swipeable horizontal carousel instead of a long stack. */
+    .visual-grid {
+        display: flex;
+        grid-template-columns: none;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        align-items: flex-start;
+        gap: 14px;
+        max-width: none;
+        margin-inline: 0;
+        padding-bottom: 12px;
+        scrollbar-width: none;
+    }
+    .visual-grid::-webkit-scrollbar { display: none; }
+    .visual-grid > * { flex: 0 0 82%; }
+    .visual { padding-top: 44px; }
+}
+
+/* About intro sits mid-page now (not under the fixed header), so it
+   hugs its content instead of forcing a full viewport with header
+   clearance. */
+#about.page {
+    min-height: 90vh;
+    padding-top: clamp(6rem, 10vh, 12rem);
+    padding-bottom: clamp(6rem, 10vh, 12rem);
+}
+
+/* ---------------- Contact modal ---------------- */
+.modal[hidden] { display: none; }
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    padding: clamp(1rem, 4vw, 2rem);
+}
+.modal__overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--about-overlay-bg);
+    backdrop-filter: blur(var(--about-overlay-blur, 5px));
+    -webkit-backdrop-filter: blur(var(--about-overlay-blur, 5px));
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal.is-open .modal__overlay { opacity: 1; }
+
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Page-Spanning Modern Contact Container */
+.modern-contact-dialog {
+    position: relative; z-index: 1;
+    width: min(1000px, 90vw);
+    max-height: calc(100vh - 4rem);
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    padding: 2rem 0;
+    transform: translateY(24px); opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+}
+.modal.is-open .modern-contact-dialog { transform: none; opacity: 1; }
+
+/* Modern typography layout elements */
+.modern-contact-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
+.modern-contact-title {
+    font-family: var(--font, sans-serif);
+    font-weight: 700;
+    font-size: clamp(2.8rem, 6vw, 4.5rem);
+    line-height: 1.05;
+    color: var(--ink);
+    letter-spacing: -0.025em;
+    text-transform: lowercase;
+    margin-bottom: 0.5rem;
+}
+
+.modern-contact-intro {
+    font-family: var(--font, sans-serif);
+    font-size: clamp(1.2rem, 1.6vw, 1.45rem);
+    line-height: 1.6;
+    color: var(--ink);
+    opacity: 0.8;
+    max-width: 800px;
+    margin-bottom: 1.5rem;
+    padding-left: 0;
+    border-left: none;
+}
+
+/* Modern Form styles */
+.modern-contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    width: 100%;
+}
+
+.modern-contact-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    width: 100%;
+}
+
+.modern-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.modern-field label {
+    font-family: var(--font, sans-serif);
+    font-size: clamp(1rem, 1.3vw, 1.2rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: color-mix(in srgb, var(--ink) 65%, transparent);
+}
+
+/* Borderless Underline Input Fields */
+.modern-field input,
+.modern-field textarea {
+    font-family: var(--font, sans-serif);
+    font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+    font-weight: 500;
+    color: var(--ink);
+    background: color-mix(in srgb, var(--ink) 3%, transparent);
+    border: none;
+    padding: 1.2rem 1.4rem;
+    width: 100%;
+    outline: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 12px;
+}
+.modern-field input::placeholder,
+.modern-field textarea::placeholder {
+    color: color-mix(in srgb, var(--ink) 35%, transparent);
+}
+.modern-field input:focus,
+.modern-field textarea:focus {
+    background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+.modern-field textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.4;
+}
+
+/* Clean, Premium Send Button */
+.modern-contact-action {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.modern-contact-submit {
+    align-self: flex-start;
+    font-family: var(--font, sans-serif);
+    font-weight: 700;
+    font-size: clamp(1.2rem, 1.6vw, 1.4rem);
+    color: var(--paper);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    border-radius: 50px;
+    padding: 0.95rem 3rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--ink) 15%, transparent);
+    transition: transform 0.3s cubic-bezier(0.3, 2.2, 0.4, 0.95), background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    text-transform: lowercase;
+}
+.modern-contact-submit:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(255, 126, 182, 0.3);
+    animation: rainbow-bg-shift 2.5s linear infinite;
+}
+.modern-contact-submit:active {
+    transform: scale(0.98);
+}
+
+.contact-status {
+    font-family: 'Alkhemikal', monospace;
+    font-size: 1.25rem;
+    color: var(--accent);
+    min-height: 1.2em;
+}
+
+/* Modern minimal footer */
+.modern-contact-footer {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+    width: 100%;
+}
+
+.footer-prompt {
+    font-family: var(--font, sans-serif);
+    font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.contact-methods {
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.contact-method-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font, sans-serif);
+    font-weight: 700;
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+    color: var(--paper);
+    border-radius: 50px;
+    padding: 0.75rem 1.6rem;
+    cursor: pointer;
+    transition: transform 0.5s cubic-bezier(0.3, 2.2, 0.4, 0.95), background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+}
+
+.email-btn {
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.email-btn:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.discord-btn {
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.discord-btn:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.contact-method-btn:active {
+    transform: scale(0.98);
+}
+
+@keyframes rainbow-bg-shift {
+    0% { background-color: #ff7eb6; border-color: #ff7eb6; color: #1a0f26; }
+    25% { background-color: #ffeab0; border-color: #ffeab0; color: #1a0f26; }
+    50% { background-color: #2dd4bf; border-color: #2dd4bf; color: #1a0f26; }
+    75% { background-color: #cfa2ff; border-color: #cfa2ff; color: #1a0f26; }
+    100% { background-color: #ff7eb6; border-color: #ff7eb6; color: #1a0f26; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modern-contact-dialog { transition: none; transform: none; }
+    .modern-contact-submit { transition: none; }
+}
+
+
+/* ---- Mobile boot splash ---- */
+/* A brief branded cover shown only on phones while the first paint settles,
+   so the page never appears mid-load. It fades out on window load (videos
+   are deferred, so that fires fast) with a hard cap so it can't hang. */
+.boot {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    place-items: center;
+    align-content: center;
+    gap: 1.4rem;
+    background: var(--paper);
+}
+.boot.is-done { opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+.boot-logo { width: clamp(96px, 30vw, 132px); height: auto; animation: boot-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.boot-dots { display: flex; gap: 0.7rem; align-items: center; }
+.boot-dots img { width: clamp(22px, 6.5vw, 30px); height: auto; animation: boot-bounce 1s ease-in-out infinite; }
+.boot-dots img:nth-child(2) { animation-delay: 0.15s; }
+.boot-dots img:nth-child(3) { animation-delay: 0.3s; }
+@keyframes boot-pop { 0% { transform: scale(0.5); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes boot-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+/* Phones only — desktop never shows it. */
+@media (max-width: 880px) { .boot { display: grid; } }
+/* Respect reduced-motion: gentle fade, no pop or bounce. */
+@media (prefers-reduced-motion: reduce) {
+    .boot-logo { animation: boot-fade 0.4s ease both; }
+    .boot-dots img { animation: none; }
+}
+@keyframes boot-fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------------- Cinematic Intro Revealer & Float-In ---------------- */
+body.intro-active {
+    overflow: hidden !important;
+    height: 100vh !important;
+}
+
+/* Override custom paper-airplane cursor during intro to enable clicking the button */
+body.intro-active, 
+body.intro-active * {
+    cursor: auto !important;
+}
+body.intro-active .cursor-plane {
+    display: none !important;
+}
+
+#revealer-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #0d0d0d; /* Slightly softer dark tone */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999; /* Higher than boot splash (9999) */
+    padding: 2rem;
+    transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), visibility 1.2s;
+}
+
+#revealer-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.quote-container {
+    max-width: min(900px, 85vw);
+    text-align: center;
+    min-height: 180px;
+    margin-bottom: 3.5rem;
+}
+
+.quote-text {
+    font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+    line-height: 1.3;
+    font-weight: normal;
+    letter-spacing: 0.02em;
+    color: #f5f5f7; /* Milky white */
+    font-family: 'Yoster Island', monospace;
+}
+
+.quote-text .letter {
+    transition-delay: calc(var(--letter-i, 0) * 35ms);
+}
+
+.cursor {
+    display: inline-block;
+    width: 3px;
+    height: 1.1em;
+    background-color: #f5f5f7;
+    margin-left: 6px;
+    vertical-align: middle;
+    animation: intro-blink 0.8s infinite;
+}
+
+@keyframes intro-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.continue-btn {
+    background: transparent;
+    color: #f5f5f7;
+    border: 1px solid rgba(245, 245, 247, 0.3);
+    padding: 0.75rem 2.5rem;
+    font-size: 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.8s ease, transform 0.8s ease, border-color 0.3s ease, background-color 0.3s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.continue-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.continue-btn:hover {
+    border-color: rgba(245, 245, 247, 1);
+    background-color: rgba(245, 245, 247, 0.08);
+}
+
+/* Fluid Site Float-In Container */
+#main-content {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+    min-height: 100vh;
+}
+
+#main-content.floated {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #main-content {
+        transition: none;
+        transform: none;
+        opacity: 1;
+    }
+}
+
+/* Instant intro bypass styles */
+.intro-bypassed body {
+    overflow: auto !important;
+    height: auto !important;
+}
+.intro-bypassed #revealer-screen {
+    display: none !important;
+}
+.intro-bypassed #main-content {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+/* ==========================================================================
+   AUTOMATIC SYSTEM-BASED DARK MODE OVERRIDES
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ink: #c181ff;                 /* Milky cream text */
+        --paper: #12071a;               /* Deep eggplant black background */
+        --accent: #cfa2ff;              /* Vibrant lilac accent */
+        --ui-active: #2dd4bf;           /* Brighter teal hover highlight */
+        --color-cream: #1e112a;         /* Dark plum-cream for card backdrops */
+        --color-yellow: #544321;        /* Muted warm gold/ochre */
+        --color-purple-light: #2d143c;   /* Dark eggplant/purple for secondary regions */
+        --ui-border-color: rgba(245, 241, 230, 0.08); /* Soft white border */
+        
+        /* Subpage-specific background gradient variables */
+        --color-blush: #25161c;
+        --color-lavender: #1a1027;
+        --color-mauve: #2f1737;
+    }
+
+    /* Base and Layout Adjustments */
+    .stage::before {
+        background: linear-gradient(to right, var(--paper) 20%, rgba(18, 7, 26, 0) 47%);
+    }
+
+    /* Invert line-art video clips so they display as light lines on dark background */
+    .talk-card-media :is(img, video),
+    .stage video {
+        filter: invert(1);
+        mix-blend-mode: screen;
+    }
+
+    /* Change the overlay blend mode from lighten (light mode) to multiply (dark mode) */
+    .talk-card-media::after {
+        background: var(--ink);
+        mix-blend-mode: multiply;
+    }
+
+    /* Disable overlays on full-color media and stage artwork to keep colors clean */
+    .work-card-media::after,
+    .stage-inner::after {
+        display: none;
+    }
+
+    /* Force stage poster (base.png) to render without dark mode mix-blend-mode overlay inversion */
+    .stage .poster {
+        mix-blend-mode: normal !important;
+        filter: none !important;
+    }
+
+    /* Dark mode overrides for Komorebi promo banner */
+    .promo-button {
+        color: var(--paper) !important;
+        background: var(--accent) !important;
+        border-color: var(--paper) !important;
+        box-shadow: 4px 4px 0 var(--paper) !important;
+    }
+    .promo-button:hover {
+        background: #ffffff !important;
+        color: var(--ink) !important;
+        box-shadow: 6px 6px 0 var(--paper) !important;
+    }
+
+    /* Bento Cards Glassmorphism styling overrides */
+    .card-info {
+        background: rgba(26, 15, 38, 0.75) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+    .bento-card:hover .card-info {
+        background: rgba(26, 15, 38, 0.88) !important;
+    }
+    .card-badge {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: var(--ink) !important;
+    }
+
+    /* Lightbox Modal Dark Mode adaptations */
+    .lightbox-content {
+        background: rgba(26, 15, 38, 0.88) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* Subtitle text colors for readability */
+    .gallery-subtitle,
+    .hytale-subtitle,
+    .bts-subtitle,
+    .videos-subtitle {
+        color: rgba(245, 241, 230, 0.7) !important;
+    }
+
+    /* Hytale category filter buttons */
+    .filter-btn {
+        color: var(--ink) !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+    }
+    .filter-btn:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        color: var(--ui-active) !important;
+    }
+    .filter-btn.active {
+        background: #8ae3d6 !important;
+        color: #1a0f26 !important;
+    }
+
+    /* Adapt contact form elements for dark mode */
+    .modern-contact-intro {
+        color: rgba(245, 241, 230, 0.85);
+    }
+    .modern-field label {
+        color: var(--accent);
+    }
+    .modern-field input,
+    .modern-field textarea {
+        color: var(--ink);
+        border-bottom-color: var(--color-purple-light);
+    }
+    .modern-field input::placeholder,
+    .modern-field textarea::placeholder {
+        color: rgba(245, 241, 230, 0.4);
+    }
+    .modern-field input:focus,
+    .modern-field textarea:focus {
+        border-bottom-color: var(--ui-active);
+    }
+
+
+    .about-text p,
+    .about-lead-text p {
+        color: var(--ink);
+    }
+
+    /* UI styling overrides */
+    .cta {
+        border-color: var(--ink);
+    }
+    .brand img, .brand svg {
+        filter: drop-shadow(0px 0px 8px rgba(255, 255, 255, 0.15));
+    }
+}

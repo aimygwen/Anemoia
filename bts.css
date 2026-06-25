@@ -1,0 +1,475 @@
+/* ----------------------------------------------------
+   BEHIND THE SCENES STYLE SYSTEM
+   Clean, technical editor aesthetic, slate grey.
+   ---------------------------------------------------- */
+
+:root {
+    --ui-bg: var(--paper);
+    --ui-ink: var(--ink);
+    --ui-active: var(--accent);
+    --ui-border: var(--ui-border-color, rgba(45, 18, 61, 0.06));
+
+    /* Custom palette overrides for Behind the Scenes (slate / technical indigo) */
+    --paper: #f1f5f9;             /* Cool slate white background */
+    --ink: #0f172a;               /* Slate dark blue-grey ink */
+    --accent: #4f46e5;            /* Indigo technical blue accent */
+    --ui-active: #06b6d4;         /* Cyan active hover */
+    --color-cream: #ffffff;       /* Pure white card backdrops */
+    --color-yellow: #e2e8f0;      /* Cool slate-grey secondary */
+    --color-purple-light: #cbd5e1; /* Slate silver secondary */
+    --ui-border-color: rgba(15, 23, 42, 0.08);
+
+    /* Background gradient variables */
+    --color-blush: #e2e8f0;
+    --color-lavender: #cbd5e1;
+    --color-mauve: #94a3b8;
+
+    /* Bento Card Media wrappers */
+    --card-media-bg: rgba(255, 255, 255, 0.5);
+    --card-media-border: rgba(255, 255, 255, 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --paper: #000000;             /* Slate dark blue background */
+        --ink: #878787;               /* Cool slate silver text */
+        --accent: #ffffff;            /* Cool indigo-blue accent */
+        --ui-active: #ffffff;         /* Bright cyan hover active */
+        --color-cream: #1e293b;       /* Slate card backdrop */
+        --color-yellow: #334155;      /* Deep slate blue */
+        --color-purple-light: #475569; /* Medium slate secondary */
+        --ui-border-color: rgba(203, 213, 225, 0.08);
+
+        /* Background gradient variables */
+        --color-blush: #1e293b;
+        --color-lavender: #0f172a;
+        --color-mauve: #334155;
+
+        /* Bento Card Media wrappers */
+        --card-media-bg: rgba(30, 41, 59, 0.6);
+        --card-media-border: rgba(255, 255, 255, 0.06);
+    }
+}
+
+.bts-page-body {
+    background-color: var(--ui-bg);
+    min-height: 100vh;
+    color: var(--ui-ink);
+}
+
+#bts-page-content {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+    padding: clamp(6rem, 10vw, 8.5rem) var(--page-pad-x) 4rem var(--page-pad-x);
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+#bts-page-content.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Hero Banner Section --- */
+.bts-hero {
+    position: relative;
+    padding: 4rem 0 2rem 0;
+    background: transparent;
+    margin-bottom: 2rem;
+}
+
+.bts-hero-content {
+    position: relative;
+    z-index: 5;
+    max-width: 700px;
+}
+
+.category-tag {
+    display: inline-block;
+    font-family: 'Yoster Island', monospace;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--ui-active);
+    background: rgba(135, 98, 166, 0.08);
+    border: none;
+    border-radius: 50px;
+    padding: 0.35rem 1.1rem;
+    margin-bottom: 1.2rem;
+}
+
+.bts-title {
+    font-family: 'Yoster Island', monospace;
+    font-size: clamp(2.5rem, 5.5vw, 4.2rem);
+    color: var(--ui-ink);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.title-star {
+    display: inline-block;
+    color: var(--ui-active);
+    animation: star-rotate 6s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes star-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.bts-subtitle {
+    font-family: var(--font, "Plus Jakarta Sans"), sans-serif;
+    font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+    line-height: 1.55;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+/* --- Bento Grid Gallery --- */
+.hytale-gallery {
+    width: 100%;
+    min-height: 400px;
+    position: relative;
+}
+
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-auto-rows: 260px;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .bento-grid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: 280px;
+    }
+}
+
+/* Card Reveal Animations */
+.bento-card {
+    position: relative;
+    border: none;
+    border-radius: 28px;
+    background: transparent;
+    cursor: pointer;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    
+    /* Scroll reveal transitions */
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+    transition: opacity 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bento-card.revealed {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.bento-card:hover {
+    transform: scale(1.02);
+}
+
+/* Snapping Corner Brackets */
+.corner-bracket {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 3.5px solid transparent;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    z-index: 10;
+}
+
+/* Bracket Positions & Offset */
+.corner-bracket.top-left {
+    top: 6px;
+    left: 6px;
+    border-top-color: var(--bracket-color, #2563eb);
+    border-left-color: var(--bracket-color, #2563eb);
+    transform: translate(-6px, -6px);
+}
+.corner-bracket.top-right {
+    top: 6px;
+    right: 6px;
+    border-top-color: var(--bracket-color, #2563eb);
+    border-right-color: var(--bracket-color, #2563eb);
+    transform: translate(6px, -6px);
+}
+.corner-bracket.bottom-left {
+    bottom: 6px;
+    left: 6px;
+    border-bottom-color: var(--bracket-color, #2563eb);
+    border-left-color: var(--bracket-color, #2563eb);
+    transform: translate(-6px, 6px);
+}
+.corner-bracket.bottom-right {
+    bottom: 6px;
+    right: 6px;
+    border-bottom-color: var(--bracket-color, #2563eb);
+    border-right-color: var(--bracket-color, #2563eb);
+    transform: translate(6px, 6px);
+}
+
+/* Snap into place on card hover */
+.bento-card:hover .corner-bracket {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+.bento-card.cat-wireframe, .lightbox.cat-wireframe { --bracket-color: #b478df; }
+.bento-card.cat-mesh, .lightbox.cat-mesh { --bracket-color: #ffeab0; }
+.bento-card.cat-progress, .lightbox.cat-progress { --bracket-color: #cfa2ff; }
+
+/* Bento Sizing classes */
+@media (min-width: 768px) {
+    .card-normal { grid-column: span 1; grid-row: span 1; }
+    .card-wide { grid-column: span 2; grid-row: span 1; }
+    .card-tall { grid-column: span 1; grid-row: span 2; }
+    .card-large { grid-column: span 2; grid-row: span 2; }
+}
+
+/* Card Inner Image Wrapper */
+.card-media {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    overflow: hidden;
+    background: var(--card-media-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--card-media-border);
+    border-radius: 28px;
+    padding: clamp(1rem, 2.8vw, 2.4rem);
+    transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+}
+
+.bento-card:hover .card-media img {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 15px 25px rgba(31, 41, 55, 0.12));
+}
+
+/* Category Hover Highlights */
+.bento-card.cat-wireframe:hover .card-media {
+    background-color: rgba(180, 120, 223, 0.25);
+    box-shadow: 0 15px 35px rgba(180, 120, 223, 0.25);
+}
+.bento-card.cat-mesh:hover .card-media {
+    background-color: rgba(255, 234, 176, 0.45);
+    box-shadow: 0 15px 35px rgba(255, 234, 176, 0.25);
+}
+.bento-card.cat-progress:hover .card-media {
+    background-color: rgba(207, 162, 255, 0.3);
+    box-shadow: 0 15px 35px rgba(207, 162, 255, 0.25);
+}
+
+/* Floating Glass Info Tags */
+.card-info {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    right: 14px;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 18px;
+    padding: 0.75rem 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 8;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.bento-card:hover .card-info {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.88);
+    box-shadow: 0 8px 25px rgba(31, 41, 55, 0.06);
+}
+
+.card-title-text {
+    font-family: 'Yoster Island', monospace;
+    font-size: 1.05rem;
+    color: var(--ui-ink);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70%;
+}
+
+.card-badge {
+    align-self: center;
+    font-family: 'Alkhemikal', monospace;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--ui-ink);
+    background: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.2rem 0.65rem;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.bento-card.cat-wireframe .card-badge, .lightbox.cat-wireframe .card-badge { color: #b478df; background: rgba(180, 120, 223, 0.08); }
+.bento-card.cat-mesh .card-badge, .lightbox.cat-mesh .card-badge { color: #2d123d; background: #ffeab0; }
+.bento-card.cat-progress .card-badge, .lightbox.cat-progress .card-badge { color: #2d123d; background: #cfa2ff; }
+
+/* --- Lightbox Modal --- */
+.lightbox {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(17, 24, 39, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 1000;
+    display: none;
+    place-items: center;
+    padding: clamp(1rem, 4vw, 2.5rem);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.lightbox[aria-hidden="false"] {
+    display: grid;
+}
+
+.lightbox.active {
+    opacity: 1;
+}
+
+.lightbox-close {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--ui-ink);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    font-size: 2.2rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.25s ease;
+    z-index: 1010;
+}
+
+.lightbox-close:hover {
+    background: #ffffff;
+    color: var(--ui-active);
+    transform: scale(1.05) rotate(90deg);
+    box-shadow: 0 10px 30px rgba(135, 98, 166, 0.15);
+}
+
+.lightbox-content {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 28px;
+    max-width: 800px;
+    width: 100%;
+    max-height: calc(100vh - 4rem);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+    transform: scale(0.95);
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.lightbox.active .lightbox-content {
+    transform: scale(1);
+}
+
+.lightbox-image-wrapper {
+    position: relative;
+    background: rgba(38, 27, 48, 0.02);
+    padding: 3rem clamp(1rem, 4vw, 3rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 250px;
+    overflow: hidden;
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    height: auto;
+    max-height: 50vh;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 15px 30px rgba(38, 27, 48, 0.12));
+    z-index: 5;
+}
+
+.lightbox .corner-bracket {
+    opacity: 1;
+    transform: translate(0, 0) !important;
+}
+
+.lightbox-info {
+    padding: 1.8rem 2.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
+    background: transparent;
+}
+
+.lightbox-info h3 {
+    font-family: 'Yoster Island', monospace;
+    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    color: var(--ui-ink);
+    margin-bottom: 0.5rem;
+}
+
+.lightbox-info .card-badge {
+    margin-bottom: 0.8rem;
+    display: inline-block;
+}
+
+.lightbox-info p {
+    font-family: var(--font, "Plus Jakarta Sans"), sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: #4b5563;
+}
+
+@media (max-width: 600px) {
+    .bts-hero {
+        padding: 1.5rem;
+    }
+    .bento-grid {
+        grid-auto-rows: 220px;
+        gap: 1rem;
+    }
+}
