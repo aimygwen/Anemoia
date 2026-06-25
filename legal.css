@@ -1,306 +1,264 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* ----------------------------------------------------
+   LEGAL IMPRINT & POLICIES STYLE SYSTEM
+   Clean, editorial, responsive layout.
+   ---------------------------------------------------- */
 
 :root {
-    --bg: rgb(241, 241, 241);
-    --ui: #000000;
-    --uifade: rgba(234, 234, 234, 0.8);
-    --link: rgb(184, 228, 49);
-    --hover: #a126ae;
-    --fade: rgba(42, 85, 8, 0.89);
-    --text: #000000;
-    --subtext: #3e3e3e;
-    --accent: rgba(126, 126, 126, 0.5);
-    --credits: #090909;
-    --credits-sub: rgba(0, 0, 0, 0.5);
+    --ui-bg: var(--paper);
+    --ui-ink: var(--ink);
+    --ui-active: var(--accent);
+    --ui-border: var(--ui-border-color, rgba(24, 24, 27, 0.06));
+
+    /* Custom palette overrides for Legal (Colorless / Neutral Zinc-Grayscale) */
+    --paper: #fafafa;             /* Crisp off-white background */
+    --ink: #18181b;               /* Deep charcoal zinc text */
+    --accent: #71717a;            /* Mid-tone gray highlight */
+    --ui-active: #18181b;         /* Dark active highlight */
+    --color-cream: #ffffff;       /* Pure white backdrops */
+    --color-yellow: #e4e4e7;      /* Light gray secondary */
+    --color-purple-light: #d4d4d8; /* Silver gray secondary */
+    --ui-border-color: rgba(24, 24, 27, 0.08);
+
+    /* Background gradient variables (neutral gray tones) */
+    --color-blush: #f4f4f5;
+    --color-lavender: #e4e4e7;
+    --color-mauve: #d4d4d8;
 }
-
-
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg: rgb(0, 0, 0);
-        --ui: #ffffff;
-        --uifade: rgba(44, 44, 44, 0.8);
-        --link: rgb(255, 255, 255);
-        --hover: #a126ae;
-        --fade: rgba(0, 0, 0, 0.75);
-        --text: #ffffff;
-        --subtext: #bcbcbc;
-        --accent: rgba(126, 126, 126, 0.5);
-        --credits: #ffffff;
-        --credits-sub: rgba(255, 255, 255, 0.5);
+        --paper: #09090b;             /* Deep zinc black background */
+        --ink: #fafafa;               /* Clean off-white zinc text */
+        --accent: #a1a1aa;            /* Soft light gray highlight */
+        --ui-active: #fafafa;         /* White active highlight */
+        --color-cream: #18181b;       /* Dark card backdrops */
+        --color-yellow: #27272a;      /* Medium dark gray secondary */
+        --color-purple-light: #3f3f46; /* Slate gray secondary */
+        --ui-border-color: rgba(250, 250, 250, 0.08);
+
+        /* Background gradient variables (neutral dark tones) */
+        --color-blush: #09090b;
+        --color-lavender: #18181b;
+        --color-mauve: #27272a;
     }
 }
 
+.legal-page-body {
+    background-color: var(--ui-bg);
+    color: var(--ui-ink);
+    min-height: 100vh;
+    font-family: var(--font, "Plus Jakarta Sans"), sans-serif;
+}
 
-body {
-    background: var(--bg);
+#legal-page-content {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
-    height: 100%;
-    overflow-x: hidden;
+    padding: clamp(6rem, 10vw, 8.5rem) var(--page-pad-x, 2rem) 6rem var(--page-pad-x, 2rem);
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
-
-/* Montserrat */
-@font-face {
-    font-family: 'Montserrat';
-    src: url('./fonts/Montserrat.ttf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
+#legal-page-content.active {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-/* Athemi */
-@font-face {
-    font-family: 'Athemi'; /* Giving it a descriptive name */
-    src: url('./fonts/athemi_otf-webfont.woff2') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-/* Aesthetic */
-@font-face {
-    font-family: 'Aesthetic';
-    src: url('./fonts/Aesthetic.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-/* Remington Noiseless */
-@font-face {
-    font-family: 'Remington';
-    src: url('./fonts/Remington Noiseless.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Alkhemikal';
-    src: url('./fonts/Alkhemikal.ttf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-/* Remington Noiseless */
-@font-face {
-    font-family: 'Yoster';
-    src: url('./fonts/yoster.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-/* Main */
-
-h1 {
-    color: var(--text);
-    font-size: 14vw;
-    text-align: left;
-    font-weight: normal;
-    margin: 0;
-    font-family: 'Athemi', serif;
-    pointer-events: none;
-}
-
-h3 {
-    color: var(--text);
-    font-size: 12vw;
-    text-align: left;
-    font-weight: normal;
-    line-height: 1;
-    margin: 0;
-    font-family: 'Athemi', serif;
-}
-
-.headline {
+/* --- Hero Banner Section --- */
+.legal-hero {
     position: relative;
-    margin-right: auto;
-    margin-top: 5vh;
-    margin-left: 20%;
-    width: 60%;
-    max-width: 100%;
-    height: auto;
-    left: auto;
-    top: auto;
-    will-change: transform;
+    padding: 3rem 0 1.5rem 0;
+    background: transparent;
+    margin-bottom: 2rem;
+    border-bottom: 1.5px solid var(--ui-border-color, rgba(24, 24, 27, 0.06));
 }
 
-
-.content {
+.legal-hero-content {
     position: relative;
-    margin-left: 20%;
-    width: 60%;
-    margin-top: 5vh;
-    margin-right: auto;
-    margin-bottom: 100px;
-    max-width: 1200px;
-    height: auto;
-    left: auto;
-    top: auto;
+    z-index: 5;
+    max-width: 700px;
 }
 
-.content h1,
-.content h3,
-.content p,
-.content h2 {
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100%;
-    max-width: none;
-    font-family: 'Alkhemikal', serif;
-    text-align: left;
-    line-height: 1.6;
-}
-
-.content h2 {
-    font-size: 4rem;
-    margin-top: 4rem;
-    margin-bottom: 0.8rem;
-    font-family: 'Alkhemikal', serif;
+.category-tag {
+    display: inline-block;
+    font-family: 'Yoster Island', monospace;
+    font-size: 0.85rem;
     font-weight: bold;
-    color: var(--text);
+    color: var(--accent);
+    background: rgba(113, 113, 122, 0.08);
+    border: none;
+    border-radius: 50px;
+    padding: 0.35rem 1.1rem;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+}
+
+.legal-title {
+    font-family: 'Yoster Island', monospace;
+    font-size: clamp(2.2rem, 5.2vw, 3.8rem);
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.title-star {
+    display: inline-block;
+    color: var(--accent);
+    animation: star-rotate 6s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes star-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.legal-subtitle {
+    font-family: var(--font, "Plus Jakarta Sans"), sans-serif;
+    font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+    line-height: 1.55;
+    color: var(--ink);
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+/* --- Main Layout --- */
+.legal-main {
+    margin-top: 3rem;
+}
+
+.yoster-title {
+    font-family: 'Yoster Island', monospace !important;
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+}
+
+.athemi-title {
+    font-family: 'Athemi', serif !important;
+    font-weight: 300 !important;
+    font-size: clamp(2rem, 5.5vw, 4.2rem);
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+}
+
+.content h2 {
+    font-family: var(--font, "Plus Jakarta Sans"), sans-serif;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 800;
+    margin-top: 3.5rem;
+    margin-bottom: 1rem;
+    color: var(--ink);
+    text-transform: capitalize;
 }
 
 .content p {
-    font-size: 2.2rem;
-    margin-bottom: 3rem;
-    line-height: 1.8;
-    color: var(--subtext);
+    font-family: var(--font, "Plus Jakarta Sans"), sans-serif;
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    color: var(--ink);
+    opacity: 0.85;
 }
 
 .content .info {
-    display: block;
-    font-family: 'Helvetica Neue', serif;
-    font-weight: normal;
-    font-size: 1.4rem;
+    display: inline-block;
+    font-family: 'Alkhemikal', monospace;
+    font-size: 1rem;
     color: var(--accent);
-    line-height: 1.5;
-    margin-top: 1rem;
-    margin-bottom: 3rem;
-}
-
-.content h2 + p + .info-note {
-    margin-top: -2rem;
-    margin-bottom: 3rem;
-}
-
-.content .info:last-child {
-    margin-top: 3rem;
-    margin-bottom: 0;
+    margin-top: -0.5rem;
+    margin-bottom: 2.5rem;
 }
 
 .email-link {
-    color: inherit;
+    color: var(--accent);
     text-decoration: none;
-    padding-bottom: 12px;
-    background-image: linear-gradient(currentColor, currentColor);
-    background-size: 100% 2px;
+    font-weight: 600;
+    padding-bottom: 2px;
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-size: 100% 1.5px;
     background-repeat: no-repeat;
     background-position: left 95%;
-    transition:
-            color 0.6s ease-in-out,
-            background-size 0.6s ease-in-out;
+    transition: background-size 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
 }
 
 .email-link:hover {
-    color: var(--hover, #555555);
-    background-size: 0 2px;
-    background-position: right 95%;
+    color: var(--ink);
+    background-size: 0% 1.5px;
 }
 
-
-
-
-
-@media (min-width: 901px) {
-    .headline {
-        margin-top: 25vh;
-        margin-left: 20%;
-        width: 60%;
-    }
-
-    .content {
-        margin-top: 5vh;
-        margin-left: 20%;
-        width: 60%;
-        margin-bottom: 10vh;
-    }
-
-    .content h1,
-    .content h2,
-    .content p {
-        width: 100%;
-    }
+/* --- Switcher Buttons --- */
+.legal-nav {
+    display: flex;
+    gap: 1.5rem;
+    margin: 3.5rem 0 2rem 0;
 }
 
+.pixel-button {
+    font-family: 'Yoster Island', monospace !important;
+    background: var(--paper);
+    color: var(--ink);
+    border: 3.5px solid var(--ink);
+    padding: 0.9rem 1.8rem;
+    font-size: clamp(0.9rem, 1.5vw, 1.15rem);
+    cursor: pointer;
+    box-shadow: 4px 4px 0px var(--ink);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    text-transform: uppercase;
+    border-radius: 6px;
+}
 
-@media (max-width: 900px) {
+.pixel-button:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px var(--accent);
+}
 
-    .headline {
-        position: relative;
-        top: 4vh;
-        left: auto;
-        width: 90%;
-        height: auto;
-        margin: 10vh auto 0 auto;
-        padding-top: 0;
-        max-width: 100%;
+.pixel-button:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px var(--ink);
+}
+
+.pixel-button.small {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    margin-top: 2rem;
+}
+
+/* --- Toggle Sections --- */
+.legal-section {
+    display: none;
+    border-top: 1.5px dashed var(--ui-border-color, rgba(24, 24, 27, 0.06));
+    margin-top: 4rem;
+    padding-top: 3rem;
+}
+
+.legal-section.active {
+    display: block;
+    animation: fadeInLegal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInLegal {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 768px) {
+    .legal-nav {
+        flex-direction: column;
+        gap: 1rem;
     }
-
-    .headline h1 {
-        font-size: clamp(6rem, 18vw, 10rem);
-        margin-bottom: 6rem;
-    }
-
-    .headline h3 {
-        font-size: clamp(5rem, 16vw, 9rem);
-        margin-bottom: 6rem;
-    }
-
-    .content {
-        position: relative;
-        top: auto;
-        left: auto;
-        width: 90%;
-        height: auto;
-        margin-top: 5vh;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 10vh;
-        max-width: 100%;
-    }
-
-    .content h2,
-    .content p {
-        position: relative;
-        top: 0;
-        left: 0;
+    
+    .pixel-button {
         width: 100%;
-        max-width: 100%;
-        font-size: 1.4rem;
-    }
-
-    .content h2 {
-        font-size: 1.8rem;
-        margin-top: 3rem;
-        margin-bottom: 0.8rem;
-    }
-
-    .content p {
-        font-size: 1.4rem;
-        margin-bottom: 2rem;
-    }
-
-    .content .info {
-        font-size: 1.1rem;
-        margin-bottom: 2rem;
-    }
-
-    .content h2 + p + .info {
-        margin-top: -1.5rem;
-        margin-bottom: 2rem;
+        text-align: center;
     }
 }

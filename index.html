@@ -3,322 +3,1268 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Welcome To This Mess</title>
-    <link rel="icon" href="./assets/favicon.png" type="image/svg+xml">
-    <link rel="stylesheet" href="index.css" />
+    <title>Aimy Gwen — Product Design Leader</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Caveat:wght@600;700&display=swap"/>
     <link rel="stylesheet" href="ui.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="assets/thumbnails/base64-thumbnails.js" defer></script>
+    <script src="ui.js" defer></script>
+    <script src="work-physics.js" defer></script>
+    <script>
+        if (sessionStorage.getItem('intro_seen')) {
+            document.documentElement.classList.add('intro-bypassed');
+        }
+    </script>
 </head>
-<body>
 
-<header class="title">
-    <div class="title-name" data-speed="0.8">
-        Aimy Gwen
+<body class="intro-active">
+<!-- Mobile-only boot splash: pink logo pops in over the paper background
+     while the page settles, then fades out on load (capped so it can't hang). -->
+<div class="boot" role="presentation" aria-hidden="true">
+    <img class="boot-logo" src="./assets/branding.svg" alt="" width="104" height="70" />
+    <span class="boot-dots" aria-hidden="true">
+      <img src="image/elements/el-star.svg" alt="" />
+      <img src="image/elements/el-spark.svg" alt="" />
+      <img src="image/elements/el-flower.svg" alt="" />
+    </span>
+</div>
+<script>
+    (function () {
+        var boot = document.querySelector(".boot");
+        if (!boot) return;
+        var done = false, start = Date.now(), MIN = 800, CAP = 15000;
+        function remove() { if (boot && boot.parentNode) boot.parentNode.removeChild(boot); }
+        function hide() {
+            if (done) return; done = true;
+            boot.classList.add("is-done");
+            setTimeout(remove, 550);
+        }
+        function requestHide() { setTimeout(hide, Math.max(0, MIN - (Date.now() - start))); }
+
+        // Hold the splash while we warm every real video in the background, so
+        // the page is already smooth (decoded, buffered) the instant the splash
+        // lifts. Each video resolves on "canplaythrough"; errors count as done so
+        // one bad clip can't hang it; a per-video timeout prevents a non-firing
+        // event from stalling the whole thing. The hero stage clips have no src
+        // yet (their script assigns it), so we skip those.
+        var vids = [].slice.call(document.querySelectorAll("video")).filter(function (v) {
+            return v.currentSrc || v.getAttribute("src");
+        });
+        var total = vids.length, ready = 0;
+        function mark() { ready++; if (ready >= total) requestHide(); }
+        if (!total) {
+            if (document.readyState === "complete") requestHide();
+            else window.addEventListener("load", requestHide);
+        } else {
+            vids.forEach(function (v) {
+                if (v.readyState >= 4) { mark(); return; } // already buffered
+                var fired = false;
+                function ok() {
+                    if (fired) return; fired = true;
+                    v.removeEventListener("canplaythrough", ok);
+                    v.removeEventListener("error", ok);
+                    mark();
+                }
+                v.addEventListener("canplaythrough", ok);
+                v.addEventListener("error", ok);
+                setTimeout(ok, CAP - 500); // fallback if the event never fires
+                try { v.preload = "auto"; v.load(); } catch (e) { ok(); }
+            });
+        }
+
+        // Hard safety cap — a stalled/slow network can never trap the visitor
+        // behind the splash forever.
+        setTimeout(hide, CAP);
+    })();
+</script>
+
+<!-- Hidden SVG holding filters referenced by CSS `filter: url(#…)`. -->
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <filter id="hero-sketchy">
+        <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="3" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+    </filter>
+</svg>
+
+<!-- 1. INTRO REVEALER OVERLAY -->
+<div id="revealer-screen">
+    <div class="quote-container">
+        <span id="typing-target" class="quote-text">The art of creation thrives on the boundaries it fights to break.</span>
+    </div>
+    <button id="continue-trigger" class="continue-btn">Continue</button>
+</div>
+
+<!-- 2. ACTUAL SITE CONTENT WRAPPER -->
+<div id="main-content">
+<header class="site-header">
+    <div class="header-left">
+        <a href="index.html" class="brand" aria-label="Aimy Gwen — home">
+            <img src="./assets/branding.svg" alt="Aimy Gwen" />
+        </a>
+
+        <nav class="nav" id="primary-nav" aria-label="Primary">
+            <a href="#work">work</a>
+            <a href="#about">about</a>
+            <a href="#collaborations">collaborations</a>
+        </nav>
     </div>
 
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
+        <span></span><span></span><span></span>
+    </button>
 
-    <img src="./assets/Portrait Test.jpg" alt="glasses" class="glasses" data-speed="1.6">
-    <img src="./assets/evilcutekawii.svg" alt="evilcutekawaii" class="evilcutekawaii" data-speed="2">
-
-    <div class="hero-text-block perpetrator" data-speed="1.1">
-        Visual Artist
-    </div>
-
-    <div class="hero-text-block welcome" data-speed="1.3">
-        That's me
-    </div>
-
-
-
-
-
-</header>
-
-<section id="about">
-    <div class="maker" data-speed="1.3">
-        Maker of this mess. ︎
-    </div>
-
-    <p class="philosophy">
-        I focus on visuals that do more than exist aesthetically. Built with intention, they carry meaning, communicate ideas, and tell stories. Across different forms, driven by same curiosity and obsession.
-    </p>
-
-    <div class="container">
-
-        <p class="story">
-            Born in the late 90s, made in Germany. When I stumbled pixel art at very early age, I learned how digital art didn’t just widen the horizon, it made it infinite. A borderless space where the only limit is your imagination and stamina.
-        </p>
-
-        <p class="skills">
-            My work spans 2D illustration, character and environmental art, animation, and design. I’ve been chasing the pretty mess for over sixteen years. Self-taught. Drawn to friction, transition, and the beauty inside instability. Memory is messy. I just make the mess look intentional.
-        </p>
-    </div>
-</section>
-
-<section id="shaped">
-    <div class="world" data-speed="1.3">
-        Shaped by the world ︎
-    </div>
-
-    <p class="influence">
-        I’m shaped by the world around me.
-        By details, moods, and experiences that make life feel more vivid.
-        These influences accumulate and resurface through my work, transforming inspiration into output.
-    </p>
-
-
-</section>
-
-<section class="tidbits-section">
-    <div class="tidbits-left">
-        <h2 class="main-title">Obsessions<br><span>These make my heart go dokidoki</span></h2>
-    </div>
-
-    <div class="tidbits-right">
-        <ul class="tidbit-list">
-            <li class="tidbit-item">
-                <div class="tidbit-badge" style="--badge-color: #000 ;">A</div>
-                <div class="tidbit-content">
-                    <h3>Album on repeat</h3>
-                    <p>Porter Robinson's "Nurture"</p>
-                </div>
-                <div class="tidbit-date">9000+ Replays</div>
-            </li>
-
-            <li class="tidbit-item">
-                <div class="tidbit-badge" style="--badge-color: #000;">B</div>
-                <div class="tidbit-content">
-                    <h3>Artist I look up to</h3>
-                    <p>Violet Schofield "@Vippori"</p>
-                </div>
-                <div class="tidbit-date">11 / 10 Polygons</div>
-            </li>
-
-            <li class="tidbit-item">
-                <div class="tidbit-badge" style="--badge-color: #000;">C</div>
-                <div class="tidbit-content">
-                    <h3>Dish that fills me with joy</h3>
-                    <p>Peanutbutter grilled salmon udon curry</p>
-                </div>
-                <div class="tidbit-date">Nom︎!</div>
-            </li>
-
-            <li class="tidbit-item">
-                <div class="tidbit-badge" style="--badge-color: #000 ;">D</div>
-                <div class="tidbit-content">
-                    <h3>Place I wish to escape to</h3>
-                    <p>Anywhere i can look at an horizon of the infinite blue sea</p>
-                </div>
-                <div class="tidbit-date">Dreamt for years</div>
-            </li>
-        </ul>
-    </div>
-</section>
-
-<section id="whats-next">
-    <h2 class="next-title">What’s<br>Next?</h2>
-
-    <p class="next-text">
-        I’m moving toward broader forms of creation. Recently, my practice has expanded into
-        low-poly 3D modeling, alongside a renewed focus on pixel-based work. To move forward,
-        I returned to my roots and reshaped them into something new. I want to keep learning
-        across disciplines, including programming and new technical forms, to build immersive
-        worlds that move, breathe, and overflow with color and joy, spaces that inspire others
-        the way art once inspired me.
-    </p>
-
-    <div class="next-footer">✦ 2026 ✦</div>
-</section>
-
-<section id="the-mess">
-    <div class="railwaycrossing">
-        <img src="./assets/crossleft.png" class="deco-cross cross-left" alt="">
-        <img src="./assets/crossright.png" class="deco-cross cross-right" alt="">
-        <img src="./assets/crossstop.png" class="deco-cross cross-stop" alt="">
-
-    <div class="pixel-bubble-wrapper">
-        <div class="pixel-bubble flashy">
-            <p>Welcome to my mess. <span class="highlight">Sorry not sorry &lt;3.</span></p>
-            <p class="jp-text">大丈夫、気にしない</p>
-            <div class="blinking-cursor"></div>
-        </div>
-    </div>
-
-    <nav class="pixel-links">
-        <a href="#works" class="pixel-btn-bold" data-text="Works">Works</a>
-        <a href="#diary" class="pixel-btn-bold" data-text="Diary">Diary</a>
-        <a href="#contact" class="pixel-btn-bold" data-text="Contact">Contact</a>
-        <a href="#legal" class="pixel-btn-bold" data-text="Legal">Legal</a>
+    <nav class="social" aria-label="Social links">
+        <a href="https://www.threads.net/@aimygwen" target="_blank" rel="noopener" aria-label="Threads">
+            <svg viewBox="0 0 442 442" fill="currentColor" aria-hidden="true">
+                <g transform="matrix(1.001953,0,0,1.001953,-540.363431,-57.338887)">
+                    <path d="M780.461,490.079C765.398,491.074 726.622,494.213 681.386,475.778C619.333,450.49 576.146,394.117 568.919,318.457C564.587,273.103 572.653,222.011 591.048,184.286C598.92,168.143 615.719,134.821 655.147,106.008C657.241,104.477 668.695,96.107 682.736,88.973C745.734,56.969 816.221,62.211 853.36,72.989C884.276,81.961 901.712,94.739 910.148,100.952C910.291,101.058 919.487,108.11 928.394,117.598C933.051,122.559 938.813,130.24 939.667,131.379C944.332,137.598 951.988,150.842 951.986,152.491C951.983,154.367 949.241,155.496 944.702,158.79C943.007,160.02 920.929,175.429 920.612,175.661C917.152,178.195 915.636,179.248 914.598,178.385C913.603,177.558 902.686,156.31 884.899,141.049C879.446,136.37 844.858,101.992 765.523,111.663C695.826,120.159 625.919,171.931 616.614,274.511C607.222,378.046 664.525,445.831 759.5,445.66C793.789,445.599 824.89,433.823 839.337,425.211C844.251,422.282 888.508,399.175 887.094,350.511C886.52,330.753 877.783,317.861 868.319,311.778C865.863,310.199 863.546,308.293 862.513,311.505C857.835,326.057 835.131,397.478 752.48,392.808C709.077,390.355 681.75,367.811 676.413,335.514C671.356,304.909 682.421,268.45 729.586,252.755C748.111,246.591 767.537,245.155 783.5,245.139C800.47,245.123 816.613,247.325 819.471,247.715C821.784,248.031 822.589,247.848 822.267,245.528C821.697,241.42 818.879,229.326 813.329,221.619C809.565,216.392 800.166,204.143 774.486,205.232C753.011,206.142 742.314,218.132 738.442,222.448C733.583,227.863 732.179,231.731 730.508,231.773C729.268,231.805 727.907,230.239 718.767,224.111C717.292,223.123 717.417,222.949 700.57,211.4C695.654,208.03 695.613,208.055 695.363,207.605C694.72,206.45 694.779,205.76 697.287,202.35C702.747,194.927 711.661,183.681 730.319,174.143C763.86,156.998 813.033,157.651 841.565,183.427C856.915,197.295 862.788,212.794 866.382,224.533C870.66,238.502 871.245,254.839 871.34,257.505C871.398,259.138 870.963,261.383 873.445,262.605C886.715,269.142 936.106,292.736 934.797,356.506C933.354,426.849 872.353,477.54 790.563,488.92C789.757,489.032 786.793,489.445 780.461,490.079ZM768.459,347.206C772.286,346.537 805.198,343.256 819.025,299.354C821.389,291.85 820.74,291.342 820.204,290.923C817.856,289.084 752.876,280.51 730.563,303.561C720.315,314.147 718.591,334.716 738.391,343.736C751.511,349.713 765.29,347.584 768.459,347.206Z"/>
+                </g>
+            </svg>
+        </a>
+        <a href="https://www.patreon.com/aimygwen" target="_blank" rel="noopener" aria-label="Patreon">
+            <svg viewBox="0 0 442 442" fill="currentColor" aria-hidden="true">
+                <g transform="matrix(1,0,0,1,35,23)">
+                    <path d="M45.997,59.937C50.437,55.406 65.782,34.899 105.672,18.996C121.353,12.744 150.095,6.084 163.523,4.708C355.293,-14.934 392.67,105.736 359.008,175.258C332.476,230.057 279.084,239.808 267.588,242.836C174.462,267.359 189.486,309.488 151.044,369.193C109.763,433.308 15.457,422.198 4.831,248.48C-2.005,136.712 15.961,99.557 45.997,59.937Z"/>
+                </g>
+            </svg>
+        </a>
+        <a href="https://vgen.co/aimygwen" target="_blank" rel="noopener" aria-label="VGen">
+            <svg viewBox="0 0 442 442" fill="currentColor" aria-hidden="true">
+                <g transform="matrix(2.613421,0,0,2.613421,-3.225767,43.756291)">
+                    <path d="M144.002,101.04C143.03,102.071 143.004,102.019 142.06,103.098C136.334,109.64 120.325,125.425 103.5,130.5C87.172,135.424 70.701,133.837 48.548,117.438C48.123,117.123 42.402,113.032 33.046,103.965C31.827,102.784 26.371,97.496 18.648,88.378C11.166,79.544 6.848,73.457 6.352,72.588C1.918,64.824 1.627,58.399 2.96,51.601C3.145,50.657 5.457,41.77 12.455,36.445C18.418,31.908 25.324,28.572 36.431,30.788C47.627,33.022 53.538,42.694 55.188,44.744C56.439,46.298 58.02,48.387 58.262,48.707C58.364,48.842 59.514,50.361 59.568,50.376C60.017,50.499 61.035,49.702 61.093,49.407C61.241,48.662 60.763,48.603 61.85,43.576C63.858,34.289 68.362,26.437 73.039,21.098C73.472,20.604 82.786,8.515 100.416,4.171C116.483,0.212 129.282,5.315 131.605,6.241C143.151,10.845 149.436,16.839 157.715,27.338C158.966,28.924 161.272,32.59 161.766,33.336C163.749,36.33 169.818,47.986 169.303,58.49C168.828,68.215 166.064,71.357 160.613,79.577C155.011,88.024 146.65,97.856 145.354,99.38C144.659,100.197 144.686,100.201 144.002,101.04ZM124.99,86.964C133.661,77.914 141.694,65.904 141.825,65.712C146.41,58.997 148.763,56.717 146.748,48.432C145.819,44.608 142.694,38.079 138.752,33.297C135.451,29.294 125.764,15.657 106.529,16.896C80.404,18.578 64.575,49.047 81.988,72.113C82.303,72.53 92.05,83.474 92.806,84.17C93.821,85.104 96.142,86.332 93.754,87.844C86.367,92.525 80.983,91.66 74.349,87.787C67.742,83.93 59.177,77.87 44.297,60.67C39.505,55.131 33.962,47.719 33.642,47.372C28.048,41.295 18.333,44.554 16.679,51.544C15.827,55.144 16.511,57.866 19.385,61.586C25.83,69.931 30.692,76.158 39.265,84.735C45.051,90.523 59.744,105.908 76.585,110.177C78.307,110.614 87.774,113.013 98.657,107.856C111.9,101.581 121.246,91.194 124.99,86.964ZM119.013,40.98C122.445,44.942 126.712,49.312 124.337,55.431C124.151,55.909 124.579,56.222 114.124,69.205C111.578,72.367 110.918,72.172 110.568,72.068C109.666,71.8 109.069,71.071 100.496,62.504C99.938,61.947 92.982,56.679 95.162,47.418C96.934,39.893 106.231,33.766 115.538,38.43C116.673,38.999 118.111,40.267 119.013,40.98Z"/>
+                </g>
+            </svg>
+        </a>
     </nav>
-</section>
-
-<div class="branding-btn" id="brand" onclick="togglenavi('branding')">
-    <img src="./assets/kawaiigwen.svg" alt="Logo" />
-</div>
-
-<div class="branding scroll-container">
-    <section class="branding-section branding-credits-section-1" id="section-branding">
-        <div class="branding-layer">
-            <img src="./assets/portrait.png"
-                 alt="Portrait Color"
-                 class="portrait">
-            <img src="./assets/signaturewhite.svg"
-                 alt="Signature"
-                 class="signature">
-
-            <div class="branding-name">Græbe,<br>Amélie Gwendolyn</div>
-            <div class="branding-rights">All Rights Reserved</div>
-            <div class="branding-year">©'25</div>
-            <div class="branding-info">Designed and directed by me. All of the content on this site is my original work and property unless otherwise noted. I poured a lot of myself into this, so please respect that by not using or distributing them without my permission.</div>
-        </div>
-    </section>
-
-
-
-
-    <section class="branding-section branding-credits-section-2" id="section-credits">
-        <div class="branding-layer">
-            <h2 class="credits-title">Special Thanks &amp; Credits</h2>
-
-            <div class="credits-grid">
-                <div class="credit-item">
-                    <span class="credit-category">Design Inspiration</span>
-                    <div class="credit-links">
-                        <a href="https://porterrobinson.com" target="_blank">Chiarra Luzanna</a>
-                        <a href="https://www.chiaraluzzana.com" target="_blank">Porter Robinson</a>
-                        <a href="https://www.vippori.com/about" target="_blank">Violet Schofield</a>
-                        <a href="https://www.threads.com/@indigoabbie" target="_blank">Indigo Abbie</a>
-                    </div>
-                </div>
-
-                <div class="credit-item">
-                    <span class="credit-category">Fonts Used</span>
-                    <div class="credit-links">
-                        <a href="https://www.myfonts.com/de/collections/athemi-font-jafar07?srsltid=AfmBOop3qeZdZ3dAQpEBTH0SVgoa-RIlZAgS5BCRCT1nYsWjx_rdR8fB" target="_blank">Athemi by Bakhrudin Ja'far</a>
-                        <a href="https://www.1001fonts.com/yoster-island-font.html" target="_blank">Yoster Island by Nathaniel Nielsen</a>
-                        <a href="https://www.dafont.com/alkhemikal.font" target="_blank">Alkhemikal by Chequered Ink</a>
-                    </div>
-                </div>
-
-                <div class="credit-item">
-                    <span class="credit-category">Song Used</span>
-                    <div class="credit-links">
-                        <a href="https://youtu.be/mtv8WkYyK0s?si=RfmTsKe5C0h-4WUp" target="_blank">Ever Fall by Tokyo</a>
-                    </div>
-                </div>
-
-                <div class="credit-item">
-                    <span class="credit-category">Tools Used</span>
-                    <div class="credit-links">
-                        <a href="https://greensock.com/gsap/" target="_blank">GSAP</a>
-                        <a href="https://spline.design/" target="_blank">Spline</a>
-                        <a href="https://spline.design/" target="_blank">ThreeJS</a>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="credits-info">Thank you to all the creators who inspire and enable beautiful web experiences.</div>
-        </div>
-    </section>
-</div>
-
-
-
-
-<div class="sound-button">
-    <canvas></canvas>
-    <audio id="audio" src="./assets/song.mp3"></audio>
-</div>
-
-<div class="btn" id="pond" onclick="togglenavi('main')">
-    <div class="ripple drop"></div>
-    <div class="ripple echo"></div>
-    <div id="mark"><span></span>
-    </div>
-</div>
-
-<div class="navi" id="main-navi">
-    <div class="main-navi">
-        <div class="main-container">
-            <div class="navi-item-works">
-                <a href="artistry.html"><span></span>Works</a>
-                <div class="navi-item-revealer"></div>
-            </div>
-
-            <div class="navi-item-story">
-                <a href="diary.html"><span></span>Diary</a>
-                <div class="navi-item-revealer"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="side-navi">
-        <div class="side-container">
-            <div class="wrapper-legal">
-                <div class="navi-item-imprint">
-                    <a href="imprint.html">Imprint</a>
-                    <div class="navi-item-revealer"></div>
-                </div>
-
-                <div class="navi-item-terms">
-                    <a href="terms.html">Terms</a>
-                    <div class="navi-item-revealer"></div>
-                </div>
-
-                <div class="navi-item-policy">
-                    <a href="policy.html">Policy</a>
-                    <div class="navi-item-revealer"></div>
-                </div>
-            </div>
-
-            <div class="wrapper-contact">
-                <div class="navi-item">
-                    <a href="contact.html">Contact</a>
-                    <div class="navi-item-revealer"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="overlay" onclick="togglenavi('main')"></div>
-<div class="haze">
-
-</div>
-
-<div class="grain"></div>
-<div class="drip-drop"></div>
-<div class="drip-echo"></div>
-
-
-<header>
-    <div class="header-bg-color"></div> <div class="gradualblur"></div>
-    <div class="gradualblur"></div>
-    <div class="gradualblur"></div>
-    <div class="gradualblur"></div>
-    <div class="gradualblur"></div>
-
-    <div class="gradient-wrp">
-        <div class="header gradient-clothoid"></div>
-    </div>
 </header>
 
+<main>
+    <section class="hero-section">
+        <div class="hero">
+            <h1>Hi, I&rsquo;m Aimy Gwen.</h1>
+            <h2>Visual artist, low-poly modeler, and enemy of generic. I'm the maker of this mess. Sorry, not sorry!</h2>
+
+            <a href="#work" class="cta">
+                View Work
+                <svg viewBox="0 0 44 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M2 9h38" />
+                    <path d="M32 1l9 8-9 8" />
+                </svg>
+            </a>
+        </div>
+
+        <div class="stage" aria-hidden="true">
+            <!-- Mobile-only: floating hero stickers overlaid on the video. -->
+            <div class="hero-deco-row">
+                <img class="hd-spark" src="image/elements/el-v.svg" alt="" style="transform:rotate(-6deg); animation-duration:7s; animation-delay:-1s" />
+                <img class="hd-clover" src="image/elements/el-star.svg" alt="" style="transform:rotate(8deg); animation-duration:9s; animation-delay:-3s" />
+                <img class="hd-rainbow" src="image/elements/el-group.svg" alt="" style="animation-duration:10s; animation-delay:-5s" />
+            </div>
+            <div class="stage-inner">
+                <!-- Static resting frame. Same as the start/end frame of every video. -->
+                <img class="poster" src="./assets/base.png" alt="" />
+                <!-- Two video elements: one plays while the other preloads the next. -->
+                <video class="vA" muted playsinline preload="none"></video>
+                <video class="vB" muted playsinline preload="none"></video>
+            </div>
+        </div>
+
+        <!-- Paper-craft accents: a taped-on sticky note. Decorative only. -->
+        <div class="hero-craft" aria-hidden="true">
+            <div class="sticky-note">
+                <span class="washi washi--note">currently</span>
+                working on Komorebi -<br />A Series of Hytale Extension Sets
+            </div>
+            <!-- Sticker doodles scattered over the hero illustration. -->
+            <img class="hero-deco" src="image/elements/el-v.svg" alt="" style="top:10%; left:53%; width:clamp(78px,8.6vw,122px); transform:rotate(-6deg); animation-duration:7s; animation-delay:-1s" />
+            <img class="hero-deco" src="image/elements/el-star.svg" alt="" style="top:5%; left:64%; width:clamp(74px,8.1vw,118px); transform:rotate(8deg); animation-duration:9s; animation-delay:-3s" />
+            <img class="hero-deco" src="image/elements/el-group.svg" alt="" style="bottom:8%; right:6%; width:clamp(112px,12.5vw,176px); animation-duration:10s; animation-delay:-5s" />
+        </div>
+    </section>
+
+    <!-- Torn bottom edge of the hero "sheet". -->
+    <div class="paper-tear" aria-hidden="true"></div>
+
+    <section class="work" id="work">
+        <h2 class="work-heading">Creations</h2>
+        
+        <!-- WebGL Canvas for 3D Physics Grid (Desktop-only) -->
+        <canvas id="work-physics-canvas"></canvas>
+        <video id="physics-video-source" src="films/mov1.mp4" autoplay muted loop playsinline preload="auto" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; overflow: hidden;"></video>
+        
+        <!-- Preloaded images for WebGL textures to prevent local CORS taints -->
+        <div style="display: none;">
+            <img id="preload-img-lowpoly" src="./assets/thumbnails/lowpoly.jpg" alt="" />
+            <img id="preload-img-artwork" src="./assets/thumbnails/artwork.jpg" alt="" />
+            <img id="preload-img-tapes" src="./assets/thumbnails/tapes.jpg" alt="" />
+            <img id="preload-img-insights" src="./assets/thumbnails/insights.jpg" alt="" />
+        </div>
+        
+        <!-- Mobile/Fallback grid -->
+        <div class="work-fallback">
+            <div class="work-banner reveal-on-scroll" style="--reveal-delay: 0ms;">
+                <div class="work-grid">
+                    <a class="work-card work-card--hytale" href="hytale.html">
+                        <div class="work-card-media">
+                            <img src="./assets/thumbnails/lowpoly.jpg" alt="Lowpoly" loading="lazy" data-parallax="0.12" />
+                        </div>
+                        <div class="work-card-overlay"></div>
+                        <div class="work-card-fg-content">
+                            <div class="card-tags">
+                                <span class="card-tag">Hytale Art</span>
+                            </div>
+                            <h3 class="work-card-title">Lowpoly</h3>
+                            <p class="work-card-desc">An extensive asset library of game-ready low-poly voxel models, organic trees, creature rigs, and hand-painted items.</p>
+                        </div>
+                    </a>
+                    <a class="work-card work-card--gallery" href="gallery.html">
+                        <div class="work-card-media">
+                            <img src="./assets/thumbnails/artwork.jpg" alt="Sketchbook illustrations" loading="lazy" data-parallax="0.12" />
+                        </div>
+                        <div class="work-card-overlay"></div>
+                        <div class="work-card-fg-content">
+                            <div class="card-tags">
+                                <span class="card-tag">Illustration</span>
+                                <span class="card-tag">2D Art</span>
+                            </div>
+                            <h3 class="work-card-title">Sketchbook</h3>
+                            <p class="work-card-desc">A visual gallery showcasing stylized 2D sketches, mascot design, vector illustrations, and digital concept painting.</p>
+                        </div>
+                    </a>
+                    <a class="work-card work-card--videos" href="videos.html">
+                        <div class="work-card-media">
+                            <video src="films/mov1.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true" data-parallax="0.12"></video>
+                        </div>
+                        <div class="work-card-overlay"></div>
+                        <div class="work-card-fg-content">
+                            <div class="card-tags">
+                                <span class="card-tag">Animation</span>
+                                <span class="card-tag">Motion</span>
+                            </div>
+                            <h3 class="work-card-title">Tapes</h3>
+                            <p class="work-card-desc">A cinematic catalog of high-energy commercial loops, interactive prototype flows, and stylized motion graphic showreels.</p>
+                        </div>
+                    </a>
+                    <a class="work-card work-card--bts" href="bts.html">
+                        <div class="work-card-media">
+                            <img src="./assets/thumbnails/insights.jpg" alt="Insights wireframes" loading="lazy" data-parallax="0.12" />
+                        </div>
+                        <div class="work-card-overlay"></div>
+                        <div class="work-card-fg-content">
+                            <div class="card-tags">
+                                <span class="card-tag">BtS</span>
+                                <span class="card-tag">WIP Process</span>
+                            </div>
+                            <h3 class="work-card-title">insights</h3>
+                            <p class="work-card-desc">An editorial breakdown detailing blockout steps, optimization wireframes, and raw voxel mesh progressions.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="komorebi-promo-banner reveal-on-scroll">
+        <a href="hytale.html" class="komorebi-promo-inner" aria-label="Explore Komorebi Extension Pack">
+            <img src="./lowpoly/hytale/komorebi.png" alt="Komorebi Extension Pack Artwork" class="komorebi-promo-img" />
+            <div class="komorebi-promo-content">
+                <span class="promo-tag">Featured Project</span>
+                <h2 class="promo-title">Komorebi Extension Pack</h2>
+                <p class="promo-desc">A series of game-ready lowpoly modpacks, custom items, and creatures crafted for the Hytale universe. Serene forest biomes, steampunk machinery, and adorable plush constructs.</p>
+                <span class="promo-button">Explore Modpacks &amp; Models</span>
+            </div>
+        </a>
+    </section>
+
+    <section class="page" id="about">
+        <div class="about-content">
+            <div class="about-left" data-parallax="0.08">
+                <figure class="about-image">
+                    <div class="about-image-tilt-wrap">
+                        <span class="about-image-frame">
+                            <img src="./assets/polaroid.JPG" alt="That's me!" />
+                        </span>
+                        <img class="photo-deco" src="image/elements/el-spark.svg" alt="" aria-hidden="true" style="top:-9%; left:28%; width:clamp(64px,8vw,106px); animation-duration:7s; animation-delay:-1s" />
+                        <img class="photo-deco" src="image/elements/el-smiley.svg" alt="" aria-hidden="true" style="top:15%; left:-24%; width:clamp(78px,9.5vw,128px); transform:rotate(-4deg); animation-duration:9s; animation-delay:-4s" />
+                        <img class="photo-deco" src="image/elements/el-spiral.svg" alt="" aria-hidden="true" style="top:58%; left:-18%; width:clamp(90px,11vw,150px); animation-duration:11s; animation-delay:-6s" />
+
+                        <!-- Sticker placeholders around portrait -->
+                        <div class="sticker-parallax-wrap" style="top: -3%; left: -7%; width: clamp(90px, 10vw, 130px); position: absolute; z-index: 3;">
+                            <div class="sticker-deco sticker-1" style="width: 100%;">
+                                <img src="./assets/sticker_01.png" alt="Sticker 1" />
+                            </div>
+                        </div>
+                        <div class="sticker-parallax-wrap" style="top: 38%; right: -6%; width: clamp(90px, 10vw, 130px); position: absolute; z-index: 3;">
+                            <div class="sticker-deco sticker-2" style="width: 100%;">
+                                <img src="./assets/sticker_02.png" alt="Sticker 2" />
+                            </div>
+                        </div>
+                        <div class="sticker-parallax-wrap" style="bottom: 10%; left: -5%; width: clamp(90px, 10vw, 130px); position: absolute; z-index: 3;">
+                            <div class="sticker-deco sticker-3" style="width: 100%;">
+                                <img src="./assets/Bunny2.png" alt="Sticker 3" />
+                            </div>
+                        </div>
+                    </div>
+                    <figcaption class="about-caption">That's me!</figcaption>
+                </figure>
+            </div>
+
+            <section class="about-text" data-parallax="0.04">
+                <h1>That's me. The maker of this mess. :D</h1>
+                <p>Sometimes it’s low-poly worlds, sometimes it’s illustration, animation, or design—but it’s always about the "in-between."</p>
+                <p>For sixteen years, my favorite places have been the ones that don't belong to a specific moment. I love <span class="handdrawn">liminality</span>: the quiet, blurry lines where things transform into something new. To me, the journey we're all on isn't a path to a final destination. The journey is the whole point.
+                    Being self-taught means my process is guided entirely by <span class="handdrawn">curiosity and intuition</span>. I spend my time looking for meaning in forgotten corners and turning abstract, fleeting feelings into something you can see and hold onto. I don't want my art to just sit quietly on a screen. I want it to leave a <span class="handdrawn">lingering feeling</span> behind.</p>
+                <a href="https://www.threads.net/@aimygwen" class="lead-link" target="_blank" rel="noopener">
+                    Come along!
+                    <svg viewBox="0 0 44 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9h38" /><path d="M32 1l9 8-9 8" /></svg>
+                </a>
+            </section>
+        </div>
+
+        <div class="about-lead-text reveal-on-scroll" style="--reveal-delay: 200ms;">
+            <h2>It doesn't need to be perfect. It just needs to be. So make it exist.</h2>
+            <p>You can obsess over trying to perfect everything until you're numb, but never forget what inspires you to create in the first place.</p>
+        </div>
+    </section>
+
+    <section class="experience" id="inspirations">
+        <div class="experience-inner">
+            <h2 class="career-heading"><span class="career-label-word">Inspiring Vibes & Media</span></h2>
+            <div class="career-stage">
+                <img class="career-bg career-bg--blob" src="image/elements/career-a.svg" alt="" aria-hidden="true" />
+                <img class="career-bg career-bg--squares" src="image/elements/career-b.svg" alt="" aria-hidden="true" />
+                <div class="career-cards">
+                    <article class="career-card reveal-on-scroll" style="--reveal-delay: 160ms">
+                        <span class="career-tape">Music</span>
+                        <div class="career-card-shape">
+                            <div class="career-card-inner">
+                                <div class="personal-card-image-wrap">
+                                    <img src="./assets/favorite_album.png" alt="SMILE! :D" class="personal-card-png" />
+                                </div>
+                                <div class="personal-card-text">
+                                    <p class="career-card-meta">Album</p>
+                                    <h3 class="career-card-role">Porter Robinson &ndash; SMILE! :D</h3>
+                                    <p>A chaotic, vibrant, and deeply emotional synthpop album that completely redefined my creative perspective with its neon digital nostalgia.</p>
+                                    <span class="career-pill">Synthpop &middot; Digital Nostalgia</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="career-card reveal-on-scroll" style="--reveal-delay: 320ms">
+                        <span class="career-tape">Show</span>
+                        <div class="career-card-shape">
+                            <div class="career-card-inner">
+                                <div class="personal-card-image-wrap">
+                                    <img src="./assets/favorite_show.png" alt="The Amazing Digital Circus" class="personal-card-png" />
+                                </div>
+                                <div class="personal-card-text">
+                                    <p class="career-card-meta">Show</p>
+                                    <h3 class="career-card-role">The Amazing Digital Circus</h3>
+                                    <p>A surreal, low-poly psychological comedy whose toybox aesthetics and wacky characters inspire my voxel art style and visual storytelling.</p>
+                                    <span class="career-pill">Indie Animation &middot; Surrealism</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="career-card reveal-on-scroll" style="--reveal-delay: 480ms">
+                        <span class="career-tape">Style</span>
+                        <div class="career-card-shape">
+                            <div class="career-card-inner">
+                                <div class="personal-card-image-wrap">
+                                    <img src="./assets/favorite_aesthetic.png" alt="Retro & Lowpoly Art" class="personal-card-png" />
+                                </div>
+                                <div class="personal-card-text">
+                                    <p class="career-card-meta">Aesthetic</p>
+                                    <h3 class="career-card-role">Retro &amp; Lowpoly</h3>
+                                    <p>Focusing on the art directions I want to go with: nostalgia, retro pixel textures, low-poly geometries, and PS1-era rendering styles.</p>
+                                    <span class="career-pill">Nostalgia &middot; Retro &middot; PS1 Style</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="career-card reveal-on-scroll" style="--reveal-delay: 160ms">
+                        <span class="career-tape">Artist</span>
+                        <div class="career-card-shape">
+                            <div class="career-card-inner">
+                                <div class="personal-card-image-wrap">
+                                    <img src="./assets/favorite_artist.png" alt="Violet Schofield" class="personal-card-png" />
+                                </div>
+                                <div class="personal-card-text">
+                                    <p class="career-card-meta">Artist</p>
+                                    <h3 class="career-card-role">Violet Schofield</h3>
+                                    <p>An incredible illustrator and artist whose unique color palettes, compositions, and character designs deeply inspire my visual style.</p>
+                                    <span class="career-pill">Illustration &middot; Visual Art</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="career-card reveal-on-scroll" style="--reveal-delay: 320ms">
+                        <span class="career-tape">Mind</span>
+                        <div class="career-card-shape">
+                            <div class="career-card-inner">
+                                <div class="personal-card-image-wrap">
+                                    <img src="./assets/favorite_escapism.png" alt="Escapism" class="personal-card-png" />
+                                </div>
+                                <div class="personal-card-text">
+                                    <p class="career-card-meta">Escapism</p>
+                                    <h3 class="career-card-role">The Dreamscape</h3>
+                                    <p>The place I always love to daydream to and think about to soothe and calm me down, clear my head, and spark fresh new ideas.</p>
+                                    <span class="career-pill">Daydreaming &middot; Inspiration</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="career-card reveal-on-scroll" style="--reveal-delay: 480ms">
+                        <span class="career-tape">Vibe</span>
+                        <div class="career-card-shape">
+                            <div class="career-card-inner">
+                                <div class="personal-card-image-wrap">
+                                    <img src="./assets/favorite_vibe.png" alt="Liminal Spaces" class="personal-card-png" />
+                                </div>
+                                <div class="personal-card-text">
+                                    <p class="career-card-meta">Vibe</p>
+                                    <h3 class="career-card-role">Liminal Spaces</h3>
+                                    <p>The eerie feeling of once-vibrant, now empty places. Forgotten spaces with a long history waiting to be discovered or simply felt.</p>
+                                    <span class="career-pill">Liminality &middot; Melancholy</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.1.2/dist/lenis.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CSSRulePlugin.min.js"></script>
-<script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
-<script src="index.js"></script>
-<script src="ui.js"></script>
 
-<div class="build">
-    α 1.0
+    <section class="specialty">
+        <div class="specialty-content">
+            <p class="specialty-heading reveal-on-scroll" data-parallax="0.04">Experienced in...</p>
+            <div class="specialty-list reveal-on-scroll" data-parallax="0.06" style="--reveal-delay: 150ms">
+                <div class="specialty-list-track">
+                    <div class="specialty-list-group">
+                        <p>2D Paintings</p>
+                        <p>Illustrations</p>
+                        <p>Animation</p>
+                        <p>Lowpoly 3D</p>
+                        <p>Nostalgia</p>
+                        <p>Character Design</p>
+                        <p>Environmental Design</p>
+                        <p>UI/UX Design</p>
+                        <p>Aesthetics</p>
+                        <p>Visual Storytelling</p>
+                        <p>Hytale Assets &amp; Modding</p>
+                    </div>
+                    <div class="specialty-list-group" aria-hidden="true">
+                        <p>2D Paintings</p>
+                        <p>Illustrations</p>
+                        <p>Animation</p>
+                        <p>Lowpoly 3D</p>
+                        <p>Nostalgia</p>
+                        <p>Character Design</p>
+                        <p>Environmental Design</p>
+                        <p>UI/UX Design</p>
+                        <p>Aesthetics</p>
+                        <p>Visual Storytelling</p>
+                        <p>Hytale Assets &amp; Modding</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="collaborations" id="collaborations">
+        <div class="collaborations-inner">
+            <h2 class="collaborations-heading reveal-on-scroll">Collaborations</h2>
+            <div class="collaborations-cards">
+                <a class="collab-card reveal-on-scroll" href="https://www.twitch.tv/jorena" target="_blank" rel="noopener" data-parallax="0.04" style="--reveal-delay: 0ms">
+                    <div class="collab-card-media">
+                        <img src="./assets/thumbnails/collab_sasha.png" alt="Sasha aka. Jorena" loading="lazy" />
+                    </div>
+                    <div class="collab-card-overlay"></div>
+                    <div class="collab-card-content">
+                        <div class="collab-card-tags">
+                            <span class="collab-card-tag">VTuber</span>
+                            <span class="collab-card-tag">Cosplay</span>
+                            <span class="collab-card-tag">Branding</span>
+                        </div>
+                        <h3 class="collab-card-title">Sasha aka. Jorena</h3>
+                        <p class="collab-card-desc">Crafting custom streaming overlays, branding design, and digital visual assets for VTuber and Cosplayer Sasha (Jorena), translating her character persona into a complete streaming identity.</p>
+                    </div>
+                </a>
+                <a class="collab-card reveal-on-scroll" href="hytale.html" data-parallax="0.04" style="--reveal-delay: 120ms">
+                    <div class="collab-card-media">
+                        <img src="./assets/thumbnails/collab_hytown.png" alt="Hytown Hytale Server" loading="lazy" />
+                    </div>
+                    <div class="collab-card-overlay"></div>
+                    <div class="collab-card-content">
+                        <div class="collab-card-tags">
+                            <span class="collab-card-tag">Hytale</span>
+                            <span class="collab-card-tag">UI Design</span>
+                            <span class="collab-card-tag">3D Voxel</span>
+                        </div>
+                        <h3 class="collab-card-title">Hytown Server</h3>
+                        <p class="collab-card-desc">Designing user interfaces, branding templates, and blocky low-poly voxel environment assets for Hytown, a community-driven server project built around the upcoming RPG Hytale.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="tools">
+        <div class="tools-inner">
+            <div class="tools-row" data-parallax="0.04">
+                <span class="tool-icon reveal-on-scroll" role="img" aria-label="VS Code"             style="--src: url('logos/logo-visual-studio.svg');         --reveal-delay: 0ms"></span>
+                <span class="tool-icon reveal-on-scroll" role="img" aria-label="Antigravity"          style="--src: url('logos/antigravity-icon__one-color.png'); --reveal-delay: 80ms"></span>
+                <span class="tool-icon reveal-on-scroll" role="img" aria-label="Figma"                style="--src: url('logos/figma.svg');                      --reveal-delay: 160ms"></span>
+                <span class="tool-icon reveal-on-scroll" role="img" aria-label="GitHub"               style="--src: url('logos/github.svg');                     --reveal-delay: 240ms"></span>
+                <span class="tool-icon reveal-on-scroll" role="img" aria-label="Adobe Creative Cloud" style="--src: url('logos/adobe.svg');                      --reveal-delay: 320ms"></span>
+                <span class="tool-icon reveal-on-scroll" role="img" aria-label="Claude"               style="--src: url('logos/claude.svg');                     --reveal-delay: 400ms"></span>
+                <span class="tool-icon reveal-on-scroll" role="img" aria-label="Kling"                style="--src: url('logos/kling-color.svg');                --reveal-delay: 480ms"></span>
+            </div>
+        </div>
+    </section>
+</main>
+
+<aside class="player" aria-label="Music player">
+    <button class="player-toggle" type="button" aria-label="Play / pause music">
+        <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="6" y="5" width="4" height="14" rx="1"/>
+            <rect x="14" y="5" width="4" height="14" rx="1"/>
+        </svg>
+    </button>
+    <div class="player-info">
+      <span class="player-label">
+        <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>Now playing</span>
+      </span>
+        <span class="player-track">—</span>
+    </div>
+    <button class="player-next" type="button" aria-label="Next track">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M16 6h2v12h-2zM4 6v12l9-6z"/>
+        </svg>
+    </button>
+    <audio class="player-audio" preload="metadata"></audio>
+</aside>
+
+<footer class="footer-reveal" aria-label="Contact and links">
+    <nav class="footer-links reveal-on-scroll" aria-label="Footer">
+        <a href="#contact" data-contact>Contact</a>
+        <a href="legal.html">Legal Imprint &amp; Policy</a>
+    </nav>
+    <div class="footer-credits reveal-on-scroll" style="--reveal-delay: 120ms">
+        <h4 class="credits-title">Special Thanks & Credits</h4>
+        <div class="credits-stack">
+            <div class="credits-item">
+                <span class="credits-label">Design Inspiration</span>
+                <span class="credits-value">
+                    <a href="https://www.chiaraluzzana.com" target="_blank" rel="noopener">Chiara Luzzana</a>
+                    <a href="https://porterrobinson.com" target="_blank" rel="noopener">Porter Robinson</a>
+                    <a href="https://vippori.com" target="_blank" rel="noopener">Violet Schofield</a>
+                    <a href="https://indigoabbie.com" target="_blank" rel="noopener">Indigo Abbie</a>
+                </span>
+            </div>
+            <div class="credits-item">
+                <span class="credits-label">Fonts Used</span>
+                <span class="credits-value">
+                    <span><a href="https://www.myfonts.com/collections/athemi-font-jafar07" target="_blank" rel="noopener">Athemi</a> by <a href="https://www.myfonts.com/collections/athemi-font-jafar07" target="_blank" rel="noopener">Bakhrudin Ja'far</a></span>
+                    <span><a href="https://www.fontspace.com/yoster-island-font-f2220" target="_blank" rel="noopener">Yoster Island</a> by Nathaniel Nielsen</span>
+                    <span><a href="https://chequered.ink" target="_blank" rel="noopener">Alkhemikal</a> by <a href="https://chequered.ink" target="_blank" rel="noopener">Chequered Ink</a></span>
+                </span>
+            </div>
+        </div>
+        <p class="credits-note">Thank you to all artists who inspire to create.</p>
+    </div>
+    <div class="footer-bottom reveal-on-scroll" style="--reveal-delay: 180ms">
+        <div class="footer-signature">
+            <svg class="signature-svg" viewBox="0 0 479 319" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <g transform="matrix(1.416892,0,0,1.416892,-52.856629,-18.28909)">
+                    <path d="M370.034,123.5C369.489,131.565 347.196,191.547 342.44,198.457C338.638,203.982 339.412,235.512 334.563,233.197C328.747,230.42 324.794,231.439 327.722,225.606C331.536,218.011 324.736,216.493 329.51,209.506C329.779,209.112 329.751,202.941 333.006,197.252C333.755,195.942 332.679,195.687 339.899,179.685C343.716,171.228 342.513,170.949 346.697,162.641C351.757,152.591 354.477,135.652 357.473,130.487C358.199,129.236 366.026,99.018 358.216,107.214C344.755,121.339 339.706,140.846 333.695,149.632C331.166,153.327 331.908,153.544 329.422,157.439C325.413,163.718 308.625,163.065 303.461,151.513C298.796,141.079 296.697,157.362 296.704,157.372C313.934,178.702 262.485,191.164 241.342,201.119C240.443,201.542 234.723,204.235 229.543,204.986C229.171,205.04 198.667,216.578 191.458,217.096C186.867,217.426 128.136,242.524 101.457,229.627C91.013,224.578 92.364,222.358 81.401,218.725C77.15,217.317 75.71,199.659 71.871,211.589C68.001,223.611 51.862,244.709 41.732,221.384C40.222,217.906 37.28,195.902 44.201,181.363C50.855,167.386 49.377,166.31 66.752,149.774C67.972,148.613 75.953,150.312 81.519,147.555C82.722,146.959 92.428,153.197 88.108,162.354C85.368,168.164 88.838,169.058 85.719,174.631C78.878,186.853 78.226,230.243 82.958,202.679C84.05,196.314 91.364,188.418 92.341,187.363C100.067,179.022 98.115,177.944 98.432,166.49C98.467,165.198 99.692,165.509 100.223,150.437C100.259,149.432 103.602,141.483 103.925,140.716C104.312,139.795 105.775,136.317 116.362,141.825C119.956,143.695 105.742,170.957 115.634,160.637C122.653,153.315 252.431,38.821 274.483,29.465C275.835,28.892 275.351,28.061 290.535,20.557C308.075,11.889 326.608,21.976 312.184,53.385C310.694,56.629 313.82,57.716 297.676,95.586C296.612,98.082 282.694,100.18 291.303,83.41C294.763,76.672 317.898,17.606 302.436,26.354C296.699,29.6 288.518,31.022 280.512,37.514C277.752,39.752 276.317,37.718 244.427,63.402C198.779,100.166 191.695,107.263 187.482,111.482C185.521,113.447 184.586,112.353 161.228,134.181C159.756,135.557 153.891,137.211 156.57,138.386C167.953,143.381 162.034,147.97 168.209,158.658C168.803,159.685 166.716,160.263 173.455,172.528C181.282,186.772 177.734,167.749 185.693,153.601C186.079,152.914 185.649,152.764 189.284,144.436C189.523,143.887 196.882,127.921 204.296,130.966C207.514,132.287 211.073,128.964 215.422,137.529C215.805,138.282 215.96,156.194 215.23,157.325C211.912,162.46 216.771,164.014 218.711,160.612C222.637,153.725 238.165,110.222 258.569,120.363C259.598,120.874 265.384,119.857 266.64,129.482C267.264,134.259 269.792,133.34 270.164,139.528C270.383,143.189 286.661,152.667 289.604,146.547C304.99,114.551 298.511,105.855 304.476,107.601C311.194,109.568 313.631,108.525 313.664,113.499C313.69,117.495 308.746,156.254 316.517,155.672C323.616,155.141 346.15,90.384 358.388,97.694C358.802,97.942 365.397,97.972 369.252,101.736C369.26,101.744 374.717,112.223 370.468,119.481C370.304,119.76 370.436,119.778 370.034,123.5ZM76.965,160.499C76.563,158.522 70.704,152.82 57.445,176.46C45.875,197.089 46.782,219.59 47.4,221.534C50.279,230.594 63.507,206.144 64.425,204.447C66.683,200.273 64.737,199.844 66.743,195.58C74.571,178.942 73.465,178.729 76.965,160.499ZM186.034,188.5C184.796,208.968 167.219,178.608 164.927,176.132C158.319,168.995 155.016,144.299 152.421,146.35C151.654,146.957 139.627,162.879 138.357,170.47C138.189,171.477 135.109,174.851 134.933,178.502C134.41,189.403 130.665,188.084 124.271,200.41C122.109,204.578 109.629,216.385 105.787,213.114C103.934,211.535 102.586,208.155 101.554,212.529C100.842,215.544 87.064,215.942 97.519,222.461C100.337,224.218 124.442,226.394 130.347,223.23C135.033,220.72 136.066,224.649 140.46,221.457C142.411,220.04 143.521,221.884 147.506,219.509C147.589,219.46 156.135,218.887 162.549,215.619C164.132,214.812 177.866,212.766 181.47,210.449C183.129,209.383 199.03,206.983 207.659,201.775C208.619,201.195 211.642,202.592 217.568,198.593C217.984,198.312 218.366,199.367 223.465,196.429C223.821,196.224 281.407,179.003 290.512,164.508C290.758,164.117 294.172,152.245 288.376,161.085C287.803,161.96 270.74,157.18 266.572,153.42C261.801,149.116 246.791,152.327 244.17,144.613C243.181,141.706 246.208,141.689 246.507,141.687C255.433,141.636 260.2,145.38 259.569,136.491C259.508,135.63 259.096,129.841 255.508,126.49C248.274,119.734 223.174,176.59 219.597,176.894C193.004,179.148 211.096,129.613 202.964,140.975C196.422,150.117 186.873,179.817 186.034,188.5ZM98.651,198.535C98.175,195.267 96.425,197.118 94.618,200.554C85.234,218.4 98.468,198.846 98.651,198.535ZM116.817,183.833C126.586,173.266 124.726,171.063 128.912,165.652C144.114,146 110.87,180.97 109.453,182.461C107.597,184.413 109.061,200.043 110.693,193.612C112.13,187.947 114.165,189.16 116.817,183.833ZM280.505,152.435C278.002,152.598 277.103,151.64 277.127,153.506C277.154,155.552 287.479,156.643 280.505,152.435ZM111.466,197.916L109.439,197.634C105.167,195.732 106.882,199.679 107.133,201.584C107.604,205.161 117.878,199.34 111.466,197.916ZM125.194,53.843C130.729,62.106 136.004,63.844 122.106,89.182C121.698,89.926 108.144,90.73 114.866,73.651C116.641,69.14 105.837,63.514 118.837,51.874C121.875,49.154 122.046,51.287 125.194,53.843Z"/>
+                </g>
+            </svg>
+        </div>
+        <p class="footer-copy">Aimy Gwen &middot; All Rights Reserved &copy; 2026</p>
+    </div>
+</footer>
+
+<script>
+    (function () {
+        // ---------- Page transition (swipe) ----------
+        const cameFromTransition = sessionStorage.getItem("pageTransition") === "1";
+        sessionStorage.removeItem("pageTransition");
+
+        if (cameFromTransition) {
+            document.body.classList.add("is-entering");
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                document.body.classList.add("is-entered");
+            }));
+            setTimeout(() => {
+                document.body.classList.remove("is-entering", "is-entered");
+            }, 700);
+        }
+
+        // Wrap an element's text in <span class="word"><span class="letter">…</span></span>.
+        // Splits on regular space only so non-breaking spaces (like the
+        // one between "Charlotte," and "NC") stay glued inside a single
+        // word and can never wrap apart. Each letter gets a sequential
+        // --letter-i value that the CSS uses to stagger its pop-in.
+        function splitIntoLetters(element) {
+            if (!element || element.dataset.lettersSplit === "1") return;
+            element.dataset.lettersSplit = "1";
+            const text = element.textContent;
+            element.textContent = "";
+            const parts = text.split(/( )/);
+            let letterIndex = 0;
+            parts.forEach((part) => {
+                if (part === "") return;
+                if (part === " ") {
+                    element.appendChild(document.createTextNode(" "));
+                    return;
+                }
+                const wordSpan = document.createElement("span");
+                wordSpan.className = "word";
+                for (const char of part) {
+                    const letter = document.createElement("span");
+                    letter.className = "letter";
+                    letter.textContent = char;
+                    letter.style.setProperty("--letter-i", letterIndex++);
+                    wordSpan.appendChild(letter);
+                }
+                element.appendChild(wordSpan);
+            });
+        }
+
+        // Above-the-fold headings — split + trigger letter cascade on
+        // the next two frames so the initial paint shows the start
+        // state and the cascade then transitions to the end state.
+        document.querySelectorAll(".about-text h1").forEach((el) => {
+            splitIntoLetters(el);
+            requestAnimationFrame(() =>
+                requestAnimationFrame(() => el.classList.add("letters-ready"))
+            );
+        });
+
+        // Scroll-triggered headings — split now, animate via observer
+        // whenever the heading enters the viewport (two-way so the
+        // cascade re-plays if the user scrolls back to the section).
+        const scrollLetterHeadings = document.querySelectorAll(
+            ".career-label-word, .specialty-heading, .collaborations-heading, .work-heading, .visual-heading"
+        );
+        scrollLetterHeadings.forEach(splitIntoLetters);
+        if (scrollLetterHeadings.length && "IntersectionObserver" in window) {
+            const lettersIO = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("letters-ready");
+                        } else {
+                            entry.target.classList.remove("letters-ready");
+                        }
+                    });
+                },
+                { threshold: 0.15 }
+            );
+            scrollLetterHeadings.forEach((el) => lettersIO.observe(el));
+        } else {
+            scrollLetterHeadings.forEach((el) => el.classList.add("letters-ready"));
+        }
+
+        // Slow the cozy-banner video down a hair for a more relaxed
+        // loop pace. defaultPlaybackRate is set first so it survives
+        // any internal reload of the source.
+        const cozyVideo = document.querySelector(".cozy-banner video");
+        if (cozyVideo) {
+            cozyVideo.defaultPlaybackRate = 0.7;
+            cozyVideo.playbackRate = 0.7;
+        }
+
+        function revealAbout() {
+            document.body.classList.add("about-revealed");
+        }
+
+        const FIRST_REVEAL_DELAY = cameFromTransition ? 300 : 100;
+        setTimeout(() => {
+            revealAbout();
+            revealPlayer();
+            revealBrands();
+        }, FIRST_REVEAL_DELAY);
+
+        document.addEventListener("click", (e) => {
+            const a = e.target.closest("a[href]");
+            if (!a) return;
+            const href = a.getAttribute("href");
+            if (!href) return;
+            if (a.target === "_blank" || a.hasAttribute("download")) return;
+            if (!/^[^/]*\.html(?:#|\?|$)/.test(href) && !href.startsWith("/") && !href.startsWith("./")) return;
+            e.preventDefault();
+            window.location.href = href;
+        });
+        // ---------------------------------------------
+
+        // Music player
+        const player = document.querySelector(".player");
+        const audio = player.querySelector(".player-audio");
+        const playerToggle = player.querySelector(".player-toggle");
+        const playerNext = player.querySelector(".player-next");
+        const playerTrack = player.querySelector(".player-track");
+
+        const TRACKS = [
+            { src: "music/Lo-Fi Hip-Hop.mp3", title: "Lo-Fi Hip-Hop" },
+            { src: "music/Main_79.mp3",       title: "Main 79" },
+            { src: "music/Full.mp3",          title: "Full" },
+        ];
+        let trackIdx = 0;
+        audio.volume = 0.55;
+
+        function loadTrack(i, autoplay) {
+            trackIdx = ((i % TRACKS.length) + TRACKS.length) % TRACKS.length;
+            const t = TRACKS[trackIdx];
+            audio.src = encodeURI(t.src);
+            playerTrack.textContent = t.title;
+            if (autoplay) audio.play().catch(() => {});
+        }
+        loadTrack(0, false);
+
+        playerToggle.addEventListener("click", () => {
+            if (audio.paused) audio.play().catch(() => {});
+            else audio.pause();
+        });
+        playerNext.addEventListener("click", () => loadTrack(trackIdx + 1, !audio.paused));
+        audio.addEventListener("play",  () => player.classList.add("is-playing"));
+        audio.addEventListener("pause", () => player.classList.remove("is-playing"));
+        audio.addEventListener("ended", () => loadTrack(trackIdx + 1, true));
+
+        function revealPlayer() {
+            setTimeout(() => player.classList.add("is-revealed"), 1000);
+        }
+
+        // (Brand row removed on this page.)
+        function revealBrands() { /* no-op */ }
+
+        // Generic scroll-reveal — any .reveal-on-scroll or .reveal-fade
+        // element gets `.is-revealed` the moment ~10% of it enters the
+        // viewport. One-shot, then unobserved.
+        // Run a one-shot count-up on every .year-count span inside the
+        // given element. From value = target - 12 (so a 12-year tick is
+        // visible regardless of the role). Marks the element with
+        // data-counted so re-entering the viewport doesn't replay it.
+        const yearReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        function runYearCount(scope) {
+            const counters = scope.querySelectorAll(".year-count");
+            counters.forEach((el) => {
+                if (el.dataset.counted === "1") return;
+                el.dataset.counted = "1";
+                const target = parseInt(el.dataset.end, 10);
+                if (Number.isNaN(target)) return;
+                if (yearReducedMotion) {
+                    el.textContent = String(target);
+                    return;
+                }
+                const from = target - 12;
+                const duration = 1500;
+                el.textContent = String(from); // set first paint to the start value
+                const start = performance.now();
+                function tick(now) {
+                    const t = Math.min(1, (now - start) / duration);
+                    const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
+                    el.textContent = String(Math.round(from + (target - from) * eased));
+                    if (t < 1) requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+            });
+        }
+
+        if ("IntersectionObserver" in window) {
+            const revealEls = document.querySelectorAll(".reveal-on-scroll, .reveal-fade");
+            // Two-way: add `.is-revealed` when the element enters the
+            // viewport, remove it when it exits. Same transition runs in
+            // reverse when the user scrolls back up.
+            const revealIO = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("is-revealed");
+                            // Kick off the year count-up the first time each
+                            // experience column enters the viewport.
+                            if (entry.target.classList.contains("experience-col")) {
+                                runYearCount(entry.target);
+                            }
+                        } else {
+                            entry.target.classList.remove("is-revealed");
+                        }
+                    });
+                },
+                { threshold: 0.1 }
+            );
+            revealEls.forEach((el) => revealIO.observe(el));
+        } else {
+            document.querySelectorAll(".reveal-on-scroll, .reveal-fade")
+                .forEach((el) => el.classList.add("is-revealed"));
+        }
+
+        // Parallax — set --parallax-y on every [data-parallax] element
+        // proportional to its distance from the viewport center, scaled
+        // by its speed multiplier. The `translate` CSS property is used
+        // (not `transform`) so it composes with reveal/hover transforms.
+        const parallaxEls = document.querySelectorAll("[data-parallax]");
+        // Sections with data-parallax-up lift upward faster than the scroll
+        // the higher they climb (0 as they enter from the bottom) — they never
+        // lag downward like the center-based effect above.
+        const parallaxUpEls = document.querySelectorAll("[data-parallax-up]");
+        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        let parallaxTicking = false;
+        function applyParallax() {
+            const vh = window.innerHeight;
+            const vCenter = vh / 2;
+            parallaxEls.forEach((el) => {
+                const speed = parseFloat(el.dataset.parallax) || 0;
+                const rect = el.getBoundingClientRect();
+                const elCenter = rect.top + rect.height / 2;
+                const offset = (vCenter - elCenter) * speed;
+                el.style.setProperty("--parallax-y", offset.toFixed(2) + "px");
+            });
+            parallaxUpEls.forEach((el) => {
+                const speed = parseFloat(el.dataset.parallaxUp) || 0;
+                const rect = el.getBoundingClientRect();
+                // Lift up as the section enters, but CLAMP the shift so consecutive
+                // sections settle to the same offset once they're both on screen —
+                // otherwise the higher section keeps rising and pulls a growing gap
+                // open between it and the next one.
+                const raw = Math.max(0, vh - rect.top) * speed;
+                const offset = -Math.min(raw, 46);
+                el.style.setProperty("--parallax-y", offset.toFixed(2) + "px");
+            });
+            parallaxTicking = false;
+        }
+        if ((parallaxEls.length || parallaxUpEls.length) && !reducedMotion) {
+            window.addEventListener(
+                "scroll",
+                () => {
+                    if (!parallaxTicking) {
+                        requestAnimationFrame(applyParallax);
+                        parallaxTicking = true;
+                    }
+                },
+                { passive: true }
+            );
+            window.addEventListener("resize", applyParallax, { passive: true });
+            applyParallax();
+        }
+
+        // Career label: reveal once the experience section is in view.
+        const careerLabel = document.querySelector(".career-label");
+        const experienceSection = document.querySelector(".experience");
+        if (careerLabel && experienceSection && "IntersectionObserver" in window) {
+            const io = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            careerLabel.classList.add("is-revealed");
+                        } else {
+                            careerLabel.classList.remove("is-revealed");
+                        }
+                    });
+                },
+                { threshold: 0.08 }
+            );
+            io.observe(experienceSection);
+        }
+
+        // Scroll: fade bottom widgets, and track direction so the header
+        // hides its nav on scroll-down and pins itself with a paper bg on
+        // scroll-up. A small delta filters out jitter.
+        const SCROLL_FADE_AT = 60;
+        const TOP_THRESHOLD = 50;
+        const SCROLL_DELTA = 5;
+        let lastScrollY = window.scrollY || 0;
+        let scrollDirection = "up";
+
+        function onScroll() {
+            const y = window.scrollY || window.pageYOffset;
+            const diff = y - lastScrollY;
+            if (diff > SCROLL_DELTA) scrollDirection = "down";
+            else if (diff < -SCROLL_DELTA) scrollDirection = "up";
+
+            const atTop = y <= TOP_THRESHOLD;
+            document.body.classList.toggle("is-scrolled", y > SCROLL_FADE_AT);
+            document.body.classList.toggle("nav-hidden", !atTop && scrollDirection === "down");
+            document.body.classList.toggle("header-pinned", !atTop && scrollDirection === "up");
+
+            lastScrollY = y;
+        }
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
+
+        // ---------- Custom cursor ----------
+        // Handled globally in ui.js to ensure consistency across all pages.
+    })();
+</script>
+
+<script>
+    /* Hero: per-letter word-stagger reveal + dual-video stage (ported
+       from the homepage). Player / cursor / scroll / page-transition
+       are owned by the main about-page script above, so this only
+       handles the hero's own animation + video playlist. */
+    (function () {
+        const hero = document.querySelector(".hero");
+        if (!hero) return;
+        const heroH1 = hero.querySelector("h1");
+        const heroH2 = hero.querySelector("h2");
+        const heroCta = hero.querySelector(".cta");
+
+        function splitIntoLetters(element) {
+            if (!element || element.dataset.lettersSplit === "1") return 0;
+            element.dataset.lettersSplit = "1";
+            const text = element.textContent;
+            element.textContent = "";
+            const parts = text.split(/( )/);
+            let letterIndex = 0;
+            parts.forEach((part) => {
+                if (part === "") return;
+                if (part === " ") { element.appendChild(document.createTextNode(" ")); return; }
+                const wordSpan = document.createElement("span");
+                wordSpan.className = "word";
+                for (const char of part) {
+                    const letter = document.createElement("span");
+                    letter.className = "letter";
+                    letter.textContent = char;
+                    letter.style.setProperty("--letter-i", letterIndex++);
+                    wordSpan.appendChild(letter);
+                }
+                element.appendChild(wordSpan);
+            });
+            return letterIndex;
+        }
+
+        splitIntoLetters(heroH1);
+        const h2LetterCount = splitIntoLetters(heroH2);
+        // Render "delightful" + "experiences" as outline-only floating words.
+        heroH2.querySelectorAll(".word").forEach((w) => {
+            const bare = w.textContent.replace(/[^a-z]/gi, "").toLowerCase();
+            if (bare === "mess" || bare === "mess") w.classList.add("word-outline");
+        });
+        const LETTER_STAGGER_MS = 22;
+        const cascadeMs = h2LetterCount * LETTER_STAGGER_MS;
+        if (heroCta) heroCta.style.transitionDelay = (cascadeMs + 200) + "ms, 0s, 0s";
+
+        // The main script already consumed the pageTransition flag, so just
+        // use the standard short delay for the reveal.
+        setTimeout(() => {
+            hero.classList.add("is-revealed");
+            heroH1.classList.add("letters-ready");
+            heroH2.classList.add("letters-ready");
+        }, 120);
+
+        // ---- Dual-video stage ----
+        const VIDEOS = [
+            "videos/lick.mp4", "videos/airplane.mp4", "videos/stretch.mp4", "videos/idea.mp4",
+            "videos/phone.mp4", "videos/glasses.mp4", "videos/headphones.mp4", "videos/sleep.mp4",
+            "videos/fasttype.mp4", "videos/fistpump.mp4", "videos/frisbee.mp4",
+            "videos/ufo.mp4",
+        ];
+        const vA = document.querySelector(".stage .vA");
+        const vB = document.querySelector(".stage .vB");
+        if (!vA || !vB) return;
+        const players = [vA, vB];
+        let lastIndex = -1;
+        let active = 0;
+
+        function pickNextIndex() {
+            if (VIDEOS.length <= 1) return 0;
+            let i;
+            do { i = Math.floor(Math.random() * VIDEOS.length); } while (i === lastIndex);
+            lastIndex = i;
+            return i;
+        }
+        function preloadInto(p) {
+            p.src = VIDEOS[pickNextIndex()];
+            try { p.load(); } catch (e) { /* noop */ }
+        }
+        function swap() {
+            const cur = players[active];
+            const next = players[1 - active];
+            next.classList.add("is-active");
+            cur.classList.remove("is-active");
+            const pp = next.play();
+            if (pp && typeof pp.catch === "function") pp.catch(() => {});
+            cur.pause();
+            cur.currentTime = 0;
+            preloadInto(cur);
+            active = 1 - active;
+        }
+        players.forEach((p) => p.addEventListener("ended", swap));
+
+        // The poster (base.png) is the resting frame shown before playback.
+        // Because the clips now multiply-blend (their white field is
+        // transparent), a poster left behind the video would show through
+        // it. Hide it the moment the first clip actually plays.
+        const poster = document.querySelector(".stage .poster");
+        vA.src = VIDEOS[pickNextIndex()];
+        preloadInto(vB);
+        vA.addEventListener("playing", () => {
+            vA.classList.add("is-active");
+            if (poster) poster.style.opacity = "0";
+        }, { once: true });
+
+        const initial = vA.play();
+        if (initial && typeof initial.catch === "function") {
+            initial.catch(() => {
+                const resume = () => {
+                    vA.play().catch(() => {});
+                    window.removeEventListener("click", resume);
+                    window.removeEventListener("touchstart", resume);
+                    window.removeEventListener("keydown", resume);
+                };
+                window.addEventListener("click", resume, { once: true });
+                window.addEventListener("touchstart", resume, { once: true });
+                window.addEventListener("keydown", resume, { once: true });
+            });
+        }
+    })();
+</script>
+<script>
+    /* Vanta tile: play the three clips one at a time, cycling 1→2→3. */
+    (function () {
+        var wrap = document.querySelector(".vanta-videos");
+        if (!wrap) return;
+        var videos = Array.prototype.slice.call(wrap.querySelectorAll("video"));
+        if (!videos.length) return;
+        function show(i) {
+            videos.forEach(function (v, n) {
+                var active = n === i;
+                v.classList.toggle("is-active", active);
+                if (active) { v.currentTime = 0; v.play().catch(function () {}); }
+                else { v.pause(); }
+            });
+        }
+        videos.forEach(function (v, n) {
+            v.addEventListener("ended", function () { show((n + 1) % videos.length); });
+        });
+        show(0);
+    })();
+</script>
+<!-- Contact modal — the contact page content in a dialog -->
+<div class="modal" id="contactModal" hidden>
+    <div class="modal__overlay" data-close></div>
+    <div class="modal__dialog modern-contact-dialog" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+        
+        <div class="modern-contact-content">
+            <h2 class="modern-contact-title" id="contactModalTitle">Say Hello</h2>
+            <p class="modern-contact-intro">No need to be shy. Have a chaotic vision or a request? Just message me, and we'll figure out what kind of trouble we can get into. Together.</p>
+            
+            <form class="contact-form modern-contact-form" id="contact-form" novalidate>
+                <div class="modern-contact-fields">
+                    <div class="modern-field field-name">
+                        <label for="cf-name">My name is</label>
+                        <input id="cf-name" name="name" type="text" autocomplete="name" required placeholder="Who's hitting me up?" />
+                    </div>
+                    <div class="modern-field field-email">
+                        <label for="cf-email">Reach me at</label>
+                        <input id="cf-email" name="email" type="email" autocomplete="email" required placeholder="How can I reach you?" />
+                    </div>
+                    <div class="modern-field field-message">
+                        <label for="cf-message">I want to say</label>
+                        <textarea id="cf-message" name="message" rows="2" required placeholder="Let your ideas go wild. Don't hold back!"></textarea>
+                    </div>
+                </div>
+                
+                <div class="modern-contact-action">
+                    <button class="contact-submit modern-contact-submit" type="submit">And off you go!</button>
+                    <p class="contact-status" role="status" aria-live="polite"></p>
+                </div>
+            </form>
+            
+            <div class="modern-contact-footer">
+                <span class="footer-prompt">Or write me directly at:</span>
+                <div class="contact-methods">
+                    <a class="contact-method-btn email-btn" href="mailto:hello@aimygwen.art">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        <span>hello@aimygwen.art</span>
+                    </a>
+                    <a class="contact-method-btn discord-btn" href="https://discord.com/users/1124618102500511744" target="_blank" rel="noopener noreferrer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink: 0;"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.873-.894.077.077 0 0 1-.008-.128c.126-.093.252-.19.372-.287a.075.075 0 0 1 .077-.011c3.92 1.793 8.18 1.793 12.061 0a.073.073 0 0 1 .078.009c.12.099.246.195.373.289a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.873-.894.077.077 0 0 1-.008-.128c.126-.093.252-.19.372-.287a.075.075 0 0 1 .077-.011c3.92 1.793 8.18 1.793 12.061 0a.073.073 0 0 1 .078.009c.12.099.246.195.373.289a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.156-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.156 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.156-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.156 2.418z"/></svg>
+                        <span>Discord DM ➔</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 
+<script>
+    /* Contact modal: open from the nav, close on overlay / X / Esc.
+       The form composes a mailto, same as the standalone contact page. */
+    (function () {
+        var modal = document.getElementById("contactModal");
+        if (!modal) return;
+        var lastFocus = null;
+        function openModal() {
+            lastFocus = document.activeElement;
+            modal.hidden = false;
+            document.body.classList.add("modal-open");
+            requestAnimationFrame(function () { modal.classList.add("is-open"); });
+            var first = modal.querySelector("#cf-name");
+            if (first) setTimeout(function () { first.focus(); }, 60);
+        }
+        function closeModal() {
+            modal.classList.remove("is-open");
+            document.body.classList.remove("modal-open");
+            setTimeout(function () { modal.hidden = true; }, 320);
+            if (lastFocus && lastFocus.focus) lastFocus.focus();
+        }
+        // Open from any [data-contact] link (desktop + mobile nav).
+        document.addEventListener("click", function (e) {
+            var trigger = e.target.closest("[data-contact]");
+            if (trigger) { e.preventDefault(); openModal(); return; }
+            if (e.target.closest("[data-close]") && modal.contains(e.target)) { closeModal(); }
+        });
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && !modal.hidden) closeModal();
+        });
+        // Deep link: arriving at "/#contact" (e.g. the contact link from any
+        // other page) opens the modal. Delay slightly so any page-transition
+        // slide-in settles first.
+        if (location.hash === "#contact") {
+            setTimeout(openModal, 350);
+        }
+
+        var contactForm = document.getElementById("contact-form");
+        if (contactForm) {
+            var statusEl = contactForm.querySelector(".contact-status");
+            contactForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                if (!contactForm.reportValidity()) return;
+                var get = function (n) { return (contactForm.elements[n].value || "").trim(); };
+                var name = get("name"), email = get("email"), phone = get("phone"), message = get("message");
+                var subject = "Portfolio inquiry from " + (name || "your site");
+                var body = ["Name: " + name, "Email: " + email, "Phone: " + (phone || "—"), "", message].join("\n");
+                window.location.href = "mailto:aimygwendesign@gmail.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+                if (statusEl) statusEl.textContent = "Opening your email app… if nothing happens, email aimygwendesign@gmail.com directly.";
+            });
+        }
+    })();
+</script>
+
+<script>
+    /* Pause autoplay card videos while they're off-screen so the browser
+       isn't decoding a stack of clips during a scroll — smooths scrolling,
+       especially on mobile. The hero stage and Vanta tile manage their own
+       playback, so they're left alone. */
+    (function () {
+        if (!("IntersectionObserver" in window)) return;
+        var vids = Array.prototype.slice
+            .call(document.querySelectorAll("video[autoplay]"))
+            .filter(function (v) { return !v.closest(".stage") && !v.closest(".vanta-videos"); });
+        if (!vids.length) return;
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                    var p = e.target.play();
+                    if (p && p.catch) p.catch(function () {});
+                } else {
+                    e.target.pause();
+                }
+            });
+        }, { rootMargin: "200px 0px" });
+        vids.forEach(function (v) { io.observe(v); });
+    })();
+</script>
+
+<!-- Intro Revealer Logic -->
+<script>
+    (function () {
+        const textTarget = document.getElementById('typing-target');
+        const continueBtn = document.getElementById('continue-trigger');
+        const revealerScreen = document.getElementById('revealer-screen');
+
+        if (!textTarget) return;
+
+        function splitIntoLetters(element) {
+            if (!element) return 0;
+            const text = element.textContent;
+            element.textContent = "";
+            const parts = text.split(/( )/);
+            let letterIndex = 0;
+            parts.forEach((part) => {
+                if (part === "") return;
+                if (part === " ") { element.appendChild(document.createTextNode(" ")); return; }
+                const wordSpan = document.createElement("span");
+                wordSpan.className = "word";
+                for (const char of part) {
+                    const letter = document.createElement("span");
+                    letter.className = "letter";
+                    letter.textContent = char;
+                    letter.style.setProperty("--letter-i", letterIndex++);
+                    wordSpan.appendChild(letter);
+                }
+                element.appendChild(wordSpan);
+            });
+            return letterIndex;
+        }
+
+        // Wait for DOM to load, then trigger pop-in animation
+        window.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('intro_seen')) {
+                document.body.classList.remove('intro-active');
+                const mainContent = document.getElementById('main-content');
+                if (mainContent) {
+                    mainContent.classList.add('floated');
+                    mainContent.style.transform = 'none';
+                }
+                return;
+            }
+
+            const letterCount = splitIntoLetters(textTarget);
+
+            // Add letters-ready class to kick off the CSS animation after a short delay
+            setTimeout(() => {
+                textTarget.classList.add('letters-ready');
+            }, 800);
+
+            // Stagger is 35ms per letter in our CSS, plus 700ms transition duration.
+            // Reveal continue button after the animation completes.
+            const LETTER_STAGGER_MS = 35;
+            const animationDuration = (letterCount * LETTER_STAGGER_MS) + 700;
+            
+            setTimeout(() => {
+                continueBtn.classList.add('visible');
+            }, 800 + animationDuration + 200); // 200ms aesthetic delay
+        });
+
+        // Click event to fade away the intro and float in the website
+        continueBtn.addEventListener('click', () => {
+            sessionStorage.setItem('intro_seen', 'true');
+            revealerScreen.classList.add('fade-out');
+            document.body.classList.remove('intro-active');
+
+            const mainContent = document.getElementById('main-content');
+            if (mainContent) {
+                mainContent.classList.add('floated');
+                // Clean up transform style after transition ends so fixed positioning works
+                mainContent.addEventListener('transitionend', function handler(e) {
+                    if (e.propertyName === 'transform') {
+                        mainContent.style.transform = 'none';
+                        mainContent.removeEventListener('transitionend', handler);
+                    }
+                });
+            }
+        });
+    })();
+</script>
 </body>
-</html>
