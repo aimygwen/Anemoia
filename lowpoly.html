@@ -27,7 +27,7 @@
     <header class="site-header">
         <div class="header-left">
             <a href="index.html" class="brand" aria-label="Aimy Gwen — home">
-                <img src="./assets/bunny.png" alt="Aimy Gwen" />
+                <img src="./assets/branding.svg" alt="Aimy Gwen" />
             </a>
 
             <nav class="nav" id="primary-nav" aria-label="Primary"></nav>
@@ -151,7 +151,15 @@
                     <img id="lightbox-main-img" src="" alt="" class="lb-main-img" />
                     <button class="lb-nav lb-nav--next" id="lightbox-next" aria-label="Next image">&#8594;</button>
                 </div>
-                <a id="lightbox-download-btn" class="lb-download-btn" href="#" download>Download</a>
+                <div class="lb-extension-actions">
+                    <img id="lightbox-pack-logo" class="lb-pack-logo" src="" alt="" hidden decoding="async" />
+                    <div class="lb-action-bar">
+                        <a id="lightbox-download-btn" class="lb-download-btn" href="#" download>Download</a>
+                        <button type="button" class="lb-close-btn" id="lightbox-close" aria-label="Close detail view">
+                            <span class="lb-close-btn__icon" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
                 <div class="lb-dots" id="lightbox-dots"></div>
             </div>
 
@@ -169,10 +177,6 @@
                 </div>
             </aside>
         </div>
-
-        <button type="button" class="lb-close-btn" id="lightbox-close" aria-label="Close detail view">
-            <span class="lb-close-btn__icon" aria-hidden="true">&times;</span>
-        </button>
 
     </div>
     </div><!-- /#spa-view -->
