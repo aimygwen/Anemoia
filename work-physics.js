@@ -21,7 +21,7 @@
             id: 0,
             title: "Lowpoly",
             category: "Hytale Art",
-            url: "hytale.html",
+            url: "lowpoly.html",
             imgKey: "lowpoly",
             posX: -420,
             posY: 0
@@ -48,34 +48,38 @@
         {
             id: 3,
             title: "insights",
-            category: "BtS / WIP Process",
-            url: "bts.html",
+            category: "Identity & Process",
+            url: "insights.html",
             imgKey: "insights",
             posX: 420,
             posY: 0
         }
     ];
 
-    // Select preloaded DOM images (or use base64 data URLs to prevent local CORS issues)
+    // Load thumbnail textures (512px canvas — 768px sources are enough at 1.5× DPR)
     const images = {};
     caseStudies.forEach(study => {
         const key = study.imgKey;
         const img = new Image();
-        if (window.base64Thumbnails && window.base64Thumbnails[key]) {
-            img.src = window.base64Thumbnails[key];
-        } else {
-            // Fallback to DOM preloader if base64 not available
-            const domEl = document.getElementById(`preload-img-${key}`);
-            if (domEl) {
-                img.src = domEl.src;
-            } else {
-                img.src = `./assets/thumbnails/${key}.jpg`;
-            }
-        }
+        img.decoding = "async";
+        img.src = `./assets/thumbnails/${key}.jpg`;
         images[key] = img;
     });
 
     const videoSource = document.getElementById("physics-video-source");
+    let videoInitStarted = false;
+
+    function ensurePhysicsVideo() {
+        if (!videoSource || videoInitStarted) return;
+        videoInitStarted = true;
+        videoSource.src = "films/mov1.mp4";
+        videoSource.muted = true;
+        videoSource.loop = true;
+        videoSource.playsInline = true;
+        videoSource.preload = "metadata";
+        videoSource.load();
+        videoSource.play().catch(() => {});
+    }
 
     // Rainbow Color Shift Palette (Pink -> Yellow -> Teal -> Lilac -> Pink)
     const rainbowColors = [
@@ -148,8 +152,7 @@
         }
 
         if (!drewVideo && img) {
-            const isBase64 = img.src && img.src.startsWith("data:");
-            if (window.location.protocol !== "file:" || isBase64) {
+            if (img.complete && img.naturalWidth) {
                 ctx.drawImage(img, 2, 2, w - 4, h - 4);
             }
         }
@@ -204,6 +207,29 @@
     const cardH = 240;
     const segX = 2;
     const segY = 2;
+
+    const desktopPositions = caseStudies.map(function (study) {
+        return { x: study.posX, y: study.posY };
+    });
+
+    const mobilePositions = [
+        { x: -125, y: 125 },
+        { x: 125, y: 125 },
+        { x: -125, y: -125 },
+        { x: 125, y: -125 },
+    ];
+
+    function applyCardLayout() {
+        const mobile = window.innerWidth <= 880;
+        caseStudies.forEach(function (study, index) {
+            const pos = mobile ? mobilePositions[index] : desktopPositions[index];
+            study.posX = pos.x;
+            study.posY = pos.y;
+            if (study.mesh) {
+                study.mesh.position.set(pos.x, pos.y, 0);
+            }
+        });
+    }
 
     caseStudies.forEach(study => {
         // Setup individual canvas
@@ -305,6 +331,7 @@
     const damping = 0.86;
 
     function animate() {
+        if (window.__workPhysicsDestroyed) return;
         requestAnimationFrame(animate);
         time += 0.015;
 
@@ -448,44 +475,60 @@
         targetMouse.y = -((e.touches[0].clientY - canvasRect.top) / canvasRect.height) * 2 + 1;
     }
 
+    function onTouchStart(e) {
+        if (e.touches.length === 0) return;
+        if (!canvasRect) updateCanvasRect();
+        targetMouse.x = ((e.touches[0].clientX - canvasRect.left) / canvasRect.width) * 2 - 1;
+        targetMouse.y = -((e.touches[0].clientY - canvasRect.top) / canvasRect.height) * 2 + 1;
+    }
+
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mouseleave", onMouseLeave);
     canvas.addEventListener("click", onClick);
-    canvas.addEventListener("touchmove", onTouchMove);
-    canvas.addEventListener("touchend", onMouseLeave);
+    canvas.addEventListener("touchstart", onTouchStart, { passive: true });
+    canvas.addEventListener("touchmove", onTouchMove, { passive: true });
+    canvas.addEventListener("touchend", function (e) {
+        if (!canvasRect) updateCanvasRect();
+        if (!e.changedTouches.length) {
+            onMouseLeave();
+            return;
+        }
+        var touch = e.changedTouches[0];
+        targetMouse.x = ((touch.clientX - canvasRect.left) / canvasRect.width) * 2 - 1;
+        targetMouse.y = -((touch.clientY - canvasRect.top) / canvasRect.height) * 2 + 1;
+        raycaster.setFromCamera(targetMouse, camera);
+        var hits = raycaster.intersectObjects(caseStudies.map(function (s) { return s.mesh; }));
+        if (hits.length > 0) {
+            hoveredStudy = caseStudies.find(function (s) { return s.mesh === hits[0].object; });
+            onClick(e);
+        }
+        onMouseLeave();
+    });
 
     // Responsive aspect ratio viewport fitting
     function onResize() {
         const w = canvas.clientWidth;
         const h = canvas.clientHeight;
 
-        // Synchronize dynamic loops and mobile loops playback
-        const fallbackVideo = document.querySelector(".work-fallback video");
-        if (window.innerWidth > 880) {
-            if (videoSource && videoSource.paused) {
-                videoSource.play().catch(() => {});
-            }
-            if (fallbackVideo && !fallbackVideo.paused) {
-                fallbackVideo.pause();
-            }
-        } else {
-            if (videoSource && !videoSource.paused) {
-                videoSource.pause();
-            }
-            if (fallbackVideo && fallbackVideo.paused) {
-                fallbackVideo.play().catch(() => {});
-            }
+        // Synchronize video playback (physics canvas uses one shared source)
+        ensurePhysicsVideo();
+        if (videoSource && videoSource.paused) {
+            videoSource.play().catch(function () {});
         }
+
+        applyCardLayout();
 
         const resMultiplier = 0.65;
         renderer.setSize(w * resMultiplier, h * resMultiplier, false);
 
         camera.aspect = w / h;
 
-        // Calculate fitting depth mapping for the 1160x320 horizontal layout bounds
+        const mobile = window.innerWidth <= 880;
+        const layoutW = mobile ? 520 : 1160;
+        const layoutH = mobile ? 520 : 320;
         const fovRad = (camera.fov * Math.PI) / 360;
-        const fitHeightZ = (320 / 2) / Math.tan(fovRad) + 20;
-        const fitWidthZ = (1160 / 2) / Math.tan(fovRad) / camera.aspect + 20;
+        const fitHeightZ = (layoutH / 2) / Math.tan(fovRad) + 20;
+        const fitWidthZ = (layoutW / 2) / Math.tan(fovRad) / camera.aspect + 20;
 
         camera.position.z = Math.max(fitHeightZ, fitWidthZ);
         camera.updateProjectionMatrix();
@@ -494,5 +537,23 @@
     window.addEventListener("resize", onResize);
     onResize();
 
+    var workSection = document.getElementById("work");
+    if (workSection && "IntersectionObserver" in window) {
+        var videoObserver = new IntersectionObserver(function (entries) {
+            if (entries.some(function (e) { return e.isIntersecting; })) {
+                ensurePhysicsVideo();
+                videoObserver.disconnect();
+            }
+        }, { rootMargin: "240px" });
+        videoObserver.observe(workSection);
+    } else {
+        ensurePhysicsVideo();
+    }
+
     animate();
+
+    window.__workPhysicsRestart = function () {
+        window.__workPhysicsDestroyed = false;
+        animate();
+    };
 })();
