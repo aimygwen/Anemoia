@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>???</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../ui.css" />
+    <link rel="stylesheet" href="404.css" />
+</head>
+<body>
+
+  <!-- SVG GLITCH FILTER -->
+  <svg style="position: absolute; width: 0; height: 0;" width="0" height="0" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="glitch-filter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.05 0.95" numOctaves="1" result="noise" />
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 100 -50" result="colormatrix" />
+        <feDisplacementMap in="SourceGraphic" in2="colormatrix" scale="20" xChannelSelector="R" yChannelSelector="A" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div id="labyrinth-container">
+
+      <!-- PAGE 1: The Entrance -->
+      <div class="labyrinth-page page-1 active" data-page="1">
+          <div class="page-content">
+              <h2 class="alkhemikal-tag">ERROR 404</h2>
+              <h1 class="yoster-title">Route Lost</h1>
+              <p>You have wandered off the edge of the map. The background feels too familiar. There is nothing but empty corridors behind you.</p>
+              <button class="next-button retro-btn" data-next="2">Go Back</button>
+          </div>
+      </div>
+
+      <!-- PAGE 2: The Loop -->
+      <div class="labyrinth-page page-2" data-page="2">
+          <div class="page-content">
+              <h2 class="alkhemikal-tag">ERROR 404</h2>
+              <h1 class="yoster-title">No Return</h1>
+              <p>Wait... the door you came in through is gone. The hallway repeats itself in every direction. Do you remember which way was home?</p>
+              <button class="next-button retro-btn" data-next="3">Turn Around</button>
+          </div>
+      </div>
+
+      <!-- PAGE 3: The Hum -->
+      <div class="labyrinth-page page-3" data-page="3">
+          <div class="page-content">
+              <h2 class="alkhemikal-tag">ERROR 404</h2>
+              <h1 class="yoster-title">Fluorescent Noise</h1>
+              <p>A low, buzzing hum rings through the walls. The air smells slightly damp. Keep walking, or the hum will find you.</p>
+              <button class="next-button retro-btn" data-next="4">Walk Faster</button>
+          </div>
+      </div>
+
+      <!-- PAGE 4: Bluescreen of Death (BSOD) -->
+      <div class="labyrinth-page page-4" data-page="4">
+          <div class="page-content bsod-content">
+              <h1 class="bsod-title">:(</h1>
+              <p class="bsod-subtitle">A fatal Labyrinth Exception has occurred. The system has crashed to protect your connection.</p>
+              <p class="bsod-code">If this is the first time you've seen this stop error screen, restart your sanity. If you continue, your progress might be corrupted.</p>
+              <pre class="bsod-details">
+*** STOP: 0x00000404 (0xDEADBEEF, 0x00000000)
+*** Labyrinth.sys - Address 0xF4040000 base at 0xF4000000
+              </pre>
+              <button class="next-button bsod-btn" data-next="5">*** REBOOT TO SAFE MODE ***</button>
+          </div>
+      </div>
+
+      <!-- PAGE 5: Missing Textures -->
+      <div class="labyrinth-page page-5" data-page="5">
+          <div class="page-content texture-error-content">
+              <h2 class="error-badge">ENGINE ERROR</h2>
+              <h1 class="pixel-title">Missing Textures</h1>
+              <p>Fatal: resources/materials/liminal/wall.vtf not found.<br>Fallback checkerboard grid loaded. The visual boundaries are collapsing.</p>
+              <button class="next-button texture-btn" data-next="6">Ignore and Proceed</button>
+          </div>
+      </div>
+
+      <!-- PAGE 6: Sliced Code -->
+      <div class="labyrinth-page page-6" data-page="6">
+          <div class="page-content slice-content">
+              <h1 class="glitch-text" data-text="c o r r u p t i o n . v t f">c o r r u p t i o n . v t f</h1>
+              <p>The ground feels soft. Slices of raw program memory are bleeding into the walls. Do not step in the negative space.</p>
+              <button class="next-button retro-btn" data-next="7">continue.exe</button>
+          </div>
+      </div>
+
+      <!-- PAGE 7: Stack Overflow -->
+      <div class="labyrinth-page page-7" data-page="7">
+          <div class="page-content terminal-content">
+              <h2 class="terminal-header">> STACK OVERFLOW DETECTED</h2>
+              <pre class="terminal-text">
+[CRITICAL] Stack overflow in thread 'main'
+[MEM_DUMP] 0x00A1B420: throw404()
+[MEM_DUMP] 0x00A1B440: infiniteWanderLoop()
+[ALERT] The program is attempting to access protected memory.
+[ALERT] GET OUT. GET OUT. GET OUT.
+              </pre>
+              <button class="next-button terminal-btn" data-next="8">> FORCE RUN EXECUTION</button>
+          </div>
+      </div>
+
+      <!-- PAGE 8: The Inverted Void -->
+      <div class="labyrinth-page page-8" data-page="8">
+          <div class="page-content inverted-content">
+              <h1 class="inverted-title">DO YOU REMEMBER?</h1>
+              <p class="inverted-text">This corridor has always been here. You built it. You can't wake up.</p>
+              <button class="next-button inverted-btn" data-next="9">A C C E P T   R E A L I T Y</button>
+          </div>
+      </div>
+
+      <!-- PAGE 9: The Static Matrix -->
+      <div class="labyrinth-page page-9" data-page="9">
+          <div class="page-content static-content">
+              <h1 class="scrambled-title">̵E̵R̸R̶O̷R̸:̶ ̵N̵O̴ ̷M̷O̴R̵E̷ ̶P̵A̷G̸E̷S̷</h1>
+              <p class="scrambled-text">T̵h̷e̵ ̸s̷y̶s̷t̶e̸m̵ ̸i̷s̴ ̶h̴e̷a̶t̵i̴n̸g̸ ̸u̵p̶.̶ ̶C̷o̵n̴n̴e̴c̸t̵i̷o̵n̴ ̴t̶e̶r̴m̴i̵n̶a̷t̶i̵n̴g̴.̴</p>
+              <button class="next-button static-btn" data-next="10">S H U T D O W N</button>
+          </div>
+      </div>
+
+      <!-- PAGE 10: The Flashing Cursor -->
+      <div class="labyrinth-page page-10" data-page="10">
+          <div class="page-content cursor-content">
+              <div class="typing-text">Labyrinth terminated. Return to reality.</div>
+              <button class="next-button final-btn" data-next="exit">W A K E   U P</button>
+          </div>
+      </div>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CSSRulePlugin.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script src="404.js"></script>
+  <script src="../ui.js"></script>
+</body>
+</html>

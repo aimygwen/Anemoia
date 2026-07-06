@@ -1161,6 +1161,13 @@ body.lightbox-open .brand {
     box-sizing: border-box;
 }
 
+.lightbox.lightbox--extension {
+    align-items: flex-start;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 .lightbox[aria-hidden="false"] {
     pointer-events: auto;
 }
@@ -1235,15 +1242,21 @@ body.lightbox-open .brand {
     max-width: none;
     width: 100%;
     min-height: min(88vh, 900px);
+    margin: auto 0;
+    padding:
+        clamp(0.5rem, 1.5vh, 1rem) 0
+        clamp(1rem, 2.5vh, 2rem);
 }
 
 .lightbox--extension .lb-image-area {
     flex: 1;
     width: 100%;
-    max-width: min(920px, 78vw);
+    max-width: min(1080px, 90vw);
     margin: 0 auto;
     gap: clamp(0.85rem, 2vw, 1.35rem);
     flex-shrink: 0;
+    position: relative;
+    overflow: visible;
 }
 
 .lightbox--extension .lb-info-panel {
@@ -1263,18 +1276,50 @@ body.lightbox-open .brand {
     align-items: center;
     width: 100%;
     margin: 0;
-    min-height: clamp(64px, 7vw, 88px);
+    min-height: clamp(72px, 8vw, 104px);
     flex-shrink: 0;
 }
 
 .lightbox--extension .lb-thumb {
-    width: clamp(64px, 7vw, 88px);
-    height: clamp(64px, 7vw, 88px);
+    width: clamp(72px, 8vw, 104px);
+    height: clamp(72px, 8vw, 104px);
+}
+
+.lightbox--extension .lb-extension-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.65rem, 1.4vw, 0.95rem);
+    align-self: center;
+    margin-top: clamp(1.25rem, 2.8vh, 2rem);
+    z-index: 5;
+    pointer-events: auto;
+    overflow: visible;
+}
+
+.lightbox--extension .lb-action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: clamp(0.75rem, 2vw, 1.15rem);
+    width: 100%;
+}
+
+.lightbox--extension .lb-pack-logo {
+    align-self: center;
+    height: clamp(3.25rem, 7.5vw, 5.25rem);
+    width: auto;
+    max-width: min(320px, 55vw);
+    object-fit: contain;
+    margin-top: clamp(-5rem, -10vh, -3rem);
+    filter: drop-shadow(0 6px 20px color-mix(in srgb, var(--primary) 22%, transparent));
+    pointer-events: none;
 }
 
 .lightbox--extension .lb-download-btn {
     align-self: center;
-    margin-top: 0.35rem;
+    margin-top: 0;
     flex-shrink: 0;
     min-height: 3.25rem;
     font-size: clamp(1.15rem, 2.2vw, 1.5rem);
@@ -1296,15 +1341,43 @@ body.lightbox-open .brand {
 }
 
 .lightbox--extension .lb-image-stage {
-    height: min(58vh, 680px);
-    min-height: min(58vh, 680px);
+    height: min(72vh, 860px);
+    min-height: min(72vh, 860px);
     flex-shrink: 0;
+    overflow: visible;
+}
+
+.lightbox--extension .lb-main-img {
+    inset: clamp(0.75rem, 2vw, 1.25rem) clamp(1rem, 2.5vw, 1.75rem) clamp(2.75rem, 5vh, 3.5rem);
 }
 
 .lightbox--asset .lb-image-stage {
     height: min(72vh, 820px);
     min-height: min(72vh, 820px);
     flex-shrink: 0;
+    overflow: visible;
+}
+
+.lightbox--asset .lb-main-img {
+    inset: clamp(0.75rem, 2vw, 1.25rem) clamp(1rem, 2.5vw, 1.75rem) clamp(2.75rem, 5vh, 3.5rem);
+}
+
+.lightbox--asset .lb-extension-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+    margin-top: 1rem;
+}
+
+.lightbox--asset .lb-action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox--asset .lb-pack-logo {
+    display: none;
 }
 
 .lb-image-area {
@@ -1333,6 +1406,7 @@ body.lightbox-open .brand {
     object-fit: contain;
     object-position: center;
     display: block;
+    border-radius: clamp(14px, 2.2vw, 22px);
     filter: drop-shadow(0 22px 48px color-mix(in srgb, var(--primary) 16%, transparent));
     transition: opacity 0.15s ease;
 }
@@ -1539,12 +1613,7 @@ body.lightbox-open .brand {
     background: var(--accent);
     padding: 0.9rem 1.85rem;
     cursor: pointer;
-    clip-path: polygon(
-        8px 0%, calc(100% - 8px) 0%,
-        100% 8px, 100% calc(100% - 8px),
-        calc(100% - 8px) 100%, 8px 100%,
-        0% calc(100% - 8px), 0% 8px
-    );
+    border-radius: 9999px;
     outline: 2px solid color-mix(in srgb, var(--lightbox-ink) 35%, transparent);
     outline-offset: 2px;
     transition: color 0.15s ease, transform 0.2s ease;
@@ -1571,28 +1640,28 @@ body.lightbox-open .brand {
 }
 
 .lb-close-btn {
-    position: fixed;
-    top: max(clamp(1.1rem, 2.5vw, 1.75rem), env(safe-area-inset-top, 0px));
-    right: max(clamp(1.1rem, 2.5vw, 1.75rem), env(safe-area-inset-right, 0px));
-    z-index: 1003;
-    display: grid;
+    display: inline-grid;
     place-items: center;
-    width: auto;
-    height: auto;
-    padding: 0.25rem;
+    width: 3.25rem;
+    height: 3.25rem;
+    min-width: 3.25rem;
+    min-height: 3.25rem;
+    padding: 0;
     border: none;
-    border-radius: 0;
+    border-radius: 50%;
     cursor: pointer;
     color: var(--lightbox-ink);
-    background: transparent;
+    background: color-mix(in srgb, var(--lightbox-ink) 6%, transparent);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.35s ease, transform 0.35s ease, color 0.2s ease;
-    transform: scale(0.92);
+    outline: 2px solid color-mix(in srgb, var(--lightbox-ink) 35%, transparent);
+    outline-offset: 2px;
+    transition: opacity 0.35s ease, transform 0.2s ease, color 0.2s ease, background 0.2s ease;
+    transform: scale(0.96);
 }
 
 .lightbox.active .lb-close-btn {
-    opacity: 0.72;
+    opacity: 1;
     pointer-events: auto;
     transform: scale(1);
 }
@@ -1600,11 +1669,12 @@ body.lightbox-open .brand {
 .lb-close-btn:hover {
     opacity: 1;
     color: var(--lightbox-ink);
-    transform: scale(1.08);
+    background: color-mix(in srgb, var(--lightbox-ink) 10%, transparent);
+    transform: scale(1.04);
 }
 
 .lb-close-btn__icon {
-    font-size: clamp(2rem, 3.5vw, 2.6rem);
+    font-size: clamp(1.65rem, 3vw, 2.1rem);
     line-height: 1;
     font-weight: 300;
 }
@@ -1722,6 +1792,14 @@ body.lightbox-open .brand {
         min-height: auto;
     }
 
+    .lightbox--extension .lb-image-area {
+        order: 1;
+    }
+
+    .lightbox--extension .lb-info-panel {
+        order: 2;
+    }
+
     .lightbox--asset .lb-image-area,
     .lightbox--extension .lb-image-area {
         flex: none;
@@ -1742,10 +1820,34 @@ body.lightbox-open .brand {
         justify-content: center;
     }
 
-    .lightbox--extension .lb-download-btn {
+    .lightbox--extension .lb-extension-actions {
+        margin-top: clamp(1rem, 2.5vh, 1.75rem);
+        width: 100%;
+        align-items: center;
+        padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+    }
+
+    .lightbox--extension .lb-action-bar,
+    .lightbox--asset .lb-action-bar {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .lightbox--extension .lb-pack-logo {
         align-self: center;
+        margin-top: clamp(-3.5rem, -8vh, -2rem);
+        height: clamp(2.75rem, 10vw, 4rem);
+    }
+
+    .lightbox--extension .lb-download-btn {
+        flex: 0 1 auto;
         width: auto;
-        max-width: calc(100% - 1rem);
+        max-width: none;
+    }
+
+    .lightbox--extension .lb-close-btn,
+    .lightbox--asset .lb-close-btn {
+        flex: 0 0 auto;
     }
 
     .lightbox--extension .lb-dots {
@@ -1753,8 +1855,13 @@ body.lightbox-open .brand {
     }
 
     .lightbox--extension .lb-image-stage {
-        height: min(46vh, 420px);
-        min-height: min(46vh, 420px);
+        height: min(54vh, 520px);
+        min-height: min(54vh, 520px);
+        overflow: visible;
+    }
+
+    .lightbox--extension .lb-main-img {
+        inset: clamp(0.35rem, 1.2vw, 0.75rem) clamp(0.5rem, 1.8vw, 1rem) clamp(1rem, 2.5vh, 1.75rem);
     }
 
     .lightbox--asset .lb-image-stage {

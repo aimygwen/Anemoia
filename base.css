@@ -1350,7 +1350,7 @@ body.is-entering.is-entered .footer-reveal {
         display: none;
     }
 
-    /* Force stage poster (base.jpg) to render without dark mode mix-blend-mode overlay inversion */
+    /* Force stage poster (base.png) to render without dark mode mix-blend-mode overlay inversion */
     .stage .poster {
         mix-blend-mode: normal !important;
         filter: none !important;

@@ -1,10 +1,10 @@
 /* ----------------------------------------------------
-   GALLERY — Neutral Bright (off-white · slate · acid lime)
+   SCROLL GALLERY — art + films (shared shell, per-page accents)
    ---------------------------------------------------- */
-.gallery-page-body {
+.gallery-page-body,
+.videos-page-body {
     --bg: #f4f4f1;
     --primary: #3d4f5c;
-    --accent: #c8f020;
 
     --brand-logo-dark-fill: var(--primary);
     --brand-logo-light-fill: var(--accent);
@@ -13,28 +13,47 @@
     color: var(--ink);
 }
 
+.gallery-page-body {
+    --accent: #c8f020;
+}
+
+.videos-page-body {
+    --accent: #ff2d55;
+}
+
 @media (prefers-color-scheme: dark) {
-    .gallery-page-body {
+    .gallery-page-body,
+    .videos-page-body {
         --bg: #1a1c18;
         --primary: #d8dde2;
-        --accent: #d4ff00;
         --brand-logo-dark-fill: var(--primary);
         --brand-logo-light-fill: var(--accent);
     }
+
+    .gallery-page-body {
+        --accent: #d4ff00;
+    }
+
+    .videos-page-body {
+        --accent: #ff4777;
+    }
 }
 
-#gallery-page-content {
+#gallery-page-content,
+#videos-page-content {
     opacity: 0;
     transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
 }
 
 #gallery-page-content.active,
-#gallery-page-content.is-active {
+#gallery-page-content.is-active,
+#videos-page-content.active,
+#videos-page-content.is-active {
     opacity: 1;
 }
 
-/* --- Hero --- */
+/* --- Art gallery hero (optional) --- */
 .gallery-hero {
     padding: clamp(4rem, 10vw, 7rem) 0 clamp(2rem, 5vw, 3.5rem);
     text-align: center;
@@ -80,4 +99,66 @@
     .gallery-hero {
         padding: 3rem 0 2rem 0;
     }
+}
+
+/* --- Films-only --- */
+.videos-page-body .gallery-item-media video {
+    opacity: 1;
+}
+
+.videos-page-body .gallery-item {
+    cursor: pointer;
+}
+
+.video-border-overlay {
+    position: absolute;
+    inset: 0;
+    border: 3.5px solid transparent;
+    border-radius: 28px;
+    pointer-events: none;
+    z-index: 5;
+    transform: translate3d(0, 0, 0);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-item:hover .video-border-overlay {
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent),
+        0 0 24px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.techtangle-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8) rotate(3deg);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+    background-color: var(--accent);
+    color: var(--bg);
+    border: 2px solid var(--primary);
+    box-shadow: 4px 4px 0 var(--primary);
+    padding: 0.65rem 1.35rem;
+    font-family: 'Alkhemikal', monospace;
+    font-size: clamp(0.9rem, 1.2vw, 1.15rem);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    clip-path: polygon(2% 8%, 98% 3%, 96% 92%, 4% 95%);
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.gallery-item:hover .techtangle-badge {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(-1.5deg);
+}
+
+.gallery-item.cat-commercial { --badge-color: var(--accent); }
+.gallery-item.cat-loops { --badge-color: #ff6b8a; }
+
+@media (prefers-reduced-motion: reduce) {
+    .gallery-item:hover .video-border-overlay { animation: none; }
 }
