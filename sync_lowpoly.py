@@ -4,7 +4,7 @@ import re
 
 # Paths
 LOWPOLY_DIR = './lowpoly'
-HYTALE_JS_PATH = './hytale.js'
+LOWPOLY_JS_PATH = './lowpoly.js'
 
 def format_title(filename):
     # Strip extension
@@ -88,27 +88,27 @@ def main():
     # Format the replacement array code
     new_array_content = "    const hytaleAssets = [\n" + ",\n".join(entries) + "\n    ];"
 
-    # Read the current hytale.js content
-    if not os.path.exists(HYTALE_JS_PATH):
-        print(f"Error: '{HYTALE_JS_PATH}' not found.")
+    # Read the current lowpoly.js content
+    if not os.path.exists(LOWPOLY_JS_PATH):
+        print(f"Error: '{LOWPOLY_JS_PATH}' not found.")
         return
 
-    with open(HYTALE_JS_PATH, 'r', encoding='utf-8') as file:
+    with open(LOWPOLY_JS_PATH, 'r', encoding='utf-8') as file:
         js_content = file.read()
 
     # Locate and replace the hytaleAssets array block
     pattern = r'const hytaleAssets\s*=\s*\[[\s\S]*?\];'
     if not re.search(pattern, js_content):
-        print("Error: Could not locate the 'const hytaleAssets = [...];' declaration in hytale.js.")
+        print("Error: Could not locate the 'const hytaleAssets = [...];' declaration in lowpoly.js.")
         return
 
     updated_js_content = re.sub(pattern, new_array_content, js_content)
 
-    # Write the updated content back to hytale.js
-    with open(HYTALE_JS_PATH, 'w', encoding='utf-8') as file:
+    # Write the updated content back to lowpoly.js
+    with open(LOWPOLY_JS_PATH, 'w', encoding='utf-8') as file:
         file.write(updated_js_content)
 
-    print(f"Success! hytale.js has been dynamically updated with all {len(png_files)} items.")
+    print(f"Success! lowpoly.js has been dynamically updated with all {len(png_files)} items.")
 
 if __name__ == '__main__':
     main()

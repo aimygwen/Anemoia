@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Legal Imprint & Privacy Policy — Aimy Gwen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Lawyers Made Me Do It</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <script>document.documentElement.classList.add("page-loading");</script>
+    <link rel="stylesheet" href="loader.css" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -13,11 +15,12 @@
 
     <!-- Core, UI, and Legal Stylesheets -->
     <link rel="stylesheet" href="ui.css" />
-    <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="legal.css" />
+    <script src="site-utils.js" defer></script>
     <script src="ui.js" defer></script>
 </head>
 <body class="legal-page-body">
+<script src="loader.js" defer></script>
 
     <!-- SITE HEADER -->
     <header class="site-header">
@@ -188,7 +191,7 @@
         <!-- GLOBAL FOOTER -->
         <footer class="footer-reveal" aria-label="Contact and links">
             <nav class="footer-links" aria-label="Footer">
-                <a href="index.html#contact" data-contact>Contact</a>
+                <a href="#contact" data-contact>Contact</a>
                 <a href="legal.html">Legal Imprint &amp; Policy</a>
             </nav>
             <div class="footer-credits" style="--reveal-delay: 120ms">

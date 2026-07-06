@@ -1,0 +1,1447 @@
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* The about page is a normal scrolling document with multiple
+   full-viewport sections (about, experience), a fixed header that
+   stays anchored across scroll & page transitions, and a footer
+   that arrives in flow at the end. */
+
+/* Header styling has been extracted to ui.css for per-page customization */
+
+/* Hero section — fills first viewport with the image+text pair
+   centered. Padding-top reserves room for the fixed header. */
+.page {
+    position: relative;
+    min-height: 100vh;
+    padding:
+            calc(var(--page-pad-y) * 2 + clamp(48px, 4.5vw, 72px))
+            var(--page-pad-x)
+            var(--page-pad-y);
+    background: var(--paper);
+    display: grid;
+    place-items: center;
+}
+
+/* Scroll-down cue pinned to the bottom of the full-viewport hero.
+   Gentle bob to draw the eye; fades out once the page is scrolled. */
+.scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(1.25rem, 4vh, 2.75rem);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font);
+    font-size: clamp(0.72rem, 0.85vw, 0.85rem);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: 0.65;
+    pointer-events: none;
+    transform: translateX(-50%);
+    animation: scroll-bob 1.8s ease-in-out infinite;
+    transition: opacity 0.4s ease;
+}
+.scroll-cue svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+body.is-scrolled .scroll-cue {
+    opacity: 0;
+}
+@keyframes scroll-bob {
+    0%, 100% { transform: translate(-50%, 0); }
+    50%      { transform: translate(-50%, 6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .scroll-cue { animation: none; }
+}
+
+/* -----------------------------------------------------------------
+   About content: image + text centered vertically AND horizontally.
+----------------------------------------------------------------- */
+.about-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: clamp(4rem, 8vw, 10rem);
+    min-height: 0;
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.about-left {
+    flex: 0 0 auto;
+    width: clamp(400px, 38vw, 620px);
+    position: relative;
+    transform: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.about-image-tilt-wrap {
+    position: relative;
+    width: 100%;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.about-image {
+    width: 100%;
+    position: relative;
+}
+
+.about-lead-text {
+    width: 100%;
+    max-width: 60rem;
+    margin: clamp(5rem, 8vw, 9rem) auto 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.about-lead-text h2 {
+    font-family: var(--hero-font);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+    line-height: var(--hero-line);
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+}
+.about-lead-text p {
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+    line-height: 1.55;
+    color: #1c2334;
+    max-width: 48rem;
+    margin: 0 auto;
+}
+
+/* Sticker placeholders surrounding portrait */
+.sticker-deco {
+    position: absolute;
+    z-index: 3;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    cursor: pointer;
+}
+.sticker-deco img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.sticker-1 {
+    animation: sticker-wiggle-1 1.4s infinite step-end;
+    animation-delay: -0.2s;
+}
+.sticker-2 {
+    animation: sticker-wiggle-2 1.6s infinite step-end;
+    animation-delay: -0.5s;
+}
+.sticker-3 {
+    animation: sticker-wiggle-3 1.3s infinite step-end;
+    animation-delay: -0.8s;
+}
+
+@keyframes sticker-wiggle-1 {
+    0%, 100% { transform: rotate(-12deg); }
+    50% { transform: rotate(-7deg); }
+}
+@keyframes sticker-wiggle-2 {
+    0%, 100% { transform: rotate(8deg); }
+    50% { transform: rotate(13deg); }
+}
+@keyframes sticker-wiggle-3 {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(-10deg); }
+}
+.about-image-frame {
+    display: block;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    position: relative;
+}
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+/* Sticker doodles overhanging the edges of the Aimy + Pixel photo.
+   Higher specificity than `.about-image img` so they keep their
+   natural aspect ratio instead of stretching to the frame. */
+.about-image img.photo-deco {
+    position: absolute; z-index: 2; height: auto; pointer-events: none; object-fit: contain;
+    animation: hero-float 8s ease-in-out infinite;
+    will-change: translate, rotate;
+}
+@media (prefers-reduced-motion: reduce) {
+    .about-image img.photo-deco { animation: none; }
+}
+/* Caption styled as a little torn strip of tape, tilted, sitting just
+   below the photo. */
+.about-image { text-align: center; }
+.about-caption {
+    display: inline-block;
+    margin-top: clamp(0.9rem, 1.7vw, 1.25rem);
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: clamp(0.72rem, 0.95vw, 0.85rem);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    padding: 0.45rem 0.95rem;
+    transform: rotate(-2.5deg);
+    clip-path: polygon(
+            0% 0%, 100% 0%,
+            97% 25%, 100% 50%, 97% 75%, 100% 100%,
+            0% 100%,
+            3% 75%, 0% 50%, 3% 25%
+    );
+}
+
+.about-text {
+    flex: 1 1 50rem;
+    max-width: 54rem;
+    transform: translateY(3vw);
+}
+
+.about-text h1 {
+    font-family: var(--hero-font);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: var(--hero-line);
+    letter-spacing: -0.025em;
+    margin-bottom: 1.5rem;
+}
+
+/* Per-letter pop-in for any heading split by JS. JS wraps text
+   in <span class="word"><span class="letter">...</span></span>
+   structures and sets --letter-i on each letter. The parent
+   heading gets `.letters-ready` (added on load for above-the-fold
+   headings or via IntersectionObserver for scroll-triggered ones)
+   to start the cascade. .word stays inline-block with no
+   wrapping so letters within a word never break mid-word; between
+   words the browser still wraps normally on text-node spaces. */
+.word {
+    display: inline-block;
+}
+.letter {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.5em) rotate(-7deg) scale(0.7);
+    transform-origin: 50% 75%;
+    transition:
+            opacity 0.7s cubic-bezier(0.34, 1.56, 0.64, 1),
+            transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition-delay: calc(var(--letter-i, 0) * 22ms);
+}
+.letters-ready .letter {
+    opacity: 1;
+    transform: translateY(0) rotate(0) scale(1);
+}
+@media (prefers-reduced-motion: reduce) {
+    .letter {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* Large headings carry a subtle currentColor stroke for a touch
+   of extra weight. */
+.about-text h1,
+.about-bridge-heading,
+.career-label-word,
+.collaborations-heading,
+.specialty-heading,
+.work-heading,
+.footer-links a {
+    -webkit-text-stroke: 0.5px currentColor;
+}
+
+
+.about-text p {
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: var(--about-body-size);
+    line-height: 1.45;
+    color: #1c2334;
+    margin-top: clamp(1.25rem, 2.2vw, 1.75rem);
+}
+.about-text .lead-link {
+    display: inline-flex; align-items: center; gap: 0.55em;
+    margin-top: clamp(1.25rem, 2.2vw, 1.6rem);
+    font-weight: 700; font-size: clamp(1.25rem, 1.8vw, 1.6rem); color: var(--ink);
+    background: transparent; border: 1px solid var(--ink); border-radius: 999px;
+    padding: 0.85em 1.7em;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.about-text .lead-link svg { width: 1.3em; height: auto; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+/* Lifts with the cards' hard offset black box; background stays transparent. */
+.about-text .lead-link:hover { transform: translate(-4px, -4px); box-shadow: 7px 7px 0 0 var(--ink); }
+.about-text .lead-link:hover svg { transform: translateX(4px); }
+
+/* Reveal animations for about content */
+.about-image,
+.about-text h1,
+.about-text p {
+    opacity: 0;
+    transform: translateY(0.6em);
+    transition:
+            opacity 0.7s ease,
+            transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.about-image {
+    transform: translateY(0) scale(0.97);
+}
+.about-text .lead-link {
+    opacity: 0;
+    transform: translateY(0.6em);
+}
+
+body.about-revealed .about-image {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition-delay: 100ms;
+}
+body.about-revealed .about-text h1 {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 300ms;
+}
+body.about-revealed .about-text p:nth-of-type(1) {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 500ms;
+}
+body.about-revealed .about-text p:nth-of-type(2) {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 650ms;
+}
+body.about-revealed .about-text .lead-link {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition-delay: 800ms;
+}
+body.about-revealed .about-text .lead-link:hover {
+    transition-delay: 0s;
+    transition-duration: 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .about-image,
+    .about-text h1,
+    .about-text p,
+    .about-text .lead-link {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
+
+/* -----------------------------------------------------------------
+   Experience section — full-width bg, content centered.
+----------------------------------------------------------------- */
+.experience {
+    position: relative;
+    background: transparent;
+    color: var(--ink);
+    margin-top: clamp(1.5rem, 4vw, 3rem);
+    padding: clamp(2rem, 4vw, 3.5rem) var(--page-pad-x) clamp(1.5rem, 3vw, 2.5rem);
+    overflow: hidden; /* keep the drifting background shapes from spilling */
+}
+.experience-inner {
+    max-width: 1320px;
+    width: 100%;
+    margin: 0 auto;
+}
+.career-heading {
+    margin: 0 0 clamp(0.25rem, 0.8vw, 0.5rem);
+}
+/* Shorter viewports (laptops, MacBooks) — the about hero is
+   min-height: 100vh and fills the whole screen, so the experience
+   section ends up sitting right under it. margin-top pushes the
+   WHOLE section (label included) down past the hero so the label
+   doesn't crowd the bottom of the viewport. Keyed on height (not
+   width) since the issue is hero-fills-viewport, which can happen
+   on a 14" or 16" MacBook at any browser width. min-width: 881px
+   excludes the mobile single-column layout. */
+
+/* "Career Overview" heading sits in normal flow at the top-left. */
+.career-label-word {
+    font-family: var(--hero-font);
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+}
+/* Collage stage — staggered cards float on top of two slowly
+   drifting shapes (yellow blob + orange nested squares) behind. */
+.career-stage { position: relative; }
+.career-bg {
+    position: absolute;
+    z-index: 0;
+    height: auto;
+    pointer-events: none;
+    will-change: transform;
+}
+.career-bg--blob {
+    top: -6%;
+    right: 5%;
+    width: clamp(280px, 42%, 520px);
+    animation: career-blob 15s ease-in-out infinite alternate;
+}
+.career-bg--squares {
+    bottom: -8%;
+    left: 3%;
+    width: clamp(150px, 17%, 220px);
+    animation: career-squares 19s ease-in-out infinite;
+}
+@keyframes career-blob {
+    from { transform: translate(0, 0) scale(1) rotate(0deg); }
+    to   { transform: translate(-2.5%, 2.5%) scale(1.05) rotate(3deg); }
+}
+@keyframes career-squares {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-4%) rotate(-4deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .career-bg { animation: none; }
+}
+
+.career-cards {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(430px, 1fr)); /* Wide columns for horizontal alignment */
+    gap: clamp(1.2rem, 2.5vw, 2rem);
+    row-gap: clamp(2rem, 4vw, 3rem);
+    width: 100%;
+    padding: clamp(0.85rem, 2vw, 1.25rem) 0 clamp(1.75rem, 3.5vw, 2.75rem);
+}
+.career-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    border: none;
+    padding: 0;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* Soft, slow float — uses the `translate` property so it composes with
+       the reveal/hover `transform`. Staggered per card below. */
+    animation: career-float 8s ease-in-out infinite;
+    will-change: translate;
+}
+.career-card-shape {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--ink); /* Border color backing */
+    box-shadow: 6px 6px 0 0 var(--ink);
+    border-radius: 28px; /* Even more rounded corners for an extra organic sticker feel */
+    padding: 2.2px; /* Border thickness */
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-sizing: border-box;
+    /* Removed overflow: hidden so images can protrude over the card borders */
+}
+.career-card-inner {
+    flex: 1;
+    background: var(--color-cream);
+    padding: clamp(1.2rem, 1.8vw, 1.6rem);
+    border-radius: 25px; /* Inner rounding matching outer border-radius */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row; /* Display side-by-side on desktop */
+    align-items: center; /* Vertically center content */
+    gap: clamp(1.2rem, 2vw, 1.8rem);
+    height: 100%;
+    transition: flex-direction 0.3s ease;
+}
+
+/* Pure customizable PNG image element styles */
+.personal-card-image-wrap {
+    flex: 0 0 clamp(170px, 16vw, 215px); /* Even bigger square container for image emphasis */
+    height: clamp(170px, 16vw, 215px);
+    margin-left: clamp(-45px, -4vw, -25px); /* Further pop out and overlap the left border */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0; /* Reset bottom margin */
+    z-index: 2; /* Ensure image sits on top of card borders */
+    overflow: visible;
+}
+.personal-card-png {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.personal-card-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.career-card:hover .personal-card-png {
+    transform: scale(1.1) rotate(-1.5deg);
+}
+@keyframes career-float {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -10px; }
+}
+@media (prefers-reduced-motion: reduce) { .career-card { animation: none; } }
+/* Vertical stagger float timing + random static sticker placement (tilts and translations) */
+.career-card:nth-child(1) { transform: rotate(-2deg) translateY(6px) translateX(-4px); animation-duration: 7s; animation-delay: 0s; }
+.career-card:nth-child(2) { transform: rotate(1.8deg) translateY(-8px) translateX(5px); animation-duration: 8.5s; animation-delay: -2.2s; }
+.career-card:nth-child(3) { transform: rotate(-1.5deg) translateY(12px) translateX(-6px); animation-duration: 9.5s; animation-delay: -4.4s; }
+.career-card:nth-child(4) { transform: rotate(2.5deg) translateY(-4px) translateX(6px); animation-duration: 8s; animation-delay: -1.1s; }
+.career-card:nth-child(5) { transform: rotate(-1.2deg) translateY(7px) translateX(-5px); animation-duration: 9s; animation-delay: -3.3s; }
+.career-card:nth-child(6) { transform: rotate(2deg) translateY(-9px) translateX(4px); animation-duration: 7.5s; animation-delay: -5.5s; }
+
+.career-card:hover {
+    transform: scale(1.05) rotate(0deg) translateY(-12px) translateX(0) !important;
+    z-index: 10;
+}
+.career-card:hover .career-card-shape {
+    transform: translate(-5px, -5px);
+    box-shadow: 11px 11px 0 0 var(--ink); /* Deepened shadow on hover */
+}
+
+/* Fall back to vertical stacking on narrow phone displays */
+@media (max-width: 580px) {
+    .career-card-inner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: clamp(1.4rem, 2.5vw, 1.8rem) clamp(1.2rem, 2vw, 1.5rem);
+    }
+    .personal-card-image-wrap {
+        flex: 0 0 185px;
+        width: 185px;
+        height: 185px;
+        margin-left: 0; /* Reset left overlap on mobile */
+        margin-top: -45px; /* Further pop out and overlap the top border on mobile */
+        margin-bottom: 1rem;
+    }
+    .career-pill {
+        align-self: center !important;
+    }
+}
+
+.career-pill {
+    align-self: flex-start;
+    margin-top: auto; /* Push pills to exact bottom of cards to align them across rows */
+    display: inline-block;
+    padding: 0.42rem 0.8rem;
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: clamp(0.62rem, 0.8vw, 0.72rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+}
+/* A torn strip of tape across the top-left of each card, carrying the
+   years. Jagged short ends read like it was ripped off a roll; a small
+   per-card tilt keeps it looking hand-applied. */
+.career-tape {
+    position: absolute;
+    top: -13px;
+    left: clamp(0.9rem, 2vw, 1.5rem);
+    z-index: 5;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: clamp(0.7rem, 0.85vw, 0.82rem);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    padding: 0.42rem 0.85rem;
+    white-space: nowrap;
+    clip-path: polygon(
+            0% 0%, 100% 0%,
+            97% 25%, 100% 50%, 97% 75%, 100% 100%,
+            0% 100%,
+            3% 75%, 0% 50%, 3% 25%
+    );
+}
+.career-card:nth-child(1) .career-tape { transform: rotate(-3deg); }
+.career-card:nth-child(2) .career-tape { transform: rotate(2.5deg); }
+.career-card:nth-child(3) .career-tape { transform: rotate(-2deg); }
+.career-card:nth-child(4) .career-tape { transform: rotate(1.8deg); }
+.career-card:nth-child(5) .career-tape { transform: rotate(-2.5deg); }
+.career-card:nth-child(6) .career-tape { transform: rotate(3deg); }
+.career-card-meta {
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: clamp(0.82rem, 0.95vw, 0.98rem);
+    color: var(--ink-2);
+    margin: 0 0 0.5rem;
+}
+.career-card-role {
+    font-family: 'Yoster Island', var(--font); /* Playful pixel font matching bento headers */
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1.6vw, 1.55rem); /* Larger title sizes */
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    margin: 0 0 clamp(0.7rem, 1.2vw, 1rem);
+    color: var(--ink);
+}
+.career-card p {
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: clamp(0.88rem, 0.98vw, 1.02rem);
+    line-height: 1.45;
+    color: var(--ink-2);
+    margin: 0 0 clamp(0.6rem, 1vw, 0.95rem);
+}
+.career-card p:last-child { margin-bottom: 0; }
+
+/* -----------------------------------------------------------------
+   Cozy banner — line-art video that plays on loop between the
+   career overview and the specializing-in sections. No frame,
+   border, shadow or background — sits clean on the page paper.
+   Section padding uses --section-py so it matches the rhythm of
+   every other section; inner container caps at 1180px to align
+   with the rest of the page's content columns.
+----------------------------------------------------------------- */
+.komorebi-promo-banner {
+    padding: clamp(2rem, 4vw, 4rem) var(--page-pad-x);
+    max-width: 1320px;
+    margin: 0 auto var(--section-py) auto;
+}
+
+.komorebi-promo-inner {
+    position: relative;
+    width: 100%;
+    min-height: 420px;
+    border-radius: 32px;
+    overflow: hidden;
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.5s cubic-bezier(0.3, 2.2, 0.4, 0.95);
+}
+
+/* Full-bleed cover image */
+.komorebi-promo-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.komorebi-promo-inner:hover .komorebi-promo-img {
+    transform: scale(1.04);
+}
+
+/* Gradient overlay so text is always legible */
+.komorebi-promo-inner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(13, 6, 25, 0.88) 0%,
+        rgba(13, 6, 25, 0.45) 50%,
+        rgba(13, 6, 25, 0.0) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+    border-radius: inherit;
+}
+
+/* Rainbow border on hover — sits above everything */
+.komorebi-promo-inner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 10px solid transparent;
+    border-radius: 32px;
+    pointer-events: none;
+    z-index: 10;
+    box-sizing: border-box;
+}
+
+.komorebi-promo-inner:hover::before {
+    animation: rainbow-border-shift 3s linear infinite;
+}
+
+.komorebi-promo-inner:hover {
+    transform: scale(1.01);
+}
+
+/* Text content — pinned to bottom-left over the gradient */
+.komorebi-promo-content {
+    position: relative;
+    z-index: 2;
+    padding: clamp(2rem, 5vw, 3.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    min-height: 420px;
+    color: #ffffff;
+}
+
+.promo-tag {
+    display: inline-block;
+    font-family: var(--font-secondary), sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 0.35rem 0.95rem;
+    border-radius: 50px;
+    margin-bottom: 1.2rem;
+}
+
+.promo-title {
+    font-family: var(--font-display, "Plus Jakarta Sans"), sans-serif;
+    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+}
+
+.promo-desc {
+    font-family: var(--font-secondary), sans-serif;
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    line-height: 1.5;
+    margin-bottom: 1.8rem;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 560px;
+}
+
+@media (max-width: 880px) {
+    .komorebi-promo-inner {
+        min-height: 340px;
+    }
+    .komorebi-promo-content {
+        min-height: 340px;
+        padding: 1.8rem 1.5rem;
+    }
+}
+
+.promo-button {
+    display: inline-block;
+    font-family: var(--font-display), sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: #ffeab0;
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    padding: 0.85rem 1.6rem;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+}
+
+.promo-button:hover {
+    background: #ffffff;
+    transform: translateY(-2px) translate3d(-1px, -1px, 0);
+    box-shadow: 6px 6px 0 var(--ink);
+}
+
+.promo-button:active {
+    transform: translateY(0) translate3d(0, 0, 0);
+    box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* -----------------------------------------------------------------
+   Specialty section — "Specializing in" + list of focus areas.
+   White bg, big red squiggle decoration in the bottom-left.
+----------------------------------------------------------------- */
+.specialty {
+    position: relative;
+    background: transparent;
+    color: #1c2334;
+    min-height: 0;
+    padding: var(--section-py) var(--page-pad-x);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+}
+
+.specialty-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1320px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.specialty-heading {
+    font-family: var(--hero-font);
+    font-weight: 700;
+    /* Matches .career-label-word and .collaborations-heading sizing so the
+       three section titles read as one type system. */
+    font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+}
+
+.specialty-list {
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: clamp(2rem, 4.5vw, 4.25rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    /* Credit-roll viewport: clip a fixed height and fade top/bottom
+       so items appear/disappear gracefully instead of being clipped
+       on a hard edge. */
+    height: clamp(20rem, 38vw, 30rem);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
+}
+.specialty-list-track {
+    display: flex;
+    flex-direction: column;
+    /* Translate by -50% (= one full group) so the loop seam lands
+       exactly where the second group starts the first one again. */
+    animation: specialty-credits 45s linear infinite;
+}
+.specialty-list-group {
+    flex-shrink: 0;
+}
+.specialty-list-group p {
+    margin: 0;
+}
+@keyframes specialty-credits {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .specialty-list-track { animation: none; }
+}
+
+@media (max-width: 880px) {
+    .specialty-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* -----------------------------------------------------------------
+   Collaborations section — big heading, 2 custom cards
+   that overhang the boundary into the Tools section below.
+----------------------------------------------------------------- */
+.collaborations {
+    background: transparent;
+    padding: var(--section-py) var(--page-pad-x) calc(var(--section-py) * 0.6);
+    position: relative;
+}
+.collaborations-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+}
+.collaborations-heading,
+.tools-heading {
+    font-family: var(--hero-font);
+    font-weight: 700;
+    font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin: 0 0 clamp(2rem, 4vw, 4rem);
+}
+.collaborations-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 1100px;
+    margin: 0 auto;
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+    position: relative;
+    z-index: 2;
+    margin-bottom: calc(-1 * var(--collaborations-overhang));
+}
+.collab-card {
+    position: relative;
+    border-radius: 0;
+    border: none;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform 0.5s cubic-bezier(0.3, 2.2, 0.4, 0.95);
+    z-index: 1;
+}
+.collab-card:hover {
+    transform: scale(1.05);
+    z-index: 5;
+}
+.collab-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 0 solid transparent;
+    pointer-events: none;
+    z-index: 10;
+    box-sizing: border-box;
+    border-radius: 0;
+}
+.collab-card:hover::before {
+    border-width: 26px;
+    border-style: solid;
+    animation: rainbow-border-shift 3s linear infinite;
+}
+.collab-card-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    display: block;
+}
+.collab-card-media img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.collab-card:hover .collab-card-media img {
+    transform: scale(1.05);
+}
+.collab-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(18, 7, 26, 0.95) 0%, rgba(18, 7, 26, 0.45) 55%, rgba(18, 7, 26, 0.1) 100%);
+    z-index: 2;
+    transition: opacity 0.35s ease;
+}
+.collab-card:hover .collab-card-overlay {
+    background: linear-gradient(to top, rgba(18, 7, 26, 0.98) 0%, rgba(18, 7, 26, 0.6) 55%, rgba(18, 7, 26, 0.2) 100%);
+}
+.collab-card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: clamp(1.5rem, 2.2vw, 2.5rem);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.6rem, 1vw, 1rem);
+    justify-content: flex-end;
+    pointer-events: none;
+}
+.collab-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.collab-card-tag {
+    border-radius: 6px;
+    font-family: 'Alkhemikal', monospace;
+    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+    letter-spacing: 0.05em;
+    padding: 0.38rem 0.72rem;
+    color: #f5f1e6;
+    background: rgba(245, 241, 230, 0.08);
+    border: 1px solid rgba(245, 241, 230, 0.25);
+    text-transform: uppercase;
+}
+.collab-card:hover .collab-card-tag {
+    background: rgba(245, 241, 230, 0.15);
+    border-color: rgba(245, 241, 230, 0.4);
+}
+.collab-card-title {
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1.6vw, 1.75rem);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: #f5f1e6;
+}
+.collab-card-desc {
+    font-family: var(--font);
+    font-size: clamp(0.85rem, 1vw, 1rem);
+    line-height: 1.45;
+    color: #e0dcd3;
+    opacity: 0.85;
+    transform: translateY(8px);
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.35s ease;
+}
+.collab-card:hover .collab-card-desc {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* -----------------------------------------------------------------
+   Tools section — purple background, big heading, row of logos.
+   Top padding leaves room for the talk cards overhanging from above.
+----------------------------------------------------------------- */
+.tools {
+    background: transparent;
+    /* Top padding = the collaborations-cards overhang + a tight buffer so
+       the logos sit close to the cards. Bottom matches the shared
+       60px section rhythm. */
+    padding:
+            calc(var(--collaborations-overhang) + clamp(0.75rem, 1.5vw, 1.5rem))
+            var(--page-pad-x)
+            var(--section-py);
+    position: relative;
+}
+.tools-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+}
+.tools-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+/* Each logo is rendered as a CSS mask over a solid var(--ink)
+   background — that way the paint is *exactly* the same color as
+   the section heading, regardless of the logo's native palette. */
+.tool-icon {
+    display: inline-block;
+    width: clamp(2rem, 3.4vw, 3.25rem);
+    height: clamp(2rem, 3.4vw, 3.25rem);
+    background-color: var(--ink);
+    -webkit-mask-image: var(--src);
+    mask-image: var(--src);
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+}
+
+@media (max-width: 880px) {
+    .collaborations-cards {
+        display: flex;
+        grid-template-columns: none;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        align-items: flex-start;
+        gap: clamp(1.5rem, 4vw, 2rem);
+        margin-bottom: 0;
+        padding-bottom: 12px;
+        scrollbar-width: none;
+    }
+    .collaborations-cards::-webkit-scrollbar { display: none; }
+    .collaborations-cards > * { flex: 0 0 80%; }
+    .tools {
+        padding-top: clamp(1.25rem, 3vw, 2.5rem);
+    }
+    .collaborations-heading,
+    .tools-heading {
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+}
+
+/* -----------------------------------------------------------------
+   Footer — sits in normal flow at the end of the document.
+----------------------------------------------------------------- */
+
+
+/* Brand row + Music player (shared shell) */
+.brands {
+    position: fixed;
+    bottom: clamp(1rem, 2vw, 1.75rem);
+    left: var(--page-pad-x);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: clamp(0.85rem, 1.6vw, 1.4rem);
+    color: var(--ink);
+    transition: opacity 0.4s ease;
+}
+.brands > * {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+            opacity 0.6s ease,
+            transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+body.is-scrolled .brands,
+body.is-scrolled .player {
+    opacity: 0;
+    pointer-events: none;
+}
+/* When music is playing the player overrides the scroll-fade and
+   stays visible regardless of scroll position. */
+body.is-scrolled .player.is-playing {
+    opacity: 1;
+    pointer-events: auto;
+}
+.brands.is-revealed > * {
+    opacity: 0.55;
+    transform: translateY(0);
+}
+.brands > *:hover { opacity: 1 !important; }
+.brands img {
+    height: 1.3rem;
+    width: auto;
+    display: block;
+}
+
+.player {
+    position: fixed;
+    bottom: clamp(1rem, 2vw, 1.75rem);
+    right: var(--page-pad-x);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.85rem 0.4rem 0.4rem;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 999px;
+    font: 500 0.78rem/1 var(--font);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+            opacity 0.6s ease,
+            transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.player.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+.player button {
+    background: var(--paper);
+    color: var(--ink);
+    border: 0;
+    width: 1.85rem;
+    height: 1.85rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.18s ease;
+}
+.player button:hover { transform: scale(1.08); }
+.player button svg { width: 0.95rem; height: 0.95rem; fill: currentColor; }
+.player-next {
+    background: transparent !important;
+    color: var(--paper) !important;
+    width: 1.4rem !important;
+    height: 1.4rem !important;
+}
+.player-next svg { width: 0.85rem !important; height: 0.85rem !important; }
+.player-toggle .icon-pause { display: none; }
+.player.is-playing .player-toggle .icon-play { display: none; }
+.player.is-playing .player-toggle .icon-pause { display: block; }
+.player-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 5rem;
+    max-width: 10rem;
+}
+.player-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
+.player-track {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.eq {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 1.5px;
+    height: 0.55rem;
+}
+.eq i {
+    display: block;
+    width: 1.5px;
+    height: 100%;
+    background: currentColor;
+    border-radius: 1px;
+    transform-origin: bottom center;
+    transform: scaleY(0.35);
+}
+.player.is-playing .eq i {
+    animation: eq-bar 0.9s ease-in-out infinite;
+}
+.player.is-playing .eq i:nth-child(2) { animation-delay: 0.15s; }
+.player.is-playing .eq i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes eq-bar {
+    0%, 100% { transform: scaleY(0.35); }
+    50%      { transform: scaleY(1); }
+}
+
+/* Page transition: the main content (about + experience) and the
+   footer slide together. The header, brand row, and music player
+   stay anchored. */
+body.is-sliding-out main,
+body.is-sliding-out .footer-reveal {
+    transform: translateX(-100vw);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body.is-entering main,
+body.is-entering .footer-reveal {
+    transform: translateX(100vw);
+    transition: none;
+}
+body.is-entering.is-entered main,
+body.is-entering.is-entered .footer-reveal {
+    transform: translateX(0);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 880px) {
+    /* Header and nav queries extracted to ui.css */
+    .about-content {
+        flex-direction: column;
+        gap: clamp(2rem, 5vw, 3rem);
+        transform: none;
+    }
+    .about-left { width: 75%; max-width: 380px; }
+    .about-text { max-width: 100%; flex-basis: auto; }
+    .about-left,
+    .about-text {
+        transform: none;
+    }
+}
+
+/* ===================================================================
+   Mobile: hamburger menu + full-screen nav overlay. The toggle is
+   fixed top-right; tapping it adds .menu-open to <body>, which
+   slides the nav overlay in. Hidden on desktop. The music player
+   is hidden on mobile.
+=================================================================== */
+/* Nav toggle and social icons extracted to ui.css */
+@media (max-width: 880px) {
+    .player { display: none !important; }
+}
+
+/* ===================================================================
+   Mobile: uniform section rhythm. The about hero stops being a
+   full-viewport block (which left a big empty gap before the
+   career section) and instead hugs its content, and every section
+   gets the same top/bottom padding so the gaps between them match.
+   Stacked cards also get a bit more room to breathe.
+=================================================================== */
+@media (max-width: 880px) {
+    .page {
+        min-height: auto;
+        padding-bottom: 44px;
+    }
+    .experience,
+    .cozy-banner,
+    .specialty,
+    .collaborations,
+    .tools {
+        margin-top: 0;
+        padding-top: 44px;
+        padding-bottom: 44px;
+    }
+    .collaborations-cards { gap: 14px; }
+
+    /* Career cards (mobile): stack full-width and drop the stagger. */
+    .career-cards {
+        grid-template-columns: 1fr;
+        gap: clamp(1.1rem, 4vw, 1.6rem);
+        padding-top: clamp(1rem, 4vw, 1.5rem);
+    }
+    .career-card {
+        width: 100%;
+        margin: 0 !important;
+        transform: none !important; /* Disable sticker tilt/offset on mobile */
+    }
+    .career-bg--blob { width: 64%; top: -2%; right: -8%; }
+    .career-bg--squares { width: 110px; bottom: -2%; left: -5%; }
+
+    /* Disable scroll parallax on mobile. Stacked vertically, the
+       image (speed 0.08) and text (0.04) drift toward each other and
+       overlap. Parallax is a subtle desktop flourish anyway. */
+    [data-parallax],
+    [data-parallax-up] {
+        translate: none;
+    }
+
+    /* Hero hugs its content on mobile (not a full viewport), so a
+       bottom-pinned scroll cue would float awkwardly — hide it. */
+    .scroll-cue {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+   AUTOMATIC SYSTEM-BASED DARK MODE OVERRIDES
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+    /* Base and Layout Adjustments */
+    .stage::before {
+        background: linear-gradient(to right, var(--paper) 20%, rgba(18, 7, 26, 0) 47%);
+    }
+
+    /* Invert line-art video clips so they display as light lines on dark background */
+    .talk-card-media :is(img, video),
+    .stage video {
+        filter: invert(1);
+        mix-blend-mode: screen;
+    }
+
+    /* Change the overlay blend mode from lighten (light mode) to multiply (dark mode) */
+    .talk-card-media::after {
+        background: var(--ink);
+        mix-blend-mode: multiply;
+    }
+
+    /* Disable overlays on full-color media and stage artwork to keep colors clean */
+    .work-card-media::after,
+    .stage-inner::after {
+        display: none;
+    }
+
+    /* Force stage poster (base.jpg) to render without dark mode mix-blend-mode overlay inversion */
+    .stage .poster {
+        mix-blend-mode: normal !important;
+        filter: none !important;
+    }
+
+    /* Dark mode overrides for Komorebi promo banner */
+    .promo-button {
+        color: var(--paper) !important;
+        background: var(--accent) !important;
+        border-color: var(--paper) !important;
+        box-shadow: 4px 4px 0 var(--paper) !important;
+    }
+    .promo-button:hover {
+        background: #ffffff !important;
+        color: var(--ink) !important;
+        box-shadow: 6px 6px 0 var(--paper) !important;
+    }
+
+    /* Bento Cards Glassmorphism styling overrides */
+    .card-info {
+        background: rgba(26, 15, 38, 0.75) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+    .bento-card:hover .card-info {
+        background: rgba(26, 15, 38, 0.88) !important;
+    }
+    .card-badge {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: var(--ink) !important;
+    }
+
+    /* Lightbox Modal Dark Mode adaptations */
+    .lightbox-content {
+        background: rgba(26, 15, 38, 0.88) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* Subtitle text colors for readability */
+    .gallery-subtitle,
+    .lowpoly-subtitle,
+    .insights-intro,
+    .videos-subtitle {
+        color: rgba(245, 241, 230, 0.7) !important;
+    }
+
+    /* Hytale category filter buttons */
+    .filter-btn {
+        color: var(--ink) !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+    }
+    .filter-btn:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        color: var(--ui-active) !important;
+    }
+    .filter-btn.active {
+        background: #8ae3d6 !important;
+        color: #1a0f26 !important;
+    }
+
+    /* Adapt contact form elements for dark mode */
+    .modern-contact-intro {
+        color: rgba(245, 241, 230, 0.85);
+    }
+    .modern-field label {
+        color: var(--accent);
+    }
+    .modern-field input,
+    .modern-field textarea {
+        color: var(--ink);
+        border-bottom-color: var(--color-purple-light);
+    }
+    .modern-field input::placeholder,
+    .modern-field textarea::placeholder {
+        color: rgba(245, 241, 230, 0.4);
+    }
+    .modern-field input:focus,
+    .modern-field textarea:focus {
+        border-bottom-color: var(--ui-active);
+    }
+
+
+    .about-text p,
+    .about-lead-text p {
+        color: var(--ink);
+    }
+
+    /* UI styling overrides */
+    .cta {
+        border-color: var(--ink);
+    }
+    .brand img, .brand svg {
+        filter: drop-shadow(0px 0px 8px rgba(255, 255, 255, 0.15));
+    }
+}

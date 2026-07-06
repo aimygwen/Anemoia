@@ -1,51 +1,22 @@
 /* ----------------------------------------------------
-   LEGAL IMPRINT & POLICIES STYLE SYSTEM
-   Clean, editorial, responsive layout.
+   LEGAL — page colors + layout
    ---------------------------------------------------- */
-
 :root {
-    --ui-bg: var(--paper);
-    --ui-ink: var(--ink);
-    --ui-active: var(--accent);
-    --ui-border: var(--ui-border-color, rgba(24, 24, 27, 0.06));
-
-    /* Custom palette overrides for Legal (Colorless / Neutral Zinc-Grayscale) */
-    --paper: #fafafa;             /* Crisp off-white background */
-    --ink: #18181b;               /* Deep charcoal zinc text */
-    --accent: #71717a;            /* Mid-tone gray highlight */
-    --ui-active: #18181b;         /* Dark active highlight */
-    --color-cream: #ffffff;       /* Pure white backdrops */
-    --color-yellow: #e4e4e7;      /* Light gray secondary */
-    --color-purple-light: #d4d4d8; /* Silver gray secondary */
-    --ui-border-color: rgba(24, 24, 27, 0.08);
-
-    /* Background gradient variables (neutral gray tones) */
-    --color-blush: #f4f4f5;
-    --color-lavender: #e4e4e7;
-    --color-mauve: #d4d4d8;
+    --bg: #fff8fc;
+    --primary: #2d123d;
+    --accent: #0d9488;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --paper: #09090b;             /* Deep zinc black background */
-        --ink: #fafafa;               /* Clean off-white zinc text */
-        --accent: #a1a1aa;            /* Soft light gray highlight */
-        --ui-active: #fafafa;         /* White active highlight */
-        --color-cream: #18181b;       /* Dark card backdrops */
-        --color-yellow: #27272a;      /* Medium dark gray secondary */
-        --color-purple-light: #3f3f46; /* Slate gray secondary */
-        --ui-border-color: rgba(250, 250, 250, 0.08);
-
-        /* Background gradient variables (neutral dark tones) */
-        --color-blush: #09090b;
-        --color-lavender: #18181b;
-        --color-mauve: #27272a;
+        --bg: #12071a;
+        --primary: #c181ff;
+        --accent: #2dd4bf;
     }
 }
 
 .legal-page-body {
-    background-color: var(--ui-bg);
-    color: var(--ui-ink);
+    color: var(--ink);
     min-height: 100vh;
     font-family: var(--font, "Plus Jakarta Sans"), sans-serif;
 }
@@ -55,7 +26,7 @@
     transform: translateY(30px);
     transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
-    padding: clamp(6rem, 10vw, 8.5rem) var(--page-pad-x, 2rem) 6rem var(--page-pad-x, 2rem);
+    padding: clamp(6rem, 10vw, 8.5rem) var(--page-pad-x, 2rem) var(--footer-content-gap) var(--page-pad-x, 2rem);
     max-width: 1000px;
     margin: 0 auto;
 }

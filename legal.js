@@ -1,13 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Fade-in page content on load
-    const content = document.getElementById("legal-page-content");
-    if (content) {
-        setTimeout(() => {
-            content.classList.add("active");
-        }, 100);
-    }
-
-    // 2. Interactive Legal Sections Switcher
+    if (window.Site) Site.initPageFadeIn("legal-page-content", 100);
     window.toggleLegal = function (id) {
         const sections = document.querySelectorAll('.legal-section');
         const targetSection = document.getElementById(id);
@@ -34,18 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 100);
         }
 
-        // Update header link highlights based on open section
-        const activeSection = document.querySelector('.legal-section.active');
-        document.querySelectorAll("#primary-nav .filter-link").forEach(link => {
-            const filterVal = link.getAttribute("data-filter");
-            if (activeSection && activeSection.id === filterVal) {
-                link.classList.add("active");
-            } else if (!activeSection && filterVal === "imprint") {
-                link.classList.add("active");
-            } else {
-                link.classList.remove("active");
-            }
-        });
+        }
     };
 
     // 3. Back to Top Scrolling
@@ -55,19 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             behavior: 'smooth'
         });
 
-        // Close all sections
-        const sections = document.querySelectorAll('.legal-section');
-        sections.forEach(section => section.classList.remove('active'));
-
-        // Reset highlight to imprint
-        document.querySelectorAll("#primary-nav .filter-link").forEach(link => {
-            const filterVal = link.getAttribute("data-filter");
-            if (filterVal === "imprint") {
-                link.classList.add("active");
-            } else {
-                link.classList.remove("active");
-            }
-        });
+        document.querySelectorAll('.legal-section').forEach(section => section.classList.remove('active'));
     };
 
     // 4. Auto-open based on URL hash

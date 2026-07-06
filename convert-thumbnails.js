@@ -1,3 +1,5 @@
+// Optional dev helper for file:// canvas testing. Homepage loads JPGs directly —
+// run `scripts/optimize-homepage-images.sh` after updating thumbnail sources.
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -26,9 +28,9 @@ for (const [key, relativePath] of Object.entries(files)) {
     }
 }
 
-const jsContent = `// Auto-generated Base64 thumbnails to bypass local CORS limitations
+const jsContent = `// Optional Base64 thumbnails for local file:// dev only
 window.base64Thumbnails = ${JSON.stringify(output, null, 2)};
 `;
 
 fs.writeFileSync(path.resolve(__dirname, './assets/thumbnails/base64-thumbnails.js'), jsContent);
-console.log('Successfully wrote assets/thumbnails/base64-thumbnails.js');
+console.log('Wrote assets/thumbnails/base64-thumbnails.js (not loaded on homepage by default)');

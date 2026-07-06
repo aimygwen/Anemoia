@@ -2,87 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aimy Gwen — Product Design Leader</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Welcome to this Mess</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <script>document.documentElement.classList.add("page-loading");</script>
+    <link rel="stylesheet" href="loader.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Caveat:wght@600;700&display=swap"/>
     <link rel="stylesheet" href="ui.css" />
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="assets/thumbnails/base64-thumbnails.js" defer></script>
+    <link rel="stylesheet" href="reveal.css" />
+    <link rel="stylesheet" href="base.css" />
+    <link rel="stylesheet" href="home.css" />
+    <link rel="stylesheet" href="gallery.css" />
+    <link rel="stylesheet" href="lowpoly.css" />
+    <link rel="stylesheet" href="videos.css" />
+    <link rel="stylesheet" href="insights.css" />
+    <script src="site-utils.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     <script src="ui.js" defer></script>
+    <script src="reveal.js" defer></script>
     <script src="work-physics.js" defer></script>
+    <script src="home.js" defer></script>
+    <script src="vertical-gallery.js" defer></script>
+    <script src="gallery.js" defer></script>
+    <script src="videos.js" defer></script>
+    <script src="insights.js" defer></script>
+    <script src="lowpoly-catalog-data.js" defer></script>
+    <script src="lowpoly-catalog.js" defer></script>
+    <script src="lowpoly.js" defer></script>
+    <script src="loader.js" defer></script>
+    <script src="spa-router.js" defer></script>
     <script>
         if (sessionStorage.getItem('intro_seen')) {
             document.documentElement.classList.add('intro-bypassed');
+            document.addEventListener('DOMContentLoaded', function () {
+                document.body.classList.remove('intro-active');
+            });
         }
     </script>
 </head>
 
-<body class="intro-active">
-<!-- Mobile-only boot splash: pink logo pops in over the paper background
-     while the page settles, then fades out on load (capped so it can't hang). -->
-<div class="boot" role="presentation" aria-hidden="true">
-    <img class="boot-logo" src="./assets/branding.svg" alt="" width="104" height="70" />
-    <span class="boot-dots" aria-hidden="true">
-      <img src="image/elements/el-star.svg" alt="" />
-      <img src="image/elements/el-spark.svg" alt="" />
-      <img src="image/elements/el-flower.svg" alt="" />
-    </span>
-</div>
-<script>
-    (function () {
-        var boot = document.querySelector(".boot");
-        if (!boot) return;
-        var done = false, start = Date.now(), MIN = 800, CAP = 15000;
-        function remove() { if (boot && boot.parentNode) boot.parentNode.removeChild(boot); }
-        function hide() {
-            if (done) return; done = true;
-            boot.classList.add("is-done");
-            setTimeout(remove, 550);
-        }
-        function requestHide() { setTimeout(hide, Math.max(0, MIN - (Date.now() - start))); }
-
-        // Hold the splash while we warm every real video in the background, so
-        // the page is already smooth (decoded, buffered) the instant the splash
-        // lifts. Each video resolves on "canplaythrough"; errors count as done so
-        // one bad clip can't hang it; a per-video timeout prevents a non-firing
-        // event from stalling the whole thing. The hero stage clips have no src
-        // yet (their script assigns it), so we skip those.
-        var vids = [].slice.call(document.querySelectorAll("video")).filter(function (v) {
-            return v.currentSrc || v.getAttribute("src");
-        });
-        var total = vids.length, ready = 0;
-        function mark() { ready++; if (ready >= total) requestHide(); }
-        if (!total) {
-            if (document.readyState === "complete") requestHide();
-            else window.addEventListener("load", requestHide);
-        } else {
-            vids.forEach(function (v) {
-                if (v.readyState >= 4) { mark(); return; } // already buffered
-                var fired = false;
-                function ok() {
-                    if (fired) return; fired = true;
-                    v.removeEventListener("canplaythrough", ok);
-                    v.removeEventListener("error", ok);
-                    mark();
-                }
-                v.addEventListener("canplaythrough", ok);
-                v.addEventListener("error", ok);
-                setTimeout(ok, CAP - 500); // fallback if the event never fires
-                try { v.preload = "auto"; v.load(); } catch (e) { ok(); }
-            });
-        }
-
-        // Hard safety cap — a stalled/slow network can never trap the visitor
-        // behind the splash forever.
-        setTimeout(hide, CAP);
-    })();
-</script>
+<body class="home-page-body intro-active">
 
 <!-- Hidden SVG holding filters referenced by CSS `filter: url(#…)`. -->
 <svg width="0" height="0" aria-hidden="true" style="position:absolute">
@@ -92,16 +55,32 @@
     </filter>
 </svg>
 
-<!-- 1. INTRO REVEALER OVERLAY -->
-<div id="revealer-screen">
-    <div class="quote-container">
-        <span id="typing-target" class="quote-text">The art of creation thrives on the boundaries it fights to break.</span>
+<!-- 1. INTRO REVEAL -->
+<div id="reveal" class="reveal" hidden aria-hidden="true">
+    <div class="reveal__noise" aria-hidden="true"></div>
+
+    <div class="reveal__stage">
+        <blockquote class="reveal__quote-wrap">
+            <canvas
+                id="reveal-ink"
+                class="reveal__ink"
+                role="img"
+                aria-labelledby="reveal-quote-sr"
+            ></canvas>
+            <p id="reveal-quote-sr" class="reveal__sr-only"></p>
+        </blockquote>
     </div>
-    <button id="continue-trigger" class="continue-btn">Continue</button>
+
+    <div class="reveal__footer">
+        <button type="button" class="reveal-start" id="reveal-start" aria-hidden="true">
+            <span class="reveal-start__label">Start</span>
+        </button>
+    </div>
 </div>
 
 <!-- 2. ACTUAL SITE CONTENT WRAPPER -->
 <div id="main-content">
+<div id="spa-view">
 <header class="site-header">
     <div class="header-left">
         <a href="index.html" class="brand" aria-label="Aimy Gwen — home">
@@ -168,7 +147,7 @@
             </div>
             <div class="stage-inner">
                 <!-- Static resting frame. Same as the start/end frame of every video. -->
-                <img class="poster" src="./assets/base.png" alt="" />
+                <img class="poster" src="./assets/base.jpg" alt="" fetchpriority="high" decoding="async" />
                 <!-- Two video elements: one plays while the other preloads the next. -->
                 <video class="vA" muted playsinline preload="none"></video>
                 <video class="vB" muted playsinline preload="none"></video>
@@ -188,107 +167,91 @@
         </div>
     </section>
 
-    <!-- Torn bottom edge of the hero "sheet". -->
-    <div class="paper-tear" aria-hidden="true"></div>
-
     <section class="work" id="work">
         <h2 class="work-heading">Creations</h2>
         
         <!-- WebGL Canvas for 3D Physics Grid (Desktop-only) -->
         <canvas id="work-physics-canvas"></canvas>
-        <video id="physics-video-source" src="films/mov1.mp4" autoplay muted loop playsinline preload="auto" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; overflow: hidden;"></video>
-        
-        <!-- Preloaded images for WebGL textures to prevent local CORS taints -->
-        <div style="display: none;">
-            <img id="preload-img-lowpoly" src="./assets/thumbnails/lowpoly.jpg" alt="" />
-            <img id="preload-img-artwork" src="./assets/thumbnails/artwork.jpg" alt="" />
-            <img id="preload-img-tapes" src="./assets/thumbnails/tapes.jpg" alt="" />
-            <img id="preload-img-insights" src="./assets/thumbnails/insights.jpg" alt="" />
-        </div>
-        
-        <!-- Mobile/Fallback grid -->
-        <div class="work-fallback">
-            <div class="work-banner reveal-on-scroll" style="--reveal-delay: 0ms;">
-                <div class="work-grid">
-                    <a class="work-card work-card--hytale" href="hytale.html">
-                        <div class="work-card-media">
-                            <img src="./assets/thumbnails/lowpoly.jpg" alt="Lowpoly" loading="lazy" data-parallax="0.12" />
+        <video id="physics-video-source" muted loop playsinline preload="none" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; overflow: hidden;"></video>
+
+        <h2 class="work-heading reveal-on-scroll">Featured Content</h2>
+
+        <section class="komorebi-promo-banner reveal-on-scroll">
+            <a href="lowpoly.html" class="komorebi-promo-inner" aria-label="Explore Komorebi Extension Pack">
+                <img src="./assets/komorebi.jpg" alt="Komorebi Extension Pack Artwork" class="komorebi-promo-img" loading="lazy" decoding="async" />
+                <div class="komorebi-promo-content">
+                    <span class="promo-tag">Featured Project</span>
+                    <h2 class="promo-title">Komorebi Extension Pack</h2>
+                    <p class="promo-desc">A series of game-ready lowpoly modpacks, custom items, and creatures crafted for the Hytale universe. Serene forest biomes, steampunk machinery, and adorable plush constructs.</p>
+                    <span class="promo-button">Explore Modpacks &amp; Models</span>
+                </div>
+            </a>
+        </section>
+
+        <section class="collaborations collaborations--in-work" id="collaborations">
+            <div class="collaborations-inner">
+                <h2 class="collaborations-heading reveal-on-scroll">Collaborations</h2>
+                <div class="collaborations-cards">
+                    <a class="collab-card reveal-on-scroll" href="https://www.twitch.tv/jorena" target="_blank" rel="noopener" data-parallax="0.04" style="--reveal-delay: 0ms">
+                        <div class="collab-card-media">
+                            <img src="./assets/thumbnails/collab_sasha.jpg" alt="Sasha aka. Jorena" loading="lazy" decoding="async" />
                         </div>
-                        <div class="work-card-overlay"></div>
-                        <div class="work-card-fg-content">
-                            <div class="card-tags">
-                                <span class="card-tag">Hytale Art</span>
+                        <div class="collab-card-overlay"></div>
+                        <div class="collab-card-content">
+                            <div class="collab-card-tags">
+                                <span class="collab-card-tag">VTuber</span>
+                                <span class="collab-card-tag">Cosplay</span>
+                                <span class="collab-card-tag">Branding</span>
                             </div>
-                            <h3 class="work-card-title">Lowpoly</h3>
-                            <p class="work-card-desc">An extensive asset library of game-ready low-poly voxel models, organic trees, creature rigs, and hand-painted items.</p>
+                            <h3 class="collab-card-title">Sasha aka. Jorena</h3>
+                            <p class="collab-card-desc">Crafting custom streaming overlays, branding design, and digital visual assets for VTuber and Cosplayer Sasha (Jorena), translating her character persona into a complete streaming identity.</p>
                         </div>
                     </a>
-                    <a class="work-card work-card--gallery" href="gallery.html">
-                        <div class="work-card-media">
-                            <img src="./assets/thumbnails/artwork.jpg" alt="Sketchbook illustrations" loading="lazy" data-parallax="0.12" />
+                    <a class="collab-card reveal-on-scroll" href="lowpoly.html" data-parallax="0.04" style="--reveal-delay: 120ms">
+                        <div class="collab-card-media">
+                            <img src="./assets/thumbnails/collab_hytown.jpg" alt="Hytown" loading="lazy" decoding="async" />
                         </div>
-                        <div class="work-card-overlay"></div>
-                        <div class="work-card-fg-content">
-                            <div class="card-tags">
-                                <span class="card-tag">Illustration</span>
-                                <span class="card-tag">2D Art</span>
+                        <div class="collab-card-overlay"></div>
+                        <div class="collab-card-content">
+                            <div class="collab-card-tags">
+                                <span class="collab-card-tag">Hytale</span>
+                                <span class="collab-card-tag">UI Design</span>
+                                <span class="collab-card-tag">3D Voxel</span>
                             </div>
-                            <h3 class="work-card-title">Sketchbook</h3>
-                            <p class="work-card-desc">A visual gallery showcasing stylized 2D sketches, mascot design, vector illustrations, and digital concept painting.</p>
-                        </div>
-                    </a>
-                    <a class="work-card work-card--videos" href="videos.html">
-                        <div class="work-card-media">
-                            <video src="films/mov1.mp4" autoplay muted loop playsinline preload="auto" aria-hidden="true" data-parallax="0.12"></video>
-                        </div>
-                        <div class="work-card-overlay"></div>
-                        <div class="work-card-fg-content">
-                            <div class="card-tags">
-                                <span class="card-tag">Animation</span>
-                                <span class="card-tag">Motion</span>
-                            </div>
-                            <h3 class="work-card-title">Tapes</h3>
-                            <p class="work-card-desc">A cinematic catalog of high-energy commercial loops, interactive prototype flows, and stylized motion graphic showreels.</p>
-                        </div>
-                    </a>
-                    <a class="work-card work-card--bts" href="bts.html">
-                        <div class="work-card-media">
-                            <img src="./assets/thumbnails/insights.jpg" alt="Insights wireframes" loading="lazy" data-parallax="0.12" />
-                        </div>
-                        <div class="work-card-overlay"></div>
-                        <div class="work-card-fg-content">
-                            <div class="card-tags">
-                                <span class="card-tag">BtS</span>
-                                <span class="card-tag">WIP Process</span>
-                            </div>
-                            <h3 class="work-card-title">insights</h3>
-                            <p class="work-card-desc">An editorial breakdown detailing blockout steps, optimization wireframes, and raw voxel mesh progressions.</p>
+                            <h3 class="collab-card-title">Hytown</h3>
+                            <p class="collab-card-desc">Designing 3D assets for Hytown, a community-driven server project built around the upcoming RPG Hytale. My work included modeling and texturing custom furniture, collectibles, cosmetics, and weapons to enrich the server&rsquo;s in-game world and economy.</p>
                         </div>
                     </a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="komorebi-promo-banner reveal-on-scroll">
-        <a href="hytale.html" class="komorebi-promo-inner" aria-label="Explore Komorebi Extension Pack">
-            <img src="./lowpoly/hytale/komorebi.png" alt="Komorebi Extension Pack Artwork" class="komorebi-promo-img" />
-            <div class="komorebi-promo-content">
-                <span class="promo-tag">Featured Project</span>
-                <h2 class="promo-title">Komorebi Extension Pack</h2>
-                <p class="promo-desc">A series of game-ready lowpoly modpacks, custom items, and creatures crafted for the Hytale universe. Serene forest biomes, steampunk machinery, and adorable plush constructs.</p>
-                <span class="promo-button">Explore Modpacks &amp; Models</span>
+        <section class="tools">
+            <div class="tools-inner">
+                <div class="tools-row" data-parallax="0.04">
+                    <span class="tool-icon reveal-on-scroll" role="img" aria-label="VS Code"             style="--src: url('logos/logo-visual-studio.svg');         --reveal-delay: 0ms"></span>
+                    <span class="tool-icon reveal-on-scroll" role="img" aria-label="Antigravity"          style="--src: url('logos/antigravity-icon__one-color.png'); --reveal-delay: 80ms"></span>
+                    <span class="tool-icon reveal-on-scroll" role="img" aria-label="Figma"                style="--src: url('logos/figma.svg');                      --reveal-delay: 160ms"></span>
+                    <span class="tool-icon reveal-on-scroll" role="img" aria-label="GitHub"               style="--src: url('logos/github.svg');                     --reveal-delay: 240ms"></span>
+                    <span class="tool-icon reveal-on-scroll" role="img" aria-label="Adobe Creative Cloud" style="--src: url('logos/adobe.svg');                      --reveal-delay: 320ms"></span>
+                    <span class="tool-icon reveal-on-scroll" role="img" aria-label="Claude"               style="--src: url('logos/claude.svg');                     --reveal-delay: 400ms"></span>
+                    <span class="tool-icon reveal-on-scroll" role="img" aria-label="Kling"                style="--src: url('logos/kling-color.svg');                --reveal-delay: 480ms"></span>
+                </div>
             </div>
-        </a>
+        </section>
     </section>
 
     <section class="page" id="about">
+        <div class="about-bridge reveal-on-scroll">
+            <h2 class="about-bridge-heading">The face behind the creations</h2>
+        </div>
+
         <div class="about-content">
             <div class="about-left" data-parallax="0.08">
                 <figure class="about-image">
                     <div class="about-image-tilt-wrap">
                         <span class="about-image-frame">
-                            <img src="./assets/polaroid.JPG" alt="That's me!" />
+                            <img src="./assets/polaroid.JPG" alt="That's me!" loading="lazy" decoding="async" />
                         </span>
                         <img class="photo-deco" src="image/elements/el-spark.svg" alt="" aria-hidden="true" style="top:-9%; left:28%; width:clamp(64px,8vw,106px); animation-duration:7s; animation-delay:-1s" />
                         <img class="photo-deco" src="image/elements/el-smiley.svg" alt="" aria-hidden="true" style="top:15%; left:-24%; width:clamp(78px,9.5vw,128px); transform:rotate(-4deg); animation-duration:9s; animation-delay:-4s" />
@@ -345,7 +308,7 @@
                         <div class="career-card-shape">
                             <div class="career-card-inner">
                                 <div class="personal-card-image-wrap">
-                                    <img src="./assets/favorite_album.png" alt="SMILE! :D" class="personal-card-png" />
+                                    <img src="./assets/favorite_album.jpg" alt="SMILE! :D" class="personal-card-png" loading="lazy" decoding="async" />
                                 </div>
                                 <div class="personal-card-text">
                                     <p class="career-card-meta">Album</p>
@@ -362,7 +325,7 @@
                         <div class="career-card-shape">
                             <div class="career-card-inner">
                                 <div class="personal-card-image-wrap">
-                                    <img src="./assets/favorite_show.png" alt="The Amazing Digital Circus" class="personal-card-png" />
+                                    <img src="./assets/favorite_show.jpg" alt="The Amazing Digital Circus" class="personal-card-png" loading="lazy" decoding="async" />
                                 </div>
                                 <div class="personal-card-text">
                                     <p class="career-card-meta">Show</p>
@@ -379,7 +342,7 @@
                         <div class="career-card-shape">
                             <div class="career-card-inner">
                                 <div class="personal-card-image-wrap">
-                                    <img src="./assets/favorite_aesthetic.png" alt="Retro & Lowpoly Art" class="personal-card-png" />
+                                    <img src="./assets/favorite_aesthetic.jpg" alt="Retro & Lowpoly Art" class="personal-card-png" loading="lazy" decoding="async" />
                                 </div>
                                 <div class="personal-card-text">
                                     <p class="career-card-meta">Aesthetic</p>
@@ -396,7 +359,7 @@
                         <div class="career-card-shape">
                             <div class="career-card-inner">
                                 <div class="personal-card-image-wrap">
-                                    <img src="./assets/favorite_artist.png" alt="Violet Schofield" class="personal-card-png" />
+                                    <img src="./assets/favorite_artist.jpg" alt="Violet Schofield" class="personal-card-png" loading="lazy" decoding="async" />
                                 </div>
                                 <div class="personal-card-text">
                                     <p class="career-card-meta">Artist</p>
@@ -413,7 +376,7 @@
                         <div class="career-card-shape">
                             <div class="career-card-inner">
                                 <div class="personal-card-image-wrap">
-                                    <img src="./assets/favorite_escapism.png" alt="Escapism" class="personal-card-png" />
+                                    <img src="./assets/favorite_escapism.jpg" alt="Escapism" class="personal-card-png" loading="lazy" decoding="async" />
                                 </div>
                                 <div class="personal-card-text">
                                     <p class="career-card-meta">Escapism</p>
@@ -430,7 +393,7 @@
                         <div class="career-card-shape">
                             <div class="career-card-inner">
                                 <div class="personal-card-image-wrap">
-                                    <img src="./assets/favorite_vibe.png" alt="Liminal Spaces" class="personal-card-png" />
+                                    <img src="./assets/favorite_vibe.jpg" alt="Liminal Spaces" class="personal-card-png" loading="lazy" decoding="async" />
                                 </div>
                                 <div class="personal-card-text">
                                     <p class="career-card-meta">Vibe</p>
@@ -484,57 +447,6 @@
         </div>
     </section>
 
-    <section class="collaborations" id="collaborations">
-        <div class="collaborations-inner">
-            <h2 class="collaborations-heading reveal-on-scroll">Collaborations</h2>
-            <div class="collaborations-cards">
-                <a class="collab-card reveal-on-scroll" href="https://www.twitch.tv/jorena" target="_blank" rel="noopener" data-parallax="0.04" style="--reveal-delay: 0ms">
-                    <div class="collab-card-media">
-                        <img src="./assets/thumbnails/collab_sasha.png" alt="Sasha aka. Jorena" loading="lazy" />
-                    </div>
-                    <div class="collab-card-overlay"></div>
-                    <div class="collab-card-content">
-                        <div class="collab-card-tags">
-                            <span class="collab-card-tag">VTuber</span>
-                            <span class="collab-card-tag">Cosplay</span>
-                            <span class="collab-card-tag">Branding</span>
-                        </div>
-                        <h3 class="collab-card-title">Sasha aka. Jorena</h3>
-                        <p class="collab-card-desc">Crafting custom streaming overlays, branding design, and digital visual assets for VTuber and Cosplayer Sasha (Jorena), translating her character persona into a complete streaming identity.</p>
-                    </div>
-                </a>
-                <a class="collab-card reveal-on-scroll" href="hytale.html" data-parallax="0.04" style="--reveal-delay: 120ms">
-                    <div class="collab-card-media">
-                        <img src="./assets/thumbnails/collab_hytown.png" alt="Hytown Hytale Server" loading="lazy" />
-                    </div>
-                    <div class="collab-card-overlay"></div>
-                    <div class="collab-card-content">
-                        <div class="collab-card-tags">
-                            <span class="collab-card-tag">Hytale</span>
-                            <span class="collab-card-tag">UI Design</span>
-                            <span class="collab-card-tag">3D Voxel</span>
-                        </div>
-                        <h3 class="collab-card-title">Hytown Server</h3>
-                        <p class="collab-card-desc">Designing user interfaces, branding templates, and blocky low-poly voxel environment assets for Hytown, a community-driven server project built around the upcoming RPG Hytale.</p>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="tools">
-        <div class="tools-inner">
-            <div class="tools-row" data-parallax="0.04">
-                <span class="tool-icon reveal-on-scroll" role="img" aria-label="VS Code"             style="--src: url('logos/logo-visual-studio.svg');         --reveal-delay: 0ms"></span>
-                <span class="tool-icon reveal-on-scroll" role="img" aria-label="Antigravity"          style="--src: url('logos/antigravity-icon__one-color.png'); --reveal-delay: 80ms"></span>
-                <span class="tool-icon reveal-on-scroll" role="img" aria-label="Figma"                style="--src: url('logos/figma.svg');                      --reveal-delay: 160ms"></span>
-                <span class="tool-icon reveal-on-scroll" role="img" aria-label="GitHub"               style="--src: url('logos/github.svg');                     --reveal-delay: 240ms"></span>
-                <span class="tool-icon reveal-on-scroll" role="img" aria-label="Adobe Creative Cloud" style="--src: url('logos/adobe.svg');                      --reveal-delay: 320ms"></span>
-                <span class="tool-icon reveal-on-scroll" role="img" aria-label="Claude"               style="--src: url('logos/claude.svg');                     --reveal-delay: 400ms"></span>
-                <span class="tool-icon reveal-on-scroll" role="img" aria-label="Kling"                style="--src: url('logos/kling-color.svg');                --reveal-delay: 480ms"></span>
-            </div>
-        </div>
-    </section>
 </main>
 
 <aside class="player" aria-label="Music player">
@@ -601,463 +513,8 @@
         <p class="footer-copy">Aimy Gwen &middot; All Rights Reserved &copy; 2026</p>
     </div>
 </footer>
+</div><!-- /#spa-view -->
 
-<script>
-    (function () {
-        // ---------- Page transition (swipe) ----------
-        const cameFromTransition = sessionStorage.getItem("pageTransition") === "1";
-        sessionStorage.removeItem("pageTransition");
-
-        if (cameFromTransition) {
-            document.body.classList.add("is-entering");
-            requestAnimationFrame(() => requestAnimationFrame(() => {
-                document.body.classList.add("is-entered");
-            }));
-            setTimeout(() => {
-                document.body.classList.remove("is-entering", "is-entered");
-            }, 700);
-        }
-
-        // Wrap an element's text in <span class="word"><span class="letter">…</span></span>.
-        // Splits on regular space only so non-breaking spaces (like the
-        // one between "Charlotte," and "NC") stay glued inside a single
-        // word and can never wrap apart. Each letter gets a sequential
-        // --letter-i value that the CSS uses to stagger its pop-in.
-        function splitIntoLetters(element) {
-            if (!element || element.dataset.lettersSplit === "1") return;
-            element.dataset.lettersSplit = "1";
-            const text = element.textContent;
-            element.textContent = "";
-            const parts = text.split(/( )/);
-            let letterIndex = 0;
-            parts.forEach((part) => {
-                if (part === "") return;
-                if (part === " ") {
-                    element.appendChild(document.createTextNode(" "));
-                    return;
-                }
-                const wordSpan = document.createElement("span");
-                wordSpan.className = "word";
-                for (const char of part) {
-                    const letter = document.createElement("span");
-                    letter.className = "letter";
-                    letter.textContent = char;
-                    letter.style.setProperty("--letter-i", letterIndex++);
-                    wordSpan.appendChild(letter);
-                }
-                element.appendChild(wordSpan);
-            });
-        }
-
-        // Above-the-fold headings — split + trigger letter cascade on
-        // the next two frames so the initial paint shows the start
-        // state and the cascade then transitions to the end state.
-        document.querySelectorAll(".about-text h1").forEach((el) => {
-            splitIntoLetters(el);
-            requestAnimationFrame(() =>
-                requestAnimationFrame(() => el.classList.add("letters-ready"))
-            );
-        });
-
-        // Scroll-triggered headings — split now, animate via observer
-        // whenever the heading enters the viewport (two-way so the
-        // cascade re-plays if the user scrolls back to the section).
-        const scrollLetterHeadings = document.querySelectorAll(
-            ".career-label-word, .specialty-heading, .collaborations-heading, .work-heading, .visual-heading"
-        );
-        scrollLetterHeadings.forEach(splitIntoLetters);
-        if (scrollLetterHeadings.length && "IntersectionObserver" in window) {
-            const lettersIO = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add("letters-ready");
-                        } else {
-                            entry.target.classList.remove("letters-ready");
-                        }
-                    });
-                },
-                { threshold: 0.15 }
-            );
-            scrollLetterHeadings.forEach((el) => lettersIO.observe(el));
-        } else {
-            scrollLetterHeadings.forEach((el) => el.classList.add("letters-ready"));
-        }
-
-        // Slow the cozy-banner video down a hair for a more relaxed
-        // loop pace. defaultPlaybackRate is set first so it survives
-        // any internal reload of the source.
-        const cozyVideo = document.querySelector(".cozy-banner video");
-        if (cozyVideo) {
-            cozyVideo.defaultPlaybackRate = 0.7;
-            cozyVideo.playbackRate = 0.7;
-        }
-
-        function revealAbout() {
-            document.body.classList.add("about-revealed");
-        }
-
-        const FIRST_REVEAL_DELAY = cameFromTransition ? 300 : 100;
-        setTimeout(() => {
-            revealAbout();
-            revealPlayer();
-            revealBrands();
-        }, FIRST_REVEAL_DELAY);
-
-        document.addEventListener("click", (e) => {
-            const a = e.target.closest("a[href]");
-            if (!a) return;
-            const href = a.getAttribute("href");
-            if (!href) return;
-            if (a.target === "_blank" || a.hasAttribute("download")) return;
-            if (!/^[^/]*\.html(?:#|\?|$)/.test(href) && !href.startsWith("/") && !href.startsWith("./")) return;
-            e.preventDefault();
-            window.location.href = href;
-        });
-        // ---------------------------------------------
-
-        // Music player
-        const player = document.querySelector(".player");
-        const audio = player.querySelector(".player-audio");
-        const playerToggle = player.querySelector(".player-toggle");
-        const playerNext = player.querySelector(".player-next");
-        const playerTrack = player.querySelector(".player-track");
-
-        const TRACKS = [
-            { src: "music/Lo-Fi Hip-Hop.mp3", title: "Lo-Fi Hip-Hop" },
-            { src: "music/Main_79.mp3",       title: "Main 79" },
-            { src: "music/Full.mp3",          title: "Full" },
-        ];
-        let trackIdx = 0;
-        audio.volume = 0.55;
-
-        function loadTrack(i, autoplay) {
-            trackIdx = ((i % TRACKS.length) + TRACKS.length) % TRACKS.length;
-            const t = TRACKS[trackIdx];
-            audio.src = encodeURI(t.src);
-            playerTrack.textContent = t.title;
-            if (autoplay) audio.play().catch(() => {});
-        }
-        loadTrack(0, false);
-
-        playerToggle.addEventListener("click", () => {
-            if (audio.paused) audio.play().catch(() => {});
-            else audio.pause();
-        });
-        playerNext.addEventListener("click", () => loadTrack(trackIdx + 1, !audio.paused));
-        audio.addEventListener("play",  () => player.classList.add("is-playing"));
-        audio.addEventListener("pause", () => player.classList.remove("is-playing"));
-        audio.addEventListener("ended", () => loadTrack(trackIdx + 1, true));
-
-        function revealPlayer() {
-            setTimeout(() => player.classList.add("is-revealed"), 1000);
-        }
-
-        // (Brand row removed on this page.)
-        function revealBrands() { /* no-op */ }
-
-        // Generic scroll-reveal — any .reveal-on-scroll or .reveal-fade
-        // element gets `.is-revealed` the moment ~10% of it enters the
-        // viewport. One-shot, then unobserved.
-        // Run a one-shot count-up on every .year-count span inside the
-        // given element. From value = target - 12 (so a 12-year tick is
-        // visible regardless of the role). Marks the element with
-        // data-counted so re-entering the viewport doesn't replay it.
-        const yearReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        function runYearCount(scope) {
-            const counters = scope.querySelectorAll(".year-count");
-            counters.forEach((el) => {
-                if (el.dataset.counted === "1") return;
-                el.dataset.counted = "1";
-                const target = parseInt(el.dataset.end, 10);
-                if (Number.isNaN(target)) return;
-                if (yearReducedMotion) {
-                    el.textContent = String(target);
-                    return;
-                }
-                const from = target - 12;
-                const duration = 1500;
-                el.textContent = String(from); // set first paint to the start value
-                const start = performance.now();
-                function tick(now) {
-                    const t = Math.min(1, (now - start) / duration);
-                    const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
-                    el.textContent = String(Math.round(from + (target - from) * eased));
-                    if (t < 1) requestAnimationFrame(tick);
-                }
-                requestAnimationFrame(tick);
-            });
-        }
-
-        if ("IntersectionObserver" in window) {
-            const revealEls = document.querySelectorAll(".reveal-on-scroll, .reveal-fade");
-            // Two-way: add `.is-revealed` when the element enters the
-            // viewport, remove it when it exits. Same transition runs in
-            // reverse when the user scrolls back up.
-            const revealIO = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add("is-revealed");
-                            // Kick off the year count-up the first time each
-                            // experience column enters the viewport.
-                            if (entry.target.classList.contains("experience-col")) {
-                                runYearCount(entry.target);
-                            }
-                        } else {
-                            entry.target.classList.remove("is-revealed");
-                        }
-                    });
-                },
-                { threshold: 0.1 }
-            );
-            revealEls.forEach((el) => revealIO.observe(el));
-        } else {
-            document.querySelectorAll(".reveal-on-scroll, .reveal-fade")
-                .forEach((el) => el.classList.add("is-revealed"));
-        }
-
-        // Parallax — set --parallax-y on every [data-parallax] element
-        // proportional to its distance from the viewport center, scaled
-        // by its speed multiplier. The `translate` CSS property is used
-        // (not `transform`) so it composes with reveal/hover transforms.
-        const parallaxEls = document.querySelectorAll("[data-parallax]");
-        // Sections with data-parallax-up lift upward faster than the scroll
-        // the higher they climb (0 as they enter from the bottom) — they never
-        // lag downward like the center-based effect above.
-        const parallaxUpEls = document.querySelectorAll("[data-parallax-up]");
-        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        let parallaxTicking = false;
-        function applyParallax() {
-            const vh = window.innerHeight;
-            const vCenter = vh / 2;
-            parallaxEls.forEach((el) => {
-                const speed = parseFloat(el.dataset.parallax) || 0;
-                const rect = el.getBoundingClientRect();
-                const elCenter = rect.top + rect.height / 2;
-                const offset = (vCenter - elCenter) * speed;
-                el.style.setProperty("--parallax-y", offset.toFixed(2) + "px");
-            });
-            parallaxUpEls.forEach((el) => {
-                const speed = parseFloat(el.dataset.parallaxUp) || 0;
-                const rect = el.getBoundingClientRect();
-                // Lift up as the section enters, but CLAMP the shift so consecutive
-                // sections settle to the same offset once they're both on screen —
-                // otherwise the higher section keeps rising and pulls a growing gap
-                // open between it and the next one.
-                const raw = Math.max(0, vh - rect.top) * speed;
-                const offset = -Math.min(raw, 46);
-                el.style.setProperty("--parallax-y", offset.toFixed(2) + "px");
-            });
-            parallaxTicking = false;
-        }
-        if ((parallaxEls.length || parallaxUpEls.length) && !reducedMotion) {
-            window.addEventListener(
-                "scroll",
-                () => {
-                    if (!parallaxTicking) {
-                        requestAnimationFrame(applyParallax);
-                        parallaxTicking = true;
-                    }
-                },
-                { passive: true }
-            );
-            window.addEventListener("resize", applyParallax, { passive: true });
-            applyParallax();
-        }
-
-        // Career label: reveal once the experience section is in view.
-        const careerLabel = document.querySelector(".career-label");
-        const experienceSection = document.querySelector(".experience");
-        if (careerLabel && experienceSection && "IntersectionObserver" in window) {
-            const io = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            careerLabel.classList.add("is-revealed");
-                        } else {
-                            careerLabel.classList.remove("is-revealed");
-                        }
-                    });
-                },
-                { threshold: 0.08 }
-            );
-            io.observe(experienceSection);
-        }
-
-        // Scroll: fade bottom widgets, and track direction so the header
-        // hides its nav on scroll-down and pins itself with a paper bg on
-        // scroll-up. A small delta filters out jitter.
-        const SCROLL_FADE_AT = 60;
-        const TOP_THRESHOLD = 50;
-        const SCROLL_DELTA = 5;
-        let lastScrollY = window.scrollY || 0;
-        let scrollDirection = "up";
-
-        function onScroll() {
-            const y = window.scrollY || window.pageYOffset;
-            const diff = y - lastScrollY;
-            if (diff > SCROLL_DELTA) scrollDirection = "down";
-            else if (diff < -SCROLL_DELTA) scrollDirection = "up";
-
-            const atTop = y <= TOP_THRESHOLD;
-            document.body.classList.toggle("is-scrolled", y > SCROLL_FADE_AT);
-            document.body.classList.toggle("nav-hidden", !atTop && scrollDirection === "down");
-            document.body.classList.toggle("header-pinned", !atTop && scrollDirection === "up");
-
-            lastScrollY = y;
-        }
-        window.addEventListener("scroll", onScroll, { passive: true });
-        onScroll();
-
-        // ---------- Custom cursor ----------
-        // Handled globally in ui.js to ensure consistency across all pages.
-    })();
-</script>
-
-<script>
-    /* Hero: per-letter word-stagger reveal + dual-video stage (ported
-       from the homepage). Player / cursor / scroll / page-transition
-       are owned by the main about-page script above, so this only
-       handles the hero's own animation + video playlist. */
-    (function () {
-        const hero = document.querySelector(".hero");
-        if (!hero) return;
-        const heroH1 = hero.querySelector("h1");
-        const heroH2 = hero.querySelector("h2");
-        const heroCta = hero.querySelector(".cta");
-
-        function splitIntoLetters(element) {
-            if (!element || element.dataset.lettersSplit === "1") return 0;
-            element.dataset.lettersSplit = "1";
-            const text = element.textContent;
-            element.textContent = "";
-            const parts = text.split(/( )/);
-            let letterIndex = 0;
-            parts.forEach((part) => {
-                if (part === "") return;
-                if (part === " ") { element.appendChild(document.createTextNode(" ")); return; }
-                const wordSpan = document.createElement("span");
-                wordSpan.className = "word";
-                for (const char of part) {
-                    const letter = document.createElement("span");
-                    letter.className = "letter";
-                    letter.textContent = char;
-                    letter.style.setProperty("--letter-i", letterIndex++);
-                    wordSpan.appendChild(letter);
-                }
-                element.appendChild(wordSpan);
-            });
-            return letterIndex;
-        }
-
-        splitIntoLetters(heroH1);
-        const h2LetterCount = splitIntoLetters(heroH2);
-        // Render "delightful" + "experiences" as outline-only floating words.
-        heroH2.querySelectorAll(".word").forEach((w) => {
-            const bare = w.textContent.replace(/[^a-z]/gi, "").toLowerCase();
-            if (bare === "mess" || bare === "mess") w.classList.add("word-outline");
-        });
-        const LETTER_STAGGER_MS = 22;
-        const cascadeMs = h2LetterCount * LETTER_STAGGER_MS;
-        if (heroCta) heroCta.style.transitionDelay = (cascadeMs + 200) + "ms, 0s, 0s";
-
-        // The main script already consumed the pageTransition flag, so just
-        // use the standard short delay for the reveal.
-        setTimeout(() => {
-            hero.classList.add("is-revealed");
-            heroH1.classList.add("letters-ready");
-            heroH2.classList.add("letters-ready");
-        }, 120);
-
-        // ---- Dual-video stage ----
-        const VIDEOS = [
-            "videos/lick.mp4", "videos/airplane.mp4", "videos/stretch.mp4", "videos/idea.mp4",
-            "videos/phone.mp4", "videos/glasses.mp4", "videos/headphones.mp4", "videos/sleep.mp4",
-            "videos/fasttype.mp4", "videos/fistpump.mp4", "videos/frisbee.mp4",
-            "videos/ufo.mp4",
-        ];
-        const vA = document.querySelector(".stage .vA");
-        const vB = document.querySelector(".stage .vB");
-        if (!vA || !vB) return;
-        const players = [vA, vB];
-        let lastIndex = -1;
-        let active = 0;
-
-        function pickNextIndex() {
-            if (VIDEOS.length <= 1) return 0;
-            let i;
-            do { i = Math.floor(Math.random() * VIDEOS.length); } while (i === lastIndex);
-            lastIndex = i;
-            return i;
-        }
-        function preloadInto(p) {
-            p.src = VIDEOS[pickNextIndex()];
-            try { p.load(); } catch (e) { /* noop */ }
-        }
-        function swap() {
-            const cur = players[active];
-            const next = players[1 - active];
-            next.classList.add("is-active");
-            cur.classList.remove("is-active");
-            const pp = next.play();
-            if (pp && typeof pp.catch === "function") pp.catch(() => {});
-            cur.pause();
-            cur.currentTime = 0;
-            preloadInto(cur);
-            active = 1 - active;
-        }
-        players.forEach((p) => p.addEventListener("ended", swap));
-
-        // The poster (base.png) is the resting frame shown before playback.
-        // Because the clips now multiply-blend (their white field is
-        // transparent), a poster left behind the video would show through
-        // it. Hide it the moment the first clip actually plays.
-        const poster = document.querySelector(".stage .poster");
-        vA.src = VIDEOS[pickNextIndex()];
-        preloadInto(vB);
-        vA.addEventListener("playing", () => {
-            vA.classList.add("is-active");
-            if (poster) poster.style.opacity = "0";
-        }, { once: true });
-
-        const initial = vA.play();
-        if (initial && typeof initial.catch === "function") {
-            initial.catch(() => {
-                const resume = () => {
-                    vA.play().catch(() => {});
-                    window.removeEventListener("click", resume);
-                    window.removeEventListener("touchstart", resume);
-                    window.removeEventListener("keydown", resume);
-                };
-                window.addEventListener("click", resume, { once: true });
-                window.addEventListener("touchstart", resume, { once: true });
-                window.addEventListener("keydown", resume, { once: true });
-            });
-        }
-    })();
-</script>
-<script>
-    /* Vanta tile: play the three clips one at a time, cycling 1→2→3. */
-    (function () {
-        var wrap = document.querySelector(".vanta-videos");
-        if (!wrap) return;
-        var videos = Array.prototype.slice.call(wrap.querySelectorAll("video"));
-        if (!videos.length) return;
-        function show(i) {
-            videos.forEach(function (v, n) {
-                var active = n === i;
-                v.classList.toggle("is-active", active);
-                if (active) { v.currentTime = 0; v.play().catch(function () {}); }
-                else { v.pause(); }
-            });
-        }
-        videos.forEach(function (v, n) {
-            v.addEventListener("ended", function () { show((n + 1) % videos.length); });
-        });
-        show(0);
-    })();
-</script>
 <!-- Contact modal — the contact page content in a dialog -->
 <div class="modal" id="contactModal" hidden>
     <div class="modal__overlay" data-close></div>
@@ -1104,167 +561,7 @@
             </div>
         </div>
     </div>
-</div>
-</div>
+</div><!-- /#main-content -->
 
-<script>
-    /* Contact modal: open from the nav, close on overlay / X / Esc.
-       The form composes a mailto, same as the standalone contact page. */
-    (function () {
-        var modal = document.getElementById("contactModal");
-        if (!modal) return;
-        var lastFocus = null;
-        function openModal() {
-            lastFocus = document.activeElement;
-            modal.hidden = false;
-            document.body.classList.add("modal-open");
-            requestAnimationFrame(function () { modal.classList.add("is-open"); });
-            var first = modal.querySelector("#cf-name");
-            if (first) setTimeout(function () { first.focus(); }, 60);
-        }
-        function closeModal() {
-            modal.classList.remove("is-open");
-            document.body.classList.remove("modal-open");
-            setTimeout(function () { modal.hidden = true; }, 320);
-            if (lastFocus && lastFocus.focus) lastFocus.focus();
-        }
-        // Open from any [data-contact] link (desktop + mobile nav).
-        document.addEventListener("click", function (e) {
-            var trigger = e.target.closest("[data-contact]");
-            if (trigger) { e.preventDefault(); openModal(); return; }
-            if (e.target.closest("[data-close]") && modal.contains(e.target)) { closeModal(); }
-        });
-        document.addEventListener("keydown", function (e) {
-            if (e.key === "Escape" && !modal.hidden) closeModal();
-        });
-        // Deep link: arriving at "/#contact" (e.g. the contact link from any
-        // other page) opens the modal. Delay slightly so any page-transition
-        // slide-in settles first.
-        if (location.hash === "#contact") {
-            setTimeout(openModal, 350);
-        }
-
-        var contactForm = document.getElementById("contact-form");
-        if (contactForm) {
-            var statusEl = contactForm.querySelector(".contact-status");
-            contactForm.addEventListener("submit", function (e) {
-                e.preventDefault();
-                if (!contactForm.reportValidity()) return;
-                var get = function (n) { return (contactForm.elements[n].value || "").trim(); };
-                var name = get("name"), email = get("email"), phone = get("phone"), message = get("message");
-                var subject = "Portfolio inquiry from " + (name || "your site");
-                var body = ["Name: " + name, "Email: " + email, "Phone: " + (phone || "—"), "", message].join("\n");
-                window.location.href = "mailto:aimygwendesign@gmail.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-                if (statusEl) statusEl.textContent = "Opening your email app… if nothing happens, email aimygwendesign@gmail.com directly.";
-            });
-        }
-    })();
-</script>
-
-<script>
-    /* Pause autoplay card videos while they're off-screen so the browser
-       isn't decoding a stack of clips during a scroll — smooths scrolling,
-       especially on mobile. The hero stage and Vanta tile manage their own
-       playback, so they're left alone. */
-    (function () {
-        if (!("IntersectionObserver" in window)) return;
-        var vids = Array.prototype.slice
-            .call(document.querySelectorAll("video[autoplay]"))
-            .filter(function (v) { return !v.closest(".stage") && !v.closest(".vanta-videos"); });
-        if (!vids.length) return;
-        var io = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (e.isIntersecting) {
-                    var p = e.target.play();
-                    if (p && p.catch) p.catch(function () {});
-                } else {
-                    e.target.pause();
-                }
-            });
-        }, { rootMargin: "200px 0px" });
-        vids.forEach(function (v) { io.observe(v); });
-    })();
-</script>
-
-<!-- Intro Revealer Logic -->
-<script>
-    (function () {
-        const textTarget = document.getElementById('typing-target');
-        const continueBtn = document.getElementById('continue-trigger');
-        const revealerScreen = document.getElementById('revealer-screen');
-
-        if (!textTarget) return;
-
-        function splitIntoLetters(element) {
-            if (!element) return 0;
-            const text = element.textContent;
-            element.textContent = "";
-            const parts = text.split(/( )/);
-            let letterIndex = 0;
-            parts.forEach((part) => {
-                if (part === "") return;
-                if (part === " ") { element.appendChild(document.createTextNode(" ")); return; }
-                const wordSpan = document.createElement("span");
-                wordSpan.className = "word";
-                for (const char of part) {
-                    const letter = document.createElement("span");
-                    letter.className = "letter";
-                    letter.textContent = char;
-                    letter.style.setProperty("--letter-i", letterIndex++);
-                    wordSpan.appendChild(letter);
-                }
-                element.appendChild(wordSpan);
-            });
-            return letterIndex;
-        }
-
-        // Wait for DOM to load, then trigger pop-in animation
-        window.addEventListener('DOMContentLoaded', () => {
-            if (sessionStorage.getItem('intro_seen')) {
-                document.body.classList.remove('intro-active');
-                const mainContent = document.getElementById('main-content');
-                if (mainContent) {
-                    mainContent.classList.add('floated');
-                    mainContent.style.transform = 'none';
-                }
-                return;
-            }
-
-            const letterCount = splitIntoLetters(textTarget);
-
-            // Add letters-ready class to kick off the CSS animation after a short delay
-            setTimeout(() => {
-                textTarget.classList.add('letters-ready');
-            }, 800);
-
-            // Stagger is 35ms per letter in our CSS, plus 700ms transition duration.
-            // Reveal continue button after the animation completes.
-            const LETTER_STAGGER_MS = 35;
-            const animationDuration = (letterCount * LETTER_STAGGER_MS) + 700;
-            
-            setTimeout(() => {
-                continueBtn.classList.add('visible');
-            }, 800 + animationDuration + 200); // 200ms aesthetic delay
-        });
-
-        // Click event to fade away the intro and float in the website
-        continueBtn.addEventListener('click', () => {
-            sessionStorage.setItem('intro_seen', 'true');
-            revealerScreen.classList.add('fade-out');
-            document.body.classList.remove('intro-active');
-
-            const mainContent = document.getElementById('main-content');
-            if (mainContent) {
-                mainContent.classList.add('floated');
-                // Clean up transform style after transition ends so fixed positioning works
-                mainContent.addEventListener('transitionend', function handler(e) {
-                    if (e.propertyName === 'transform') {
-                        mainContent.style.transform = 'none';
-                        mainContent.removeEventListener('transitionend', handler);
-                    }
-                });
-            }
-        });
-    })();
-</script>
 </body>
+</html>

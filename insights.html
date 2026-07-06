@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Behind the Madness</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <script>document.documentElement.classList.add("page-loading");</script>
+    <link rel="stylesheet" href="loader.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="ui.css" />
+    <link rel="stylesheet" href="insights.css" />
+    <script src="site-utils.js" defer></script>
+    <script src="ui.js" defer></script>
+</head>
+<body class="insights-page-body">
+<script src="loader.js" defer></script>
+
+    <div id="spa-view">
+    <header class="site-header">
+        <div class="header-left">
+            <a href="index.html" class="brand" aria-label="Aimy Gwen — home">
+                <img src="./assets/bunny.png" alt="Aimy Gwen" />
+            </a>
+
+            <nav class="nav" id="primary-nav" aria-label="Primary"></nav>
+        </div>
+
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
+            <span></span><span></span><span></span>
+        </button>
+
+        <nav class="social" aria-label="Social links"></nav>
+    </header>
+
+    <div id="insights-page-content">
+        <header class="insights-hero">
+            <figure class="insights-hero-photo-wrap">
+                <img
+                    src="./assets/base.jpg"
+                    alt="Aimy Gwen"
+                    class="insights-hero-photo"
+                    width="900"
+                    height="1200"
+                    fetchpriority="high"
+                    decoding="async"
+                />
+            </figure>
+            <h1 class="insights-hero-title">Born from vision, shaped by noise.</h1>
+        </header>
+
+        <article id="identity" class="insights-section reveal-on-scroll">
+            <div class="insights-section-inner">
+                <h2 class="insights-section-title">Identity</h2>
+                <p class="insights-lead">Softness with structure. Play with restraint.</p>
+                <div class="insights-body">
+                    <p>My visual identity didn’t arrive fully formed — it grew out of wanting things to feel approachable without losing clarity. Pastel warmth, rounded forms, and a little bit of mischief sit on top of a grid I actually trust.</p>
+                    <p>The bunny mark, the pixel accents, the way type shifts between expressive display and readable body copy — those aren’t random choices. They’re how I signal that this work is human-made, cared for, and allowed to be a little weird.</p>
+                    <p>I think of branding less as a logo lockup and more as a mood you can recognize from across the room: gentle, precise, slightly nostalgic, never sterile.</p>
+                </div>
+                <figure class="insights-figure">
+                    <img src="./assets/branding.svg" alt="Aimy Gwen brand mark" width="200" height="134" loading="lazy" />
+                    <figcaption>The mark — simple enough to live anywhere, characterful enough to feel like mine.</figcaption>
+                </figure>
+            </div>
+        </article>
+
+        <article id="process" class="insights-section reveal-on-scroll">
+            <div class="insights-section-inner">
+                <h2 class="insights-section-title">Process</h2>
+                <p class="insights-lead">Start messy. Refine until it breathes.</p>
+                <div class="insights-body">
+                    <p>Most of my projects begin as loose notes — a color swatch, a sentence, a screenshot I can’t stop thinking about. I sketch in blocks before I polish curves, because understanding shape language matters more to me than jumping straight to detail.</p>
+                    <p>When something feels off, I usually step back and ask whether the problem is visual or emotional. Is it too loud? Too flat? Does it match the story I’m trying to tell? That question saves me from overworking the wrong layer.</p>
+                    <p>Iteration isn’t failure — it’s how I find the version that feels inevitable, like it was always meant to look that way.</p>
+                </div>
+                <blockquote class="insights-pullquote">
+                    <p>“If I can explain why a choice exists, it’s probably ready. If I can’t, I keep going.”</p>
+                </blockquote>
+            </div>
+        </article>
+
+        <article id="workspace" class="insights-section reveal-on-scroll">
+            <div class="insights-section-inner">
+                <h2 class="insights-section-title">Workspace</h2>
+                <p class="insights-lead">A desk that invites focus — and the occasional sticker pile.</p>
+                <div class="insights-body">
+                    <p>I work best in spaces that feel lived-in: monitor light, a notebook always open, reference images pinned where I’ll actually see them. Tools matter, but ritual matters more — the same playlist, the same coffee mug, the same slow start before the pixels move.</p>
+                    <p>My setup is split between illustration, 3D, and web — so everything has to be within reach without becoming clutter. Cables hidden where possible. Inspiration visible where it helps.</p>
+                    <p>The workspace isn’t a aesthetic set piece. It’s the quiet infrastructure behind everything you see on this site.</p>
+                </div>
+                <figure class="insights-figure insights-figure--photo">
+                    <img src="./assets/polaroid.JPG" alt="Polaroid photo of Aimy at her workspace" loading="lazy" />
+                    <figcaption>Where the messy middle actually happens.</figcaption>
+                </figure>
+            </div>
+        </article>
+
+        <article id="notes" class="insights-section reveal-on-scroll">
+            <div class="insights-section-inner">
+                <h2 class="insights-section-title">Notes</h2>
+                <p class="insights-lead">Experiences, fragments, things I’m still figuring out.</p>
+                <div class="insights-body">
+                    <p>Games taught me worldbuilding. Music taught me pacing. Design taught me to edit — ruthlessly, lovingly. I carry all of that into every commission, every personal piece, every page like this one.</p>
+                    <p>I’m drawn to collaborators who care about feeling as much as function. The best projects leave me with a new constraint I didn’t know I needed, and a story worth telling afterward.</p>
+                    <p>This page will keep growing — less a portfolio of finished work, more a diary of how the work gets made.</p>
+                </div>
+                <ul class="insights-list">
+                    <li><span class="insights-list-label">Right now</span> refining how color variants read across the Hytale library</li>
+                    <li><span class="insights-list-label">Always</span> chasing readability without killing personality</li>
+                    <li><span class="insights-list-label">Next</span> more writing here — less showcase, more honesty</li>
+                </ul>
+            </div>
+        </article>
+
+        <footer class="footer-reveal insights-footer" aria-label="Contact and links">
+            <nav class="footer-links" aria-label="Footer">
+                <a href="#contact" data-contact>Contact</a>
+                <a href="legal.html">Legal Imprint &amp; Policy</a>
+            </nav>
+            <div class="footer-credits" style="--reveal-delay: 120ms">
+                <h4 class="credits-title">Special Thanks & Credits</h4>
+                <div class="credits-stack">
+                    <div class="credits-item">
+                        <span class="credits-label">Design Inspiration</span>
+                        <span class="credits-value">
+                            <a href="https://www.chiaraluzzana.com" target="_blank" rel="noopener">Chiara Luzzana</a>
+                            <a href="https://porterrobinson.com" target="_blank" rel="noopener">Porter Robinson</a>
+                            <a href="https://vippori.com" target="_blank" rel="noopener">Violet Schofield</a>
+                            <a href="https://indigoabbie.com" target="_blank" rel="noopener">Indigo Abbie</a>
+                        </span>
+                    </div>
+                    <div class="credits-item">
+                        <span class="credits-label">Fonts Used</span>
+                        <span class="credits-value">
+                            <span><a href="https://www.myfonts.com/collections/athemi-font-jafar07" target="_blank" rel="noopener">Athemi</a> by <a href="https://www.myfonts.com/collections/athemi-font-jafar07" target="_blank" rel="noopener">Bakhrudin Ja'far</a></span>
+                            <span><a href="https://chequered.ink" target="_blank" rel="noopener">Alkhemikal</a> by <a href="https://chequered.ink" target="_blank" rel="noopener">Chequered Ink</a></span>
+                        </span>
+                    </div>
+                </div>
+                <p class="credits-note">Thank you to all artists who inspire to create.</p>
+            </div>
+            <div class="footer-bottom" style="--reveal-delay: 180ms">
+                <div class="footer-signature">
+                    <svg class="signature-svg" viewBox="0 0 479 319" version="1.1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <g transform="matrix(1.416892,0,0,1.416892,-52.856629,-18.28909)">
+                            <path d="M370.034,123.5C369.489,131.565 347.196,191.547 342.44,198.457C338.638,203.982 339.412,235.512 334.563,233.197C328.747,230.42 324.794,231.439 327.722,225.606C331.536,218.011 324.736,216.493 329.51,209.506C329.779,209.112 329.751,202.941 333.006,197.252C333.755,195.942 332.679,195.687 339.899,179.685C343.716,171.228 342.513,170.949 346.697,162.641C351.757,152.591 354.477,135.652 357.473,130.487C358.199,129.236 366.026,99.018 358.216,107.214C344.755,121.339 339.706,140.846 333.695,149.632C331.166,153.327 331.908,153.544 329.422,157.439C325.413,163.718 308.625,163.065 303.461,151.513C298.796,141.079 296.697,157.362 296.704,157.372C313.934,178.702 262.485,191.164 241.342,201.119C240.443,201.542 234.723,204.235 229.543,204.986C229.171,205.04 198.667,216.578 191.458,217.096C186.867,217.426 128.136,242.524 101.457,229.627C91.013,224.578 92.364,222.358 81.401,218.725C77.15,217.317 75.71,199.659 71.871,211.589C68.001,223.611 51.862,244.709 41.732,221.384C40.222,217.906 37.28,195.902 44.201,181.363C50.855,167.386 49.377,166.31 66.752,149.774C67.972,148.613 75.953,150.312 81.519,147.555C82.722,146.959 92.428,153.197 88.108,162.354C85.368,168.164 88.838,169.058 85.719,174.631C78.878,186.853 78.226,230.243 82.958,202.679C84.05,196.314 91.364,188.418 92.341,187.363C100.067,179.022 98.115,177.944 98.432,166.49C98.467,165.198 99.692,165.509 100.223,150.437C100.259,149.432 103.602,141.483 103.925,140.716C104.312,139.795 105.775,136.317 116.362,141.825C119.956,143.695 105.742,170.957 115.634,160.637C122.653,153.315 252.431,38.821 274.483,29.465C275.835,28.892 275.351,28.061 290.535,20.557C308.075,11.889 326.608,21.976 312.184,53.385C310.694,56.629 313.82,57.716 297.676,95.586C296.612,98.082 282.694,100.18 291.303,83.41C294.763,76.672 317.898,17.606 302.436,26.354C296.699,29.6 288.518,31.022 280.512,37.514C277.752,39.752 276.317,37.718 244.427,63.402C198.779,100.166 191.695,107.263 187.482,111.482C185.521,113.447 184.586,112.353 161.228,134.181C159.756,135.557 153.891,137.211 156.57,138.386C167.953,143.381 162.034,147.97 168.209,158.658C168.803,159.685 166.716,160.263 173.455,172.528C181.282,186.772 177.734,167.749 185.693,153.601C186.079,152.914 185.649,152.764 189.284,144.436C189.523,143.887 196.882,127.921 204.296,130.966C207.514,132.287 211.073,128.964 215.422,137.529C215.805,138.282 215.96,156.194 215.23,157.325C211.912,162.46 216.771,164.014 218.711,160.612C222.637,153.725 238.165,110.222 258.569,120.363C259.598,120.874 265.384,119.857 266.64,129.482C267.264,134.259 269.792,133.34 270.164,139.528C270.383,143.189 286.661,152.667 289.604,146.547C304.99,114.551 298.511,105.855 304.476,107.601C311.194,109.568 313.631,108.525 313.664,113.499C313.69,117.495 308.746,156.254 316.517,155.672C323.616,155.141 346.15,90.384 358.388,97.694C358.802,97.942 365.397,97.972 369.252,101.736C369.26,101.744 374.717,112.223 370.468,119.481C370.304,119.76 370.436,119.778 370.034,123.5Z"/>
+                        </g>
+                    </svg>
+                </div>
+                <p class="footer-copy">Aimy Gwen &middot; All Rights Reserved &copy; 2026</p>
+            </div>
+        </footer>
+    </div>
+    </div><!-- /#spa-view -->
+
+    <script src="insights.js" defer></script>
+    <script src="spa-router.js" defer></script>
+</body>
+</html>

@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Art Gallery & Sketches — Aimy Gwen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Look at What I Made</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <script>document.documentElement.classList.add("page-loading");</script>
+    <link rel="stylesheet" href="loader.css" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -13,12 +15,15 @@
 
     <!-- Core, UI, and Gallery Stylesheets -->
     <link rel="stylesheet" href="ui.css" />
-    <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="gallery.css" />
+    <link rel="preload" as="image" href="visuals/display/img1.webp" type="image/webp" />
+    <script src="site-utils.js" defer></script>
     <script src="ui.js" defer></script>
 </head>
 <body class="gallery-page-body">
+<script src="loader.js" defer></script>
 
+    <div id="spa-view">
     <!-- SITE HEADER -->
     <header class="site-header">
         <div class="header-left">
@@ -26,11 +31,7 @@
                 <img src="./assets/bunny.png" alt="Aimy Gwen" />
             </a>
 
-            <nav class="nav" id="primary-nav" aria-label="Primary">
-                <a href="index.html#work">work</a>
-                <a href="index.html#about">about</a>
-                <a href="index.html#collaborations">collaborations</a>
-            </nav>
+            <nav class="nav" id="primary-nav" aria-label="Primary"></nav>
         </div>
 
         <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
@@ -54,7 +55,7 @@
             <!-- GLOBAL FOOTER -->
             <footer class="footer-reveal" aria-label="Contact and links">
                 <nav class="footer-links" aria-label="Footer">
-                    <a href="index.html#contact" data-contact>Contact</a>
+                    <a href="#contact" data-contact>Contact</a>
                     <a href="legal.html">Legal Imprint &amp; Policy</a>
                 </nav>
                 <div class="footer-credits" style="--reveal-delay: 120ms">
@@ -96,10 +97,11 @@
         <!-- Scroll Spacer (dynamically sized in JS) -->
         <div class="scroll-spacer"></div>
     </div>
-
-
+    </div><!-- /#spa-view -->
 
     <!-- SCRIPTS -->
-    <script src="gallery.js"></script>
+    <script src="vertical-gallery.js" defer></script>
+    <script src="gallery.js" defer></script>
+    <script src="spa-router.js" defer></script>
 </body>
 </html>
