@@ -1,0 +1,446 @@
+/**
+ * About — scroll language (sky → paper curtain → sticky hero → deck)
+ */
+
+@font-face {
+  font-family: "Bold Block";
+  src: url("../fonts/Bold Block.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Pastel purple family */
+  --paper: #ffe6f1;
+  --ink: #2a2433;
+  --pink: #c9a0ef;   /* mid lilac — primary card */
+  --peach: #e2d0f5;  /* soft lavender — light card */
+  --blue: #b8a6e8;   /* dusty periwinkle — deep card */
+  --sky: #bb88ff;
+  --violet-soft: #e2d0f5;
+  --violet-deep: #6e458f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--sky);
+  scroll-behavior: auto;
+  overscroll-behavior: none;
+  overflow-x: clip;
+}
+
+.about-page-body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100%;
+  overflow-x: hidden;
+  color: var(--ink);
+  background: var(--sky);
+  font-family: Arial, Helvetica, sans-serif;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.about-page-body a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Chrome tuned to the pastel-violet page */
+.about-page-body {
+  --aimy-chrome-ink: var(--ink);
+  --aimy-primary: var(--ink);
+  --aimy-secondary: var(--violet-soft);
+  --aimy-tertiary: var(--violet-deep);
+  --aimy-accent: var(--pink);
+  --aimy-menu-coin: var(--pink);
+  --aimy-menu-coin-open: var(--blue);
+  --aimy-r1: #c9a0ef;
+  --aimy-r2: #e2d0f5;
+  --aimy-r3: #b8a6e8;
+  --aimy-r4: #9b7ec8;
+}
+
+.about-page-body .site-header[data-aimy-chrome] {
+  --aimy-chrome-ink: var(--ink);
+  --aimy-primary: var(--ink);
+  will-change: auto;
+}
+
+.about {
+  --menu-reveal: 0;
+  --curtain-y: 92vh;
+  --mx: 0;
+  --my: 0;
+  --polaroid-y: 0px;
+  --polaroid-x: 0px;
+  --polaroid-rot: 0deg;
+  --polaroid-skew: 0deg;
+  --polaroid-stretch: 1;
+  --polaroid-squash: 1;
+  position: relative;
+  min-height: 340vh;
+  overflow-x: clip;
+  overflow-y: visible;
+  background: var(--sky);
+}
+
+.scene-noise {
+  display: none;
+}
+
+.about-underlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+  pointer-events: none;
+  perspective: 1100px;
+}
+
+.about-underlay img {
+  display: block;
+  width: auto;
+  height: min(82vh, 42rem);
+  max-width: min(90vw, 34rem);
+  object-fit: contain;
+  user-select: none;
+  transform-origin: 50% 55%;
+  will-change: transform;
+  transform:
+    translate3d(
+      calc(var(--mx) * 14px + var(--polaroid-x)),
+      calc(var(--my) * 10px + var(--polaroid-y)),
+      0
+    )
+    rotateX(calc(var(--my) * -2.4deg))
+    rotateY(calc(var(--mx) * 3deg))
+    rotate(calc(-3deg + var(--polaroid-rot)))
+    skewX(var(--polaroid-skew))
+    scale3d(var(--polaroid-squash), var(--polaroid-stretch), 1);
+}
+
+.scroll-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  height: 140vh;
+  pointer-events: none;
+  transform: translate3d(0, var(--curtain-y), 0);
+  backface-visibility: hidden;
+  contain: strict;
+}
+
+.scroll-curtain svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.scroll-curtain svg,
+.scroll-curtain__shape {
+  fill: var(--paper);
+  color: var(--paper);
+}
+
+.scroll-curtain__shape {
+  shape-rendering: optimizeSpeed;
+}
+
+/*
+ * Fixed hero mark — behind polaroid at rest;
+ * rises above the paper curtain once scrolling starts (.is-above-curtain).
+ */
+.about-hero {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding-top: 0;
+  pointer-events: none;
+  transform: translate3d(0, var(--scene-y, 0px), 0);
+  transform-style: preserve-3d;
+  perspective: 1100px;
+}
+
+.about-hero.is-above-curtain {
+  z-index: 4;
+}
+
+.about-hero__name {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(148vw, 118rem);
+  user-select: none;
+  pointer-events: none;
+  will-change: transform;
+  transform:
+    translate3d(calc(-50% + var(--mx) * -10px), calc(-50% + var(--my) * -6px), 0)
+    rotateX(calc(var(--my) * -1.2deg))
+    rotateY(calc(var(--mx) * 1.2deg));
+}
+
+.about-hero__mark {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(108vh, 62rem);
+  object-fit: contain;
+  filter: none;
+}
+
+/* One paper note on the curtain */
+.about-deck {
+  position: relative;
+  z-index: 6;
+  width: min(46rem, 90vw);
+  margin: 155vh auto 0;
+  padding-bottom: 22vh;
+  opacity: var(--menu-reveal);
+  overflow: visible;
+  perspective: 1100px;
+  perspective-origin: 50% 35%;
+}
+
+.about-card.about-paper {
+  --note-x: 0px;
+  --note-y: 0px;
+  --note-rot: 0deg;
+  --note-rx: 0deg;
+  --note-ry: 0deg;
+  position: relative;
+  display: grid;
+  gap: clamp(1.75rem, 3.5vh, 2.6rem);
+  padding:
+    clamp(2rem, 4.5vw, 3rem)
+    clamp(1.5rem, 4vw, 2.75rem)
+    clamp(2.2rem, 5vw, 3.2rem);
+  overflow: visible;
+  color: var(--ink);
+  background:
+    linear-gradient(165deg, #fff7fb 0%, var(--paper) 42%, #ffe0ec 100%);
+  /* Soft torn-sheet silhouette — one piece, not three */
+  clip-path: polygon(
+    1.2% 0.8%,
+    98.6% 0.2%,
+    99.8% 97.4%,
+    0.4% 99.6%
+  );
+  box-shadow:
+    0 1.1rem 2.4rem rgba(42, 36, 51, 0.1),
+    0 0.2rem 0.6rem rgba(42, 36, 51, 0.06);
+  transform-origin: 50% 40%;
+  will-change: transform;
+  transform:
+    translate3d(var(--note-x), var(--note-y), 0)
+    rotateX(var(--note-rx))
+    rotateY(var(--note-ry))
+    rotate(calc(-1.4deg + var(--note-rot)));
+}
+
+.about-block {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.about-block + .about-block {
+  padding-top: clamp(1.25rem, 2.5vh, 1.8rem);
+  border-top: 1px solid rgba(42, 36, 51, 0.12);
+}
+
+.about-kicker,
+.about-title,
+.about-lead,
+.about-card p,
+.about-likes,
+.about-closing {
+  position: relative;
+  z-index: 1;
+}
+
+.about-kicker {
+  margin: 0;
+  font-family: "Arial Black", Impact, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+.about-title {
+  margin: 0;
+  font-family: "Arial Black", Impact, sans-serif;
+  font-size: clamp(1.85rem, 4.5vw, 2.8rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.about-lead,
+.about-card p {
+  margin: 0;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  line-height: 1.55;
+  font-weight: 600;
+  text-wrap: pretty;
+}
+
+.about-likes {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.about-likes li {
+  display: grid;
+  gap: 0.25rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(42, 36, 51, 0.1);
+}
+
+.about-likes__label {
+  font-family: "Arial Black", Impact, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.about-likes__text {
+  font-size: clamp(0.95rem, 1.4vw, 1.08rem);
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+.about-closing {
+  font-size: clamp(1.2rem, 2.2vw, 1.55rem) !important;
+  font-family: "Arial Black", Impact, sans-serif;
+  font-weight: 900 !important;
+  line-height: 1.25 !important;
+  text-transform: uppercase;
+}
+
+.about-closing a {
+  color: var(--violet-deep);
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.15em;
+}
+
+.about-closing a:hover,
+.about-closing a:focus-visible {
+  color: #fff;
+  background: var(--violet-deep);
+  outline: none;
+}
+
+.about-hint {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.2rem;
+  z-index: 20;
+  margin: 0;
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  pointer-events: none;
+  opacity: calc(1 - var(--menu-reveal) * 1.2);
+}
+
+@media (max-width: 720px) {
+  .about {
+    min-height: 380vh;
+  }
+
+  .about-hero__name {
+    width: min(155vw, 68rem);
+  }
+
+  .about-hero__mark {
+    max-height: min(88vh, 36rem);
+  }
+
+  .about-deck {
+    margin-top: 145vh;
+    width: min(92vw, 40rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-underlay img,
+  .about-hero__name {
+    transform: none;
+  }
+
+  .about {
+    min-height: auto;
+  }
+
+  .about-underlay,
+  .scroll-curtain {
+    display: none;
+  }
+
+  .about-hero {
+    position: relative;
+    min-height: 100vh;
+    transform: none;
+  }
+
+  .about-hero__name,
+  .about-deck {
+    opacity: 1;
+  }
+
+  .about-deck {
+    margin-top: 0;
+    padding: 2rem 0 4rem;
+  }
+
+  .about-hint {
+    display: none;
+  }
+}

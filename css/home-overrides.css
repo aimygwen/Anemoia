@@ -1,0 +1,1650 @@
+/* Aimy home — static layout overrides (after Polykroma). */
+/* Unlock scroll for static replica (original app used custom scroller) */
+html, body {
+  overflow: auto !important;
+  height: auto !important;
+  max-height: none !important;
+  overscroll-behavior: none;
+}
+
+/*
+ * Pastel purple / lavender theme (light + dark via system preference).
+ * Remaps legacy tokens so every section stays in one palette.
+ *
+ * Light:
+ *  --c-black  → deep plum (ink / dark section surfaces)
+ *  --c-yellow → soft lavender paper (light surfaces / light text on dark)
+ *
+ * Dark:
+ *  Same dual-use roles, but tuned for contrast — paper stays luminous,
+ *  ink/surfaces go deeper, chrome ink flips light on elevated dark panels.
+ */
+:root {
+  color-scheme: light;
+
+  --c-white: #fbf8fd;
+  --c-white-rgb: 251, 248, 253;
+  --c-black: #3a2748;
+  --c-black-rgb: 58, 39, 72;
+  --c-grey: #6f5a82;
+  --c-grey-rgb: 111, 90, 130;
+  --c-stone: #4d375e;
+  --c-stone-rgb: 77, 55, 94;
+  --c-yellow: #f0e6f7;
+  --c-yellow-rgb: 240, 230, 247;
+  --c-brown: #a78bc0;
+  --c-brown-rgb: 167, 139, 192;
+  --c-stroke: #d2bfe3;
+  --c-stroke-rgb: 210, 191, 227;
+  --c-red: #e8a8c8;
+  --c-red-rgb: 232, 168, 200;
+  --c-purple: #c9a8e8;
+  --c-purple-rgb: 201, 168, 232;
+
+  --aimy-surface: #f0e6f7;
+  --aimy-surface-deep: #e4d2f0;
+  --aimy-ink: #56267a;
+  --aimy-ink-soft: #7a5a96;
+  --aimy-primary: #8a48c0;
+  --aimy-secondary: #f2d6ea;
+  --aimy-tertiary: #2e123f;
+  --aimy-accent: #e879b8;
+  --aimy-ink-on-dark: #f7f0fb;
+  --aimy-glass: rgba(232, 220, 242, 0.28);
+  --aimy-glass-strong: rgba(232, 220, 242, 0.42);
+  --aimy-field-line: rgba(58, 39, 72, 0.22);
+  --aimy-field-placeholder: rgba(58, 39, 72, 0.38);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    /* Luminous text / dark-section type */
+    --c-white: #f6effc;
+    --c-white-rgb: 246, 239, 252;
+    --c-yellow: #ebe3f6;
+    --c-yellow-rgb: 235, 227, 246;
+
+    /* Deep plum surfaces / light-section ink */
+    --c-black: #140e1c;
+    --c-black-rgb: 20, 14, 28;
+    --c-stone: #1c1428;
+    --c-stone-rgb: 28, 20, 40;
+
+    /* Readable secondary + accents on dark */
+    --c-grey: #b9a6ce;
+    --c-grey-rgb: 185, 166, 206;
+    --c-brown: #d2b4f0;
+    --c-brown-rgb: 210, 180, 240;
+    --c-stroke: #5a4570;
+    --c-stroke-rgb: 90, 69, 112;
+    --c-red: #f0b0d4;
+    --c-red-rgb: 240, 176, 212;
+    --c-purple: #d9b8ff;
+    --c-purple-rgb: 217, 184, 255;
+
+    /* Elevated panels (contact, glass, chrome) */
+    --aimy-surface: #1c1428;
+    --aimy-surface-deep: #2a1f3c;
+    --aimy-ink: #f3eafc;
+    --aimy-ink-soft: #cbb8e0;
+    --aimy-primary: #c084e8;
+    --aimy-secondary: #f5dced;
+    --aimy-tertiary: #1a0c28;
+    --aimy-accent: #ff9ad0;
+    --aimy-ink-on-dark: #f8f2fc;
+    --aimy-glass: rgba(72, 48, 104, 0.42);
+    --aimy-glass-strong: rgba(96, 64, 132, 0.55);
+    --aimy-field-line: rgba(243, 234, 252, 0.28);
+    --aimy-field-placeholder: rgba(243, 234, 252, 0.45);
+  }
+}
+
+html,
+body {
+  background-color: var(--c-yellow) !important;
+  color: var(--c-black);
+}
+
+@media (prefers-color-scheme: dark) {
+  html,
+  body {
+    /* Page reads as deep plum with light ink by default */
+    background-color: var(--c-black) !important;
+    color: var(--c-yellow);
+  }
+}
+
+/* Hide Nuxt page-transition splash (never dismissed without app JS) */
+.page-transition,
+.m-transition-underlay {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+
+/*
+ * Hero artwork (kawaiievil.png)
+ * Original used a stone-shaped mask + rock hover layers (hover-1/2).
+ * That clips / covers Aimy's character art — strip it and show the PNG cleanly.
+ */
+.c-welcome .-w .stone,
+.c-welcome .-w .stone[data-v-6c6a6d99] {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  contain: none !important;
+  overflow: visible !important;
+  /* Between filled title (behind) and outline title (in front). */
+  z-index: 10 !important;
+  /* Keep original grid slot (--top:3) so title / side pics stay put.
+     Nudge only visually with translate (does not affect layout). */
+  translate: 0 -30% !important;
+  /* Base size (was ~0.72–0.78; 1.0 is a touch under the last 1.05 bump) */
+  scale: 1 !important;
+  /* Scroll warp — shrink toward the arch (origin below the art) */
+  transform: translate3d(0, calc(var(--vh, 1vh) * -2), 0)
+    scale(calc(1 - var(--progress, 0) * 0.5)) !important;
+  transform-origin: 50% 150% !important;
+}
+
+/* Kill the black progress fade that paints over the art */
+.c-welcome .-w .stone::after,
+.c-welcome .-w .stone[data-v-6c6a6d99]::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* Leftover rock spotlight layers (if still in markup) */
+.c-welcome .-w .stone .hover-1,
+.c-welcome .-w .stone .hover-2 {
+  display: none !important;
+  background-image: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.c-welcome .-w .stone img,
+.c-welcome .-w .stone[data-v-6c6a6d99] img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  background: transparent !important;
+}
+
+.c-welcome .-w .stone picture,
+.c-welcome .-w .stone[data-v-6c6a6d99] picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+  grid-area: 1 / 1;
+}
+
+/* Welcome flankers: free decor stickers (no captions, no card crop) */
+.c-welcome .-w .places:after,
+.c-welcome .-w .items:after,
+.c-welcome .-w .places[data-v-6c6a6d99]:after,
+.c-welcome .-w .items[data-v-6c6a6d99]:after {
+  content: none !important;
+  display: none !important;
+}
+
+.c-welcome .-w figure.places,
+.c-welcome .-w figure.items,
+.c-welcome .-w .places[data-v-6c6a6d99],
+.c-welcome .-w .items[data-v-6c6a6d99] {
+  aspect-ratio: auto !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+  align-self: center !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 22 !important;
+}
+
+.c-welcome .-w figure.places img,
+.c-welcome .-w figure.items img,
+.c-welcome .-w .places[data-v-6c6a6d99] img,
+.c-welcome .-w .items[data-v-6c6a6d99] img {
+  position: relative !important;
+  inset: auto !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: 135% !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  display: block !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  pointer-events: none;
+}
+
+/* Let stickers breathe past their grid cells; clip only the wide arch sides */
+.c-welcome,
+.c-welcome[data-v-6c6a6d99] {
+  overflow-x: clip !important;
+  overflow-y: visible !important;
+  contain: none !important;
+}
+
+.c-welcome .-w {
+  --welcome-title: #6a35a0;
+  overflow: visible !important;
+  isolation: isolate;
+}
+
+@media (prefers-color-scheme: dark) {
+  .c-welcome .-w {
+    --welcome-title: #c9a0ef;
+  }
+}
+
+/* Welcome sky: mood_day (light) / mood_night (dark) via system preference */
+.c-welcome,
+.c-welcome[data-v-6c6a6d99] {
+  background-image: url("../assets/mood_day.jpg") !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .c-welcome,
+  .c-welcome[data-v-6c6a6d99] {
+    background-image: url("../assets/mood_night.jpg") !important;
+  }
+}
+
+/* Lazy imgs fill their figure frame — but do NOT force visibility
+   (sequence figures rely on visibility:hidden until .-active) */
+figure.-fit img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Work sticky track: collapse the 400vh scrub void between Work and Tapes & Motion.
+   Sequencer still works via prev/next; content layout stays intact. */
+@media (min-width: 1024px) {
+  .c-places .places-story .sticky-container,
+  .c-places .places-story .-w .sticky-container,
+  .c-places .places-story .-w .sticky-container[data-v-7eb8a498] {
+    height: calc(var(--vh, 1vh) * 100) !important;
+    min-height: 0 !important;
+  }
+
+  .c-places .places-story .sticky-container .-gc {
+    --columns: 12 !important;
+    --rows: 20 !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .c-places .places-story .sticky-container,
+  .c-places .places-story .-w .sticky-container,
+  .c-places .places-story .-w .sticky-container[data-v-7eb8a498] {
+    height: auto !important;
+  }
+}
+
+/* Little tagline above “Made by me” */
+.c-places .work-intro {
+  position: relative;
+  z-index: 3;
+  margin: 0 auto clamp(0.75rem, 2vh, 1.35rem);
+  padding: 0 var(--g-margin);
+  max-width: 36ch;
+  text-align: center;
+  color: var(--c-yellow);
+  font-family: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  font-size: clamp(0.72rem, 1.1vw, 0.9rem);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.45;
+  opacity: 0.88;
+}
+
+/* Featured Work (ex-Studio): sit between Creations and Tapes & Motion */
+#featured.c-updates,
+.c-updates.c-featured {
+  z-index: 35;
+  padding-bottom: clamp(2rem, 6vh, 4rem);
+}
+
+#featured.c-updates .-w.figure-holder,
+.c-updates.c-featured .-w.figure-holder {
+  min-height: calc(var(--vh, 1vh) * 70);
+}
+
+#featured.c-updates .figure-sequence figure img,
+.c-updates.c-featured .figure-sequence figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Readable Aimy body copy on dark sections */
+.c-places p,
+.c-objects p,
+.c-people p,
+.c-updates p,
+.c-connection p {
+  max-width: 42ch;
+}
+
+/*
+ * About portrait — drop arch / half-circle frame.
+ * Keep original grid placement; shrink with max-width.
+ * Image is position:absolute (.-fit), so the frame needs a real box.
+ */
+.c-people .-w .arch,
+.c-people .-w .arch[data-v-95ef3e57] {
+  background-image: none !important;
+  border-radius: 0.35rem !important;
+  clip-path: none !important;
+  -webkit-clip-path: none !important;
+  padding: 0 !important;
+  overflow: hidden;
+  scale: 1 !important;
+  transform-origin: center center !important;
+  max-width: 15rem;
+  width: 100%;
+  justify-self: center;
+}
+
+@media (min-width: 1024px) {
+  .c-people .-w .arch,
+  .c-people .-w .arch[data-v-95ef3e57] {
+    max-width: 20rem;
+  }
+}
+
+.c-people .-w .arch .arch-inner,
+.c-people .-w .arch .arch-inner[data-v-95ef3e57] {
+  aspect-ratio: 4 / 5 !important;
+  border-radius: 0.35rem !important;
+  display: block !important;
+  overflow: hidden !important;
+  position: relative !important;
+  width: 100%;
+  scale: 1 !important;
+}
+
+.c-people .-w .arch .arch-inner::before,
+.c-people .-w .arch .arch-inner[data-v-95ef3e57]:before {
+  content: none !important;
+  display: none !important;
+  background-image: none !important;
+}
+
+.c-people .-w .arch .arch-inner figure,
+.c-people .-w .arch .arch-inner figure[data-v-95ef3e57] {
+  display: block !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  align-self: auto !important;
+}
+
+.c-people .-w .arch .arch-inner figure img,
+.c-people .-w .arch .arch-inner figure[data-v-95ef3e57] img {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  display: block;
+}
+
+/* Optional window decorations around the arch — hide for a quieter look */
+.c-people .-w .window,
+.c-people .-w .window[data-v-95ef3e57] {
+  display: none !important;
+}
+
+/* Contact form polish */
+.c-admission,
+.c-admission .-w,
+.c-admission .sequence-canvas {
+  color: var(--aimy-ink);
+}
+
+.c-admission input,
+.c-admission textarea,
+.c-admission label,
+.c-admission .field {
+  color: var(--aimy-ink) !important;
+}
+
+.c-admission .field,
+.c-admission .field[data-v-8910626f],
+.c-admission .field[data-v-4b3f08f7] {
+  border-bottom-color: var(--aimy-field-line) !important;
+}
+
+.c-admission .field .placeholder,
+.c-admission .placeholder,
+.c-admission .field .placeholder[data-v-8910626f],
+.c-admission input::placeholder,
+.c-admission textarea::placeholder {
+  color: rgba(var(--c-black-rgb), 0.14) !important;
+  opacity: 1 !important;
+  filter: blur(0.12rem) !important;
+  -webkit-filter: blur(0.12rem) !important;
+}
+
+.c-admission .field .-t-placeholder-enter-active,
+.c-admission .field .-t-placeholder-leave-active,
+.c-admission .field .-t-placeholder-enter-active[data-v-8910626f],
+.c-admission .field .-t-placeholder-leave-active[data-v-8910626f] {
+  color: rgba(var(--c-black-rgb), 0.14) !important;
+  filter: blur(0.12rem) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .c-admission .field .placeholder,
+  .c-admission .placeholder,
+  .c-admission .field .placeholder[data-v-8910626f],
+  .c-admission input::placeholder,
+  .c-admission textarea::placeholder,
+  .c-admission .field .-t-placeholder-enter-active,
+  .c-admission .field .-t-placeholder-leave-active {
+    color: rgba(var(--c-yellow-rgb), 0.28) !important;
+  }
+}
+
+.c-admission .-w form .agreement label a {
+  color: var(--aimy-primary) !important;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.c-admission .-w form .agreement label a.contact-discord-link {
+  display: inline-block;
+  margin-top: 0.35em;
+}
+
+.c-admission .title > span.-lrg-max,
+.c-admission .title > span.-lrg-max[data-v-4b3f08f7] {
+  color: var(--aimy-ink) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .c-admission .title > span.-lrg-max,
+  .c-admission .title > span.-lrg-max[data-v-4b3f08f7] {
+    color: var(--aimy-ink-on-dark) !important;
+  }
+}
+
+/* Work / updates / admission: clickable sequence chrome */
+.c-places .sequence-controller figure.-active,
+.c-updates .figure-sequence figure.-active,
+.c-admission .sequence-canvas figure.-active {
+  visibility: visible;
+  z-index: 3;
+}
+
+.c-places .places-story .-w .sticky-container .-gc .i {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.c-places .sequesnce-nav nav button,
+.c-updates button.prev,
+.c-updates button.next {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* —— Main footer polish —— */
+.page-footer,
+.page-footer[data-v-a41b36d1] {
+  --footer-ink: var(--aimy-ink);
+  --footer-ink-soft: var(--aimy-ink-soft);
+  --footer-link: var(--aimy-primary);
+  --footer-bounce: cubic-bezier(0.3, 2.2, 0.4, 0.95);
+  padding-top: clamp(3.5rem, 8vw, 6rem);
+}
+
+.page-footer a[href*="index.html"] {
+  text-decoration: none;
+}
+
+/* Soft plum underlay — less void, more stage */
+.page-footer.-home .underlay,
+.page-footer.-home .underlay[data-v-a41b36d1] {
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(138, 72, 192, 0.22), transparent 55%),
+    linear-gradient(180deg, #2a1a38 0%, var(--c-black) 42%, #1a1024 100%) !important;
+}
+
+.page-footer .underlay[data-v-a41b36d1]::before {
+  opacity: 0.35;
+  mix-blend-mode: soft-light;
+}
+
+/* Paper panel — luminous, Aimy-tinted */
+.page-footer .-w.block,
+.page-footer .-w.block[data-v-a41b36d1] {
+  background-color: var(--c-white) !important;
+  background-image:
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--aimy-primary) 7%, var(--c-white)) 0%,
+      var(--c-white) 42%,
+      color-mix(in srgb, var(--c-yellow) 70%, var(--c-white)) 100%
+    ) !important;
+  color: var(--footer-ink) !important;
+  border-radius: clamp(1.25rem, 2.5vw, 2rem) !important;
+  padding-top: clamp(2.25rem, 4.5vw, 3.5rem) !important;
+  padding-bottom: clamp(1.75rem, 3.5vw, 2.75rem) !important;
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--aimy-primary) 12%, transparent),
+    0 28px 64px rgba(58, 39, 72, 0.18);
+}
+
+.page-footer .-w.block[data-v-a41b36d1]::before {
+  background-color: color-mix(in srgb, var(--c-white) 88%, var(--aimy-primary)) !important;
+}
+
+.page-footer .-w.block[data-v-a41b36d1]::after {
+  background-color: color-mix(in srgb, var(--c-yellow) 82%, var(--aimy-accent)) !important;
+}
+
+/* Signature mark (masked SVG → primary purple) */
+.page-footer .-w.block .footer-signature {
+  --top: 1;
+  --left: 1;
+  --width: 2;
+  --height: 1;
+  display: block;
+  align-self: end;
+  justify-self: start;
+  margin: 0 0 0.45rem var(--g-gap);
+  width: clamp(5.75rem, 13vw, 8.75rem);
+  aspect-ratio: 479 / 319;
+  height: auto;
+  background-color: var(--aimy-primary);
+  -webkit-mask-image: url("../assets/polykroma/signature.svg");
+  mask-image: url("../assets/polykroma/signature.svg");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+/* Tagline */
+.page-footer .-w.block .operating,
+.page-footer .-w.block .operating[data-v-a41b36d1] {
+  --top: 2 !important;
+  color: var(--footer-ink) !important;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem) !important;
+}
+
+.page-footer .-w.block .operating span[data-v-a41b36d1]:nth-child(1) {
+  font-weight: 600;
+}
+
+.page-footer .-w.block .operating span[data-v-a41b36d1]:nth-child(3) {
+  color: var(--aimy-primary);
+}
+
+/* Nav — intentional cascade, not leftover slots */
+.page-footer .-w.block nav[data-v-a41b36d1] {
+  --top: 3;
+  --height: 1;
+  --left: 1;
+  --width: 6;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  column-gap: clamp(0.75rem, 2vw, 1.5rem) !important;
+  row-gap: clamp(0.2rem, 1vw, 0.55rem) !important;
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem) !important;
+  align-items: start;
+}
+
+.page-footer .-w.block nav a[data-v-a41b36d1],
+.page-footer .-w.block nav a.places[data-v-a41b36d1],
+.page-footer .-w.block nav a.objects[data-v-a41b36d1],
+.page-footer .-w.block nav a.about[data-v-a41b36d1],
+.page-footer .-w.block nav a.contacts[data-v-a41b36d1] {
+  grid-column: auto !important;
+  grid-row: auto !important;
+  grid-column-start: auto !important;
+  grid-column-end: auto !important;
+  grid-row-start: auto !important;
+  grid-row-end: auto !important;
+  justify-self: start !important;
+  translate: none !important;
+  margin-left: 0 !important;
+  padding: 0.1rem 0.15rem 0.25rem !important;
+  font-size: clamp(1.55rem, 4.2vw, 2.85rem) !important;
+  line-height: 0.95 !important;
+  color: var(--footer-link) !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  transition: transform 0.5s var(--footer-bounce), color 0.3s ease;
+}
+
+.page-footer .-w.block nav a.places[data-v-a41b36d1] { grid-column: 1 !important; grid-row: 1 !important; }
+.page-footer .-w.block nav a.objects[data-v-a41b36d1] { grid-column: 2 !important; grid-row: 1 !important; }
+.page-footer .-w.block nav a.about[data-v-a41b36d1] { grid-column: 1 !important; grid-row: 2 !important; }
+.page-footer .-w.block nav a.contacts[data-v-a41b36d1] { grid-column: 2 !important; grid-row: 2 !important; }
+
+/* Soften cross + flip; keep character motion */
+.page-footer .-w.block nav a[data-v-a41b36d1]::before {
+  background-image:
+    linear-gradient(
+      0deg,
+      transparent calc(50% - 1px),
+      var(--aimy-accent) calc(50% - 1px),
+      var(--aimy-accent) calc(50% + 1px),
+      transparent calc(50% + 1px)
+    ),
+    linear-gradient(
+      90deg,
+      transparent calc(50% - 1px),
+      var(--aimy-accent) calc(50% - 1px),
+      var(--aimy-accent) calc(50% + 1px),
+      transparent calc(50% + 1px)
+    ) !important;
+  opacity: 0.85;
+  bottom: 0.2em !important;
+}
+
+.page-footer .-w.block nav a[data-v-a41b36d1]:hover {
+  color: var(--aimy-accent) !important;
+  transform: scale(1.04);
+}
+
+.page-footer .-w.block .copy,
+.page-footer .-w.block .copy[data-v-a41b36d1] {
+  --top: 4;
+  --left: 1;
+  --width: 4;
+  align-self: end;
+  justify-self: start;
+  margin: 0.35rem 0 0 var(--g-gap) !important;
+  color: var(--footer-ink-soft) !important;
+  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  letter-spacing: 0.02em;
+}
+
+@media (min-width: 1024px) {
+  .page-footer .-w.block .footer-signature {
+    --top: 1;
+    --left: 2;
+    --width: 2;
+    margin-left: 0;
+    margin-bottom: 0.65rem;
+    width: clamp(6.75rem, 9.5vw, 10rem);
+  }
+
+  .page-footer .-w.block .operating,
+  .page-footer .-w.block .operating[data-v-a41b36d1] {
+    --top: 2 !important;
+    margin-bottom: clamp(2.5rem, 4vw, 4rem) !important;
+  }
+
+  .page-footer .-w.block nav[data-v-a41b36d1] {
+    --top: 1;
+    --height: 2;
+    --left: 5;
+    --width: 7;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    column-gap: clamp(1.25rem, 2.5vw, 2.5rem) !important;
+    row-gap: clamp(0.35rem, 0.9vw, 0.75rem) !important;
+    margin-bottom: clamp(2rem, 3.5vw, 3.25rem) !important;
+  }
+
+  .page-footer .-w.block nav a[data-v-a41b36d1],
+  .page-footer .-w.block nav a.places[data-v-a41b36d1],
+  .page-footer .-w.block nav a.objects[data-v-a41b36d1],
+  .page-footer .-w.block nav a.about[data-v-a41b36d1],
+  .page-footer .-w.block nav a.contacts[data-v-a41b36d1] {
+    font-size: clamp(2rem, 3.2vw, 3.1rem) !important;
+  }
+
+  .page-footer .-w.block .copy,
+  .page-footer .-w.block .copy[data-v-a41b36d1] {
+    --top: 3;
+    --left: 2;
+    margin-left: 0 !important;
+  }
+
+  .page-footer .-w.block nav a[data-v-a41b36d1] .-s-char::after {
+    color: var(--aimy-primary) !important;
+  }
+}
+
+/* Below the paper box — imprint, contact, social, inspiration */
+.page-footer .footer-below {
+  position: relative;
+  z-index: 50;
+  margin: 0 var(--g-margin);
+  padding:
+    clamp(2rem, 4.5vw, 3.25rem)
+    clamp(0.35rem, 1.5vw, 1rem)
+    clamp(2.5rem, 5vw, 4rem);
+  color: color-mix(in srgb, var(--c-yellow) 78%, white);
+}
+
+.page-footer .footer-below-inner {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.35rem, 3vw, 2rem);
+  max-width: 52rem;
+}
+
+.page-footer .footer-site,
+.page-footer .footer-social,
+.page-footer .footer-inspire-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.65rem 1.35rem;
+}
+
+.page-footer .footer-site a,
+.page-footer .footer-social a,
+.page-footer .footer-inspire-links a {
+  color: color-mix(in srgb, var(--c-yellow) 88%, white);
+  text-decoration: none;
+  font-family: var(--aimy-nav-font, "Plus Jakarta Sans", sans-serif);
+  font-size: clamp(0.92rem, 1.35vw, 1.05rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  transition:
+    transform 0.45s var(--footer-bounce),
+    color 0.25s ease;
+}
+
+.page-footer .footer-site a:hover,
+.page-footer .footer-social a:hover,
+.page-footer .footer-inspire-links a:hover {
+  color: var(--aimy-accent);
+  transform: translateY(-2px) scale(1.05);
+}
+
+.page-footer .footer-inspire {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.page-footer .footer-inspire-label {
+  font-family: var(--aimy-nav-font, "Plus Jakarta Sans", sans-serif);
+  font-size: clamp(0.72rem, 1vw, 0.82rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--c-yellow) 48%, transparent);
+}
+
+.page-footer .footer-inspire-links {
+  gap: 0.55rem 1.25rem;
+}
+
+.page-footer .footer-inspire-links a {
+  font-weight: 500;
+  color: color-mix(in srgb, var(--c-yellow) 72%, white);
+}
+
+.page-footer .no-so-me,
+.page-footer .independent {
+  display: none !important;
+}
+
+.page-footer .expression,
+.page-footer .credits,
+.page-footer .-w.after,
+.page-footer .stone-3,
+.page-footer figure.stone-3 {
+  display: none !important;
+}
+
+/* Leftover Imagine Possible mark after the page */
+body > svg[data-v-55c3b488],
+main + svg[data-v-55c3b488],
+#Aimy\ Gwen svg[data-v-55c3b488] {
+  display: none !important;
+}
+
+/* Contact (admission): elevated panel from theme */
+.c-admission .sequence-canvas,
+.c-admission .sequence-canvas[data-v-4b3f08f7] {
+  background-color: var(--aimy-surface-deep) !important;
+  background-image: none !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .c-admission .sequence-canvas,
+  .c-admission .sequence-canvas[data-v-4b3f08f7] {
+    box-shadow: inset 0 0 0 1px rgba(243, 234, 252, 0.08);
+  }
+
+  /* Light “paper” sections stay luminous islands on the dark page */
+  .c-updates,
+  .c-updates[data-v-86cabee1],
+  .c-featured {
+    background-color: var(--c-stone);
+    color: var(--c-yellow);
+  }
+
+  .c-updates .title,
+  .c-updates .subtitle,
+  .c-updates .update-title,
+  .c-updates .update-status,
+  .c-updates .update-caption,
+  .c-updates .num {
+    color: var(--c-yellow);
+  }
+
+  /* Inputs: kill inset black ring that disappears on dark panels */
+  .c-admission input,
+  .c-admission textarea {
+    box-shadow: none !important;
+    -webkit-text-fill-color: var(--aimy-ink);
+  }
+
+  /* Paper footer stays luminous; keep ink readable on the plate */
+  .page-footer,
+  .page-footer[data-v-a41b36d1] {
+    --footer-ink: #2a1a38;
+    --footer-ink-soft: #6a5578;
+  }
+
+  .page-footer.-home .underlay,
+  .page-footer.-home .underlay[data-v-a41b36d1] {
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(180, 120, 224, 0.18), transparent 55%),
+      linear-gradient(180deg, #0c0812 0%, #140e1c 50%, #0a0610 100%) !important;
+  }
+
+  .page-footer .-w.block,
+  .page-footer .-w.block[data-v-a41b36d1] {
+    box-shadow:
+      0 1px 0 rgba(243, 234, 252, 0.08),
+      0 32px 72px rgba(0, 0, 0, 0.45);
+  }
+}
+
+.c-admission .sequence-canvas figure,
+.c-admission .sequence-canvas figure[data-v-4b3f08f7],
+.c-admission .sequence-canvas img {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Discord field — same span as the old Country row on desktop */
+@media (min-width: 1024px) {
+  .c-admission .-w form .discord,
+  .c-admission .-w form .discord[data-v-4b3f08f7] {
+    grid-column-start: 3;
+    grid-column-end: 9;
+  }
+}
+
+/*
+ * Insights — art left, title + copy beside it
+ */
+.insights-compose {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  align-items: start;
+  background-color: var(--c-yellow);
+  padding: var(--h5) clamp(0.75rem, 3vw, 2rem) var(--large);
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .insights-compose {
+    grid-template-columns: minmax(18rem, 0.9fr) minmax(20rem, 1.15fr);
+    gap: clamp(1.5rem, 3.5vw, 3.25rem);
+    padding: var(--h3) clamp(1.5rem, 5vw, 4rem) var(--large);
+  }
+}
+
+.connection-figure,
+.connection-figure[data-v-f3038ea5],
+.s-wrapper,
+.s-wrapper[data-v-f3038ea5],
+.s-wrapper .c-connection,
+.s-wrapper .c-connection[data-v-f3038ea5] {
+  background-color: transparent !important;
+}
+
+.connection-figure,
+.connection-figure[data-v-f3038ea5] {
+  margin-bottom: 0 !important;
+  width: 100%;
+}
+
+.connection-figure .-w,
+.connection-figure .-w[data-v-f3038ea5] {
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0;
+  overflow: visible;
+  place-items: start;
+  justify-items: start;
+  display: block !important;
+}
+
+.connection-figure .-w figure,
+.connection-figure .-w figure[data-v-f3038ea5] {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  rotate: none !important;
+  width: 100% !important;
+  max-width: 22rem;
+  aspect-ratio: 4 / 5;
+  margin: 0 !important;
+  overflow: hidden;
+  border-radius: 0.35rem;
+  justify-self: start !important;
+}
+
+.connection-figure .-w figure img,
+.connection-figure .-w figure[data-v-f3038ea5] img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .connection-figure .-w figure,
+  .connection-figure .-w figure[data-v-f3038ea5] {
+    max-width: none;
+  }
+}
+
+/* Drop path / giant order glyph */
+.connection-figure .-w .connection-path,
+.connection-figure .-w .connection-order,
+.connection-figure .-w .connection-path[data-v-f3038ea5],
+.connection-figure .-w .connection-order[data-v-f3038ea5] {
+  display: none !important;
+}
+
+.s-wrapper,
+.s-wrapper[data-v-f3038ea5] {
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.s-wrapper .c-connection .figure-holder.-w,
+.s-wrapper .c-connection .figure-holder.-w[data-v-f3038ea5] {
+  min-height: 0 !important;
+  color: var(--c-black) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0;
+  justify-items: start;
+  margin: 0 !important;
+}
+
+.s-wrapper .c-connection .-w .caption,
+.s-wrapper .c-connection .-w .caption[data-v-f3038ea5],
+.s-wrapper .c-connection .-w .label,
+.s-wrapper .c-connection .-w .label[data-v-f3038ea5] {
+  color: var(--c-black) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .insights-compose {
+    background-color: var(--c-black);
+  }
+
+  .s-wrapper .c-connection .figure-holder.-w,
+  .s-wrapper .c-connection .figure-holder.-w[data-v-f3038ea5],
+  .s-wrapper .c-connection .-w .caption,
+  .s-wrapper .c-connection .-w .caption[data-v-f3038ea5],
+  .s-wrapper .c-connection .-w .label,
+  .s-wrapper .c-connection .-w .label[data-v-f3038ea5] {
+    color: var(--c-yellow) !important;
+  }
+}
+
+/* Insights title — large, sits with the copy column */
+.s-wrapper .c-connection .figure-holder .title,
+.s-wrapper .c-connection .figure-holder a.title,
+.s-wrapper .c-connection .figure-holder .title[data-v-f3038ea5],
+.s-wrapper .c-connection .-w .title[data-v-f3038ea5] {
+  --width: 6 !important;
+  --left: 1 !important;
+  color: inherit;
+  text-decoration: none;
+  pointer-events: auto;
+  cursor: pointer;
+  justify-self: start !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  margin: 0 !important;
+  font-size: clamp(3.6rem, 11vw, 7.5rem) !important;
+  line-height: 0.92 !important;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.3, 2.2, 0.4, 0.95);
+}
+
+@media (min-width: 1024px) {
+  .s-wrapper .c-connection .figure-holder .title,
+  .s-wrapper .c-connection .figure-holder a.title,
+  .s-wrapper .c-connection .figure-holder .title[data-v-f3038ea5],
+  .s-wrapper .c-connection .-w .title[data-v-f3038ea5] {
+    --width: 12 !important;
+    --left: 1 !important;
+    font-size: clamp(4.5rem, 6.5vw, 7.25rem) !important;
+  }
+}
+
+.s-wrapper .c-connection .figure-holder a.title:hover {
+  opacity: 0.88;
+  transform: scale(1.02);
+}
+
+.s-wrapper .c-connection .figure-holder .insights-desc {
+  --top: 2;
+  --width: 6;
+  --left: 1;
+  justify-self: start;
+  text-align: left;
+  max-width: 40ch;
+  margin: 1rem 0 0;
+  color: inherit;
+  opacity: 0.92;
+  line-height: 1.4;
+  pointer-events: none;
+  white-space: normal;
+}
+
+@media (min-width: 1024px) {
+  .s-wrapper .c-connection .figure-holder .insights-desc {
+    --width: 12;
+    --left: 1;
+    max-width: 42ch;
+  }
+}
+
+/* Body captions — under the title in the same column */
+.s-wrapper .c-connection .-w:not(.figure-holder) {
+  padding-top: 1.15rem !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+}
+
+.s-wrapper .c-connection .-w .caption.c-1,
+.s-wrapper .c-connection .-w .caption.c-1[data-v-f3038ea5],
+.s-wrapper .c-connection .-w .caption.c-2,
+.s-wrapper .c-connection .-w .caption.c-2[data-v-f3038ea5] {
+  --left: 1 !important;
+  --width: 6 !important;
+  max-width: 44ch;
+  text-align: left !important;
+  justify-self: start !important;
+  margin-left: 0 !important;
+}
+
+.s-wrapper .c-connection .-w .caption.c-2,
+.s-wrapper .c-connection .-w .caption.c-2[data-v-f3038ea5] {
+  --top: 2 !important;
+  --width: 5 !important;
+  max-width: 38ch;
+  margin-top: 1.15rem;
+  opacity: 0.9;
+}
+
+@media (min-width: 1024px) {
+  .s-wrapper .c-connection .-w .caption.c-1,
+  .s-wrapper .c-connection .-w .caption.c-1[data-v-f3038ea5],
+  .s-wrapper .c-connection .-w .caption.c-2,
+  .s-wrapper .c-connection .-w .caption.c-2[data-v-f3038ea5] {
+    --width: 12 !important;
+  }
+
+  .s-wrapper .c-connection .-w .caption.c-2,
+  .s-wrapper .c-connection .-w .caption.c-2[data-v-f3038ea5] {
+    --left: 1 !important;
+  }
+}
+
+/* Kill leftover indent spacer */
+.s-wrapper .c-connection .-w .c-1 .indent {
+  display: none !important;
+  width: 0 !important;
+}
+
+@font-face {
+  font-family: "Newpixel";
+  src: url("../fonts/newpixel.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Bold Block";
+  src: url("../fonts/Bold Block.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Alias legacy faces → Newpixel so direct font-family names also swap */
+@font-face {
+  font-family: "Voyage-Regular";
+  src: url("../fonts/newpixel.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "OTJubilee-Platinum";
+  src: url("../fonts/newpixel.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Switzer-Regular";
+  src: url("../fonts/newpixel.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Switzer-Medium";
+  src: url("../fonts/newpixel.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/newpixel.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font: "Newpixel", "Courier New", monospace;
+  --font-t-1: "Newpixel", "Courier New", monospace;
+  --font-t-2: "Newpixel", "Courier New", monospace;
+  --font-b-regular: "Newpixel", "Courier New", monospace;
+  --font-b-medium: "Newpixel", "Courier New", monospace;
+  --aimy-font: "Newpixel", "Courier New", monospace;
+  --aimy-nav-font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+}
+
+html,
+body,
+#Aimy\ Gwen,
+.page,
+button,
+input,
+textarea,
+label {
+  font-family: "Newpixel", "Courier New", monospace !important;
+  font-style: normal !important;
+  font-synthesis: none !important;
+}
+
+.site-header[data-aimy-chrome] .nav a,
+.site-header[data-aimy-chrome] .social a {
+  font-family: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  font-synthesis: none !important;
+}
+
+
+/*
+ * Welcome title — filled type behind hero art, outline clone in front
+ * so covered letters read as stroke only.
+ */
+.c-welcome .-w span.title,
+.c-welcome .-w span.title[data-v-6c6a6d99],
+.c-welcome .-w span.line-1[data-v-6c6a6d99],
+.c-welcome .-w span.line-2[data-v-6c6a6d99],
+.c-welcome .-w span.line-3[data-v-6c6a6d99] {
+  overflow: visible !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  pointer-events: none !important;
+}
+
+/* Filled titles: no fade mask. Outline titles keep a JS character mask. */
+.c-welcome .-w span.title.is-title-fill,
+.c-welcome .-w span.title.line-1.is-title-fill,
+.c-welcome .-w span.title.line-3.is-title-fill,
+.c-welcome .-w span.title:not(.is-title-outline) {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+}
+
+.c-welcome .-w span.title.line-1,
+.c-welcome .-w span.line-1[data-v-6c6a6d99],
+.c-welcome .-w span.title.line-1.is-visions-of {
+  --top: 2 !important;
+  --left: 1 !important;
+  --width: 6 !important;
+  justify-self: center !important;
+  justify-content: center !important;
+  align-self: end !important;
+  text-align: center !important;
+  margin: 0 0 0.15em !important;
+  padding: 0 !important;
+  font-family: "Newpixel", "Courier New", monospace !important;
+  font-size: clamp(1.05rem, 2.9vw, 2rem) !important;
+  font-weight: normal !important;
+  line-height: 1.05 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  color: var(--welcome-title) !important;
+  transform: translate3d(0, calc(24vh - 0.15em), 0) !important;
+  transform-origin: center center !important;
+  z-index: 4;
+}
+
+.c-welcome .-w span.title.line-2,
+.c-welcome .-w span.line-2[data-v-6c6a6d99],
+.c-welcome .-w span.title.line-2.is-title-spacer {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.c-welcome .-w span.title.line-3,
+.c-welcome .-w span.line-3[data-v-6c6a6d99],
+.c-welcome .-w span.title.line-3.is-brand-title {
+  --top: 3 !important;
+  --left: 1 !important;
+  --width: 6 !important;
+  justify-self: center !important;
+  justify-content: center !important;
+  align-self: start !important;
+  text-align: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: "Bold Block", "Arial Black", Impact, sans-serif !important;
+  font-size: clamp(3.4rem, 12.5vw, 9.5rem) !important;
+  font-weight: normal !important;
+  line-height: 0.86 !important;
+  letter-spacing: 0.01em !important;
+  text-transform: none !important;
+  color: var(--welcome-title) !important;
+  transform: translate3d(0, calc(24vh + var(--progress) * var(--vh, 1vh) * 12), 0) !important;
+  transform-origin: center center !important;
+  z-index: 4;
+}
+
+/* Filled titles live behind the character */
+.c-welcome .-w span.title.is-title-fill,
+.c-welcome .-w span.title.line-1.is-title-fill,
+.c-welcome .-w span.title.line-3.is-title-fill {
+  z-index: 4 !important;
+  color: var(--welcome-title) !important;
+  -webkit-text-fill-color: var(--welcome-title) !important;
+  -webkit-text-stroke: 0 !important;
+  text-shadow: none !important;
+}
+
+/*
+ * Outline above the art (masked to character): thin INNER stroke.
+ * Slight scale-down keeps the stroke inside the solid glyph footprint.
+ */
+.c-welcome .-w span.title.is-title-outline,
+.c-welcome .-w span.title.line-1.is-title-outline,
+.c-welcome .-w span.title.line-3.is-title-outline,
+.c-welcome .-w span.title.line-1.is-visions-of.is-title-outline,
+.c-welcome .-w span.title.line-3.is-brand-title.is-title-outline {
+  z-index: 20 !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: none !important;
+  paint-order: stroke fill;
+  -webkit-text-stroke: 0.012em var(--welcome-title) !important;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  transform-origin: center center !important;
+}
+
+.c-welcome .-w span.title.line-1.is-title-outline,
+.c-welcome .-w span.title.line-1.is-visions-of.is-title-outline {
+  -webkit-text-stroke: 0.028em var(--welcome-title) !important;
+  transform: translate3d(0, calc(24vh - 0.15em), 0) scale(0.97) !important;
+}
+
+.c-welcome .-w span.title.line-3.is-title-outline,
+.c-welcome .-w span.title.line-3.is-brand-title.is-title-outline {
+  -webkit-text-stroke: 0.01em var(--welcome-title) !important;
+  transform: translate3d(0, calc(24vh + var(--progress) * var(--vh, 1vh) * 12), 0) scale(0.985) !important;
+}
+
+@media (min-width: 1024px) {
+  .c-welcome .-w span.title.line-1,
+  .c-welcome .-w span.line-1[data-v-6c6a6d99],
+  .c-welcome .-w span.title.line-1.is-visions-of {
+    --left: 1 !important;
+    --width: 12 !important;
+    font-size: clamp(1.2rem, 2vw, 2rem) !important;
+    letter-spacing: 0.22em !important;
+    transform: translate3d(0, calc(26vh - 0.2em), 0) !important;
+  }
+
+  .c-welcome .-w span.title.line-1.is-title-outline,
+  .c-welcome .-w span.title.line-1.is-visions-of.is-title-outline {
+    transform: translate3d(0, calc(26vh - 0.2em), 0) scale(0.97) !important;
+  }
+
+  .c-welcome .-w span.title.line-3,
+  .c-welcome .-w span.line-3[data-v-6c6a6d99],
+  .c-welcome .-w span.title.line-3.is-brand-title {
+    --left: 1 !important;
+    --width: 12 !important;
+    font-size: clamp(5.75rem, 11vw, 11rem) !important;
+    transform: translate3d(0, calc(26vh + var(--progress) * var(--vh, 1vh) * 12), 0) !important;
+  }
+
+  .c-welcome .-w span.title.line-3.is-title-outline,
+  .c-welcome .-w span.title.line-3.is-brand-title.is-title-outline {
+    -webkit-text-stroke: 0.008em var(--welcome-title) !important;
+    transform: translate3d(0, calc(26vh + var(--progress) * var(--vh, 1vh) * 12), 0) scale(0.985) !important;
+  }
+
+  .c-welcome .-w span.title.line-3.is-title-outline {
+    -webkit-text-stroke-width: 0.022em;
+  }
+
+  .c-welcome .-w .stone,
+  .c-welcome .-w .stone[data-v-6c6a6d99] {
+    scale: 1 !important;
+    translate: 0 -26% !important;
+    transform: translate3d(0, calc(var(--vh, 1vh) * -2), 0)
+      scale(calc(1 - var(--progress, 0) * 0.5)) !important;
+    transform-origin: 50% 150% !important;
+  }
+}
+
+/* Glass CTA — force visible + sit with the lowered title.
+   Use margin (not transform) so backdrop-filter stays clipped to the button. */
+.c-welcome .-w .cta,
+.c-welcome .-w .cta[data-v-6c6a6d99],
+.c-welcome .-w .cta.-a-to-top {
+  --left: 1 !important;
+  --width: 6 !important;
+  display: flex !important;
+  justify-content: center !important;
+  justify-self: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  z-index: 40 !important;
+  margin-top: calc(
+    var(--h1) + 2rem + 24vh + var(--progress) * var(--vh, 1vh) * 5
+  ) !important;
+  transform: none !important;
+  translate: none !important;
+}
+
+@media (min-width: 1024px) {
+  .c-welcome .-w .cta,
+  .c-welcome .-w .cta[data-v-6c6a6d99] {
+    --left: 1 !important;
+    --width: 12 !important;
+    margin-top: calc(
+      var(--h1) + 2rem + 26vh + var(--progress) * var(--vh, 1vh) * 5
+    ) !important;
+  }
+}
+
+.c-welcome .-w .cta .cta-label {
+  display: none !important;
+}
+
+.c-welcome .-w .cta .button,
+.c-welcome .-w .cta .button.-glass-cta,
+.c-welcome .-w .cta .button.-reverse {
+  --aimy-cta-diameter: 60px;
+  position: relative !important;
+  display: inline-flex !important;
+  width: var(--aimy-cta-diameter) !important;
+  height: var(--aimy-cta-diameter) !important;
+  min-width: var(--aimy-cta-diameter);
+  min-height: var(--aimy-cta-diameter);
+  max-width: none !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin-inline: auto !important;
+  padding: 0.8rem !important;
+  border-radius: 50% !important;
+  border: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  clip-path: none !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  cursor: pointer;
+  text-decoration: none !important;
+  color: inherit !important;
+  transition: none !important;
+}
+
+.c-welcome .-w .cta .button > span:not(.aimy-cta-frost),
+.c-welcome .-w .cta .button > span[data-v-f52f19c3] {
+  color: #fff !important;
+  opacity: 1 !important;
+  position: relative;
+  z-index: 2;
+  font-family: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  font-size: clamp(0.85rem, 1.05vw, 1.05rem) !important;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-transform: none !important;
+}
+
+/* Frost disc clipped to the circle (rings stay outside via canvas). */
+.c-welcome .-w .cta .button > .aimy-cta-frost,
+.aimy-cta-frost {
+  content: none;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  letter-spacing: 0 !important;
+  text-shadow: none !important;
+  background: color-mix(in srgb, white 16%, transparent) !important;
+  -webkit-backdrop-filter: blur(7px) saturate(1.15) !important;
+  backdrop-filter: blur(7px) saturate(1.15) !important;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 34%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, #3a2748 16%, transparent) !important;
+}
+
+.c-welcome .-w .cta .button::before,
+.c-welcome .-w .cta .button::after {
+  content: none !important;
+  display: none !important;
+}
+
+.c-welcome .-w .cta .button:hover,
+.c-welcome .-w .cta .button:not(.-disabled):hover {
+  background: transparent !important;
+  background-color: transparent !important;
+  transform: none;
+  box-shadow: none !important;
+}
+
+.c-welcome .-w .cta .button:hover > .aimy-cta-frost,
+.c-welcome .-w .cta .button:not(.-disabled):hover > .aimy-cta-frost {
+  background: color-mix(in srgb, white 30%, transparent) !important;
+}
+
+.c-welcome .-w .cta .button:hover > span:not(.aimy-cta-frost),
+.c-welcome .-w .cta .button:not(.-disabled):hover > span[data-v-f52f19c3] {
+  color: transparent !important;
+  background: linear-gradient(
+    90deg,
+    #ff4fa3,
+    #ffd84a,
+    #5dffb0,
+    #5ec8ff,
+    #d889ff,
+    #ff4fa3
+  );
+  background-size: 400% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: brightness(1.2) saturate(1.35);
+  animation: aimy-cta-text-rainbow 2.2s linear infinite;
+}
+
+.c-welcome .-w .cta .button:active {
+  transform: none;
+}
+
+.aimy-cta-noise-rings {
+  position: absolute;
+  inset: -8px;
+  z-index: 1;
+  display: block;
+  width: calc(100% + 16px);
+  height: calc(100% + 16px);
+  pointer-events: none;
+  color: var(--aimy-logo-primary, var(--aimy-primary, #8a48c0));
+}
+
+@media (prefers-color-scheme: dark) {
+  .c-welcome .-w .cta .button > .aimy-cta-frost,
+  .aimy-cta-frost {
+    background: color-mix(in srgb, #1a0c28 50%, transparent) !important;
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 14%, transparent),
+      inset 0 -1px 0 color-mix(in srgb, black 28%, transparent) !important;
+  }
+
+  .c-welcome .-w .cta .button:hover > .aimy-cta-frost,
+  .c-welcome .-w .cta .button:not(.-disabled):hover > .aimy-cta-frost {
+    background: color-mix(in srgb, #1a0c28 62%, transparent) !important;
+  }
+}
+
+@keyframes aimy-cta-text-rainbow {
+  to { background-position: 400% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-welcome .-w .cta .button:hover > span {
+    animation: none;
+    background-position: 0 0;
+  }
+}
+
+@media (min-width: 992px) {
+  .c-welcome .-w .cta .button,
+  .c-welcome .-w .cta .button.-glass-cta,
+  .c-welcome .-w .cta .button.-reverse {
+    --aimy-cta-diameter: 96px;
+  }
+}
+
+@media (min-width: 1921px) {
+  .c-welcome .-w .cta .button,
+  .c-welcome .-w .cta .button.-glass-cta,
+  .c-welcome .-w .cta .button.-reverse {
+    --aimy-cta-diameter: 120px;
+  }
+}
+
+/* ── Start: hero → work section divider (no fixed overlay) ── */
+.c-welcome::before,
+.c-welcome[data-v-6c6a6d99]::before,
+.c-welcome::after,
+.c-welcome[data-v-6c6a6d99]::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  clip-path: none !important;
+}
+
+.c-welcome,
+.c-welcome[data-v-6c6a6d99] {
+  box-shadow: none !important;
+  min-height: 100vh !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  /* Restore clipping so the hero stays one viewport and meets work cleanly */
+  overflow: hidden !important;
+  contain: paint !important;
+}
+
+.c-welcome .-w,
+.c-welcome .-w[data-v-6c6a6d99] {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Decorative path was reading as a broken arch across the seam */
+.c-welcome .welcome-path,
+.c-welcome .welcome-path[data-v-6c6a6d99] {
+  display: none !important;
+}

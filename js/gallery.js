@@ -1,0 +1,582 @@
+/**
+ * Stills & Films — large DOM gallery with scroll stretch.
+ * Films: theatre color-blur behind focused clip; others stay paused stills.
+ */
+(function () {
+  "use strict";
+
+  var IMG = "./assets/content/stills/";
+  var FILM = "./assets/content/films/";
+
+  var artworks = [
+    { id: 1, src: IMG + "img1.webp", title: "Celestial Meadow", medium: "Illustration", width: 1600, height: 905 },
+    { id: 2, src: IMG + "img2.webp", title: "Aetherial Canopy", medium: "Sketch", width: 1600, height: 898 },
+    { id: 3, src: IMG + "img3.webp", title: "Glowgem Crystal", medium: "Painting", width: 1600, height: 900 },
+    { id: 4, src: IMG + "img4.webp", title: "Fennec Wanderer", medium: "Illustration", width: 1600, height: 900 },
+    { id: 5, src: IMG + "img5.webp", title: "Runic Broadsword", medium: "Sketch", width: 1600, height: 899 },
+    { id: 6, src: IMG + "img6.webp", title: "Autumntide Picnic", medium: "Sketch", width: 1600, height: 900 },
+    { id: 7, src: IMG + "img7.webp", title: "Voxel Sentry", medium: "Illustration", width: 1600, height: 844 },
+    { id: 8, src: IMG + "img8.webp", title: "Elderglen Guardian", medium: "Painting", width: 1600, height: 905 },
+    { id: 9, src: IMG + "img9.webp", title: "Prismatic Cavern", medium: "Painting", width: 1600, height: 1199 },
+    { id: 10, src: IMG + "img10.webp", title: "Floating Spire", medium: "Sketch", width: 1600, height: 900 },
+    { id: 11, src: IMG + "img11.webp", title: "Valley Ridge", medium: "Illustration", width: 1600, height: 900 },
+    { id: 12, src: IMG + "img12.webp", title: "Clouddrift Sails", medium: "Sketch", width: 1600, height: 900 },
+    { id: 13, src: IMG + "img13.webp", title: "Aetherwood Bonsai", medium: "Illustration", width: 1600, height: 1199 },
+    { id: 14, src: IMG + "img14.webp", title: "Vibrant Forest Flora", medium: "Painting", width: 1199, height: 1600 },
+    { id: 15, src: IMG + "img15.webp", title: "Ancient Archway", medium: "Sketch", width: 1600, height: 1199 },
+    { id: 16, src: IMG + "img16.webp", title: "Shadowgrove Druid", medium: "Illustration", width: 900, height: 1600 },
+    { id: 17, src: IMG + "img17.webp", title: "Firefly Hearth", medium: "Painting", width: 1600, height: 1067 },
+    { id: 18, src: IMG + "img18.webp", title: "Canopy Leaf", medium: "Illustration", width: 1597, height: 1600 },
+    { id: 19, src: IMG + "img19.webp", title: "Runic Obsidian", medium: "Sketch", width: 1200, height: 1600 },
+    { id: 20, src: IMG + "img20.webp", title: "Starry Ruins", medium: "Painting", width: 1131, height: 1600 },
+  ];
+
+  var films = [
+    { id: "mov1", src: FILM + "mov1.mp4", title: "Soft Static", medium: "Film", width: 1920, height: 1080 },
+    { id: "mov2", src: FILM + "mov2.mp4", title: "Night Bloom", medium: "Film", width: 1920, height: 1080 },
+    { id: "mov3", src: FILM + "mov3.mp4", title: "Loop Garden", medium: "Film", width: 1920, height: 1080 },
+  ];
+
+  function readView() {
+    var hash = (location.hash || "").replace(/^#/, "").toLowerCase();
+    if (hash === "films" || hash === "film") return "films";
+    var q = new URLSearchParams(location.search).get("view");
+    if (q === "films" || q === "film") return "films";
+    return "stills";
+  }
+
+  function boot() {
+    var main = document.getElementById("main");
+    var dotsNav = document.querySelector(".gal-dots");
+    var lightbox = document.getElementById("gal-lightbox");
+    var lbImage = document.getElementById("gal-lightbox-image");
+    var lbVideo = document.getElementById("gal-lightbox-video");
+    var lbTitle = document.getElementById("gal-lightbox-title");
+    var lbMedium = document.getElementById("gal-lightbox-medium");
+    var lbClose = document.getElementById("gal-lightbox-close");
+    var body = document.body;
+    var viewLinks = document.querySelectorAll(".gal-view-nav [data-gal-view]");
+    if (!main || !dotsNav) return;
+
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var open = false;
+    var view = readView();
+    var activeFilm = -1;
+    var filmIO = null;
+    var projects = [];
+    var dots = [];
+    var medias = [];
+
+    function setViewLinks() {
+      for (var i = 0; i < viewLinks.length; i++) {
+        var link = viewLinks[i];
+        var v = link.getAttribute("data-gal-view");
+        link.classList.toggle("is-current", v === view);
+        link.setAttribute("aria-current", v === view ? "page" : "false");
+      }
+    }
+
+    function clearStage() {
+      if (filmIO) {
+        filmIO.disconnect();
+        filmIO = null;
+      }
+      activeFilm = -1;
+      main.innerHTML = "";
+      dotsNav.innerHTML = "";
+      projects = [];
+      dots = [];
+      medias = [];
+    }
+
+    function buildStills() {
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < artworks.length; i++) {
+        var art = artworks[i];
+        var section = document.createElement("section");
+        section.className = "gal-project";
+        section.id = "project-" + i;
+
+        var eyebrow = document.createElement("p");
+        eyebrow.className = "gal-eyebrow";
+        eyebrow.textContent = art.medium;
+
+        var card = document.createElement("button");
+        card.type = "button";
+        card.className = "gal-card";
+        card.setAttribute("aria-label", "Open " + art.title);
+
+        var media = document.createElement("div");
+        media.className = "gal-media";
+        var img = document.createElement("img");
+        img.alt = art.title;
+        img.width = art.width;
+        img.height = art.height;
+        img.decoding = "async";
+        img.loading = i < 2 ? "eager" : "lazy";
+        img.src = art.src;
+        media.appendChild(img);
+        card.appendChild(media);
+
+        var title = document.createElement("h2");
+        title.className = "gal-title";
+        title.textContent = art.title;
+
+        var go = document.createElement("span");
+        go.className = "gal-go";
+        go.setAttribute("aria-hidden", "true");
+        go.innerHTML =
+          '<span class="gal-go-disk"></span><span class="gal-go-arrow">→</span>';
+
+        card.appendChild(title);
+        card.appendChild(go);
+        card.addEventListener("click", openLightbox.bind(null, art, null));
+
+        section.appendChild(eyebrow);
+        section.appendChild(card);
+        frag.appendChild(section);
+        appendDot(art.title, section.id, i === 0);
+      }
+      main.appendChild(frag);
+      collectRefs();
+    }
+
+    function buildFilms() {
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < films.length; i++) {
+        var film = films[i];
+        var section = document.createElement("section");
+        section.className = "gal-project gal-project--film";
+        section.id = "film-" + i;
+        section.dataset.filmIndex = String(i);
+
+        var eyebrow = document.createElement("p");
+        eyebrow.className = "gal-eyebrow";
+        eyebrow.textContent = film.medium;
+
+        var card = document.createElement("button");
+        card.type = "button";
+        card.className = "gal-card";
+        card.setAttribute("aria-label", "Open " + film.title);
+
+        var media = document.createElement("div");
+        media.className = "gal-media gal-media--film";
+
+        var theatre = document.createElement("div");
+        theatre.className = "gal-theatre";
+        theatre.setAttribute("aria-hidden", "true");
+        var blurVid = document.createElement("video");
+        blurVid.className = "gal-theatre-video";
+        blurVid.muted = true;
+        blurVid.playsInline = true;
+        blurVid.loop = true;
+        blurVid.preload = "metadata";
+        blurVid.setAttribute("muted", "");
+        blurVid.setAttribute("playsinline", "");
+        blurVid.src = film.src;
+        theatre.appendChild(blurVid);
+
+        var vid = document.createElement("video");
+        vid.className = "gal-film-video";
+        vid.muted = true;
+        vid.playsInline = true;
+        vid.loop = true;
+        vid.preload = i === 0 ? "auto" : "metadata";
+        vid.setAttribute("muted", "");
+        vid.setAttribute("playsinline", "");
+        vid.src = film.src;
+        vid.setAttribute("aria-label", film.title);
+
+        /* Seek to a readable still frame once metadata is ready. */
+        (function (v, b) {
+          function pinStill() {
+            try {
+              var t = Math.min(0.35, (v.duration || 1) * 0.08);
+              if (Math.abs(v.currentTime - t) > 0.05) v.currentTime = t;
+              if (b && Math.abs(b.currentTime - t) > 0.05) b.currentTime = t;
+            } catch (err) {}
+          }
+          v.addEventListener("loadedmetadata", pinStill, { once: true });
+          b.addEventListener("loadedmetadata", pinStill, { once: true });
+        })(vid, blurVid);
+
+        media.appendChild(theatre);
+        media.appendChild(vid);
+        card.appendChild(media);
+
+        var title = document.createElement("h2");
+        title.className = "gal-title";
+        title.textContent = film.title;
+
+        var go = document.createElement("span");
+        go.className = "gal-go";
+        go.setAttribute("aria-hidden", "true");
+        go.innerHTML =
+          '<span class="gal-go-disk"></span><span class="gal-go-arrow">→</span>';
+
+        card.appendChild(title);
+        card.appendChild(go);
+        card.addEventListener("click", openLightbox.bind(null, null, film));
+
+        section.appendChild(eyebrow);
+        section.appendChild(card);
+        frag.appendChild(section);
+        appendDot(film.title, section.id, i === 0);
+      }
+      main.appendChild(frag);
+      collectRefs();
+      wireFilmFocus();
+    }
+
+    function appendDot(label, id, active) {
+      var dot = document.createElement("a");
+      dot.href = "#" + id;
+      if (active) dot.className = "is-active";
+      dot.setAttribute("aria-label", "Go to " + label);
+      var sr = document.createElement("span");
+      sr.className = "sr-only";
+      sr.textContent = label;
+      dot.appendChild(sr);
+      dotsNav.appendChild(dot);
+    }
+
+    function collectRefs() {
+      projects = main.querySelectorAll(".gal-project");
+      dots = dotsNav.querySelectorAll("a");
+      medias = main.querySelectorAll(".gal-media");
+      wireDots();
+      wireActiveDots();
+    }
+
+    function setActiveDot(index) {
+      for (var d = 0; d < dots.length; d++) {
+        dots[d].classList.toggle("is-active", d === index);
+      }
+    }
+
+    function wireActiveDots() {
+      var activeIO = new IntersectionObserver(
+        function (entries) {
+          for (var e = 0; e < entries.length; e++) {
+            if (!entries[e].isIntersecting) continue;
+            var index = Array.prototype.indexOf.call(
+              projects,
+              entries[e].target
+            );
+            if (index >= 0) setActiveDot(index);
+          }
+        },
+        { root: null, threshold: 0.55 }
+      );
+      for (var a = 0; a < projects.length; a++) activeIO.observe(projects[a]);
+    }
+
+    function wireDots() {
+      for (var di = 0; di < dots.length; di++) {
+        dots[di].addEventListener("click", function (ev) {
+          ev.preventDefault();
+          var href = this.getAttribute("href");
+          var target = href && document.querySelector(href);
+          if (!target) return;
+          if (window.Polyglide) window.Polyglide.to(target, { offset: 0 });
+          else
+            target.scrollIntoView({
+              behavior: reduced ? "auto" : "smooth",
+              block: "start",
+            });
+        });
+      }
+    }
+
+    function pauseFilmAt(index) {
+      var section = projects[index];
+      if (!section) return;
+      section.classList.remove("is-playing");
+      var vids = section.querySelectorAll("video");
+      for (var i = 0; i < vids.length; i++) {
+        try {
+          vids[i].pause();
+        } catch (err) {}
+      }
+    }
+
+    function playFilmAt(index) {
+      var section = projects[index];
+      if (!section) return;
+      section.classList.add("is-playing");
+      var mainVid = section.querySelector(".gal-film-video");
+      var blurVid = section.querySelector(".gal-theatre-video");
+      if (mainVid && blurVid) {
+        try {
+          blurVid.currentTime = mainVid.currentTime || 0;
+        } catch (err) {}
+      }
+      function tryPlay(v) {
+        if (!v) return;
+        var p = v.play();
+        if (p && typeof p.catch === "function") p.catch(function () {});
+      }
+      tryPlay(mainVid);
+      tryPlay(blurVid);
+    }
+
+    function setActiveFilm(index) {
+      if (index === activeFilm) return;
+      if (activeFilm >= 0) pauseFilmAt(activeFilm);
+      activeFilm = index;
+      if (activeFilm >= 0 && !open && !reduced) playFilmAt(activeFilm);
+      else if (activeFilm >= 0 && reduced) {
+        projects[activeFilm].classList.add("is-playing");
+      }
+    }
+
+    function wireFilmFocus() {
+      filmIO = new IntersectionObserver(
+        function (entries) {
+          var best = null;
+          for (var e = 0; e < entries.length; e++) {
+            var entry = entries[e];
+            if (!entry.isIntersecting) continue;
+            if (!best || entry.intersectionRatio > best.intersectionRatio) {
+              best = entry;
+            }
+          }
+          if (!best) return;
+          var idx = Number(best.target.dataset.filmIndex);
+          if (!isNaN(idx)) setActiveFilm(idx);
+        },
+        { root: null, threshold: [0.45, 0.6, 0.75] }
+      );
+      for (var i = 0; i < projects.length; i++) filmIO.observe(projects[i]);
+      if (projects.length) setActiveFilm(0);
+    }
+
+    function render() {
+      clearStage();
+      body.setAttribute("data-gal-view", view);
+      document.title =
+        (view === "films" ? "Films" : "Stills") + " — Art of Aimy Gwen";
+      setViewLinks();
+      if (view === "films") buildFilms();
+      else buildStills();
+      lastScroll = getScrollY();
+      stretch = 1;
+      squash = 1;
+      applyStretch();
+      if (window.Polyglide) {
+        try {
+          window.scrollTo(0, 0);
+          if (window.__lenis && typeof window.__lenis.scrollTo === "function") {
+            window.__lenis.scrollTo(0, { immediate: true });
+          }
+        } catch (err) {}
+      }
+    }
+
+    function switchView(next, pushHash) {
+      if (next !== "films" && next !== "stills") return;
+      if (next === view && main.children.length) {
+        setViewLinks();
+        return;
+      }
+      view = next;
+      if (pushHash !== false) {
+        var hash = "#" + view;
+        if (location.hash !== hash) {
+          history.replaceState(null, "", hash);
+        }
+      }
+      render();
+    }
+
+    for (var vi = 0; vi < viewLinks.length; vi++) {
+      viewLinks[vi].addEventListener("click", function (ev) {
+        ev.preventDefault();
+        switchView(this.getAttribute("data-gal-view"), true);
+      });
+    }
+    window.addEventListener("hashchange", function () {
+      switchView(readView(), false);
+    });
+
+    var lenis = window.Polyglide ? window.Polyglide.boot() : null;
+
+    /* —— Scroll-velocity stretch —— */
+    var lastScroll = 0;
+    var speed = 0;
+    var stretch = 1;
+    var squash = 1;
+    var raf = 0;
+    var lastStretch = "";
+    var lastSquash = "";
+
+    function getScrollY() {
+      if (window.__lenis && typeof window.__lenis.scroll === "number") {
+        return window.__lenis.scroll;
+      }
+      return window.scrollY || 0;
+    }
+
+    function applyStretch() {
+      var s = stretch.toFixed(3);
+      var q = squash.toFixed(3);
+      if (s === lastStretch && q === lastSquash) return;
+      lastStretch = s;
+      lastSquash = q;
+      for (var m = 0; m < medias.length; m++) {
+        medias[m].style.setProperty("--gal-stretch", s);
+        medias[m].style.setProperty("--gal-squash", q);
+      }
+    }
+
+    function tickStretch() {
+      raf = 0;
+      if (open || reduced) {
+        stretch += (1 - stretch) * 0.25;
+        squash += (1 - squash) * 0.25;
+        applyStretch();
+        if (Math.abs(stretch - 1) > 0.002 || Math.abs(squash - 1) > 0.002) {
+          raf = requestAnimationFrame(tickStretch);
+        }
+        return;
+      }
+
+      var y = getScrollY();
+      var dy = y - lastScroll;
+      lastScroll = y;
+      speed = speed * 0.82 + dy * 0.18;
+
+      var stretchTarget = 1 + Math.max(-0.1, Math.min(0.22, -speed * 0.006));
+      var squashTarget = 1 + Math.max(-0.08, Math.min(0.1, speed * 0.004));
+      stretch += (stretchTarget - stretch) * 0.22;
+      squash += (squashTarget - squash) * 0.22;
+
+      if (Math.abs(speed) < 0.25) {
+        stretch += (1 - stretch) * 0.1;
+        squash += (1 - squash) * 0.1;
+      }
+
+      applyStretch();
+
+      if (
+        Math.abs(speed) > 0.05 ||
+        Math.abs(stretch - 1) > 0.002 ||
+        Math.abs(squash - 1) > 0.002
+      ) {
+        raf = requestAnimationFrame(tickStretch);
+      }
+    }
+
+    function bumpStretch() {
+      if (reduced || open) return;
+      if (!raf) raf = requestAnimationFrame(tickStretch);
+    }
+
+    lastScroll = getScrollY();
+    window.addEventListener("scroll", bumpStretch, { passive: true });
+    if (lenis && typeof lenis.on === "function") {
+      lenis.on("scroll", bumpStretch);
+    }
+
+    function openLightbox(art, film) {
+      if (!lightbox) return;
+      open = true;
+      if (window.Polyglide) window.Polyglide.stop();
+      if (view === "films" && activeFilm >= 0) pauseFilmAt(activeFilm);
+      stretch = 1;
+      squash = 1;
+      applyStretch();
+
+      if (film) {
+        if (lbImage) {
+          lbImage.hidden = true;
+          lbImage.removeAttribute("src");
+        }
+        if (lbVideo) {
+          lbVideo.hidden = false;
+          lbVideo.src = film.src;
+          lbVideo.play().catch(function () {});
+        }
+        lbTitle.textContent = film.title;
+        lbMedium.textContent = film.medium || "";
+      } else if (art) {
+        if (lbVideo) {
+          lbVideo.pause();
+          lbVideo.removeAttribute("src");
+          lbVideo.hidden = true;
+          lbVideo.load();
+        }
+        if (lbImage) {
+          lbImage.hidden = false;
+          lbImage.src = art.src;
+          lbImage.alt = art.title;
+        }
+        lbTitle.textContent = art.title;
+        lbMedium.textContent = art.medium || "";
+      }
+
+      lightbox.hidden = false;
+      void lightbox.offsetWidth;
+      lightbox.classList.add("is-open");
+      body.classList.add("gal-lightbox-open");
+      lbClose.focus({ preventScroll: true });
+    }
+
+    function closeLightbox() {
+      if (!lightbox || !open) return;
+      open = false;
+      lightbox.classList.remove("is-open");
+      body.classList.remove("gal-lightbox-open");
+      if (lbVideo) {
+        lbVideo.pause();
+        lbVideo.removeAttribute("src");
+        lbVideo.load();
+        lbVideo.hidden = true;
+      }
+      if (lbImage) {
+        lbImage.hidden = false;
+        lbImage.removeAttribute("src");
+      }
+      if (window.Polyglide) window.Polyglide.start();
+      if (view === "films" && activeFilm >= 0 && !reduced) {
+        playFilmAt(activeFilm);
+      }
+      lastScroll = getScrollY();
+      var done = function () {
+        lightbox.hidden = true;
+        lightbox.removeEventListener("transitionend", done);
+      };
+      lightbox.addEventListener("transitionend", done);
+      setTimeout(function () {
+        if (!open) lightbox.hidden = true;
+      }, 380);
+    }
+
+    lbClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", function (e) {
+      if (e.target === lightbox) closeLightbox();
+    });
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && open) {
+        e.preventDefault();
+        closeLightbox();
+      }
+    });
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) {
+        if (view === "films" && activeFilm >= 0) pauseFilmAt(activeFilm);
+      } else if (view === "films" && activeFilm >= 0 && !open && !reduced) {
+        playFilmAt(activeFilm);
+      }
+    });
+
+    render();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
+  } else {
+    boot();
+  }
+})();

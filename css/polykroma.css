@@ -1,0 +1,1869 @@
+/**
+ * Polykroma — shared Aimy UI chrome
+ * Owns: nav bar, Polly (mascot / mark), social links, menu coin + overlay menu,
+ * page transitions. Geometry is single-sourced here (px-locked).
+ * Pages theme colors via --aimy-* (aliases: --polykroma-*).
+ * Polyglide remains separate (scroll feel).
+ */
+
+@font-face {
+  font-family: "Newpixel";
+  src: url("../fonts/newpixel.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+:root {
+  /*
+   * Logo color hierarchy (always):
+   *   primary   — most obvious / brand signal → hairstyle
+   *   secondary — lightest pastel             → face, bow, base
+   *   tertiary  — darkest contrast           → iris, lashes
+   */
+  --aimy-primary: #8a48c0;
+  --aimy-secondary: #f2d6ea;
+  --aimy-tertiary: #2e123f;
+  --aimy-accent: #e879b8;
+  --aimy-logo-primary: var(--aimy-primary);
+  --aimy-ink: #56267a;
+  --aimy-ink-on-dark: #f7f0fb;
+  --aimy-menu-coin: #f57eb6;
+  --aimy-menu-coin-open: #59b5ec;
+  --aimy-chrome-ink: var(--aimy-primary);
+  /*
+   * Shared chrome geometry — Polly / socials / menu coin.
+   * Use px (not rem): the home page scales html font-size to 20–28px,
+   * which was making rem-based social icons larger than on other pages.
+   */
+  --aimy-pad-x: clamp(28px, 5.2vw, 80px);
+  --aimy-pad-y: clamp(28px, 3.4vw, 40px);
+  --aimy-nav-size: clamp(12.5px, 0.9vw, 14.5px);
+  --aimy-brand-size: clamp(70px, 5.9vw, 86px);
+  --aimy-social-size: 20px;
+  --aimy-social-gap: clamp(14px, 1.5vw, 20px);
+  --aimy-menu-size: clamp(44px, 3.8vw, 56px);
+  --aimy-menu-gap: 36px;
+  --aimy-chrome-top: max(var(--aimy-pad-y), env(safe-area-inset-top, 0px));
+  --aimy-chrome-right: max(var(--aimy-pad-x), env(safe-area-inset-right, 0px));
+  --aimy-chrome-left: max(var(--aimy-pad-x), env(safe-area-inset-left, 0px));
+  --aimy-z: 2147483000;
+  --aimy-font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  --aimy-nav-font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  --aimy-r1: #ff7eb6;
+  --aimy-r2: #e8b4d4;
+  --aimy-r3: #c9a8e8;
+  --aimy-r4: #b89ad4;
+
+  /* Polykroma aliases — pages may set either family */
+  --polykroma-primary: var(--aimy-primary);
+  --polykroma-secondary: var(--aimy-secondary);
+  --polykroma-tertiary: var(--aimy-tertiary);
+  --polykroma-accent: var(--aimy-accent);
+  --polykroma-ink: var(--aimy-chrome-ink);
+
+  /*
+   * Overlay menu — Soft pastel wash + Newpixel.
+   * Pages may override any of these.
+   */
+  --polykroma-menu-bg: color-mix(in srgb, var(--aimy-secondary, #f2d6ea) 68%, white);
+  --polykroma-menu-ink: var(--aimy-primary, #7a3eb0);
+  --polykroma-menu-ink-soft: color-mix(in srgb, var(--aimy-primary, #7a3eb0) 58%, white);
+  --polykroma-menu-muted: color-mix(in srgb, var(--polykroma-menu-ink) 62%, #0a0a0a);
+  --polykroma-menu-rule: color-mix(in srgb, var(--polykroma-menu-ink) 22%, transparent);
+  --polykroma-menu-on-block: #fff8fd;
+  --polykroma-menu-block: var(--polykroma-menu-ink);
+  --polykroma-menu-font: "Newpixel", "Courier New", monospace;
+
+  /*
+   * Menu link geometry — locked in px so home html{font-size:20–28px}
+   * (and any other rem root) cannot drift Polykroma menu type.
+   */
+  --polykroma-menu-link-size: clamp(38px, 7.6vw, 86px);
+  --polykroma-menu-link-size-sm: clamp(40px, 13.5vw, 66px);
+  --polykroma-menu-meta-size: clamp(17px, 2.4vw, 25px);
+  --polykroma-menu-meta-size-sm: clamp(18px, 5vw, 24px);
+  --polykroma-menu-social-size: clamp(22px, 2.6vw, 28px);
+  --polykroma-menu-social-size-sm: clamp(26px, 7.2vw, 32px);
+  --polykroma-menu-link-tracking: 0.06em;
+  --polykroma-menu-link-leading: 0.95;
+  --polykroma-menu-meta-tracking: 0.12em;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --aimy-primary: #c084e8;
+    --aimy-secondary: #f5dced;
+    --aimy-tertiary: #1a0c28;
+    --aimy-accent: #ff9ad0;
+    --aimy-ink: #f3eafc;
+    --aimy-ink-on-dark: #f8f2fc;
+  }
+}
+
+header[data-v-81ce8483] {
+  display: none !important;
+}
+
+.page-transition,
+.m-transition-underlay {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* —— Fixed viewport chrome —— */
+body > .site-header[data-aimy-chrome],
+.site-header[data-aimy-chrome] {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100vw !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  z-index: var(--aimy-z) !important;
+  padding:
+    var(--aimy-chrome-top)
+    var(--aimy-chrome-right)
+    var(--aimy-pad-y)
+    var(--aimy-chrome-left);
+  display: grid !important;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: calc(var(--aimy-chrome-top) + var(--aimy-brand-size) + var(--aimy-pad-y));
+  box-sizing: border-box;
+  background: transparent !important;
+  border: 0 !important;
+  pointer-events: none;
+  /* keep compositor layer without locking transform (allows entrance anim) */
+  will-change: transform;
+}
+
+/* Top chrome wash — removed globally (was header::before fade) */
+.site-header[data-aimy-chrome]::before,
+html body .site-header[data-aimy-chrome]::before {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  background-image: none !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+}
+
+.site-header[data-aimy-chrome] .aimy-chrome-bar {
+  display: contents;
+}
+
+.site-header[data-aimy-chrome] .header-left {
+  display: contents;
+}
+
+.site-header[data-aimy-chrome] > *,
+.site-header[data-aimy-chrome] .aimy-chrome-bar > *,
+.site-header[data-aimy-chrome] .nav,
+.site-header[data-aimy-chrome] .brand,
+.site-header[data-aimy-chrome] .social {
+  pointer-events: auto;
+}
+
+.site-header[data-aimy-chrome] .nav {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 2.5vw, 40px);
+  /* Match logo optical center (menu coin uses the same offset). */
+  min-height: var(--aimy-brand-size);
+}
+
+.site-header[data-aimy-chrome] .brand {
+  /* Fixed to the header padding box (not a grid area) so top spacing
+     matches social / menu coin: chrome-top + brand-size band. */
+  position: absolute;
+  left: 50%;
+  top: var(--aimy-chrome-top);
+  transform: translateX(-50%);
+  grid-column: auto;
+  grid-row: auto;
+  width: var(--aimy-brand-size);
+  height: var(--aimy-brand-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 2;
+  margin: 0;
+  text-decoration: none !important;
+  background: none !important;
+  color: var(--aimy-chrome-ink);
+  overflow: visible;
+}
+
+.site-header[data-aimy-chrome] .brand-mark,
+.site-header[data-aimy-chrome] .brand svg {
+  width: var(--aimy-brand-size) !important;
+  height: var(--aimy-brand-size) !important;
+  max-width: var(--aimy-brand-size) !important;
+  display: block;
+  overflow: visible;
+  transform: none;
+  transform-origin: center;
+  transition: transform 0.65s cubic-bezier(0.3, 2.2, 0.4, 0.95);
+}
+
+.site-header[data-aimy-chrome] .brand:hover .brand-mark,
+.site-header[data-aimy-chrome] .brand:hover svg {
+  transform: scale(1.08);
+}
+
+/*
+ * Stacked logo layers — hierarchy locked:
+ *   brand-logo-dark  → primary   (hairstyle) — most obvious
+ *   brand-logo-light → secondary (base, face, bow) — lightest pastel
+ *   brand-logo-mid   → tertiary  (iris, lashes) — darkest contrast
+ */
+.site-header[data-aimy-chrome] .brand-logo-dark,
+.site-header[data-aimy-chrome] .brand-logo-dark * {
+  fill: var(--aimy-primary);
+  color: var(--aimy-primary);
+  transition: fill 0.35s ease;
+}
+
+.site-header[data-aimy-chrome] .brand-logo-light,
+.site-header[data-aimy-chrome] .brand-logo-light * {
+  fill: var(--aimy-secondary);
+  transition: fill 0.35s ease;
+}
+
+.site-header[data-aimy-chrome] .brand-logo-mid,
+.site-header[data-aimy-chrome] .brand-logo-mid * {
+  fill: var(--aimy-tertiary);
+  transition: fill 0.35s ease;
+}
+
+.site-header[data-aimy-chrome] .brand:hover .brand-logo-dark,
+.site-header[data-aimy-chrome] .brand:hover .brand-logo-dark * {
+  animation: aimy-rainbow-fill 3s linear infinite;
+}
+
+.site-header[data-aimy-chrome] .brand:hover .brand-logo-light,
+.site-header[data-aimy-chrome] .brand:hover .brand-logo-light * {
+  animation: aimy-logo-light 3s linear infinite;
+}
+
+.site-header[data-aimy-chrome] .brand:hover .brand-logo-mid,
+.site-header[data-aimy-chrome] .brand:hover .brand-logo-mid * {
+  animation: aimy-logo-mid 3s linear infinite;
+}
+
+/* Polly iris pupils — look-at transforms set via SVG attribute in polly-iris.js */
+.site-header[data-aimy-chrome] .brand-layer--iris .iris-pupil {
+  will-change: transform;
+}
+
+/* Specular: per-layer SVG lighting (polly-specular.js) */
+.site-header[data-aimy-chrome] .brand-mark {
+  overflow: visible;
+}
+
+.site-header[data-aimy-chrome] .social {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: var(--aimy-social-gap);
+  min-height: var(--aimy-brand-size);
+}
+
+.site-header[data-aimy-chrome] .nav a,
+.site-header[data-aimy-chrome] .social a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--aimy-chrome-ink);
+  font-family: var(--aimy-nav-font);
+  font-style: normal;
+  font-weight: 700;
+  font-size: var(--aimy-nav-size);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: lowercase;
+  text-decoration: none !important;
+  background: none !important;
+  background-image: none !important;
+  padding: 6px 7px;
+  transition:
+    transform 0.5s cubic-bezier(0.3, 2.2, 0.4, 0.95),
+    color 0.3s ease;
+}
+
+.site-header[data-aimy-chrome] .nav a::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -0.3rem;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translateX(-50%) scale(0);
+  opacity: 0;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s ease;
+}
+
+.site-header[data-aimy-chrome] .nav a.is-current::before,
+.site-header[data-aimy-chrome] .nav a.active::before {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+}
+
+.site-header[data-aimy-chrome] .nav a:hover,
+.site-header[data-aimy-chrome] .social a:hover {
+  transform: scale(1.12);
+  animation: aimy-rainbow 3s linear infinite;
+  background: none !important;
+  background-image: none !important;
+}
+
+.site-header[data-aimy-chrome] .social svg {
+  width: var(--aimy-social-size) !important;
+  height: var(--aimy-social-size) !important;
+  min-width: var(--aimy-social-size) !important;
+  min-height: var(--aimy-social-size) !important;
+  max-width: var(--aimy-social-size) !important;
+  max-height: var(--aimy-social-size) !important;
+  display: block;
+  flex: 0 0 var(--aimy-social-size);
+  aspect-ratio: 1 / 1;
+  fill: currentColor !important;
+}
+
+.site-header[data-aimy-chrome] .social svg * {
+  fill: currentColor !important;
+}
+
+@keyframes aimy-rainbow {
+  0% { color: var(--aimy-r1); }
+  25% { color: var(--aimy-r2); }
+  50% { color: var(--aimy-r3); }
+  75% { color: var(--aimy-r4); }
+  100% { color: var(--aimy-r1); }
+}
+
+@keyframes aimy-rainbow-fill {
+  0% { fill: var(--aimy-r1); }
+  25% { fill: var(--aimy-r2); }
+  50% { fill: var(--aimy-r3); }
+  75% { fill: var(--aimy-r4); }
+  100% { fill: var(--aimy-r1); }
+}
+
+/*
+ * Coin glyph rainbow — white/black SVGs can't use color/fill, so filter
+ * approximates --aimy-r* pinks/lavenders (overrides brightness(0) invert(1) on hover).
+ */
+@keyframes aimy-coin-icon-rainbow {
+  0% {
+    filter: brightness(0) saturate(100%) invert(72%) sepia(42%) saturate(2200%)
+      hue-rotate(295deg) brightness(1.05);
+  }
+  25% {
+    filter: brightness(0) saturate(100%) invert(82%) sepia(18%) saturate(900%)
+      hue-rotate(290deg) brightness(1.05);
+  }
+  50% {
+    filter: brightness(0) saturate(100%) invert(78%) sepia(28%) saturate(1200%)
+      hue-rotate(230deg) brightness(1.05);
+  }
+  75% {
+    filter: brightness(0) saturate(100%) invert(72%) sepia(22%) saturate(1100%)
+      hue-rotate(245deg) brightness(1.05);
+  }
+  100% {
+    filter: brightness(0) saturate(100%) invert(72%) sepia(42%) saturate(2200%)
+      hue-rotate(295deg) brightness(1.05);
+  }
+}
+
+@keyframes aimy-logo-light {
+  0% { fill: #00cfe8; }
+  25% { fill: #ff5cad; }
+  50% { fill: #84e018; }
+  75% { fill: #ff9f1c; }
+  100% { fill: #00cfe8; }
+}
+
+/* Third logo cycle — offset from primary + secondary hover */
+@keyframes aimy-logo-mid {
+  0% { fill: #ff9f1c; }
+  25% { fill: #00cfe8; }
+  50% { fill: #c77dff; }
+  75% { fill: #ff5cad; }
+  100% { fill: #ff9f1c; }
+}
+
+/*
+ * Chrome load reveal — directional fly-in from outside the frame, then spring settle.
+ * Uses the CSS `translate` property (not `transform`) so brand centering
+ * (transform: translateX(-50%)) and social scroll-hide transforms stay free.
+ * Driven by polykroma.js: pk-chrome-boot → pk-chrome-ready → pk-chrome-settled.
+ * Settled drops reveal transitions so scroll hide / menu open own opacity.
+ * Stagger: logo → coin → socials. Reduced-motion: opacity only (see below).
+ */
+html.pk-chrome-boot:not(.pk-chrome-ready) .site-header[data-aimy-chrome] .brand {
+  opacity: 0;
+  translate: 0 -5.75rem; /* from above / top-outside */
+}
+
+html.pk-chrome-boot:not(.pk-chrome-ready) .pk-coin-button,
+html.pk-chrome-boot:not(.pk-chrome-ready) .pk-burger-hit {
+  opacity: 0;
+  translate: 4.5rem -4.5rem; /* from top-right outside */
+}
+
+html.pk-chrome-boot:not(.pk-chrome-ready) .site-header[data-aimy-chrome] .social {
+  opacity: 0;
+  translate: 0 3.5rem; /* from below */
+}
+
+html.pk-chrome-boot.pk-chrome-ready:not(.pk-chrome-settled) .site-header[data-aimy-chrome] .brand {
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity 0.72s cubic-bezier(0.22, 1.72, 0.36, 1),
+    translate 0.88s cubic-bezier(0.22, 1.72, 0.36, 1);
+  transition-delay: 0ms;
+}
+
+html.pk-chrome-boot.pk-chrome-ready:not(.pk-chrome-settled) .pk-coin-button,
+html.pk-chrome-boot.pk-chrome-ready:not(.pk-chrome-settled) .pk-burger-hit {
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity 0.74s cubic-bezier(0.22, 1.72, 0.36, 1),
+    translate 0.9s cubic-bezier(0.22, 1.72, 0.36, 1);
+  transition-delay: 110ms;
+}
+
+html.pk-chrome-boot.pk-chrome-ready:not(.pk-chrome-settled) .site-header[data-aimy-chrome] .social {
+  opacity: 1;
+  translate: 0 0;
+  /* Reveal owns opacity/translate; keep transform idle until settled. */
+  transition:
+    opacity 0.78s cubic-bezier(0.22, 1.72, 0.36, 1) 220ms,
+    translate 0.94s cubic-bezier(0.22, 1.72, 0.36, 1) 220ms,
+    transform 0s,
+    visibility 0s;
+}
+
+html.pk-chrome-settled .site-header[data-aimy-chrome] .brand,
+html.pk-chrome-settled .pk-coin-button,
+html.pk-chrome-settled .pk-burger-hit {
+  opacity: 1;
+  translate: none;
+}
+
+/* Clear reveal offset only — leave opacity to scroll-hide / menu. */
+html.pk-chrome-settled .site-header[data-aimy-chrome] .social {
+  translate: none;
+}
+
+/* Scroll-away — only nav + social bounce up; logo stays */
+.site-header[data-aimy-chrome] .nav,
+.site-header[data-aimy-chrome] .social {
+  transition:
+    transform 0.95s cubic-bezier(0.22, 1.7, 0.32, 1),
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.95s;
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  visibility: visible;
+  will-change: transform, opacity;
+}
+
+.site-header[data-aimy-chrome].is-nav-hidden .nav:not(.gal-view-nav),
+.site-header[data-aimy-chrome].is-nav-hidden .social {
+  transform: translate3d(0, -140%, 0);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    transform 0.85s cubic-bezier(0.4, -0.35, 0.45, 1.15),
+    opacity 0.55s ease,
+    visibility 0.85s;
+}
+
+body.menu-open .site-header[data-aimy-chrome].is-nav-hidden .social {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Mobile */
+@media (max-width: 55rem) {
+  :root {
+    /* Larger logo + menu coin for easier tapping; desktop clamps unchanged. */
+    --aimy-brand-size: 92px;
+    --aimy-menu-size: 54px;
+  }
+
+  .site-header[data-aimy-chrome] {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  /* Keep gallery Stills/Films chrome; hide leftover text nav + socials */
+  .site-header[data-aimy-chrome] .nav:not(.gal-view-nav),
+  .site-header[data-aimy-chrome] .social {
+    display: none;
+  }
+
+  .site-header[data-aimy-chrome] .brand {
+    left: 50%;
+    top: var(--aimy-chrome-top);
+    transform: translateX(-50%);
+  }
+}
+
+
+/* —— Menu coin + hit (geometry only; 3D faces stay with Polykroma menu block) —— */
+.pk-burger-hit {
+  position: fixed;
+  /* Above menu shell (--pk-z) so open/close stays clickable */
+  z-index: calc(var(--pk-z, 2147483600) + 6);
+  display: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  top: calc(
+    var(--aimy-chrome-top) + (var(--aimy-brand-size) - var(--aimy-menu-size)) / 2
+  );
+  right: var(--aimy-chrome-right);
+  width: var(--aimy-menu-size);
+  height: var(--aimy-menu-size);
+}
+
+.pk-burger-hit.on {
+  display: block;
+}
+
+.pk-coin-button {
+  --pk-coin-turn: 0deg;
+  --pk-coin-scale: 1;
+  --pk-coin-color: var(--aimy-menu-coin);
+  position: fixed;
+  top: calc(
+    var(--aimy-chrome-top) + (var(--aimy-brand-size) - var(--aimy-menu-size)) / 2
+  );
+  right: var(--aimy-chrome-right);
+  z-index: calc(var(--pk-z, 2147483600) + 5);
+  width: var(--aimy-menu-size);
+  height: var(--aimy-menu-size);
+  aspect-ratio: 1;
+  pointer-events: none;
+  perspective: 11rem;
+  filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.07));
+}
+
+.pk-menu-root.is-menu-open .pk-coin-button {
+  --pk-coin-color: var(--aimy-menu-coin-open);
+  --pk-coin-turn: 360deg;
+}
+
+.pk-burger-hit:hover ~ .pk-coin-button,
+.pk-burger-hit:focus-visible ~ .pk-coin-button {
+  --pk-coin-scale: 1.09;
+  /* Coin body cycles rainbow via --pk-coin-color */
+  animation: aimy-coin-body-rainbow 3s linear infinite;
+}
+
+.pk-burger-hit:hover ~ .pk-coin-button .pk-coin-face,
+.pk-burger-hit:hover ~ .pk-coin-button .pk-coin-edge,
+.pk-burger-hit:hover ~ .pk-coin-button .pk-coin-edge::before,
+.pk-burger-hit:hover ~ .pk-coin-button .pk-coin-edge::after,
+.pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-face,
+.pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-edge,
+.pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-edge::before,
+.pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-edge::after {
+  transition: none;
+}
+
+/* Glyph rainbow — animation filter replaces idle white tint */
+.pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon,
+.pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon {
+  animation: aimy-coin-icon-rainbow 3s linear infinite;
+}
+
+@property --pk-coin-color {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f57eb6;
+}
+
+@keyframes aimy-coin-body-rainbow {
+  0%,
+  100% {
+    --pk-coin-color: #ff7eb6;
+  }
+  25% {
+    --pk-coin-color: #e8b4d4;
+  }
+  50% {
+    --pk-coin-color: #c9a8e8;
+  }
+  75% {
+    --pk-coin-color: #b89ad4;
+  }
+}
+
+/* Menu enabled — reserve coin space; hide leftover text nav if present */
+body.pk-menu-enabled .site-header[data-aimy-chrome] .nav:not(.gal-view-nav) {
+  display: none !important;
+}
+
+body.pk-menu-enabled .site-header[data-aimy-chrome] .social {
+  margin-right: calc(var(--aimy-menu-size) + var(--aimy-menu-gap));
+}
+
+html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] {
+  z-index: calc(var(--pk-z, 2147483600) + 4) !important;
+}
+
+html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .social {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Header rises above the menu shell for brand + coin; hide page chrome that would bleed */
+html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .gal-view-nav {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
+  position: absolute;
+  left: 50%;
+  top: var(--aimy-chrome-top);
+  transform: translateX(-50%);
+  z-index: 2;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.pk-chrome-boot:not(.pk-chrome-ready) .site-header[data-aimy-chrome] .brand,
+  html.pk-chrome-boot:not(.pk-chrome-ready) .site-header[data-aimy-chrome] .social,
+  html.pk-chrome-boot:not(.pk-chrome-ready) .pk-coin-button,
+  html.pk-chrome-boot:not(.pk-chrome-ready) .pk-burger-hit {
+    opacity: 0;
+    translate: none;
+  }
+
+  html.pk-chrome-boot.pk-chrome-ready:not(.pk-chrome-settled) .site-header[data-aimy-chrome] .brand,
+  html.pk-chrome-boot.pk-chrome-ready:not(.pk-chrome-settled) .site-header[data-aimy-chrome] .social,
+  html.pk-chrome-boot.pk-chrome-ready:not(.pk-chrome-settled) .pk-coin-button,
+  html.pk-chrome-boot.pk-chrome-ready:not(.pk-chrome-settled) .pk-burger-hit {
+    opacity: 1;
+    translate: none;
+    transition: opacity 0.2s ease !important;
+    transition-delay: 0ms !important;
+  }
+
+  html.pk-chrome-settled .site-header[data-aimy-chrome] .brand,
+  html.pk-chrome-settled .pk-coin-button,
+  html.pk-chrome-settled .pk-burger-hit {
+    opacity: 1;
+    translate: none;
+  }
+
+  html.pk-chrome-settled .site-header[data-aimy-chrome] .social {
+    translate: none;
+  }
+
+  .site-header[data-aimy-chrome] .nav,
+  .site-header[data-aimy-chrome] .social,
+  .site-header[data-aimy-chrome].is-nav-hidden .nav,
+  .site-header[data-aimy-chrome].is-nav-hidden .social {
+    transition: none !important;
+  }
+
+  .site-header[data-aimy-chrome] .nav a:hover,
+  .site-header[data-aimy-chrome] .social a:hover,
+  .site-header[data-aimy-chrome] .brand:hover .brand-mark,
+  .site-header[data-aimy-chrome] .brand:hover .brand-logo-dark,
+  .site-header[data-aimy-chrome] .brand:hover .brand-logo-dark *,
+  .site-header[data-aimy-chrome] .brand:hover .brand-logo-light,
+  .site-header[data-aimy-chrome] .brand:hover .brand-logo-light *,
+  .site-header[data-aimy-chrome] .brand:hover .brand-logo-mid,
+  .site-header[data-aimy-chrome] .brand:hover .brand-logo-mid *,
+  .pk-burger-hit:hover ~ .pk-coin-button,
+  .pk-burger-hit:focus-visible ~ .pk-coin-button,
+  .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon,
+  .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon {
+    animation: none;
+    transform: none;
+  }
+
+  .pk-coin-icon {
+    transition: opacity 0.12s ease !important;
+  }
+}
+
+
+/* ===== Polykroma overlay menu (pastel wash + chunked layout) ===== */
+
+.pk-menu-root {
+  --pk-coin-color: var(--aimy-menu-coin, #f57eb6);
+  --pk-z: 2147483600;
+  --pk-menu-bg: var(--polykroma-menu-bg);
+  --pk-link: var(--polykroma-menu-ink);
+  --pk-link-soft: var(--polykroma-menu-ink-soft);
+  --pk-link-muted: var(--polykroma-menu-muted);
+  --pk-on-block: var(--polykroma-menu-on-block);
+  --pk-block: var(--polykroma-menu-block);
+  pointer-events: none;
+  color: var(--aimy-logo-primary, var(--aimy-primary));
+}
+
+@media (prefers-color-scheme: dark) {
+  .pk-menu-root {
+    --polykroma-menu-bg: color-mix(in srgb, #0a0a0a 82%, var(--aimy-primary, #c084e8));
+    --polykroma-menu-ink: #f7f0fc;
+    --polykroma-menu-ink-soft: color-mix(in srgb, #f7f0fc 72%, var(--aimy-primary, #c084e8));
+    --polykroma-menu-muted: color-mix(in srgb, #f7f0fc 58%, transparent);
+    --polykroma-menu-on-block: #120c1a;
+    --polykroma-menu-block: var(--aimy-primary, #c084e8);
+  }
+}
+
+.pk-menu-root *,
+.pk-menu-root *::before,
+.pk-menu-root *::after {
+  box-sizing: border-box;
+}
+
+/* Hit + coin box model / placement: Polykroma chrome */
+
+.pk-coin-state,
+.pk-coin {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-style: preserve-3d;
+}
+
+.pk-coin-state {
+  transform: rotateY(var(--pk-coin-turn)) scale(var(--pk-coin-scale));
+  transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.pk-coin {
+  inset: 2%;
+  will-change: transform;
+}
+
+.pk-coin-edge {
+  position: absolute;
+  inset: 5%;
+  display: block;
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, rgba(102, 42, 71, 0.42), transparent 28% 72%, rgba(255, 207, 230, 0.42)),
+    var(--pk-coin-color);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28),
+    inset 0.2rem 0 0.35rem rgba(85, 33, 59, 0.25);
+  transform: translateZ(0);
+  transform-style: preserve-3d;
+  transition: background-color 0.45s ease;
+}
+
+.pk-coin-edge::before,
+.pk-coin-edge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--pk-coin-color);
+  transition: background-color 0.45s ease;
+}
+
+.pk-coin-edge::before {
+  transform: translateZ(0.22rem);
+}
+
+.pk-coin-edge::after {
+  transform: translateZ(-0.22rem);
+}
+
+.pk-coin-face {
+  position: absolute;
+  inset: 5%;
+  display: block;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--pk-coin-color);
+  backface-visibility: hidden;
+  box-shadow:
+    inset 0.1rem 0.16rem 0.35rem rgba(255, 255, 255, 0.45),
+    inset -0.12rem -0.18rem 0.35rem rgba(91, 29, 61, 0.2);
+  transition: background-color 0.45s ease;
+}
+
+.pk-coin-face--front {
+  transform: translateZ(0.46rem);
+}
+
+.pk-coin-face--back {
+  transform: rotateY(180deg) translateZ(0.46rem);
+}
+
+.pk-coin-icon {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Black SVG paths → white (defaults + uncolored alts) */
+  filter: brightness(0) invert(1);
+  image-rendering: pixelated;
+  transform: scale(1);
+  transform-origin: center;
+  /* Open/close state swap — short ease; fine-pointer hover morph overrides below */
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Default: open affordance; close + hover alts hidden */
+.pk-coin-icon--open:not(.pk-coin-icon--alt) {
+  opacity: 1;
+}
+
+.pk-coin-icon--close,
+.pk-coin-icon--alt {
+  opacity: 0;
+}
+
+.pk-menu-root.is-menu-open .pk-coin-icon--open {
+  opacity: 0;
+}
+
+.pk-menu-root.is-menu-open .pk-coin-icon--close:not(.pk-coin-icon--alt) {
+  opacity: 1;
+}
+
+/*
+ * Hover alts — fine pointer only; touch keeps default open/close glyphs.
+ * Morph: staggered stepped dissolve (~380ms, 10 stops) + tiny scale punch so
+ * base→alt reads as one glyph reshaping, not a 4-frame snap.
+ * Base steps out faster; alt steps in slightly delayed so layers overlap mid-phase.
+ */
+@media (hover: hover) and (pointer: fine) {
+  .pk-coin-icon:not(.pk-coin-icon--alt) {
+    transition:
+      opacity 0.34s steps(10, end),
+      transform 0.38s cubic-bezier(0.33, 1.2, 0.68, 1);
+  }
+
+  .pk-coin-icon--alt {
+    /* Rest slightly undersized so hover settles into place */
+    transform: scale(0.97);
+    transition:
+      opacity 0.4s steps(10, end) 0.05s,
+      transform 0.4s cubic-bezier(0.33, 1.2, 0.68, 1) 0.05s;
+  }
+
+  .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--open:not(.pk-coin-icon--alt),
+  .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--open:not(.pk-coin-icon--alt) {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+
+  .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--open.pk-coin-icon--alt,
+  .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--open.pk-coin-icon--alt {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--open,
+  .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--open {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+
+  .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--close:not(.pk-coin-icon--alt),
+  .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--close:not(.pk-coin-icon--alt) {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+
+  .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--close.pk-coin-icon--alt,
+  .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--close.pk-coin-icon--alt {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* —— Full-screen nav shell (chunked layout + veil) —— */
+.pk-nav-shell {
+  position: fixed;
+  inset: 0;
+  z-index: var(--pk-z);
+  pointer-events: none;
+  display: block;
+}
+
+.pk-nav-shell[hidden] {
+  display: none !important;
+}
+
+.pk-nav-shell.is-open {
+  pointer-events: auto;
+  cursor: default;
+}
+
+/*
+ * Progressive veil — sweeps in from the LEFT.
+ * Page frost blur is applied to page content via filter (JS).
+ */
+.pk-menu-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.pk-nav-shell.is-open .pk-menu-veil {
+  visibility: visible;
+}
+
+.pk-menu-veil-wash {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 130%;
+  pointer-events: none;
+  will-change: transform;
+  transform: translate3d(-100%, 0, 0);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--pk-menu-bg) 92%, transparent) 0%,
+    color-mix(in srgb, var(--pk-menu-bg) 78%, transparent) 22%,
+    color-mix(in srgb, var(--pk-menu-bg) 52%, transparent) 48%,
+    color-mix(in srgb, var(--pk-menu-bg) 18%, transparent) 72%,
+    transparent 100%
+  );
+}
+
+.pk-menu {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: none;
+  align-items: center;
+  justify-content: flex-start;
+  padding:
+    calc(var(--aimy-chrome-top, 24px) + var(--aimy-brand-size, 72px) + 12px)
+    var(--aimy-chrome-right, 40px)
+    max(32px, env(safe-area-inset-bottom, 0px))
+    var(--aimy-chrome-left, 40px);
+  background: transparent;
+  pointer-events: none;
+}
+
+.pk-menu.is-visible {
+  display: flex;
+  pointer-events: auto;
+}
+
+.pk-menu-panel {
+  width: min(100%, 42rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.pk-menu-group {
+  width: 100%;
+}
+
+.pk-menu-group--home {
+  margin-bottom: clamp(2rem, 5.5vh, 3.5rem);
+}
+
+.pk-menu-group--work {
+  margin-bottom: clamp(2rem, 5.5vh, 3.5rem);
+}
+
+.pk-menu-group--story {
+  margin-bottom: clamp(1.1rem, 2.8vh, 1.75rem);
+}
+
+.pk-menu-rule {
+  width: min(100%, 18rem);
+  height: 2px;
+  margin: 0 0 clamp(1.1rem, 2.8vh, 1.75rem);
+  background: var(--polykroma-menu-rule);
+}
+
+.pk-menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(0.35rem, 1.1vh, 0.7rem);
+  width: 100%;
+}
+
+.pk-menu-list--util {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: clamp(1.5rem, 3.5vw, 2.75rem);
+  margin-bottom: clamp(0.85rem, 2vh, 1.25rem);
+}
+
+.pk-menu-list--social {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(0.95rem, 2.4vw, 1.65rem);
+}
+
+.pk-menu-item {
+  position: relative;
+  overflow: visible;
+  width: fit-content;
+  max-width: 100%;
+}
+
+html body .pk-menu-root .pk-menu-link,
+.pk-menu-link {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  color: var(--pk-link);
+  text-decoration: none !important;
+  font-family: var(--polykroma-menu-font);
+  font-style: normal;
+  font-weight: normal;
+  font-size: var(--polykroma-menu-link-size) !important;
+  line-height: var(--polykroma-menu-link-leading) !important;
+  letter-spacing: var(--polykroma-menu-link-tracking) !important;
+  text-transform: uppercase;
+  padding: 0 !important;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  will-change: transform, opacity;
+  transition: color 0.2s ease;
+  outline: none;
+  cursor: pointer;
+}
+
+.pk-menu-link__index {
+  flex: 0 0 auto;
+  min-width: 1.6em;
+  font-family: var(--polykroma-menu-font);
+  font-style: normal;
+  font-weight: normal;
+  font-size: 0.34em;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  color: var(--pk-link-soft);
+  opacity: 0.85;
+  transform: translateY(-0.15em);
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pk-menu-link__mask {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.08em 0.14em;
+  margin: -0.08em -0.14em;
+  vertical-align: baseline;
+}
+
+.pk-menu-link__label {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.pk-menu-link__block {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: var(--pk-block);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.pk-menu-link__wipe {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  padding: inherit;
+  background: var(--pk-block);
+  color: var(--pk-on-block);
+  clip-path: inset(0 100% 0 0);
+  pointer-events: none;
+  transition: clip-path 0.42s cubic-bezier(0.77, 0, 0.18, 1);
+  will-change: clip-path;
+}
+
+.pk-menu-link__wipe .pk-menu-link__label {
+  color: var(--pk-on-block);
+}
+
+html body .pk-menu-root .pk-menu-link--util,
+.pk-menu-link--util {
+  font-size: var(--polykroma-menu-meta-size) !important;
+  letter-spacing: var(--polykroma-menu-meta-tracking) !important;
+  line-height: 1.15 !important;
+  color: var(--pk-link-muted);
+  gap: 0;
+}
+
+.pk-menu-link--util .pk-menu-link__mask {
+  padding: 0.12em 0.2em;
+  margin: -0.12em -0.2em;
+}
+
+.pk-menu-link--util .pk-menu-link__wipe {
+  transition-duration: 0.34s;
+}
+
+.pk-menu-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--polykroma-menu-social-size);
+  height: var(--polykroma-menu-social-size);
+  /* Same primary ink as Start / Contact / Imprint links */
+  color: var(--pk-link);
+  text-decoration: none !important;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+  transition: color 0.14s ease, transform 0.14s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pk-menu-social__icon {
+  display: block;
+  width: 100%;
+  height: 100%;
+  flex: 0 0 auto;
+  pointer-events: none;
+  overflow: visible;
+  color: inherit;
+  fill: currentColor;
+  transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pk-menu-social__text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Hover — rainbow index + wipe reveal (no PS1 slab) */
+html body .pk-menu-root .pk-menu-link:hover,
+html body .pk-menu-root .pk-menu-link:focus-visible,
+html body .pk-menu-root .pk-menu-link.is-selected,
+.pk-menu-link:hover,
+.pk-menu-link:focus-visible,
+.pk-menu-link.is-selected {
+  color: var(--pk-link);
+  background: transparent;
+  box-shadow: none;
+}
+
+html body .pk-menu-root .pk-menu-link:hover .pk-menu-link__index,
+html body .pk-menu-root .pk-menu-link:focus-visible .pk-menu-link__index,
+html body .pk-menu-root .pk-menu-link.is-selected .pk-menu-link__index,
+.pk-menu-link:hover .pk-menu-link__index,
+.pk-menu-link:focus-visible .pk-menu-link__index,
+.pk-menu-link.is-selected .pk-menu-link__index {
+  color: currentColor;
+  opacity: 1;
+  transform: translateY(-0.15em) translateX(0.06em);
+  animation: aimy-rainbow 2.2s linear infinite;
+}
+
+html body .pk-menu-root .pk-menu-link:hover .pk-menu-link__wipe,
+html body .pk-menu-root .pk-menu-link:focus-visible .pk-menu-link__wipe,
+html body .pk-menu-root .pk-menu-link.is-selected .pk-menu-link__wipe,
+.pk-menu-link:hover .pk-menu-link__wipe,
+.pk-menu-link:focus-visible .pk-menu-link__wipe,
+.pk-menu-link.is-selected .pk-menu-link__wipe {
+  clip-path: inset(0 0 0 0);
+  animation: pk-block-rainbow 2.2s linear infinite;
+}
+
+html body .pk-menu-root .pk-menu-link:hover .pk-menu-link__block,
+html body .pk-menu-root .pk-menu-link:focus-visible .pk-menu-link__block,
+html body .pk-menu-root .pk-menu-link.is-selected .pk-menu-link__block,
+.pk-menu-link:hover .pk-menu-link__block,
+.pk-menu-link:focus-visible .pk-menu-link__block,
+.pk-menu-link.is-selected .pk-menu-link__block {
+  opacity: 0;
+}
+
+@keyframes pk-block-rainbow {
+  0%,
+  100% { background-color: var(--aimy-r1, #ff7eb6); }
+  25% { background-color: var(--aimy-r2, #e8b4d4); }
+  50% { background-color: var(--aimy-r3, #c9a8e8); }
+  75% { background-color: var(--aimy-r4, #b89ad4); }
+}
+
+/* Current page — wipe parked open until hovered / selected */
+html body .pk-menu-root .pk-menu-link.is-current:not(:hover):not(:focus-visible):not(.is-selected) .pk-menu-link__wipe,
+.pk-menu-link.is-current:not(:hover):not(:focus-visible):not(.is-selected) .pk-menu-link__wipe {
+  clip-path: inset(0 0 0 0);
+}
+
+html body .pk-menu-root .pk-menu-link.is-current:not(:hover):not(:focus-visible):not(.is-selected) .pk-menu-link__index,
+.pk-menu-link.is-current:not(:hover):not(:focus-visible):not(.is-selected) .pk-menu-link__index {
+  opacity: 1;
+  color: currentColor;
+}
+
+.pk-menu-social:hover,
+.pk-menu-social:focus-visible {
+  color: var(--pk-link);
+  background: transparent;
+  border-color: transparent;
+  transform: scale(1.12);
+  animation: none;
+}
+
+.pk-menu-social:hover .pk-menu-social__icon,
+.pk-menu-social:focus-visible .pk-menu-social__icon {
+  transform: scale(1.02);
+}
+
+html.pk-menu-open,
+html.pk-menu-open body {
+  overflow: hidden !important;
+}
+
+@media screen and (max-width: 720px) {
+  .pk-menu {
+    align-items: center;
+    justify-content: center;
+    padding-top: calc(var(--aimy-chrome-top, 24px) + var(--aimy-brand-size, 72px) + 8px);
+  }
+
+  .pk-menu-panel {
+    width: 100%;
+    max-width: 22rem;
+    align-items: center;
+    text-align: center;
+  }
+
+  .pk-menu-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pk-menu-list {
+    align-items: center;
+    gap: clamp(0.55rem, 1.6vh, 1rem);
+  }
+
+  .pk-menu-list--util,
+  .pk-menu-list--social {
+    justify-content: center;
+  }
+
+  .pk-menu-rule {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: clamp(1.25rem, 3.6vh, 1.85rem);
+  }
+
+  html body .pk-menu-root .pk-menu-link,
+  .pk-menu-link {
+    font-size: var(--polykroma-menu-link-size-sm) !important;
+    letter-spacing: 0.05em !important;
+    gap: 0.32em;
+  }
+
+  .pk-menu-link__index {
+    min-width: 1.55em;
+    font-size: 0.36em;
+  }
+
+  .pk-menu-list--util {
+    gap: clamp(1.4rem, 6vw, 2.1rem);
+    margin-bottom: clamp(1rem, 2.4vh, 1.45rem);
+  }
+
+  .pk-menu-list--social {
+    gap: clamp(1.15rem, 3.2vw, 1.85rem);
+  }
+
+  html body .pk-menu-root .pk-menu-link--util,
+  .pk-menu-link--util {
+    font-size: var(--polykroma-menu-meta-size-sm) !important;
+    letter-spacing: 0.1em !important;
+  }
+
+  .pk-menu-social {
+    width: var(--polykroma-menu-social-size-sm);
+    height: var(--polykroma-menu-social-size-sm);
+  }
+
+  .pk-menu-group--home,
+  .pk-menu-group--work {
+    margin-bottom: clamp(1.85rem, 5.5vh, 3rem);
+  }
+
+  .pk-menu-group--story {
+    margin-bottom: clamp(1.25rem, 3.6vh, 1.85rem);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    --aimy-menu-coin: #ff2fbd;
+    --aimy-menu-coin-open: #20e7ff;
+  }
+
+  .pk-coin-button {
+    filter:
+      drop-shadow(0 0 0.28rem color-mix(in srgb, var(--pk-coin-color) 90%, transparent))
+      drop-shadow(0 0 0.72rem color-mix(in srgb, var(--pk-coin-color) 62%, transparent));
+  }
+
+  .pk-coin-edge {
+    background:
+      linear-gradient(
+        90deg,
+        #32104f,
+        color-mix(in srgb, var(--pk-coin-color) 88%, white) 28%,
+        var(--pk-coin-color) 58%,
+        #792cff
+      );
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.65),
+      inset 0.2rem 0 0.38rem rgba(35, 3, 59, 0.62),
+      0 0 0.55rem color-mix(in srgb, var(--pk-coin-color) 76%, transparent);
+  }
+
+  .pk-coin-edge::before,
+  .pk-coin-edge::after,
+  .pk-coin-face {
+    background:
+      radial-gradient(circle at 28% 20%, rgba(255, 255, 255, 0.98), transparent 12%),
+      linear-gradient(
+        145deg,
+        color-mix(in srgb, var(--pk-coin-color) 64%, white),
+        var(--pk-coin-color) 48%,
+        color-mix(in srgb, var(--pk-coin-color) 64%, #5426ff)
+      );
+  }
+
+  .pk-coin-face {
+    box-shadow:
+      inset 0.12rem 0.16rem 0.34rem rgba(255, 255, 255, 0.72),
+      inset -0.14rem -0.2rem 0.4rem rgba(38, 4, 70, 0.48),
+      0 0 0.48rem color-mix(in srgb, var(--pk-coin-color) 90%, transparent),
+      0 0 1.2rem color-mix(in srgb, var(--pk-coin-color) 48%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pk-coin {
+    animation: none;
+    transform: rotateX(-7deg) rotateY(8deg);
+  }
+
+  .pk-coin-state {
+    transition: none;
+    animation: none !important;
+  }
+
+  /* Keep white SVG tint; only drop stepped hover dissolve */
+  .pk-coin-icon {
+    transition: none;
+    animation: none !important;
+  }
+
+  .pk-menu-veil-wash,
+  .pk-menu-link,
+  .pk-menu-link__index,
+  .pk-menu-link__label,
+  .pk-menu-link__block,
+  .pk-menu-link__wipe,
+  .pk-menu-social,
+  .pk-menu-social__icon {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .pk-menu-link__wipe {
+    clip-path: none !important;
+  }
+}
+
+
+/* ===== Page transition (merged) ===== */
+
+
+:root {
+  --pt-ease: cubic-bezier(0.35, 0.35, 0, 1);
+  --pt-ease-in: cubic-bezier(0.69, 0, 0, 1);
+  /* Defaults match home/index; JS overrides per destination page */
+  --pt-veil: 42, 36, 51;
+  --pt-block: #2a2433;
+  --pt-r1: #ff8fd2;
+  --pt-r2: #b8a6ff;
+  --pt-r3: #7ed9ff;
+  --pt-r4: #7ed9ff;
+}
+
+.aimy-pt {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483000 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+  transform: translateZ(0);
+  background-color: rgba(var(--pt-veil), 1);
+  display: none !important;
+  opacity: 1 !important;
+  visibility: hidden !important;
+  overflow: hidden;
+}
+
+.aimy-pt.is-enter-from,
+.aimy-pt.is-enter-active,
+.aimy-pt.is-leave-active,
+.aimy-pt.is-leave-to {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.aimy-pt .g {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.aimy-pt .g > span {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 25%;
+  overflow: hidden;
+  transform: none;
+}
+
+/* Solid cover + two trailing sibling bands (same row geometry) */
+.aimy-pt__band {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform: scaleX(1) translateZ(0);
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* Primary stays on top at full cover; trails sit under and peek as hard bands */
+.aimy-pt__band--p {
+  z-index: 3;
+  background: var(--pt-block);
+}
+
+.aimy-pt__band--t1 {
+  z-index: 2;
+  background: var(--pt-r1);
+}
+
+.aimy-pt__band--t2 {
+  z-index: 1;
+  background: var(--pt-r2);
+}
+
+/* Center logo — true viewport center; transform never changes during the wipe */
+.aimy-pt .t {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.aimy-pt__logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(5.75rem, 16vw, 9rem);
+  height: clamp(5.75rem, 16vw, 9rem);
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 8px 24px rgba(42, 36, 51, 0.28));
+  opacity: 1;
+  will-change: opacity;
+}
+
+.aimy-pt__chroma {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.aimy-pt__chroma .brand-mark,
+.aimy-pt__chroma svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.aimy-pt__chroma--main {
+  z-index: 2;
+}
+
+.aimy-pt__chroma--cyan,
+.aimy-pt__chroma--magenta {
+  z-index: 1;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.aimy-pt__chroma--cyan {
+  transform: translate(-3px, 1px);
+  filter: grayscale(1) sepia(1) saturate(12) hue-rotate(145deg) brightness(1.15);
+  mix-blend-mode: multiply;
+}
+
+.aimy-pt__chroma--magenta {
+  transform: translate(3px, -1px);
+  filter: grayscale(1) sepia(1) saturate(12) hue-rotate(295deg) brightness(1.1);
+  mix-blend-mode: multiply;
+}
+
+/* Logo fills — trail hues on dark covers; deeper ink on light covers */
+.aimy-pt__chroma--main .brand-logo-dark,
+.aimy-pt__chroma--main .brand-logo-dark * {
+  fill: #2a2433;
+  animation: aimy-pt-logo-dark 2.4s linear infinite;
+}
+
+.aimy-pt__chroma--main .brand-logo-light,
+.aimy-pt__chroma--main .brand-logo-light * {
+  fill: var(--pt-r1);
+  animation: aimy-pt-logo-light 2.4s linear infinite;
+}
+
+.aimy-pt__chroma--main .brand-logo-mid,
+.aimy-pt__chroma--main .brand-logo-mid * {
+  fill: var(--pt-r2);
+  animation: aimy-pt-logo-mid 2.4s linear infinite;
+}
+
+/* Light primary: keep dark silhouette readable; tint accents with trail hues */
+.aimy-pt.is-on-light .aimy-pt__logo {
+  filter: drop-shadow(0 6px 18px rgba(42, 36, 51, 0.22));
+}
+
+.aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-dark,
+.aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-dark * {
+  fill: #2a2433;
+  animation: aimy-pt-logo-dark-on-light 2.4s linear infinite;
+}
+
+.aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-light,
+.aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-light * {
+  fill: var(--pt-r2);
+  animation: aimy-pt-logo-light-on-light 2.4s linear infinite;
+}
+
+.aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-mid,
+.aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-mid * {
+  fill: var(--pt-r1);
+  animation: aimy-pt-logo-mid-on-light 2.4s linear infinite;
+}
+
+.aimy-pt.is-on-light .aimy-pt__chroma--cyan {
+  filter: grayscale(1) sepia(1) saturate(10) hue-rotate(155deg) brightness(0.85);
+  mix-blend-mode: multiply;
+  opacity: 0.45;
+}
+
+.aimy-pt.is-on-light .aimy-pt__chroma--magenta {
+  filter: grayscale(1) sepia(1) saturate(10) hue-rotate(310deg) brightness(0.9);
+  mix-blend-mode: multiply;
+  opacity: 0.45;
+}
+
+/*
+ * Enter — trail bands sweep first (under primary), primary covers last.
+ * Leading fringe reads trail1 then trail2 ahead of the solid cover.
+ */
+.aimy-pt.is-enter-active {
+  transition: background-color 1.2s var(--pt-ease);
+}
+
+.aimy-pt.is-enter-active .aimy-pt__band--t2 {
+  transform-origin: 0 50%;
+  transition: transform calc(0.6s + var(--order) * 0.15s) var(--pt-ease-in);
+}
+
+.aimy-pt.is-enter-active .aimy-pt__band--t1 {
+  transform-origin: 0 50%;
+  transition: transform calc(0.6s + var(--order) * 0.15s) var(--pt-ease-in) 0.045s;
+}
+
+.aimy-pt.is-enter-active .aimy-pt__band--p {
+  transform-origin: 0 50%;
+  transition: transform calc(0.6s + var(--order) * 0.15s) var(--pt-ease-in) 0.09s;
+}
+
+.aimy-pt.is-enter-active .aimy-pt__logo {
+  transition: opacity 0.55s var(--pt-ease) 0.18s;
+}
+
+.aimy-pt.is-enter-active .aimy-pt__chroma--cyan,
+.aimy-pt.is-enter-active .aimy-pt__chroma--magenta {
+  transition: opacity 0.55s var(--pt-ease) 0.22s;
+}
+
+.aimy-pt.is-enter-from {
+  background-color: rgba(var(--pt-veil), 0);
+}
+
+.aimy-pt.is-enter-from .aimy-pt__band {
+  transform: scaleX(0) translateZ(0);
+}
+
+.aimy-pt.is-enter-from .aimy-pt__logo {
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+
+.aimy-pt.is-enter-from .aimy-pt__chroma--cyan,
+.aimy-pt.is-enter-from .aimy-pt__chroma--magenta {
+  opacity: 0;
+}
+
+/* Leave — primary peels first; solid trail bands linger in the wake */
+.aimy-pt.is-leave-active {
+  pointer-events: none;
+  transition: background-color 1.5s var(--pt-ease);
+}
+
+.aimy-pt.is-leave-active .aimy-pt__band--p {
+  transform-origin: 100% 50%;
+  transition: transform calc(0.9s + var(--order-back) * 0.15s) var(--pt-ease-in);
+}
+
+.aimy-pt.is-leave-active .aimy-pt__band--t1 {
+  transform-origin: 100% 50%;
+  transition: transform calc(0.9s + var(--order-back) * 0.15s) var(--pt-ease-in) 0.055s;
+}
+
+.aimy-pt.is-leave-active .aimy-pt__band--t2 {
+  transform-origin: 100% 50%;
+  transition: transform calc(0.9s + var(--order-back) * 0.15s) var(--pt-ease-in) 0.11s;
+}
+
+.aimy-pt.is-leave-active .aimy-pt__logo {
+  transition: opacity 0.45s var(--pt-ease);
+}
+
+.aimy-pt.is-leave-active .aimy-pt__chroma--cyan,
+.aimy-pt.is-leave-active .aimy-pt__chroma--magenta {
+  transition: opacity 0.4s var(--pt-ease);
+}
+
+.aimy-pt.is-leave-to {
+  background-color: rgba(var(--pt-veil), 0);
+}
+
+.aimy-pt.is-leave-to .aimy-pt__band {
+  transform: scaleX(0) translateZ(0);
+}
+
+.aimy-pt.is-leave-to .aimy-pt__logo {
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+
+.aimy-pt.is-leave-to .aimy-pt__chroma--cyan,
+.aimy-pt.is-leave-to .aimy-pt__chroma--magenta {
+  opacity: 0;
+}
+
+@keyframes aimy-pt-logo-dark {
+  0% {
+    fill: #2a2433;
+  }
+  25% {
+    fill: #5a3d6e;
+  }
+  50% {
+    fill: #3d5a6e;
+  }
+  75% {
+    fill: #6e3d5a;
+  }
+  100% {
+    fill: #2a2433;
+  }
+}
+
+@keyframes aimy-pt-logo-light {
+  0% {
+    fill: var(--pt-r1);
+  }
+  33% {
+    fill: var(--pt-r2);
+  }
+  66% {
+    fill: var(--pt-r3);
+  }
+  100% {
+    fill: var(--pt-r1);
+  }
+}
+
+@keyframes aimy-pt-logo-mid {
+  0% {
+    fill: var(--pt-r2);
+  }
+  33% {
+    fill: var(--pt-r3);
+  }
+  66% {
+    fill: var(--pt-r1);
+  }
+  100% {
+    fill: var(--pt-r2);
+  }
+}
+
+@keyframes aimy-pt-logo-dark-on-light {
+  0%,
+  100% {
+    fill: #2a2433;
+  }
+  50% {
+    fill: #3d2f4a;
+  }
+}
+
+@keyframes aimy-pt-logo-light-on-light {
+  0% {
+    fill: var(--pt-r2);
+  }
+  50% {
+    fill: var(--pt-r1);
+  }
+  100% {
+    fill: var(--pt-r2);
+  }
+}
+
+@keyframes aimy-pt-logo-mid-on-light {
+  0% {
+    fill: var(--pt-r1);
+  }
+  50% {
+    fill: var(--pt-r2);
+  }
+  100% {
+    fill: var(--pt-r1);
+  }
+}
+
+@media (max-width: 1023px) {
+  .aimy-pt__logo {
+    width: clamp(4.75rem, 28vw, 7rem);
+    height: clamp(4.75rem, 28vw, 7rem);
+  }
+
+  .aimy-pt__chroma--cyan {
+    transform: translate(-2px, 1px);
+  }
+
+  .aimy-pt__chroma--magenta {
+    transform: translate(2px, -1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aimy-pt,
+  .aimy-pt .aimy-pt__band,
+  .aimy-pt__logo,
+  .aimy-pt__chroma--cyan,
+  .aimy-pt__chroma--magenta,
+  .aimy-pt__chroma--main .brand-logo-dark,
+  .aimy-pt__chroma--main .brand-logo-dark *,
+  .aimy-pt__chroma--main .brand-logo-light,
+  .aimy-pt__chroma--main .brand-logo-light *,
+  .aimy-pt__chroma--main .brand-logo-mid,
+  .aimy-pt__chroma--main .brand-logo-mid *,
+  .aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-dark,
+  .aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-dark *,
+  .aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-light,
+  .aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-light *,
+  .aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-mid,
+  .aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-mid * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

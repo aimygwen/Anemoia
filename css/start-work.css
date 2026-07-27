@@ -1,0 +1,488 @@
+/**
+ * Start — work selection (light grey stage).
+ */
+
+@font-face {
+  font-family: "Bold Block";
+  src: url("../fonts/Bold Block.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.start-work {
+  --start-paper: #e7e7e7;
+  --start-ink: #292929;
+  --start-muted: rgba(41, 41, 41, 0.55);
+  --start-line: rgba(41, 41, 41, 0.14);
+  --start-preview: #d8d8d8;
+  position: relative;
+  z-index: 3;
+  min-height: 100vh;
+  margin: 0;
+  /* Cards are the site endpoint — no trailing stage padding */
+  padding: clamp(2.5rem, 6vh, 4rem) 0 0;
+  background: var(--start-paper);
+  color: var(--start-ink);
+  isolation: isolate;
+}
+
+main:has(> .start-work:last-child),
+main:has(.start-work:last-of-type) {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/*
+ * Rising paper curtain — follows the about-page transition language.
+ * Its resting edge sits at the viewport floor, outside the hero artwork.
+ */
+.start-work__divider {
+  position: fixed;
+  inset: 0;
+  height: 140vh;
+  transform: translate3d(0, 92vh, 0);
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  contain: strict;
+}
+
+.start-work__divider svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.start-work__divider-shape {
+  fill: var(--start-paper);
+  shape-rendering: optimizeSpeed;
+}
+
+.start-work__swap-title {
+  position: relative;
+  z-index: 2;
+  top: auto;
+  left: auto;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0 clamp(1.25rem, 4vw, 2.5rem);
+  color: #292929;
+  font-family: Newpixel, "Courier New", monospace;
+  font-size: calc(var(--large) * 0.72);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(0, calc((1 - var(--swap-progress, 0)) * 1.25rem), 0);
+  will-change: opacity, transform;
+}
+
+@media (min-width: 1024px) {
+  .start-work__swap-title {
+    font-size: calc(var(--large) * 0.68);
+  }
+}
+
+.start-work__frame {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: clamp(1rem, 2.5vh, 1.75rem);
+}
+
+.start-work__kicker {
+  margin: 0;
+  padding: 0 clamp(1.25rem, 4vw, 2.5rem);
+  font-family: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--start-muted);
+}
+
+.start-work__scroller {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  scroll-snap-type: none;
+  -webkit-overflow-scrolling: touch;
+  cursor: default;
+  scrollbar-width: none;
+  border-top: 0;
+  border-bottom: 0;
+  contain: content;
+}
+
+.start-work__scroller.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+.start-work__scroller::-webkit-scrollbar {
+  height: 6px;
+}
+
+.start-work__scroller::-webkit-scrollbar-thumb {
+  background: rgba(41, 41, 41, 0.22);
+  border-radius: 999px;
+}
+
+.start-work__col {
+  --i: 0;
+  position: relative;
+  flex: 1 1 25%;
+  width: 25%;
+  min-width: 0;
+  max-width: 25%;
+  min-height: clamp(34rem, 82vh, 50rem);
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  align-content: center;
+  justify-items: center;
+  gap: 0.35rem;
+  padding: clamp(2.75rem, 7vh, 4.5rem) clamp(1rem, 2vw, 1.75rem) clamp(2.5rem, 6vh, 4rem);
+  scroll-snap-align: none;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  border-right: 1px solid var(--start-line);
+  content-visibility: auto;
+  contain-intrinsic-size: 25vw 50rem;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.start-work__col:first-child {
+  border-left: 1px solid var(--start-line);
+}
+
+.start-work__col:hover,
+.start-work__col:focus-visible {
+  outline: none;
+}
+
+.start-work__preview {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: var(--start-preview);
+  box-shadow: none;
+  transform: none;
+}
+
+.start-work__preview::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--start-paper) 0%,
+    color-mix(in srgb, var(--start-paper) 92%, transparent) 14%,
+    color-mix(in srgb, var(--start-paper) 35%, transparent) 38%,
+    color-mix(in srgb, var(--start-paper) 6%, transparent) 58%,
+    transparent 78%
+  );
+}
+
+.start-work__preview img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  filter: saturate(0.72) contrast(0.96);
+  transform: scale(1.02);
+  transition:
+    opacity 220ms ease,
+    transform 650ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 350ms ease;
+  will-change: transform, opacity;
+}
+
+/* Vector stage thumbs (lowpoly / visuals) — light grey rest, soft pixel rainbow hover */
+.start-work__preview--sketch {
+  background: transparent;
+}
+
+.start-work__preview--sketch img {
+  object-fit: cover;
+  object-position: center center;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  position: absolute;
+  inset: 0;
+  /* Hidden — single mosaic canvas is the visual */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/*
+ * One mosaic for vector thumbs: solid light grey at rest, chunkier + rainbow on hover.
+ * No paused animation at rest — that froze on a tinted keyframe instead of grey.
+ */
+.start-work__preview--sketch .start-work__pixel-preview {
+  z-index: 2;
+  opacity: 1;
+  filter: brightness(0) saturate(100%) invert(78%);
+  transform: scale(1);
+  transition:
+    transform 550ms cubic-bezier(0.22, 0.8, 0.2, 1),
+    filter 280ms ease;
+  animation: none;
+}
+
+.start-work__pixel-preview {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: pixelated;
+  opacity: 0;
+  filter: saturate(1.15) contrast(1.08);
+  transform: scale(1.02);
+  transition:
+    opacity 420ms ease,
+    transform 550ms cubic-bezier(0.22, 0.8, 0.2, 1);
+  will-change: opacity, transform;
+  pointer-events: none;
+}
+
+.start-work__col:hover .start-work__preview img,
+.start-work__col:focus-visible .start-work__preview img {
+  opacity: 0;
+  transform: scale(1.06);
+}
+
+.start-work__col:hover .start-work__pixel-preview,
+.start-work__col:focus-visible .start-work__pixel-preview {
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+.start-work__col--sketch:hover .start-work__pixel-preview,
+.start-work__col--sketch:focus-visible .start-work__pixel-preview {
+  opacity: 1;
+  transform: scale(1.04);
+  animation: start-work-sketch-rainbow 5s linear infinite;
+}
+
+.start-work__col:hover .start-work__num,
+.start-work__col:focus-visible .start-work__num,
+.start-work__col:hover .start-work__name,
+.start-work__col:focus-visible .start-work__name,
+.start-work__col:hover .start-work__desc,
+.start-work__col:focus-visible .start-work__desc {
+  animation: start-work-text-rainbow 2.2s linear infinite;
+}
+
+.start-work__num {
+  position: relative;
+  z-index: 2;
+  display: block;
+  align-self: end;
+  margin: 0 0 0.15em;
+  font-family: "Bold Block", "Arial Black", Impact, sans-serif;
+  font-size: clamp(7rem, 22vw, 14rem);
+  font-weight: normal;
+  line-height: 0.78;
+  letter-spacing: -0.02em;
+  color: var(--start-ink);
+  user-select: none;
+  transition: color 180ms ease;
+}
+
+.start-work__name {
+  position: relative;
+  z-index: 2;
+  display: block;
+  margin: 0;
+  font-family: "Bold Block", "Arial Black", Impact, sans-serif;
+  font-size: clamp(1.35rem, 2.8vw, 2.1rem);
+  font-weight: normal;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--start-ink);
+  transition: color 180ms ease;
+}
+
+.start-work__desc {
+  position: relative;
+  z-index: 2;
+  display: block;
+  max-width: 16ch;
+  margin: 0.35rem 0 0;
+  font-family: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--start-muted);
+  text-wrap: balance;
+  transition: color 180ms ease;
+}
+
+@keyframes start-work-text-rainbow {
+  0% { color: #ff4fa3; }
+  16% { color: #ffd84a; }
+  33% { color: #5dff9a; }
+  50% { color: #4fd4ff; }
+  66% { color: #8b6dff; }
+  83% { color: #ff6ad5; }
+  100% { color: #ff4fa3; }
+}
+
+/* Soft pastel shift for sketchbook hover — muted pinks / lavenders / mist */
+@keyframes start-work-sketch-rainbow {
+  0% {
+    filter: brightness(0) saturate(100%) invert(78%) sepia(22%) saturate(520%)
+      hue-rotate(295deg) brightness(1.04);
+  }
+  25% {
+    filter: brightness(0) saturate(100%) invert(82%) sepia(14%) saturate(380%)
+      hue-rotate(280deg) brightness(1.05);
+  }
+  50% {
+    filter: brightness(0) saturate(100%) invert(80%) sepia(16%) saturate(420%)
+      hue-rotate(220deg) brightness(1.04);
+  }
+  75% {
+    filter: brightness(0) saturate(100%) invert(76%) sepia(18%) saturate(450%)
+      hue-rotate(250deg) brightness(1.03);
+  }
+  100% {
+    filter: brightness(0) saturate(100%) invert(78%) sepia(22%) saturate(520%)
+      hue-rotate(295deg) brightness(1.04);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .start-work {
+    --start-paper: #17141d;
+    --start-ink: #f8f2ff;
+    --start-muted: rgba(248, 242, 255, 0.62);
+    --start-line: rgba(248, 242, 255, 0.14);
+    --start-preview: #28222f;
+  }
+
+  .start-work__swap-title {
+    color: #f8f2ff;
+  }
+
+  .start-work__scroller {
+    scrollbar-color: rgba(248, 242, 255, 0.28) transparent;
+  }
+
+  .start-work__scroller::-webkit-scrollbar-thumb {
+    background: rgba(248, 242, 255, 0.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .start-work__preview img,
+  .start-work__pixel-preview {
+    transform: none;
+    transition: opacity 120ms ease;
+  }
+
+  .start-work__preview--sketch .start-work__pixel-preview {
+    animation: none;
+    filter: brightness(0) saturate(100%) invert(78%);
+  }
+
+  .start-work__col--sketch:hover .start-work__pixel-preview,
+  .start-work__col--sketch:focus-visible .start-work__pixel-preview {
+    filter: brightness(0) saturate(100%) invert(78%) sepia(22%) saturate(520%)
+      hue-rotate(295deg) brightness(1.04);
+  }
+
+  .start-work__col:hover .start-work__num,
+  .start-work__col:hover .start-work__name,
+  .start-work__col:hover .start-work__desc,
+  .start-work__col:focus-visible .start-work__num,
+  .start-work__col:focus-visible .start-work__name,
+  .start-work__col:focus-visible .start-work__desc {
+    animation: none;
+    color: #ff4fa3;
+  }
+}
+
+@media (max-width: 900px) {
+  /* Keep all four stages visible at once — no horizontal browse */
+  .start-work__scroller {
+    overflow-x: hidden;
+    scroll-snap-type: none;
+    cursor: default;
+    scrollbar-width: none;
+  }
+
+  .start-work__col {
+    flex: 1 1 25%;
+    width: 25%;
+    min-width: 0;
+    max-width: 25%;
+    min-height: clamp(26rem, 72vh, 40rem);
+    padding: clamp(2rem, 5vh, 3rem) clamp(0.35rem, 1.2vw, 0.75rem) clamp(1.75rem, 4vh, 2.75rem);
+    gap: 0.2rem;
+  }
+
+  .start-work__num {
+    font-size: clamp(2.75rem, 14vw, 7rem);
+  }
+
+  /* Stage titles sit upright-on-side inside the slim columns */
+  .start-work__name {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 46%;
+    margin: 0;
+    font-size: clamp(1.55rem, 8vw, 2.75rem);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    transform-origin: center center;
+    pointer-events: none;
+  }
+
+  .start-work__col:hover .start-work__name,
+  .start-work__col:focus-visible .start-work__name {
+    /* Keep the -90° tilt while rainbowing color */
+    animation: start-work-text-rainbow 2.2s linear infinite;
+    transform: translate(-50%, -50%) rotate(-90deg);
+  }
+
+  .start-work__desc {
+    max-width: 11ch;
+    font-size: clamp(0.58rem, 2vw, 0.8rem);
+    line-height: 1.25;
+  }
+}
