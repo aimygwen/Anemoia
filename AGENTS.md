@@ -50,6 +50,7 @@ Plain HTML + CSS + vanilla JS, deployed 1:1 to GitHub Pages.
 - Some links point outside the repo (`../../videos.html`, `../../visuals/…`) — they resolve on the deployed site, not locally. Don't "fix" them.
 - `.cursor/rules/*.mdc` exists but is gitignored and references a `behind-the-madness/` folder that no longer exists — its Polyglide/brand content is superseded by this file. Keep this AGENTS.md current instead.
 - `legal.html` currently has no css/js pair.
+- **Do not use Git LFS.** The site is deployed 1:1 from the repo by `.github/workflows/static.yml`; GitHub Pages serves the committed bytes, and it cannot resolve LFS pointers. Images/videos/fonts must remain regular files in git.
 - macOS junk (`.DS_Store`) is untracked via `.gitignore`; keep it that way.
 
 ## When you change things
