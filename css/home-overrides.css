@@ -1660,33 +1660,30 @@ label {
   display: none !important;
 }
 
-/* Backdrop stage for the vector logo */
-.aimy-type-logo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 5;
+/* Backdrop stage for the vector logo — direct child of .c-welcome so it
+   avoids the grid-ancestor quirks that were pinning it to the top-left. */
+.c-welcome > .aimy-type-logo {
+  position: absolute !important;
+  inset: 0;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  transform-style: preserve-3d;
-  perspective: 1200px;
   overflow: visible;
 }
 
 .aimy-type-logo__stage {
   position: relative;
-  width: min(78vw, 44rem);
+  width: min(86vw, 54rem);
   max-width: 100%;
   aspect-ratio: 1557 / 1318;
+  transform-style: preserve-3d;
+  perspective: 1200px;
   transform:
     translate3d(calc(var(--mx, 0) * -10px), calc(var(--my, 0) * -7px), 0)
     rotateX(calc(var(--my, 0) * -1.8deg))
     rotateY(calc(var(--mx, 0) * 2deg));
-  transform-style: preserve-3d;
   will-change: transform;
 }
 
