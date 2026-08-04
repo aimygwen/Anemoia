@@ -1663,8 +1663,14 @@ label {
 /* Backdrop stage for the vector logo */
 .aimy-type-logo {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
   transform-style: preserve-3d;
   perspective: 1200px;
@@ -1672,18 +1678,14 @@ label {
 }
 
 .aimy-type-logo__stage {
-  position: absolute;
-  left: 50%;
-  top: 50%;
+  position: relative;
   width: min(78vw, 44rem);
   max-width: 100%;
   aspect-ratio: 1557 / 1318;
   transform:
-    translate(-50%, -50%)
     translate3d(calc(var(--mx, 0) * -10px), calc(var(--my, 0) * -7px), 0)
     rotateX(calc(var(--my, 0) * -1.8deg))
     rotateY(calc(var(--mx, 0) * 2deg));
-  transform-origin: center center;
   transform-style: preserve-3d;
   will-change: transform;
 }
@@ -1756,7 +1758,7 @@ label {
 
 @media (prefers-reduced-motion: reduce) {
   .aimy-type-logo__stage {
-    transform: translate(-50%, -50%) !important;
+    transform: none !important;
   }
 
   .c-welcome .-w .stone,
