@@ -1708,7 +1708,7 @@ label {
   background-color: var(--welcome-title, #c9a0ef);
   -webkit-mask-image: url("../assets/polykroma/logo/text.svg");
   mask-image: url("../assets/polykroma/logo/text.svg");
-  transform: translateZ(40px);
+  transform: translateZ(12px);
   filter: drop-shadow(0 0 24px rgba(201, 160, 239, 0.32));
 }
 
@@ -1737,9 +1737,9 @@ label {
   background-blend-mode: overlay, normal;
   -webkit-mask-image: url("../assets/polykroma/logo/shadow.svg");
   mask-image: url("../assets/polykroma/logo/shadow.svg");
-  transform: translateZ(-40px);
-  filter: brightness(1.05);
-  opacity: 0.82;
+  transform: translateZ(-12px);
+  filter: brightness(1.03);
+  opacity: 0.68;
 }
 
 /* Keep the front character art in front and give it depth too */
