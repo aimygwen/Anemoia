@@ -2,3 +2,4 @@
 node_modules/
 .cursor/
 *.log
+.tmp-lfs-migrate/
