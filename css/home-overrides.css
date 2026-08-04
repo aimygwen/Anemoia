@@ -1715,31 +1715,42 @@ label {
 /* Shadow layer — holographic foil sheen that follows the "light" */
 .aimy-type-logo__shadow {
   background:
-    /* fine foil lines that catch the light */
+    /* moving radial glint that follows the cursor */
+    radial-gradient(
+      circle at calc(50% + var(--mx, 0) * 30%) calc(50% + var(--my, 0) * 30%),
+      rgba(255, 255, 255, 0.45) 0%,
+      rgba(255, 255, 255, 0.18) 18%,
+      rgba(255, 255, 255, 0) 42%
+    ),
+    /* crossed foil lines for a micro-prismatic texture */
     repeating-linear-gradient(
-      calc(105deg + var(--logo-light, 0deg)),
+      calc(110deg + var(--logo-light, 0deg)),
       rgba(255, 255, 255, 0) 0px,
-      rgba(255, 255, 255, 0.14) 1px,
-      rgba(255, 255, 255, 0) 2px,
-      rgba(255, 255, 255, 0.09) 3px,
+      rgba(255, 255, 255, 0.16) 1px,
+      rgba(255, 255, 255, 0) 3px
+    ),
+    repeating-linear-gradient(
+      calc(20deg + var(--logo-light, 0deg)),
+      rgba(255, 255, 255, 0) 0px,
+      rgba(255, 255, 255, 0.10) 1px,
       rgba(255, 255, 255, 0) 4px
     ),
     /* prismatic color shift */
     conic-gradient(
-      from calc(170deg + var(--logo-light, 0deg)),
-      rgba(255, 154, 208, 0.88),
-      rgba(192, 132, 232, 0.88),
-      rgba(132, 200, 255, 0.88),
-      rgba(158, 255, 196, 0.88),
-      rgba(255, 216, 74, 0.88),
-      rgba(255, 154, 208, 0.88)
+      from calc(165deg + var(--logo-light, 0deg)),
+      rgba(255, 105, 180, 0.90),
+      rgba(180, 90, 240, 0.90),
+      rgba(90, 180, 255, 0.90),
+      rgba(120, 255, 190, 0.90),
+      rgba(255, 220, 90, 0.90),
+      rgba(255, 105, 180, 0.90)
     );
-  background-blend-mode: overlay, normal;
+  background-blend-mode: overlay, overlay, overlay, normal;
   -webkit-mask-image: url("../assets/polykroma/logo/shadow.svg");
   mask-image: url("../assets/polykroma/logo/shadow.svg");
   transform: translateZ(-12px);
-  filter: brightness(1.03);
-  opacity: 0.68;
+  filter: blur(0.6px) brightness(1.08) saturate(1.15);
+  opacity: 0.62;
 }
 
 /* Keep the front character art in front and give it depth too */
