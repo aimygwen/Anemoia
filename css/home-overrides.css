@@ -1648,3 +1648,103 @@ label {
 .c-welcome .welcome-path[data-v-6c6a6d99] {
   display: none !important;
 }
+
+/* =========================================================
+   Aimy type logo (text.svg + shadow.svg) behind the hero art
+   ========================================================= */
+
+/* Hide the legacy filled/outline title stack and mobile taglines */
+.c-welcome .-w .title,
+.c-welcome .-w .-mm,
+.c-welcome .-w .cta-label {
+  display: none !important;
+}
+
+/* Backdrop stage for the vector logo */
+.aimy-type-logo {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  overflow: visible;
+}
+
+.aimy-type-logo__stage {
+  position: relative;
+  width: min(78vw, 44rem);
+  max-width: 100%;
+  aspect-ratio: 1557 / 1318;
+  transform:
+    translate3d(calc(var(--mx, 0) * -10px), calc(var(--my, 0) * -7px), 0)
+    rotateX(calc(var(--my, 0) * -1.4deg))
+    rotateY(calc(var(--mx, 0) * 1.6deg));
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.aimy-type-logo__text,
+.aimy-type-logo__shadow {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  pointer-events: none;
+}
+
+/* Text layer — bright lavender/pink to match the palette */
+.aimy-type-logo__text {
+  background-color: var(--welcome-title, #c9a0ef);
+  -webkit-mask-image: url("../assets/polykroma/logo/text.svg");
+  mask-image: url("../assets/polykroma/logo/text.svg");
+  transform: translateZ(34px);
+  filter: drop-shadow(0 0 28px rgba(201, 160, 239, 0.35));
+}
+
+/* Shadow layer — holographic rainbow sheen that follows the "light" */
+.aimy-type-logo__shadow {
+  background:
+    conic-gradient(
+      from calc(180deg + var(--logo-light, 0deg)),
+      #ff9ad0,
+      #c084e8,
+      #84c8ff,
+      #9effc4,
+      #ffd84a,
+      #ff9ad0
+    );
+  -webkit-mask-image: url("../assets/polykroma/logo/shadow.svg");
+  mask-image: url("../assets/polykroma/logo/shadow.svg");
+  transform: translateZ(-34px) scale(1.025);
+  filter: blur(1px) brightness(1.04);
+  opacity: 0.78;
+}
+
+/* Keep the front character art in front and give it depth too */
+.c-welcome .-w .stone,
+.c-welcome .-w .stone[data-v-6c6a6d99] {
+  transform:
+    translate3d(0, calc(var(--vh, 1vh) * -2), 0)
+    scale(calc(1 - var(--progress, 0) * 0.5))
+    rotateX(calc(var(--my, 0) * -1.8deg))
+    rotateY(calc(var(--mx, 0) * 1.8deg))
+    translateZ(70px) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aimy-type-logo__stage,
+  .c-welcome .-w .stone,
+  .c-welcome .-w .stone[data-v-6c6a6d99] {
+    transform: none !important;
+  }
+}

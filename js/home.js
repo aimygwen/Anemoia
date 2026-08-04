@@ -408,6 +408,67 @@
     );
   }
 
+  /**
+   * 3D mouse tilt for the hero type logo + front art.
+   * Sets --mx/--my on .c-welcome and rotates a "light" angle for the shadow sheen.
+   */
+  function bootTypeLogoTilt() {
+    var welcome = document.querySelector(".c-welcome");
+    if (!welcome || reduced) return;
+
+    var rendered = { x: 0, y: 0 };
+    var target = { x: 0, y: 0 };
+    var rafId = 0;
+    var lastLight = "";
+
+    function tick() {
+      rendered.x += (target.x - rendered.x) * 0.12;
+      rendered.y += (target.y - rendered.y) * 0.12;
+
+      var mx = rendered.x.toFixed(4);
+      var my = rendered.y.toFixed(4);
+      welcome.style.setProperty("--mx", mx);
+      welcome.style.setProperty("--my", my);
+
+      var light = ((Math.atan2(rendered.y, rendered.x) * 180) / Math.PI).toFixed(2);
+      if (light !== lastLight) {
+        welcome.style.setProperty("--logo-light", light + "deg");
+        lastLight = light;
+      }
+
+      if (
+        Math.abs(target.x - rendered.x) > 0.001 ||
+        Math.abs(target.y - rendered.y) > 0.001
+      ) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        rafId = 0;
+      }
+    }
+
+    window.addEventListener(
+      "pointermove",
+      function (e) {
+        var w = window.innerWidth || 1;
+        var h = window.innerHeight || 1;
+        target.x = (e.clientX / w - 0.5) * 2;
+        target.y = (e.clientY / h - 0.5) * 2;
+        if (!rafId) rafId = requestAnimationFrame(tick);
+      },
+      { passive: true }
+    );
+
+    document.documentElement.addEventListener("pointerleave", function () {
+      target.x = 0;
+      target.y = 0;
+      if (!rafId) rafId = requestAnimationFrame(tick);
+    });
+
+    welcome.style.setProperty("--mx", "0");
+    welcome.style.setProperty("--my", "0");
+    welcome.style.setProperty("--logo-light", "180deg");
+  }
+
   function bootGridStages() {
     function apply() {
       var desktop = window.matchMedia("(min-width: 1024px)").matches;
@@ -530,11 +591,13 @@
       /* Keep the hero's original scroll parallax without booting removed sections. */
       bootProgress();
       bootWelcomePointer();
+      bootTypeLogoTilt();
     } else {
       bootProgress();
       bootGridStages();
       bootSequencers();
       bootWelcomePointer();
+      bootTypeLogoTilt();
     }
 
     bootAimyChrome();

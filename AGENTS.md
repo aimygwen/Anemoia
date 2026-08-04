@@ -5,8 +5,9 @@ Plain HTML + CSS + vanilla JS, deployed 1:1 to GitHub Pages.
 
 ## Run & deploy
 
-- Local preview: `npm run dev` → serves the folder at `http://localhost:7100` (plain `python3 -m http.server`; `PORT` env overrides).
+- Local preview: `python3 -m http.server 7100` (or any port) from the repo root. The site is static; no build step. `PORT` env overrides if you wrap it in a script.
 - There are no tests, no lint, no build. Verify changes by opening the page in a browser.
+- **Safari is the reference browser** for this project. Do visual verification in Safari; do not use Chrome/Blink for testing or screenshots.
 - Deploy: push to `main` → `.github/workflows/static.yml` uploads the **entire repo** to GitHub Pages. Anything committed is public.
 
 ## Project layout
