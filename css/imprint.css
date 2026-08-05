@@ -22,19 +22,19 @@
 :root {
   color-scheme: light;
   /* Soft lavender field */
-  --c-yellow: #e8e0f2;
-  --c-yellow-rgb: 232, 224, 242;
-  --c-black: #2a1f3a;
+  --c-yellow: var(--step-01);
+  --c-yellow-rgb: 254, 240, 254;
+  --c-black: var(--step-08);
   --c-black-rgb: 42, 31, 58;
-  --aimy-ink: #2a1f3a;
-  --aimy-ink-soft: #5c4d70;
-  --aimy-primary: #8a48c0;
-  --aimy-secondary: #f2d6ea;
-  --aimy-tertiary: #2e123f;
-  --aimy-accent: #e879b8;
-  --aimy-ink-on-dark: #f3eafc;
-  --aimy-field-line: rgba(42, 31, 58, 0.18);
-  --aimy-placeholder: rgba(42, 31, 58, 0.36);
+  --aimy-ink: var(--step-08);
+  --aimy-ink-soft: var(--step-07);
+  --aimy-primary: var(--step-07);
+  --aimy-secondary: var(--step-02);
+  --aimy-tertiary: var(--step-08);
+  --aimy-accent: var(--step-03);
+  --aimy-ink-on-dark: var(--step-01);
+  --aimy-field-line: color-mix(in srgb, var(--step-08) 18%, transparent);
+  --aimy-placeholder: color-mix(in srgb, var(--step-08) 36%, transparent);
   --aimy-gap: clamp(2.25rem, 5vw, 4rem);
   --aimy-sans: "Plus Jakarta Sans", system-ui, sans-serif;
   --aimy-pixel: "Newpixel", "Courier New", monospace;
@@ -89,19 +89,19 @@
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    --c-yellow: #16121f;
-    --c-yellow-rgb: 22, 18, 31;
-    --c-black: #0e0b14;
+    --c-yellow: var(--step-08);
+    --c-yellow-rgb: 49, 22, 51;
+    --c-black: var(--step-08);
     --c-black-rgb: 14, 11, 20;
-    --aimy-ink: #ece6f4;
-    --aimy-ink-soft: #b5a8c8;
-    --aimy-primary: #c084e8;
-    --aimy-secondary: #f5dced;
-    --aimy-tertiary: #1a0c28;
-    --aimy-accent: #ff9ad0;
-    --aimy-ink-on-dark: #f8f2fc;
-    --aimy-field-line: rgba(236, 230, 244, 0.18);
-    --aimy-placeholder: rgba(236, 230, 244, 0.36);
+    --aimy-ink: var(--step-01);
+    --aimy-ink-soft: var(--step-03);
+    --aimy-primary: var(--pk-soft);
+    --aimy-secondary: var(--step-01);
+    --aimy-tertiary: var(--step-08);
+    --aimy-accent: var(--step-03);
+    --aimy-ink-on-dark: var(--step-01);
+    --aimy-field-line: color-mix(in srgb, var(--step-01) 18%, transparent);
+    --aimy-placeholder: color-mix(in srgb, var(--step-01) 36%, transparent);
   }
 }
 
@@ -403,11 +403,11 @@ body.imprint-page-body::before {
   border-radius: 50%;
   padding: 2px;
   -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+    linear-gradient(white 0 0) content-box,
+    linear-gradient(white 0 0);
   mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+    linear-gradient(white 0 0) content-box,
+    linear-gradient(white 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;

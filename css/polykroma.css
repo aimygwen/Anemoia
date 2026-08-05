@@ -15,20 +15,50 @@
 }
 :root {
   /*
+   * Anemoia 8-step palette — single source of truth for the whole site.
+   */
+  --step-01: #FEF0FE;  /* Soft Blush Glow */
+  --step-02: #FDC3FD;  /* Lavender Bubblegum */
+  --step-03: #F09EFB;  /* Radiant Orchid */
+  --step-04: #F089FE;  /* Electric Blossom */
+  --step-05: #E43EFF;  /* Ultra Magenta - Primary Brand Accent */
+  --step-06: #B24BFB;  /* Neon Violet */
+  --step-07: #8E14CE;  /* Velvet Purple */
+  --step-08: #311633;  /* Midnight Eclipse */
+
+  /* Semantic aliases */
+  --pk-bg: var(--step-01);
+  --pk-surface: var(--step-02);
+  --pk-hover: var(--step-03);
+  --pk-border: var(--pk-soft);
+  --pk-text: var(--step-07);
+  --pk-heading: var(--step-08);
+
+  /*
+   * Muted pastel-lavender accents — professional, less saturated than the raw
+   * magenta step. Derived from step-07 (velvet purple) + step-01 (blush white).
+   */
+  --pk-primary: color-mix(in srgb, var(--step-07) 68%, var(--step-01));
+  --pk-accent: color-mix(in srgb, var(--step-06) 58%, var(--step-01));
+  --pk-soft: color-mix(in srgb, var(--step-04) 55%, var(--step-01));
+  --pk-cta-bg: var(--pk-primary);
+  --pk-cta-text: var(--step-08);
+
+  /*
    * Logo color hierarchy (always):
    *   primary   — most obvious / brand signal → hairstyle
    *   secondary — lightest pastel             → face, bow, base
    *   tertiary  — darkest contrast           → iris, lashes
    */
-  --aimy-primary: #8a48c0;
-  --aimy-secondary: #f2d6ea;
-  --aimy-tertiary: #2e123f;
-  --aimy-accent: #e879b8;
+  --aimy-primary: var(--pk-primary);
+  --aimy-secondary: var(--step-02);
+  --aimy-tertiary: var(--step-08);
+  --aimy-accent: var(--pk-accent);
   --aimy-logo-primary: var(--aimy-primary);
-  --aimy-ink: #56267a;
-  --aimy-ink-on-dark: #f7f0fb;
-  --aimy-menu-coin: #f57eb6;
-  --aimy-menu-coin-open: #59b5ec;
+  --aimy-ink: var(--step-07);
+  --aimy-ink-on-dark: var(--step-01);
+  --aimy-menu-coin: var(--pk-primary);
+  --aimy-menu-coin-open: var(--pk-accent);
   --aimy-chrome-ink: var(--aimy-primary);
   /*
    * Shared chrome geometry — Polly / socials / menu coin.
@@ -49,10 +79,10 @@
   --aimy-z: 2147483000;
   --aimy-font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
   --aimy-nav-font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
-  --aimy-r1: #ff7eb6;
-  --aimy-r2: #e8b4d4;
-  --aimy-r3: #c9a8e8;
-  --aimy-r4: #b89ad4;
+  --aimy-r1: var(--pk-soft);
+  --aimy-r2: var(--step-03);
+  --aimy-r3: var(--pk-accent);
+  --aimy-r4: var(--step-06);
 
   /* Polykroma aliases — pages may set either family */
   --polykroma-primary: var(--aimy-primary);
@@ -65,12 +95,12 @@
    * Overlay menu — Soft pastel wash + Newpixel.
    * Pages may override any of these.
    */
-  --polykroma-menu-bg: color-mix(in srgb, var(--aimy-secondary, #f2d6ea) 68%, white);
-  --polykroma-menu-ink: var(--aimy-primary, #7a3eb0);
-  --polykroma-menu-ink-soft: color-mix(in srgb, var(--aimy-primary, #7a3eb0) 58%, white);
-  --polykroma-menu-muted: color-mix(in srgb, var(--polykroma-menu-ink) 62%, #0a0a0a);
-  --polykroma-menu-rule: color-mix(in srgb, var(--polykroma-menu-ink) 22%, transparent);
-  --polykroma-menu-on-block: #fff8fd;
+  --polykroma-menu-bg: color-mix(in srgb, var(--step-02) 70%, var(--step-01));
+  --polykroma-menu-ink: var(--step-07);
+  --polykroma-menu-ink-soft: color-mix(in srgb, var(--step-07) 60%, var(--step-01));
+  --polykroma-menu-muted: color-mix(in srgb, var(--step-07) 65%, var(--step-08));
+  --polykroma-menu-rule: color-mix(in srgb, var(--step-07) 22%, transparent);
+  --polykroma-menu-on-block: var(--step-01);
   --polykroma-menu-block: var(--polykroma-menu-ink);
   --polykroma-menu-font: "Newpixel", "Courier New", monospace;
 
@@ -91,12 +121,35 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --aimy-primary: #c084e8;
-    --aimy-secondary: #f5dced;
-    --aimy-tertiary: #1a0c28;
-    --aimy-accent: #ff9ad0;
-    --aimy-ink: #f3eafc;
-    --aimy-ink-on-dark: #f8f2fc;
+    --pk-bg: var(--step-08);
+    --pk-surface: var(--step-07);
+    --pk-hover: var(--step-06);
+    --pk-border: color-mix(in srgb, var(--step-06) 30%, transparent);
+    --pk-text: var(--step-02);
+    --pk-heading: var(--step-01);
+    --pk-primary: color-mix(in srgb, var(--step-07) 62%, var(--step-02));
+    --pk-accent: color-mix(in srgb, var(--step-06) 65%, var(--step-02));
+    --pk-soft: color-mix(in srgb, var(--step-04) 45%, var(--step-02));
+    --pk-cta-bg: var(--pk-primary);
+    --pk-cta-text: var(--step-01);
+
+    --aimy-primary: var(--pk-primary);
+    --aimy-secondary: var(--step-02);
+    --aimy-tertiary: var(--step-08);
+    --aimy-accent: var(--pk-accent);
+    --aimy-ink: var(--step-02);
+    --aimy-ink-on-dark: var(--step-01);
+    --aimy-menu-coin: var(--pk-primary);
+    --aimy-menu-coin-open: var(--pk-accent);
+    --aimy-chrome-ink: var(--aimy-primary);
+
+    --polykroma-menu-bg: color-mix(in srgb, var(--step-07) 80%, var(--step-08));
+    --polykroma-menu-ink: var(--step-02);
+    --polykroma-menu-ink-soft: color-mix(in srgb, var(--step-02) 70%, var(--step-08));
+    --polykroma-menu-muted: color-mix(in srgb, var(--step-02) 55%, var(--step-08));
+    --polykroma-menu-rule: color-mix(in srgb, var(--step-02) 22%, transparent);
+    --polykroma-menu-on-block: var(--step-08);
+    --polykroma-menu-block: var(--polykroma-menu-ink);
   }
 }
 
@@ -393,20 +446,20 @@ html body .site-header[data-aimy-chrome]::before {
 }
 
 @keyframes aimy-logo-light {
-  0% { fill: #00cfe8; }
-  25% { fill: #ff5cad; }
-  50% { fill: #84e018; }
-  75% { fill: #ff9f1c; }
-  100% { fill: #00cfe8; }
+  0% { fill: var(--pk-soft); }
+  25% { fill: var(--step-03); }
+  50% { fill: var(--pk-primary); }
+  75% { fill: var(--pk-primary); }
+  100% { fill: var(--pk-soft); }
 }
 
 /* Third logo cycle — offset from primary + secondary hover */
 @keyframes aimy-logo-mid {
-  0% { fill: #ff9f1c; }
-  25% { fill: #00cfe8; }
-  50% { fill: #c77dff; }
-  75% { fill: #ff5cad; }
-  100% { fill: #ff9f1c; }
+  0% { fill: var(--pk-primary); }
+  25% { fill: var(--pk-soft); }
+  50% { fill: var(--step-06); }
+  75% { fill: var(--step-03); }
+  100% { fill: var(--pk-primary); }
 }
 
 /*
@@ -574,7 +627,7 @@ body.menu-open .site-header[data-aimy-chrome].is-nav-hidden .social {
   aspect-ratio: 1;
   pointer-events: none;
   perspective: 11rem;
-  filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.07));
+  filter: drop-shadow(0 3px 0 color-mix(in srgb, var(--step-08) 7%, transparent));
 }
 
 .pk-menu-root.is-menu-open .pk-coin-button {
@@ -609,22 +662,22 @@ body.menu-open .site-header[data-aimy-chrome].is-nav-hidden .social {
 @property --pk-coin-color {
   syntax: "<color>";
   inherits: true;
-  initial-value: #f57eb6;
+  initial-value: var(--step-03);
 }
 
 @keyframes aimy-coin-body-rainbow {
   0%,
   100% {
-    --pk-coin-color: #ff7eb6;
+    --pk-coin-color: var(--step-03);
   }
   25% {
-    --pk-coin-color: #e8b4d4;
+    --pk-coin-color: var(--step-02);
   }
   50% {
-    --pk-coin-color: #c9a8e8;
+    --pk-coin-color: var(--step-03);
   }
   75% {
-    --pk-coin-color: #b89ad4;
+    --pk-coin-color: var(--step-03);
   }
 }
 
@@ -727,7 +780,7 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
 /* ===== Polykroma overlay menu (pastel wash + chunked layout) ===== */
 
 .pk-menu-root {
-  --pk-coin-color: var(--aimy-menu-coin, #f57eb6);
+  --pk-coin-color: var(--aimy-menu-coin, var(--step-03));
   --pk-z: 2147483600;
   --pk-menu-bg: var(--polykroma-menu-bg);
   --pk-link: var(--polykroma-menu-ink);
@@ -741,12 +794,12 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
 
 @media (prefers-color-scheme: dark) {
   .pk-menu-root {
-    --polykroma-menu-bg: color-mix(in srgb, #0a0a0a 82%, var(--aimy-primary, #c084e8));
-    --polykroma-menu-ink: #f7f0fc;
-    --polykroma-menu-ink-soft: color-mix(in srgb, #f7f0fc 72%, var(--aimy-primary, #c084e8));
-    --polykroma-menu-muted: color-mix(in srgb, #f7f0fc 58%, transparent);
-    --polykroma-menu-on-block: #120c1a;
-    --polykroma-menu-block: var(--aimy-primary, #c084e8);
+    --polykroma-menu-bg: color-mix(in srgb, var(--step-08) 82%, var(--aimy-primary, var(--pk-soft)));
+    --polykroma-menu-ink: var(--step-01);
+    --polykroma-menu-ink-soft: color-mix(in srgb, var(--step-01) 72%, var(--aimy-primary, var(--pk-soft)));
+    --polykroma-menu-muted: color-mix(in srgb, var(--step-01) 58%, transparent);
+    --polykroma-menu-on-block: var(--step-08);
+    --polykroma-menu-block: var(--aimy-primary, var(--pk-soft));
   }
 }
 
@@ -782,11 +835,11 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   display: block;
   border-radius: 50%;
   background:
-    linear-gradient(90deg, rgba(102, 42, 71, 0.42), transparent 28% 72%, rgba(255, 207, 230, 0.42)),
+    linear-gradient(90deg, color-mix(in srgb, var(--step-08) 42%, transparent), transparent 28% 72%, color-mix(in srgb, var(--step-02) 42%, transparent)),
     var(--pk-coin-color);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.28),
-    inset 0.2rem 0 0.35rem rgba(85, 33, 59, 0.25);
+    inset 0 0 0 1px color-mix(in srgb, var(--step-01) 28%, transparent),
+    inset 0.2rem 0 0.35rem color-mix(in srgb, var(--step-08) 25%, transparent);
   transform: translateZ(0);
   transform-style: preserve-3d;
   transition: background-color 0.45s ease;
@@ -819,8 +872,8 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   background: var(--pk-coin-color);
   backface-visibility: hidden;
   box-shadow:
-    inset 0.1rem 0.16rem 0.35rem rgba(255, 255, 255, 0.45),
-    inset -0.12rem -0.18rem 0.35rem rgba(91, 29, 61, 0.2);
+    inset 0.1rem 0.16rem 0.35rem color-mix(in srgb, var(--step-01) 45%, transparent),
+    inset -0.12rem -0.18rem 0.35rem color-mix(in srgb, var(--step-08) 20%, transparent);
   transition: background-color 0.45s ease;
 }
 
@@ -1255,10 +1308,10 @@ html body .pk-menu-root .pk-menu-link.is-selected .pk-menu-link__block,
 
 @keyframes pk-block-rainbow {
   0%,
-  100% { background-color: var(--aimy-r1, #ff7eb6); }
-  25% { background-color: var(--aimy-r2, #e8b4d4); }
-  50% { background-color: var(--aimy-r3, #c9a8e8); }
-  75% { background-color: var(--aimy-r4, #b89ad4); }
+  100% { background-color: var(--aimy-r1, var(--step-03)); }
+  25% { background-color: var(--aimy-r2, var(--step-02)); }
+  50% { background-color: var(--aimy-r3, var(--step-03)); }
+  75% { background-color: var(--aimy-r4, var(--step-03)); }
 }
 
 /* Current page — wipe parked open until hovered / selected */
@@ -1372,8 +1425,8 @@ html.pk-menu-open body {
 
 @media (prefers-color-scheme: dark) {
   body {
-    --aimy-menu-coin: #ff2fbd;
-    --aimy-menu-coin-open: #20e7ff;
+    --aimy-menu-coin: var(--pk-primary);
+    --aimy-menu-coin-open: var(--pk-accent);
   }
 
   .pk-coin-button {
@@ -1386,14 +1439,14 @@ html.pk-menu-open body {
     background:
       linear-gradient(
         90deg,
-        #32104f,
-        color-mix(in srgb, var(--pk-coin-color) 88%, white) 28%,
+        var(--step-08),
+        color-mix(in srgb, var(--pk-coin-color) 88%, var(--step-01)) 28%,
         var(--pk-coin-color) 58%,
-        #792cff
+        var(--step-06)
       );
     box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.65),
-      inset 0.2rem 0 0.38rem rgba(35, 3, 59, 0.62),
+      inset 0 0 0 1px color-mix(in srgb, var(--step-01) 65%, transparent),
+      inset 0.2rem 0 0.38rem color-mix(in srgb, var(--step-08) 62%, transparent),
       0 0 0.55rem color-mix(in srgb, var(--pk-coin-color) 76%, transparent);
   }
 
@@ -1401,19 +1454,19 @@ html.pk-menu-open body {
   .pk-coin-edge::after,
   .pk-coin-face {
     background:
-      radial-gradient(circle at 28% 20%, rgba(255, 255, 255, 0.98), transparent 12%),
+      radial-gradient(circle at 28% 20%, color-mix(in srgb, var(--step-01) 98%, transparent), transparent 12%),
       linear-gradient(
         145deg,
-        color-mix(in srgb, var(--pk-coin-color) 64%, white),
+        color-mix(in srgb, var(--pk-coin-color) 64%, var(--step-01)),
         var(--pk-coin-color) 48%,
-        color-mix(in srgb, var(--pk-coin-color) 64%, #5426ff)
+        color-mix(in srgb, var(--pk-coin-color) 64%, var(--step-06))
       );
   }
 
   .pk-coin-face {
     box-shadow:
-      inset 0.12rem 0.16rem 0.34rem rgba(255, 255, 255, 0.72),
-      inset -0.14rem -0.2rem 0.4rem rgba(38, 4, 70, 0.48),
+      inset 0.12rem 0.16rem 0.34rem color-mix(in srgb, var(--step-01) 72%, transparent),
+      inset -0.14rem -0.2rem 0.4rem color-mix(in srgb, var(--step-08) 48%, transparent),
       0 0 0.48rem color-mix(in srgb, var(--pk-coin-color) 90%, transparent),
       0 0 1.2rem color-mix(in srgb, var(--pk-coin-color) 48%, transparent);
   }
@@ -1464,11 +1517,11 @@ html.pk-menu-open body {
   --pt-ease-in: cubic-bezier(0.69, 0, 0, 1);
   /* Defaults match home/index; JS overrides per destination page */
   --pt-veil: 42, 36, 51;
-  --pt-block: #2a2433;
-  --pt-r1: #ff8fd2;
-  --pt-r2: #b8a6ff;
-  --pt-r3: #7ed9ff;
-  --pt-r4: #7ed9ff;
+  --pt-block: var(--step-08);
+  --pt-r1: var(--step-03);
+  --pt-r2: var(--pk-soft);
+  --pt-r3: var(--pk-soft);
+  --pt-r4: var(--pk-soft);
 }
 
 .aimy-pt {
@@ -1553,7 +1606,7 @@ html.pk-menu-open body {
   width: clamp(5.75rem, 16vw, 9rem);
   height: clamp(5.75rem, 16vw, 9rem);
   transform: translate(-50%, -50%);
-  filter: drop-shadow(0 8px 24px rgba(42, 36, 51, 0.28));
+  filter: drop-shadow(0 8px 24px color-mix(in srgb, var(--step-08) 28%, transparent));
   opacity: 1;
   will-change: opacity;
 }
@@ -1599,7 +1652,7 @@ html.pk-menu-open body {
 /* Logo fills — trail hues on dark covers; deeper ink on light covers */
 .aimy-pt__chroma--main .brand-logo-dark,
 .aimy-pt__chroma--main .brand-logo-dark * {
-  fill: #2a2433;
+  fill: var(--step-08);
   animation: aimy-pt-logo-dark 2.4s linear infinite;
 }
 
@@ -1617,12 +1670,12 @@ html.pk-menu-open body {
 
 /* Light primary: keep dark silhouette readable; tint accents with trail hues */
 .aimy-pt.is-on-light .aimy-pt__logo {
-  filter: drop-shadow(0 6px 18px rgba(42, 36, 51, 0.22));
+  filter: drop-shadow(0 6px 18px color-mix(in srgb, var(--step-08) 22%, transparent));
 }
 
 .aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-dark,
 .aimy-pt.is-on-light .aimy-pt__chroma--main .brand-logo-dark * {
-  fill: #2a2433;
+  fill: var(--step-08);
   animation: aimy-pt-logo-dark-on-light 2.4s linear infinite;
 }
 
@@ -1750,19 +1803,19 @@ html.pk-menu-open body {
 
 @keyframes aimy-pt-logo-dark {
   0% {
-    fill: #2a2433;
+    fill: var(--step-08);
   }
   25% {
-    fill: #5a3d6e;
+    fill: var(--step-07);
   }
   50% {
-    fill: #3d5a6e;
+    fill: var(--step-07);
   }
   75% {
-    fill: #6e3d5a;
+    fill: var(--step-07);
   }
   100% {
-    fill: #2a2433;
+    fill: var(--step-08);
   }
 }
 
@@ -1799,10 +1852,10 @@ html.pk-menu-open body {
 @keyframes aimy-pt-logo-dark-on-light {
   0%,
   100% {
-    fill: #2a2433;
+    fill: var(--step-08);
   }
   50% {
-    fill: #3d2f4a;
+    fill: var(--step-08);
   }
 }
 

@@ -7,7 +7,8 @@ Plain HTML + CSS + vanilla JS, deployed 1:1 to GitHub Pages.
 
 - Local preview: `npm run dev` (or `python3 -m http.server 7100`) from the repo root. The site is static; no build step. Always preview through `http://localhost:7100` — opening `index.html` directly via `file://` will break external SVG masks and some assets.
 - There are no tests, no lint, no build. Verify changes by opening the page in a browser.
-- **Safari is the reference browser** for this project. Do visual verification in Safari; do not use Chrome/Blink for testing or screenshots.
+- **Safari is the reference browser** for this project. Do visual verification in Safari; **never use Chrome/Blink** for testing, screenshots, or "what you see" verification.
+- **Do not push to GitHub** until the user explicitly asks. Stage work locally and preview in Safari first.
 - Deploy: push to `main` → `.github/workflows/static.yml` uploads the **entire repo** to GitHub Pages. Anything committed is public.
 
 ## Project layout
@@ -34,9 +35,48 @@ Plain HTML + CSS + vanilla JS, deployed 1:1 to GitHub Pages.
 
 ## Design tokens (polykroma.css)
 
-- Palette = the 8-step Anemoia ramp `--step-01` (Soft Blush Glow) … `--step-08` (Midnight Eclipse). These are constants — **never redefine or add steps**. Use semantic tokens instead: `--pk-bg/surface/hover/border/text/heading/cta-*/badge-*/focus-ring` (aliases `--aimy-*` exist for chrome).
-- Dark mode is automatic via `prefers-color-scheme` in `polykroma.css` — write components against the `--pk-*` tokens so they flip for free. Never hardcode step colors in page CSS.
-- Logo color hierarchy is fixed: primary → hairstyle, secondary (lightest pastel) → face/bow/base, tertiary (darkest) → iris/lashes.
+### Anemoia 8-step palette — single source of truth
+
+| Token | Hex | Role |
+|-------|-----|------|
+| `--step-01` | `#FEF0FE` | Soft Blush Glow — lightest surfaces / dark-mode headings |
+| `--step-02` | `#FDC3FD` | Lavender Bubblegum — card/container surfaces |
+| `--step-03` | `#F09EFB` | Radiant Orchid — hover/active surfaces, soft accents |
+| `--step-04` | `#F089FE` | Electric Blossom — borders, secondary accents |
+| `--step-05` | `#E43EFF` | Ultra Magenta — primary brand accent / CTA fill |
+| `--step-06` | `#B24BFB` | Neon Violet — hover CTA, violet accents |
+| `--step-07` | `#8E14CE` | Velvet Purple — body/secondary text |
+| `--step-08` | `#311633` | Midnight Eclipse — headings (light), dark surfaces |
+
+These eight values are constants — **never redefine them, never add new steps**. Derive every UI color from them.
+
+### Semantic aliases
+
+Use `--pk-*` (or the older `--aimy-*` aliases) so components flip automatically in dark mode:
+
+| Token | Light mode | Dark mode |
+|-------|------------|-----------|
+| `--pk-bg` | `--step-01` | `--step-08` |
+| `--pk-surface` | `--step-02` | `--step-07` |
+| `--pk-hover` | `--step-03` | `--step-06` |
+| `--pk-border` | `--pk-soft` | `rgba(178, 75, 251, 0.3)` |
+| `--pk-text` | `--step-07` | `--step-02` |
+| `--pk-heading` | `--step-08` | `--step-01` |
+| `--pk-primary` | `color-mix(--step-07 68%, --step-01)` | `color-mix(--step-07 62%, --step-02)` |
+| `--pk-accent` | `color-mix(--step-06 58%, --step-01)` | `color-mix(--step-06 65%, --step-02)` |
+| `--pk-soft` | `color-mix(--step-04 55%, --step-01)` | `color-mix(--step-04 45%, --step-02)` |
+| `--pk-cta-bg` | `--pk-primary` | `--pk-primary` |
+| `--pk-cta-text` | `--step-08` | `--step-01` |
+
+`--aimy-primary`, `--aimy-accent`, `--aimy-menu-coin`, and the logo primary use `--pk-primary` / `--pk-accent`, so the brand signal is now a muted pastel lavender rather than the raw magenta step.
+
+### Token application rules
+
+- **No hardcoded hex outside the step definitions.** Every CSS color must resolve to a `--step-*` token, a semantic alias, or `color-mix(in srgb, var(--step-XX) N%, transparent)` for opacity.
+- For opacity, prefer `color-mix()` over `rgba(#hex, a)`. Example: `color-mix(in srgb, var(--step-07) 22%, transparent)`.
+- Use `var(--step-01)` in place of white and `var(--step-08)` in place of black for UI surfaces. The literal keywords `black`/`white` are reserved only for SVG masks where full opacity is required.
+- Dark mode is automatic via `prefers-color-scheme` in `polykroma.css` — write components against the `--pk-*` / `--aimy-*` tokens so they flip for free.
+- Logo color hierarchy is fixed: primary (brand accent) → hairstyle, secondary (lightest pastel) → face/bow/base, tertiary (darkest) → iris/lashes.
 - Fluid type/spacing via `clamp()`. Polykroma menu geometry is px-locked by design (home sets a large root font-size).
 
 ## Motion & feel

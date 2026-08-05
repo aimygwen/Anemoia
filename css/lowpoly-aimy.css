@@ -35,16 +35,16 @@ html:has(.lowpoly-page-body) {
 
 .lowpoly-page-body {
   /* Atmosphere: calm lavender. Brand: purple. Pop: soft yellow (CTAs only). */
-  --lp-lavender: #EDE4FF;
-  --lp-lavender-soft: #F3EDFF;
-  --lp-lavender-deep: #E8DEFA;
-  --lp-yellow: #FFF4C2;
-  --lp-yellow-soft: #FFF9E0;
-  --lp-yellow-deep: #FFE89A;
-  --lp-purple: #8F2BB8;
-  --lp-purple-deep: #6B1F8C;
-  --lp-pink: #E07AE8;
-  --lp-cream: #FFFBF0;
+  --lp-lavender: var(--step-01);
+  --lp-lavender-soft: var(--step-01);
+  --lp-lavender-deep: var(--step-02);
+  --lp-yellow: var(--step-02);
+  --lp-yellow-soft: var(--step-02);
+  --lp-yellow-deep: var(--step-02);
+  --lp-purple: var(--step-07);
+  --lp-purple-deep: var(--step-07);
+  --lp-pink: var(--step-03);
+  --lp-cream: var(--step-01);
 
   /* Legacy aliases → lavender / purple / yellow-CTA system */
   --lp-cobalt: var(--lp-purple);
@@ -62,7 +62,7 @@ html:has(.lowpoly-page-body) {
   --lp-hero-paper: var(--lp-lavender-deep);
   --lp-gallery-paper: var(--lp-lavender-soft);
   --lp-ink: var(--lp-purple);
-  --lp-muted: color-mix(in srgb, var(--lp-ink) 52%, white);
+  --lp-muted: color-mix(in srgb, var(--lp-ink) 52%, var(--step-01));
   --lp-radius: 1.35rem;
   --lp-radius-sm: 999px;
 
@@ -83,7 +83,7 @@ html:has(.lowpoly-page-body) {
   --c-yellow: var(--lp-paper);
   --c-black: var(--lp-ink);
   --aimy-surface: var(--lp-paper);
-  --aimy-surface-deep: color-mix(in srgb, var(--lp-lavender-deep) 55%, white);
+  --aimy-surface-deep: color-mix(in srgb, var(--lp-lavender-deep) 55%, var(--step-01));
   --aimy-ink: var(--lp-ink);
   --aimy-ink-soft: var(--lp-muted);
   --aimy-primary: var(--lp-purple);
@@ -95,9 +95,9 @@ html:has(.lowpoly-page-body) {
   --aimy-menu-coin: var(--lp-pink);
   --aimy-menu-coin-open: var(--lp-yellow-deep);
   --aimy-ink-on-dark: var(--lp-cream);
-  --aimy-glass: color-mix(in srgb, white 78%, var(--lp-lavender));
-  --aimy-glass-strong: color-mix(in srgb, white 88%, var(--lp-lavender-soft));
-  --lp-card-face: color-mix(in srgb, white 86%, var(--lp-lavender-soft));
+  --aimy-glass: color-mix(in srgb, var(--step-01) 78%, var(--lp-lavender));
+  --aimy-glass-strong: color-mix(in srgb, var(--step-01) 88%, var(--lp-lavender-soft));
+  --lp-card-face: color-mix(in srgb, var(--step-01) 86%, var(--lp-lavender-soft));
   --lp-wash: color-mix(in srgb, var(--lp-pink) 12%, transparent);
   --aimy-r1: var(--lp-yellow-deep);
   --aimy-r2: var(--lp-pink);
@@ -122,8 +122,8 @@ html:has(.lowpoly-page-body) {
   --brand-logo-mid-fill: var(--lp-pink);
 
   --lightbox-bg: var(--lp-paper);
-  --lightbox-scrim: color-mix(in srgb, var(--lp-paper) 88%, white);
-  --lightbox-panel-bg: color-mix(in srgb, white 90%, var(--lp-lavender));
+  --lightbox-scrim: color-mix(in srgb, var(--lp-paper) 88%, var(--step-01));
+  --lightbox-panel-bg: color-mix(in srgb, var(--step-01) 90%, var(--lp-lavender));
   --lightbox-panel-border: transparent;
   --lightbox-ink: var(--lp-ink);
   --lightbox-ink-muted: var(--lp-muted);
@@ -162,16 +162,16 @@ html:has(.lowpoly-page-body) {
 
 @media (prefers-color-scheme: dark) {
   .lowpoly-page-body {
-    --lp-lavender: #5C1A7A;
-    --lp-lavender-soft: #6B248C;
-    --lp-lavender-deep: #4A1568;
-    --lp-yellow: #FFF4C2;
-    --lp-yellow-soft: #FFF9E0;
-    --lp-yellow-deep: #FFE89A;
-    --lp-purple: #E07AE8;
-    --lp-purple-deep: #4A1568;
-    --lp-pink: #E07AE8;
-    --lp-cream: #FFFBF0;
+    --lp-lavender: var(--step-07);
+    --lp-lavender-soft: var(--step-07);
+    --lp-lavender-deep: var(--step-08);
+    --lp-yellow: var(--step-02);
+    --lp-yellow-soft: var(--step-02);
+    --lp-yellow-deep: var(--step-02);
+    --lp-purple: var(--step-03);
+    --lp-purple-deep: var(--step-08);
+    --lp-pink: var(--step-03);
+    --lp-cream: var(--step-01);
 
     --lp-cobalt: var(--lp-purple);
     --lp-lime: var(--lp-yellow-deep);
@@ -184,56 +184,56 @@ html:has(.lowpoly-page-body) {
     --lp-candy: var(--lp-pink);
     --lp-sun: var(--lp-yellow-deep);
 
-    --lp-paper: #4A1568;
-    --lp-hero-paper: #3D1158;
-    --lp-gallery-paper: #5C1A7A;
+    --lp-paper: var(--step-08);
+    --lp-hero-paper: var(--step-08);
+    --lp-gallery-paper: var(--step-07);
     --lp-ink: var(--lp-yellow);
     --lp-muted: color-mix(in srgb, var(--lp-yellow) 55%, transparent);
 
-    --c-yellow: #4A1568;
-    --c-black: #3D1158;
-    --aimy-surface: #4A1568;
-    --aimy-surface-deep: #3D1158;
+    --c-yellow: var(--step-08);
+    --c-black: var(--step-08);
+    --aimy-surface: var(--step-08);
+    --aimy-surface-deep: var(--step-08);
     --aimy-ink: var(--lp-ink);
     --aimy-ink-soft: var(--lp-muted);
     --aimy-primary: var(--lp-yellow-deep);
     --aimy-secondary: var(--lp-pink);
-    --aimy-tertiary: #3D1158;
+    --aimy-tertiary: var(--step-08);
     --aimy-accent: var(--lp-pink);
     --aimy-logo-primary: var(--lp-yellow);
     --aimy-chrome-ink: var(--lp-ink);
     --aimy-menu-coin: var(--lp-pink);
     --aimy-menu-coin-open: var(--lp-yellow-deep);
     --aimy-ink-on-dark: var(--lp-cream);
-    --aimy-glass: rgba(61, 17, 88, 0.9);
-    --aimy-glass-strong: rgba(74, 21, 104, 0.95);
-    --lp-card-face: #3D1158;
+    --aimy-glass: color-mix(in srgb, var(--step-08) 90%, transparent);
+    --aimy-glass-strong: color-mix(in srgb, var(--step-08) 95%, transparent);
+    --lp-card-face: var(--step-08);
     --lp-wash: color-mix(in srgb, var(--lp-pink) 14%, transparent);
 
     --aimy-r1: var(--lp-yellow-deep);
     --aimy-r2: var(--lp-pink);
-    --aimy-r3: color-mix(in srgb, var(--lp-pink) 65%, white);
-    --aimy-r4: color-mix(in srgb, #8F2BB8 55%, white);
+    --aimy-r3: color-mix(in srgb, var(--lp-pink) 65%, var(--step-01));
+    --aimy-r4: color-mix(in srgb, var(--step-07) 55%, var(--step-01));
     --rainbow-1: var(--aimy-r1);
     --rainbow-2: var(--aimy-r2);
     --rainbow-3: var(--aimy-r3);
     --rainbow-4: var(--aimy-r4);
-    --rainbow-on-fill: #4A1568;
+    --rainbow-on-fill: var(--step-08);
     --rainbow-card-fill-mix: 20%;
 
     --bg: var(--lp-paper);
     --primary: var(--lp-ink);
     --accent: var(--lp-accent);
     --accent-warm: var(--lp-pink);
-    --on-accent: #6B1F8C;
+    --on-accent: var(--step-07);
 
     --brand-logo-dark-fill: var(--lp-ink);
     --brand-logo-light-fill: color-mix(in srgb, var(--lp-yellow-deep) 34%, transparent);
     --brand-logo-mid-fill: var(--lp-pink);
 
-    --lightbox-bg: #4A1568;
-    --lightbox-scrim: rgba(61, 17, 88, 0.9);
-    --lightbox-panel-bg: #3D1158;
+    --lightbox-bg: var(--step-08);
+    --lightbox-scrim: color-mix(in srgb, var(--step-08) 90%, transparent);
+    --lightbox-panel-bg: var(--step-08);
     --lightbox-ink: var(--lp-ink);
     --lightbox-ink-muted: var(--lp-muted);
 
@@ -337,7 +337,7 @@ html:has(.lowpoly-page-body) {
 
 /* —— Welcome hero —— */
 .lp-welcome {
-  --lp-welcome-ink: var(--aimy-ink-on-dark, #f5f7ff);
+  --lp-welcome-ink: var(--aimy-ink-on-dark, var(--step-01));
   --progress: 0;
   position: relative;
   isolation: isolate;
@@ -363,7 +363,7 @@ html:has(.lowpoly-page-body) {
   max-width: none;
   margin: 0;
   pointer-events: none;
-  background-color: #8F2BB8;
+  background-color: var(--step-07);
   background-image: url("../assets/lowpoly_day.jpg");
   background-position: center top;
   background-repeat: no-repeat;
@@ -385,8 +385,8 @@ html:has(.lowpoly-page-body) {
   height: min(28vh, 16rem);
   background: linear-gradient(
     180deg,
-    rgba(143, 43, 184, 0.45) 0%,
-    rgba(143, 43, 184, 0) 100%
+    color-mix(in srgb, var(--step-07) 45%, transparent) 0%,
+    transparent 100%
   );
   pointer-events: none;
 }
@@ -835,7 +835,7 @@ html:has(.lowpoly-page-body) {
   padding: 0.55rem 0.7rem;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--lp-purple) 14%, transparent);
-  background: color-mix(in srgb, white 62%, var(--lp-lavender-soft));
+  background: color-mix(in srgb, var(--step-01) 62%, var(--lp-lavender-soft));
   backdrop-filter: blur(12px) saturate(1.1);
   -webkit-backdrop-filter: blur(12px) saturate(1.1);
   box-shadow: 0 10px 28px color-mix(in srgb, var(--lp-purple) 10%, transparent);
@@ -1149,8 +1149,8 @@ body.lightbox-open .filter-bar.is-visible {
   overflow: visible !important;
   contain: none !important;
   /* Soft white translucent wash — floating model surfaces on lavender */
-  background: color-mix(in srgb, white 64%, transparent) !important;
-  border: 1px solid color-mix(in srgb, white 78%, transparent) !important;
+  background: color-mix(in srgb, var(--step-01) 64%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--step-01) 78%, transparent) !important;
   box-shadow: none !important;
   backdrop-filter: blur(6px) saturate(1.05);
   -webkit-backdrop-filter: blur(6px) saturate(1.05);
@@ -1160,21 +1160,21 @@ body.lightbox-open .filter-bar.is-visible {
 
 .models-grid .bento-card:not(.is-modpack):hover .card-media:not(.card-media--modpack) {
   animation: none;
-  border-color: color-mix(in srgb, white 88%, transparent) !important;
-  background: color-mix(in srgb, white 72%, transparent) !important;
+  border-color: color-mix(in srgb, var(--step-01) 88%, transparent) !important;
+  background: color-mix(in srgb, var(--step-01) 72%, transparent) !important;
 }
 
 @media (prefers-color-scheme: dark) {
   .models-grid .card-media,
   .models-grid .card-media:not(.card-media--modpack),
   .models-grid .bento-card.has-variants .card-media {
-    background: color-mix(in srgb, white 16%, transparent) !important;
-    border: 1px solid color-mix(in srgb, white 22%, transparent) !important;
+    background: color-mix(in srgb, var(--step-01) 16%, transparent) !important;
+    border: 1px solid color-mix(in srgb, var(--step-01) 22%, transparent) !important;
   }
 
   .models-grid .bento-card:not(.is-modpack):hover .card-media:not(.card-media--modpack) {
-    background: color-mix(in srgb, white 26%, transparent) !important;
-    border-color: color-mix(in srgb, white 34%, transparent) !important;
+    background: color-mix(in srgb, var(--step-01) 26%, transparent) !important;
+    border-color: color-mix(in srgb, var(--step-01) 34%, transparent) !important;
   }
 }
 
@@ -1261,7 +1261,7 @@ body.lightbox-open .filter-bar.is-visible {
   border-radius: 50%;
   background: radial-gradient(
     circle at 50% 45%,
-    color-mix(in srgb, var(--rainbow-1) 92%, white),
+    color-mix(in srgb, var(--rainbow-1) 92%, var(--step-01)),
     var(--rainbow-1) 55%,
     color-mix(in srgb, var(--rainbow-1) 55%, transparent)
   );
@@ -1284,7 +1284,7 @@ body.lightbox-open .filter-bar.is-visible {
 .models-grid .card-variant-picker:focus-within .card-chroma-dot {
   background: radial-gradient(
     circle at 50% 45%,
-    color-mix(in srgb, var(--rainbow-2) 90%, white),
+    color-mix(in srgb, var(--rainbow-2) 90%, var(--step-01)),
     var(--rainbow-2) 55%,
     color-mix(in srgb, var(--rainbow-2) 50%, transparent)
   );
@@ -1360,7 +1360,7 @@ body.lightbox-open .filter-bar.is-visible {
   height: 24px;
   margin: -12px 0 0 -12px;
   border-radius: 50%;
-  border: 2px solid color-mix(in srgb, white 92%, transparent);
+  border: 2px solid color-mix(in srgb, var(--step-01) 92%, transparent);
   background: var(--swatch-color);
   cursor: pointer;
   padding: 0;
@@ -1443,31 +1443,31 @@ body.lightbox-open .filter-bar.is-visible {
   0% {
     background-color: color-mix(in srgb, var(--rainbow-1) var(--rainbow-card-fill-mix, 28%), transparent);
     box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 50%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--step-01) 50%, transparent),
       0 12px 32px color-mix(in srgb, var(--rainbow-1) 22%, transparent);
   }
   25% {
     background-color: color-mix(in srgb, var(--rainbow-2) var(--rainbow-card-fill-mix, 28%), transparent);
     box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 50%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--step-01) 50%, transparent),
       0 12px 32px color-mix(in srgb, var(--rainbow-2) 22%, transparent);
   }
   50% {
     background-color: color-mix(in srgb, var(--rainbow-3) var(--rainbow-card-fill-mix, 28%), transparent);
     box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 50%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--step-01) 50%, transparent),
       0 12px 32px color-mix(in srgb, var(--rainbow-3) 22%, transparent);
   }
   75% {
     background-color: color-mix(in srgb, var(--rainbow-4) var(--rainbow-card-fill-mix, 28%), transparent);
     box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 50%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--step-01) 50%, transparent),
       0 12px 32px color-mix(in srgb, var(--rainbow-4) 22%, transparent);
   }
   100% {
     background-color: color-mix(in srgb, var(--rainbow-1) var(--rainbow-card-fill-mix, 28%), transparent);
     box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 50%, transparent),
+      inset 0 1px 0 color-mix(in srgb, var(--step-01) 50%, transparent),
       0 12px 32px color-mix(in srgb, var(--rainbow-1) 22%, transparent);
   }
 }
@@ -1761,7 +1761,7 @@ body.lightbox-open .filter-bar.is-visible {
 
 .lb-download-btn:hover {
   transform: none !important;
-  background: color-mix(in srgb, var(--lp-yellow-deep) 88%, white) !important;
+  background: color-mix(in srgb, var(--lp-yellow-deep) 88%, var(--step-01)) !important;
   color: var(--lp-purple-deep) !important;
   filter: none;
 }
@@ -2239,7 +2239,7 @@ body.lightbox-open .filter-bar.is-visible {
   content: "";
   position: absolute;
   inset: 0;
-  background: color-mix(in srgb, var(--c-black, #8F2BB8) 72%, transparent);
+  background: color-mix(in srgb, var(--c-var(--step-08), var(--step-07)) 72%, transparent);
   opacity: 0;
   z-index: 3;
   transition: opacity 0.55s var(--lp-featured-ease);
@@ -2267,7 +2267,7 @@ body.lightbox-open .filter-bar.is-visible {
   transform: translate(-50%, -50%) scale(0.9);
   transform-origin: center center;
   pointer-events: none;
-  filter: drop-shadow(0 10px 28px color-mix(in srgb, black 35%, transparent));
+  filter: drop-shadow(0 10px 28px color-mix(in srgb, var(--step-08) 35%, transparent));
   transition:
     opacity 0.45s var(--lp-featured-ease),
     transform 0.55s var(--lp-featured-ease);
@@ -2338,18 +2338,18 @@ body.lightbox-open .filter-bar.is-visible {
   border-radius: 50%;
   padding: 2px;
   -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+    linear-gradient(white 0 0) content-box,
+    linear-gradient(white 0 0);
   mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+    linear-gradient(white 0 0) content-box,
+    linear-gradient(white 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
   background-image: linear-gradient(
     90deg,
     transparent,
-    color-mix(in srgb, var(--aimy-ink-on-dark, #fff5fb) 55%, transparent)
+    color-mix(in srgb, var(--aimy-ink-on-dark, var(--step-01)) 55%, transparent)
   );
 }
 
@@ -2357,7 +2357,7 @@ body.lightbox-open .filter-bar.is-visible {
   background-image: linear-gradient(
     -90deg,
     transparent,
-    color-mix(in srgb, var(--aimy-ink-on-dark, #fff5fb) 55%, transparent)
+    color-mix(in srgb, var(--aimy-ink-on-dark, var(--step-01)) 55%, transparent)
   );
 }
 
@@ -2366,7 +2366,7 @@ body.lightbox-open .filter-bar.is-visible {
   width: 2.5rem;
   height: 2.5rem;
   display: block;
-  fill: var(--aimy-ink-on-dark, #fff5fb);
+  fill: var(--aimy-ink-on-dark, var(--step-01));
 }
 
 .lp-featured__col--prev .lp-featured__media:hover .lp-featured__arrow,
@@ -2447,7 +2447,7 @@ body.lightbox-open .filter-bar.is-visible {
   position: absolute;
   inset: 0;
   border-radius: 0.25rem;
-  background: color-mix(in srgb, var(--aimy-surface-deep) 88%, white);
+  background: color-mix(in srgb, var(--aimy-surface-deep) 88%, var(--step-01));
   opacity: 0;
   transform: scale(0.86);
   transition: opacity 0.45s var(--lp-featured-ease), transform 0.45s var(--lp-featured-ease);
@@ -2466,15 +2466,15 @@ body.lightbox-open .filter-bar.is-visible {
 
 @media (prefers-color-scheme: dark) {
   .lp-featured__media::before {
-    background: color-mix(in srgb, #140a16 78%, transparent);
+    background: color-mix(in srgb, var(--step-08) 78%, transparent);
   }
 
   .lp-featured__arrow svg {
-    fill: #ffe8f7;
+    fill: var(--step-01);
   }
 
   .lp-featured__num::before {
-    background: color-mix(in srgb, var(--aimy-surface-deep) 80%, black);
+    background: color-mix(in srgb, var(--aimy-surface-deep) 80%, var(--step-08));
   }
 }
 

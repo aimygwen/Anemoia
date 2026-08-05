@@ -12,6 +12,116 @@
 
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /**
+   * First-load fullscreen typewriter reveal.
+   * Shows once per session, then fades to the home page.
+   */
+  function bootReveal(onComplete) {
+    var overlay = document.getElementById("aimy-reveal");
+    if (!overlay) {
+      onComplete();
+      return;
+    }
+
+    if (window.sessionStorage && sessionStorage.getItem("aimy-reveal-shown")) {
+      overlay.classList.add("is-done");
+      onComplete();
+      return;
+    }
+
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+
+    var lines = [
+      [{ text: "AIMY", color: "magenta" }, { text: "GWEN", color: "pink" }],
+      [{ text: "ARTIST", color: "teal" }],
+      [{ text: "WELCOME", color: "magenta" }]
+    ];
+
+    var textEl = overlay.querySelector(".aimy-reveal__text");
+    textEl.innerHTML = "";
+
+    var lineData = [];
+    lines.forEach(function (line) {
+      var p = document.createElement("p");
+      p.className = "aimy-reveal__line";
+      var segEls = [];
+      line.forEach(function (seg) {
+        var s = document.createElement("span");
+        s.className = "aimy-reveal__word aimy-reveal__word--" + seg.color;
+        p.appendChild(s);
+        segEls.push({ el: s, text: seg.text, length: seg.text.length });
+      });
+      textEl.appendChild(p);
+      lineData.push({ el: p, segs: segEls });
+    });
+
+    var cursor = document.createElement("span");
+    cursor.className = "aimy-reveal__cursor";
+    cursor.textContent = "_";
+
+    function placeCursor(lineEl) {
+      if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+      if (lineEl) lineEl.appendChild(cursor);
+    }
+
+    function finish() {
+      if (window.sessionStorage) sessionStorage.setItem("aimy-reveal-shown", "1");
+      overlay.classList.add("is-done");
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      window.setTimeout(onComplete, 900);
+    }
+
+    if (reduced) {
+      lineData.forEach(function (line) {
+        line.segs.forEach(function (seg) {
+          seg.el.textContent = seg.text;
+        });
+      });
+      placeCursor(null);
+      window.setTimeout(finish, 900);
+      return;
+    }
+
+    var queue = [];
+    lineData.forEach(function (line, li) {
+      line.segs.forEach(function (seg, si) {
+        for (var i = 0; i < seg.length; i++) {
+          queue.push({ li: li, si: si, ci: i });
+        }
+      });
+    });
+
+    var charDelay = 55;
+    var lineDelay = 450;
+    var step = 0;
+
+    function typeStep() {
+      if (step >= queue.length) {
+        placeCursor(null);
+        window.setTimeout(finish, 900);
+        return;
+      }
+
+      var item = queue[step];
+      var line = lineData[item.li];
+      var seg = line.segs[item.si];
+      seg.el.textContent = seg.text.slice(0, item.ci + 1);
+      placeCursor(line.el);
+
+      var next = step + 1;
+      var delay = charDelay;
+      if (next < queue.length && queue[next].li !== item.li) {
+        delay = lineDelay;
+      }
+      step = next;
+      window.setTimeout(typeStep, delay);
+    }
+
+    window.setTimeout(typeStep, 350);
+  }
+
   function setViewportUnits() {
     var h = window.innerHeight || 1;
     var w = window.innerWidth || 1;
@@ -579,45 +689,47 @@
   }
 
   function boot() {
-    unlockScroll();
-    setViewportUnits();
-    window.addEventListener("resize", setViewportUnits, { passive: true });
+    bootReveal(function () {
+      unlockScroll();
+      setViewportUnits();
+      window.addEventListener("resize", setViewportUnits, { passive: true });
 
-    var isStartPage = !!document.querySelector("[data-start-work]");
+      var isStartPage = !!document.querySelector("[data-start-work]");
 
-    bootLenis();
+      bootLenis();
 
-    if (isStartPage) {
-      /* Keep the hero's original scroll parallax without booting removed sections. */
-      bootProgress();
-      bootWelcomePointer();
-      bootTypeLogoTilt();
-    } else {
-      bootProgress();
-      bootGridStages();
-      bootSequencers();
-      bootWelcomePointer();
-      bootTypeLogoTilt();
-    }
+      if (isStartPage) {
+        /* Keep the hero's original scroll parallax without booting removed sections. */
+        bootProgress();
+        bootWelcomePointer();
+        bootTypeLogoTilt();
+      } else {
+        bootProgress();
+        bootGridStages();
+        bootSequencers();
+        bootWelcomePointer();
+        bootTypeLogoTilt();
+      }
 
-    bootAimyChrome();
-    bootHeaderTheme();
+      bootAimyChrome();
+      bootHeaderTheme();
 
-    document.documentElement.classList.add("-loaded");
-    window.setTimeout(function () {
-      document.documentElement.classList.add("-ready");
-    }, reduced ? 0 : 50);
+      document.documentElement.classList.add("-loaded");
+      window.setTimeout(function () {
+        document.documentElement.classList.add("-ready");
+      }, reduced ? 0 : 50);
 
-    if (typeof ScrollTrigger !== "undefined") {
-      ScrollTrigger.refresh();
-      window.addEventListener(
-        "load",
-        function () {
-          ScrollTrigger.refresh();
-        },
-        { once: true }
-      );
-    }
+      if (typeof ScrollTrigger !== "undefined") {
+        ScrollTrigger.refresh();
+        window.addEventListener(
+          "load",
+          function () {
+            ScrollTrigger.refresh();
+          },
+          { once: true }
+        );
+      }
+    });
   }
 
   if (document.readyState === "loading") {

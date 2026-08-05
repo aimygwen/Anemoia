@@ -22,38 +22,39 @@ html, body {
 :root {
   color-scheme: light;
 
-  --c-white: #fbf8fd;
-  --c-white-rgb: 251, 248, 253;
-  --c-black: #3a2748;
-  --c-black-rgb: 58, 39, 72;
-  --c-grey: #6f5a82;
-  --c-grey-rgb: 111, 90, 130;
-  --c-stone: #4d375e;
-  --c-stone-rgb: 77, 55, 94;
-  --c-yellow: #f0e6f7;
-  --c-yellow-rgb: 240, 230, 247;
-  --c-brown: #a78bc0;
-  --c-brown-rgb: 167, 139, 192;
-  --c-stroke: #d2bfe3;
-  --c-stroke-rgb: 210, 191, 227;
-  --c-red: #e8a8c8;
-  --c-red-rgb: 232, 168, 200;
-  --c-purple: #c9a8e8;
-  --c-purple-rgb: 201, 168, 232;
+  /* Legacy Nuxt tokens remapped to the Anemoia 8-step palette */
+  --c-white: var(--step-01);
+  --c-white-rgb: 254, 240, 254;
+  --c-black: var(--step-08);
+  --c-black-rgb: 49, 22, 51;
+  --c-grey: color-mix(in srgb, var(--step-07) 72%, var(--step-01));
+  --c-grey-rgb: 139, 84, 154;
+  --c-stone: color-mix(in srgb, var(--step-08) 85%, var(--step-01));
+  --c-stone-rgb: 74, 43, 77;
+  --c-yellow: var(--step-01);
+  --c-yellow-rgb: 254, 240, 254;
+  --c-brown: var(--pk-soft);
+  --c-brown-rgb: 240, 137, 254;
+  --c-stroke: var(--step-03);
+  --c-stroke-rgb: 240, 158, 251;
+  --c-red: var(--pk-soft);
+  --c-red-rgb: 240, 137, 254;
+  --c-purple: var(--pk-primary);
+  --c-purple-rgb: 228, 62, 255;
 
-  --aimy-surface: #f0e6f7;
-  --aimy-surface-deep: #e4d2f0;
-  --aimy-ink: #56267a;
-  --aimy-ink-soft: #7a5a96;
-  --aimy-primary: #8a48c0;
-  --aimy-secondary: #f2d6ea;
-  --aimy-tertiary: #2e123f;
-  --aimy-accent: #e879b8;
-  --aimy-ink-on-dark: #f7f0fb;
-  --aimy-glass: rgba(232, 220, 242, 0.28);
-  --aimy-glass-strong: rgba(232, 220, 242, 0.42);
-  --aimy-field-line: rgba(58, 39, 72, 0.22);
-  --aimy-field-placeholder: rgba(58, 39, 72, 0.38);
+  --aimy-surface: var(--step-01);
+  --aimy-surface-deep: var(--step-02);
+  --aimy-ink: var(--step-07);
+  --aimy-ink-soft: var(--pk-soft);
+  --aimy-primary: var(--pk-primary);
+  --aimy-secondary: var(--step-02);
+  --aimy-tertiary: var(--step-08);
+  --aimy-accent: var(--pk-accent);
+  --aimy-ink-on-dark: var(--step-01);
+  --aimy-glass: color-mix(in srgb, var(--pk-soft) 28%, transparent);
+  --aimy-glass-strong: color-mix(in srgb, var(--pk-soft) 42%, transparent);
+  --aimy-field-line: color-mix(in srgb, var(--step-07) 22%, transparent);
+  --aimy-field-placeholder: color-mix(in srgb, var(--step-07) 38%, transparent);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -61,43 +62,43 @@ html, body {
     color-scheme: dark;
 
     /* Luminous text / dark-section type */
-    --c-white: #f6effc;
-    --c-white-rgb: 246, 239, 252;
-    --c-yellow: #ebe3f6;
-    --c-yellow-rgb: 235, 227, 246;
+    --c-white: var(--step-01);
+    --c-white-rgb: 254, 240, 254;
+    --c-yellow: var(--step-01);
+    --c-yellow-rgb: 254, 240, 254;
 
     /* Deep plum surfaces / light-section ink */
-    --c-black: #140e1c;
-    --c-black-rgb: 20, 14, 28;
-    --c-stone: #1c1428;
-    --c-stone-rgb: 28, 20, 40;
+    --c-black: var(--step-08);
+    --c-black-rgb: 49, 22, 51;
+    --c-stone: var(--step-07);
+    --c-stone-rgb: 142, 20, 206;
 
     /* Readable secondary + accents on dark */
-    --c-grey: #b9a6ce;
-    --c-grey-rgb: 185, 166, 206;
-    --c-brown: #d2b4f0;
-    --c-brown-rgb: 210, 180, 240;
-    --c-stroke: #5a4570;
-    --c-stroke-rgb: 90, 69, 112;
-    --c-red: #f0b0d4;
-    --c-red-rgb: 240, 176, 212;
-    --c-purple: #d9b8ff;
-    --c-purple-rgb: 217, 184, 255;
+    --c-grey: var(--step-03);
+    --c-grey-rgb: 240, 158, 251;
+    --c-brown: var(--step-03);
+    --c-brown-rgb: 240, 158, 251;
+    --c-stroke: var(--step-06);
+    --c-stroke-rgb: 178, 75, 251;
+    --c-red: var(--step-03);
+    --c-red-rgb: 240, 158, 251;
+    --c-purple: var(--pk-soft);
+    --c-purple-rgb: 240, 137, 254;
 
     /* Elevated panels (contact, glass, chrome) */
-    --aimy-surface: #1c1428;
-    --aimy-surface-deep: #2a1f3c;
-    --aimy-ink: #f3eafc;
-    --aimy-ink-soft: #cbb8e0;
-    --aimy-primary: #c084e8;
-    --aimy-secondary: #f5dced;
-    --aimy-tertiary: #1a0c28;
-    --aimy-accent: #ff9ad0;
-    --aimy-ink-on-dark: #f8f2fc;
-    --aimy-glass: rgba(72, 48, 104, 0.42);
-    --aimy-glass-strong: rgba(96, 64, 132, 0.55);
-    --aimy-field-line: rgba(243, 234, 252, 0.28);
-    --aimy-field-placeholder: rgba(243, 234, 252, 0.45);
+    --aimy-surface: var(--step-07);
+    --aimy-surface-deep: var(--step-08);
+    --aimy-ink: var(--step-02);
+    --aimy-ink-soft: var(--step-03);
+    --aimy-primary: var(--pk-primary);
+    --aimy-secondary: var(--step-02);
+    --aimy-tertiary: var(--step-08);
+    --aimy-accent: var(--pk-accent);
+    --aimy-ink-on-dark: var(--step-01);
+    --aimy-glass: color-mix(in srgb, var(--step-06) 35%, transparent);
+    --aimy-glass-strong: color-mix(in srgb, var(--step-06) 50%, transparent);
+    --aimy-field-line: color-mix(in srgb, var(--step-02) 28%, transparent);
+    --aimy-field-placeholder: color-mix(in srgb, var(--step-02) 45%, transparent);
   }
 }
 
@@ -239,14 +240,14 @@ body {
 }
 
 .c-welcome .-w {
-  --welcome-title: #6a35a0;
+  --welcome-title: var(--pk-primary);
   overflow: visible !important;
   isolation: isolate;
 }
 
 @media (prefers-color-scheme: dark) {
   .c-welcome .-w {
-    --welcome-title: #c9a0ef;
+    --welcome-title: var(--pk-primary);
   }
 }
 
@@ -527,8 +528,8 @@ figure.-fit img {
 .page-footer.-home .underlay,
 .page-footer.-home .underlay[data-v-a41b36d1] {
   background:
-    radial-gradient(120% 80% at 50% 0%, rgba(138, 72, 192, 0.22), transparent 55%),
-    linear-gradient(180deg, #2a1a38 0%, var(--c-black) 42%, #1a1024 100%) !important;
+    radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--step-07) 22%, transparent), transparent 55%),
+    linear-gradient(180deg, var(--step-08) 0%, var(--c-black) 42%, var(--step-07) 100%) !important;
 }
 
 .page-footer .underlay[data-v-a41b36d1]::before {
@@ -543,9 +544,9 @@ figure.-fit img {
   background-image:
     linear-gradient(
       165deg,
-      color-mix(in srgb, var(--aimy-primary) 7%, var(--c-white)) 0%,
+      color-mix(in srgb, var(--aimy-primary) 7%, var(--c-var(--step-01))) 0%,
       var(--c-white) 42%,
-      color-mix(in srgb, var(--c-yellow) 70%, var(--c-white)) 100%
+      color-mix(in srgb, var(--c-yellow) 70%, var(--c-var(--step-01))) 100%
     ) !important;
   color: var(--footer-ink) !important;
   border-radius: clamp(1.25rem, 2.5vw, 2rem) !important;
@@ -553,11 +554,11 @@ figure.-fit img {
   padding-bottom: clamp(1.75rem, 3.5vw, 2.75rem) !important;
   box-shadow:
     0 1px 0 color-mix(in srgb, var(--aimy-primary) 12%, transparent),
-    0 28px 64px rgba(58, 39, 72, 0.18);
+    0 28px 64px color-mix(in srgb, var(--step-08) 18%, transparent);
 }
 
 .page-footer .-w.block[data-v-a41b36d1]::before {
-  background-color: color-mix(in srgb, var(--c-white) 88%, var(--aimy-primary)) !important;
+  background-color: color-mix(in srgb, var(--c-var(--step-01)) 88%, var(--aimy-primary)) !important;
 }
 
 .page-footer .-w.block[data-v-a41b36d1]::after {
@@ -746,7 +747,7 @@ figure.-fit img {
     clamp(2rem, 4.5vw, 3.25rem)
     clamp(0.35rem, 1.5vw, 1rem)
     clamp(2.5rem, 5vw, 4rem);
-  color: color-mix(in srgb, var(--c-yellow) 78%, white);
+  color: color-mix(in srgb, var(--c-yellow) 78%, var(--step-01));
 }
 
 .page-footer .footer-below-inner {
@@ -768,7 +769,7 @@ figure.-fit img {
 .page-footer .footer-site a,
 .page-footer .footer-social a,
 .page-footer .footer-inspire-links a {
-  color: color-mix(in srgb, var(--c-yellow) 88%, white);
+  color: color-mix(in srgb, var(--c-yellow) 88%, var(--step-01));
   text-decoration: none;
   font-family: var(--aimy-nav-font, "Plus Jakarta Sans", sans-serif);
   font-size: clamp(0.92rem, 1.35vw, 1.05rem);
@@ -808,7 +809,7 @@ figure.-fit img {
 
 .page-footer .footer-inspire-links a {
   font-weight: 500;
-  color: color-mix(in srgb, var(--c-yellow) 72%, white);
+  color: color-mix(in srgb, var(--c-yellow) 72%, var(--step-01));
 }
 
 .page-footer .no-so-me,
@@ -841,7 +842,7 @@ main + svg[data-v-55c3b488],
 @media (prefers-color-scheme: dark) {
   .c-admission .sequence-canvas,
   .c-admission .sequence-canvas[data-v-4b3f08f7] {
-    box-shadow: inset 0 0 0 1px rgba(243, 234, 252, 0.08);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--step-01) 8%, transparent);
   }
 
   /* Light “paper” sections stay luminous islands on the dark page */
@@ -871,22 +872,22 @@ main + svg[data-v-55c3b488],
   /* Paper footer stays luminous; keep ink readable on the plate */
   .page-footer,
   .page-footer[data-v-a41b36d1] {
-    --footer-ink: #2a1a38;
-    --footer-ink-soft: #6a5578;
+    --footer-ink: var(--step-08);
+    --footer-ink-soft: var(--step-06);
   }
 
   .page-footer.-home .underlay,
   .page-footer.-home .underlay[data-v-a41b36d1] {
     background:
-      radial-gradient(120% 80% at 50% 0%, rgba(180, 120, 224, 0.18), transparent 55%),
-      linear-gradient(180deg, #0c0812 0%, #140e1c 50%, #0a0610 100%) !important;
+      radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--step-06) 18%, transparent), transparent 55%),
+      linear-gradient(180deg, var(--step-08) 0%, var(--step-08) 50%, var(--step-08) 100%) !important;
   }
 
   .page-footer .-w.block,
   .page-footer .-w.block[data-v-a41b36d1] {
     box-shadow:
-      0 1px 0 rgba(243, 234, 252, 0.08),
-      0 32px 72px rgba(0, 0, 0, 0.45);
+      0 1px 0 color-mix(in srgb, var(--step-01) 8%, transparent),
+      0 32px 72px color-mix(in srgb, var(--step-08) 45%, transparent);
   }
 }
 
@@ -1474,7 +1475,7 @@ label {
 
 .c-welcome .-w .cta .button > span:not(.aimy-cta-frost),
 .c-welcome .-w .cta .button > span[data-v-f52f19c3] {
-  color: #fff !important;
+  color: var(--step-01) !important;
   opacity: 1 !important;
   position: relative;
   z-index: 2;
@@ -1509,12 +1510,12 @@ label {
   line-height: 0 !important;
   letter-spacing: 0 !important;
   text-shadow: none !important;
-  background: color-mix(in srgb, white 16%, transparent) !important;
+  background: color-mix(in srgb, var(--step-01) 16%, transparent) !important;
   -webkit-backdrop-filter: blur(7px) saturate(1.15) !important;
   backdrop-filter: blur(7px) saturate(1.15) !important;
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, white 34%, transparent),
-    inset 0 -1px 0 color-mix(in srgb, #3a2748 16%, transparent) !important;
+    inset 0 1px 0 color-mix(in srgb, var(--step-01) 34%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--step-08) 16%, transparent) !important;
 }
 
 .c-welcome .-w .cta .button::before,
@@ -1533,7 +1534,7 @@ label {
 
 .c-welcome .-w .cta .button:hover > .aimy-cta-frost,
 .c-welcome .-w .cta .button:not(.-disabled):hover > .aimy-cta-frost {
-  background: color-mix(in srgb, white 30%, transparent) !important;
+  background: color-mix(in srgb, var(--step-01) 30%, transparent) !important;
 }
 
 .c-welcome .-w .cta .button:hover > span:not(.aimy-cta-frost),
@@ -1541,12 +1542,12 @@ label {
   color: transparent !important;
   background: linear-gradient(
     90deg,
-    #ff4fa3,
-    #ffd84a,
-    #5dffb0,
-    #5ec8ff,
-    #d889ff,
-    #ff4fa3
+    var(--step-03),
+    var(--step-02),
+    var(--pk-soft),
+    var(--pk-primary),
+    var(--pk-soft),
+    var(--step-03)
   );
   background-size: 400% 100%;
   -webkit-background-clip: text;
@@ -1567,21 +1568,21 @@ label {
   width: calc(100% + 16px);
   height: calc(100% + 16px);
   pointer-events: none;
-  color: var(--aimy-logo-primary, var(--aimy-primary, #8a48c0));
+  color: var(--aimy-logo-primary, var(--aimy-primary, var(--step-07)));
 }
 
 @media (prefers-color-scheme: dark) {
   .c-welcome .-w .cta .button > .aimy-cta-frost,
   .aimy-cta-frost {
-    background: color-mix(in srgb, #1a0c28 50%, transparent) !important;
+    background: color-mix(in srgb, var(--step-08) 50%, transparent) !important;
     box-shadow:
-      inset 0 1px 0 color-mix(in srgb, white 14%, transparent),
-      inset 0 -1px 0 color-mix(in srgb, black 28%, transparent) !important;
+      inset 0 1px 0 color-mix(in srgb, var(--step-01) 14%, transparent),
+      inset 0 -1px 0 color-mix(in srgb, var(--step-08) 28%, transparent) !important;
   }
 
   .c-welcome .-w .cta .button:hover > .aimy-cta-frost,
   .c-welcome .-w .cta .button:not(.-disabled):hover > .aimy-cta-frost {
-    background: color-mix(in srgb, #1a0c28 62%, transparent) !important;
+    background: color-mix(in srgb, var(--step-08) 62%, transparent) !important;
   }
 }
 
@@ -1675,15 +1676,15 @@ label {
 
 .aimy-type-logo__stage {
   position: relative;
-  width: min(86vw, 54rem);
+  width: min(68vw, 42rem);
   max-width: 100%;
   aspect-ratio: 1557 / 1318;
   transform-style: preserve-3d;
   perspective: 1200px;
   transform:
-    translate3d(calc(var(--mx, 0) * -10px), calc(var(--my, 0) * -7px), 0)
-    rotateX(calc(var(--my, 0) * -1.8deg))
-    rotateY(calc(var(--mx, 0) * 2deg));
+    translate3d(calc(var(--mx, 0) * -24px), calc(var(--my, 0) * -18px), 0)
+    rotateX(calc(var(--my, 0) * -3.4deg))
+    rotateY(calc(var(--mx, 0) * 3.6deg));
   will-change: transform;
 }
 
@@ -1705,60 +1706,58 @@ label {
 
 /* Text layer — bright lavender/pink to match the palette */
 .aimy-type-logo__text {
-  background-color: var(--welcome-title, #c9a0ef);
+  background-color: var(--welcome-title, var(--pk-soft));
   -webkit-mask-image: url("../assets/polykroma/logo/text.svg");
   mask-image: url("../assets/polykroma/logo/text.svg");
-  transform: translateZ(12px);
-  filter: drop-shadow(0 0 24px rgba(201, 160, 239, 0.32));
+  transform: translateZ(6px);
+  filter: drop-shadow(0 0 24px color-mix(in srgb, var(--pk-soft) 32%, transparent));
 }
 
 /* Shadow layer — holographic foil sheen that follows the "light" */
 .aimy-type-logo__shadow {
   background:
-    /* moving radial glint that follows the cursor */
+    /* Liquid-Glass-style rim light: bright edge facing the cursor/light source */
     radial-gradient(
-      circle at calc(50% + var(--mx, 0) * 30%) calc(50% + var(--my, 0) * 30%),
-      rgba(255, 255, 255, 0.45) 0%,
-      rgba(255, 255, 255, 0.18) 18%,
-      rgba(255, 255, 255, 0) 42%
+      ellipse 130% 130% at calc(50% - var(--mx, 0) * 38%) calc(50% - var(--my, 0) * 38%),
+      transparent 44%,
+      color-mix(in srgb, var(--step-01) 42%, transparent) 62%,
+      transparent 78%
     ),
-    /* crossed foil lines for a micro-prismatic texture */
-    repeating-linear-gradient(
-      calc(110deg + var(--logo-light, 0deg)),
-      rgba(255, 255, 255, 0) 0px,
-      rgba(255, 255, 255, 0.16) 1px,
-      rgba(255, 255, 255, 0) 3px
+    /* fractal noise glitter texture */
+    url("../assets/polykroma/logo/noise.svg"),
+    /* bright specular glint at the cursor */
+    radial-gradient(
+      circle at calc(50% + var(--mx, 0) * 35%) calc(50% + var(--my, 0) * 35%),
+      color-mix(in srgb, var(--step-01) 55%, transparent) 0%,
+      color-mix(in srgb, var(--step-01) 18%, transparent) 18%,
+      transparent 46%
     ),
-    repeating-linear-gradient(
-      calc(20deg + var(--logo-light, 0deg)),
-      rgba(255, 255, 255, 0) 0px,
-      rgba(255, 255, 255, 0.10) 1px,
-      rgba(255, 255, 255, 0) 4px
-    ),
-    /* prismatic color shift */
-    conic-gradient(
-      from calc(165deg + var(--logo-light, 0deg)),
-      rgba(255, 105, 180, 0.90),
-      rgba(180, 90, 240, 0.90),
-      rgba(90, 180, 255, 0.90),
-      rgba(120, 255, 190, 0.90),
-      rgba(255, 220, 90, 0.90),
-      rgba(255, 105, 180, 0.90)
+    /* tilt-based soft rainbow using the Anemoia palette: light → pink → magenta → violet */
+    linear-gradient(
+      calc(var(--logo-light, 0deg)),
+      color-mix(in srgb, var(--step-01) 86%, transparent) 0%,
+      color-mix(in srgb, var(--step-02) 82%, transparent) 14%,
+      color-mix(in srgb, var(--step-03) 80%, transparent) 30%,
+      color-mix(in srgb, var(--pk-soft) 78%, transparent) 48%,
+      color-mix(in srgb, var(--pk-primary) 78%, transparent) 66%,
+      color-mix(in srgb, var(--step-06) 80%, transparent) 82%,
+      color-mix(in srgb, var(--step-07) 86%, transparent) 100%
     );
-  background-blend-mode: overlay, overlay, overlay, normal;
+  background-size: 100% 100%, 160px 160px, 100% 100%, 100% 100%;
+  background-blend-mode: screen, overlay, screen, normal;
   -webkit-mask-image: url("../assets/polykroma/logo/shadow.svg");
   mask-image: url("../assets/polykroma/logo/shadow.svg");
-  transform: translateZ(-12px);
-  filter: blur(0.6px) brightness(1.08) saturate(1.15);
-  opacity: 0.62;
+  transform: translateZ(-6px);
+  filter: contrast(1.08) brightness(1.08) saturate(1.2);
+  opacity: 0.76;
 }
 
 /* Keep the front character art in front and give it depth too */
 .c-welcome .-w .stone,
 .c-welcome .-w .stone[data-v-6c6a6d99] {
   transform:
-    translate3d(0, calc(var(--vh, 1vh) * -2), 0)
-    scale(calc(1 - var(--progress, 0) * 0.5))
+    translate3d(calc(var(--mx, 0) * -7px), calc(var(--my, 0) * -5px + var(--vh, 1vh) * -2), 0)
+    scale(calc((1 - var(--progress, 0) * 0.5) * 0.82))
     rotateX(calc(var(--my, 0) * -1.8deg))
     rotateY(calc(var(--mx, 0) * 1.8deg))
     translateZ(70px) !important;
@@ -1772,5 +1771,111 @@ label {
   .c-welcome .-w .stone,
   .c-welcome .-w .stone[data-v-6c6a6d99] {
     transform: none !important;
+  }
+}
+
+/* =========================================================
+   First-load reveal — Newpixel typewriter overlay
+   ========================================================= */
+
+.aimy-reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483001;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding:
+    max(var(--aimy-pad-y), env(safe-area-inset-top, 0px))
+    max(var(--aimy-pad-x), env(safe-area-inset-right, 0px))
+    max(var(--aimy-pad-y), env(safe-area-inset-bottom, 0px))
+    max(var(--aimy-pad-x), env(safe-area-inset-left, 0px));
+  background:
+    radial-gradient(120% 100% at 80% 20%, color-mix(in srgb, var(--step-07) 25%, transparent), transparent 55%),
+    var(--step-08);
+  color: var(--step-01);
+  font-family: "Newpixel", "Courier New", monospace;
+  pointer-events: none;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.85s cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0.85s step-end;
+}
+
+.aimy-reveal.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.aimy-reveal__text {
+  width: 100%;
+  max-width: 100%;
+}
+
+.aimy-reveal__line {
+  margin: 0;
+  font-size: clamp(3.5rem, 13vw, 11rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.aimy-reveal__line + .aimy-reveal__line {
+  margin-top: clamp(0.35rem, 1.5vh, 0.9rem);
+}
+
+.aimy-reveal__word {
+  display: inline-block;
+  margin-right: 0.18em;
+}
+
+.aimy-reveal__word--magenta {
+  color: var(--step-05);
+  text-shadow: 0 0 40px color-mix(in srgb, var(--step-05) 45%, transparent);
+}
+
+.aimy-reveal__word--pink {
+  color: var(--step-04);
+  text-shadow: 0 0 40px color-mix(in srgb, var(--step-04) 40%, transparent);
+}
+
+.aimy-reveal__word--teal {
+  color: var(--step-04);
+  filter: hue-rotate(155deg) brightness(1.12) saturate(1.15);
+  text-shadow: 0 0 40px color-mix(in srgb, var(--step-04) 35%, transparent);
+}
+
+.aimy-reveal__cursor {
+  display: inline-block;
+  width: 0.55em;
+  color: var(--step-01);
+  animation: aimy-reveal-cursor 0.85s step-end infinite;
+  vertical-align: baseline;
+}
+
+@keyframes aimy-reveal-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aimy-reveal {
+    transition-duration: 0.25s;
+  }
+
+  .aimy-reveal__cursor {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .aimy-reveal__line {
+    font-size: clamp(2.6rem, 16vw, 6rem);
+    white-space: normal;
   }
 }

@@ -21,13 +21,13 @@
 }
 
 .insights-page-body {
-  /* Monochrome stage + one soft pink accent */
-  --ins-paper: #e5e3dc;
-  --ins-ink: #0a0a0a;
-  --ins-muted: rgba(10, 10, 10, 0.55);
-  --ins-pink: #e8a0bc;
-  --ins-pink-soft: #f3c4d6;
-  --ins-pink-deep: #c4789a;
+  /* Step-derived stage + one soft pink accent */
+  --ins-paper: var(--step-01);
+  --ins-ink: var(--step-08);
+  --ins-muted: color-mix(in srgb, var(--step-08) 55%, transparent);
+  --ins-pink: var(--step-03);
+  --ins-pink-soft: color-mix(in srgb, var(--step-02) 78%, var(--step-01));
+  --ins-pink-deep: color-mix(in srgb, var(--step-03) 70%, var(--step-08));
   --ins-lavender: var(--ins-pink); /* legacy alias */
   --ins-display: "Athemi", "Bodoni Moda", "Voyage", "Instrument Serif", Georgia, serif;
   --ins-serif: "Instrument Serif", "Voyage", Georgia, serif;
@@ -64,9 +64,9 @@ html.page-loading .insights-page-body {
 /* Top-left wordmark — brand corner */
 .ins-logo { display: none; }
 
-/* Aimy chrome — mono ink + soft pink only (no second accent) */
+/* Aimy chrome — step-derived ink + soft pink only (no second accent) */
 .insights-page-body {
-  --aimy-primary: #0a0a0a;
+  --aimy-primary: var(--ins-ink);
   --aimy-secondary: var(--ins-pink-soft);
   --aimy-tertiary: var(--ins-pink-deep);
   --aimy-accent: var(--ins-pink);
@@ -77,21 +77,21 @@ html.page-loading .insights-page-body {
   /* Keep hovers in the pink family — no multi-hue rainbow on this page */
   --aimy-r1: var(--ins-pink);
   --aimy-r2: var(--ins-pink-soft);
-  --aimy-r3: #efb6cb;
+  --aimy-r3: color-mix(in srgb, var(--step-02) 85%, var(--step-01));
   --aimy-r4: var(--ins-pink-deep);
 }
 
 @media (prefers-color-scheme: dark) {
   .insights-page-body {
-    --ins-paper: #161412;
-    --ins-ink: #f2efe8;
-    --ins-muted: rgba(242, 239, 232, 0.58);
-    --ins-pink: #e8b0c8;
-    --ins-pink-soft: #f3d0de;
-    --ins-pink-deep: #c98aaa;
+    --ins-paper: var(--step-08);
+    --ins-ink: var(--step-01);
+    --ins-muted: color-mix(in srgb, var(--step-01) 58%, transparent);
+    --ins-pink: color-mix(in srgb, var(--step-03) 88%, var(--step-01));
+    --ins-pink-soft: color-mix(in srgb, var(--step-02) 92%, var(--step-01));
+    --ins-pink-deep: color-mix(in srgb, var(--step-03) 72%, var(--step-01));
     --ins-lavender: var(--ins-pink);
 
-    --aimy-primary: #f2efe8;
+    --aimy-primary: var(--ins-ink);
     --aimy-secondary: var(--ins-pink-soft);
     --aimy-tertiary: var(--ins-pink-deep);
     --aimy-accent: var(--ins-pink);
@@ -278,7 +278,7 @@ html.page-loading .insights-page-body {
   line-height: 1.15;
   letter-spacing: -0.02em;
   color: var(--ins-paper);
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 1px 12px color-mix(in srgb, var(--step-08) 35%, transparent);
   mix-blend-mode: difference;
 }
 
@@ -722,7 +722,7 @@ html.page-loading .insights-page-body {
   position: relative;
   z-index: 2;
   max-width: 40rem;
-  margin: 0 auto clamp(2rem, 5vh, 3.5rem);
+  margin: 0 auto clamp(2rem, 5vh, 3rem);
   text-align: center;
 }
 
@@ -839,23 +839,23 @@ html.page-loading .insights-page-body {
 }
 
 @keyframes ins-pink-fill {
-  0%, 100% { fill: #e8a0bc; }
-  50% { fill: #f3c4d6; }
+  0%, 100% { fill: var(--ins-pink); }
+  50% { fill: var(--ins-pink-soft); }
 }
 
 @keyframes ins-pink-fill-soft {
-  0%, 100% { fill: #f3c4d6; }
-  50% { fill: #f8dce8; }
+  0%, 100% { fill: var(--ins-pink-soft); }
+  50% { fill: color-mix(in srgb, var(--step-02) 60%, var(--step-01)); }
 }
 
 @keyframes ins-pink-fill-deep {
-  0%, 100% { fill: #c4789a; }
-  50% { fill: #e8a0bc; }
+  0%, 100% { fill: var(--ins-pink-deep); }
+  50% { fill: var(--ins-pink); }
 }
 
 @keyframes ins-coin-pink {
-  0%, 100% { --pk-coin-color: #e8a0bc; }
-  50% { --pk-coin-color: #f3c4d6; }
+  0%, 100% { --pk-coin-color: var(--ins-pink); }
+  50% { --pk-coin-color: var(--ins-pink-soft); }
 }
 
 /* Header mark — soft blur out while the large logo is in view */

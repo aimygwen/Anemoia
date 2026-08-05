@@ -1,5 +1,5 @@
 /**
- * Start — work selection (light grey stage).
+ * Start — work selection (soft blush stage).
  */
 
 @font-face {
@@ -11,11 +11,11 @@
 }
 
 .start-work {
-  --start-paper: #e7e7e7;
-  --start-ink: #292929;
-  --start-muted: rgba(41, 41, 41, 0.55);
-  --start-line: rgba(41, 41, 41, 0.14);
-  --start-preview: #d8d8d8;
+  --start-paper: var(--step-01);
+  --start-ink: var(--step-08);
+  --start-muted: color-mix(in srgb, var(--step-08) 55%, transparent);
+  --start-line: color-mix(in srgb, var(--step-08) 14%, transparent);
+  --start-preview: var(--step-02);
   position: relative;
   z-index: 3;
   min-height: 100vh;
@@ -70,7 +70,7 @@ main:has(.start-work:last-of-type) {
   width: 100%;
   margin: 0;
   padding: 0 clamp(1.25rem, 4vw, 2.5rem);
-  color: #292929;
+  color: var(--start-ink);
   font-family: Newpixel, "Courier New", monospace;
   font-size: calc(var(--large) * 0.72);
   font-weight: 400;
@@ -139,7 +139,7 @@ main:has(.start-work:last-of-type) {
 }
 
 .start-work__scroller::-webkit-scrollbar-thumb {
-  background: rgba(41, 41, 41, 0.22);
+  background: color-mix(in srgb, var(--step-08) 22%, transparent);
   border-radius: 999px;
 }
 
@@ -222,7 +222,7 @@ main:has(.start-work:last-of-type) {
   will-change: transform, opacity;
 }
 
-/* Vector stage thumbs (lowpoly / visuals) — light grey rest, soft pixel rainbow hover */
+/* Vector stage thumbs (lowpoly / visuals) — soft blush rest, soft pixel rainbow hover */
 .start-work__preview--sketch {
   background: transparent;
 }
@@ -242,7 +242,7 @@ main:has(.start-work:last-of-type) {
 }
 
 /*
- * One mosaic for vector thumbs: solid light grey at rest, chunkier + rainbow on hover.
+ * One mosaic for vector thumbs: solid soft blush at rest, chunkier + rainbow on hover.
  * No paused animation at rest — that froze on a tinted keyframe instead of grey.
  */
 .start-work__preview--sketch .start-work__pixel-preview {
@@ -351,13 +351,13 @@ main:has(.start-work:last-of-type) {
 }
 
 @keyframes start-work-text-rainbow {
-  0% { color: #ff4fa3; }
-  16% { color: #ffd84a; }
-  33% { color: #5dff9a; }
-  50% { color: #4fd4ff; }
-  66% { color: #8b6dff; }
-  83% { color: #ff6ad5; }
-  100% { color: #ff4fa3; }
+  0% { color: var(--pk-primary); }
+  16% { color: var(--pk-soft); }
+  33% { color: var(--step-03); }
+  50% { color: var(--step-02); }
+  66% { color: var(--step-06); }
+  83% { color: var(--step-07); }
+  100% { color: var(--pk-primary); }
 }
 
 /* Soft pastel shift for sketchbook hover — muted pinks / lavenders / mist */
@@ -386,23 +386,23 @@ main:has(.start-work:last-of-type) {
 
 @media (prefers-color-scheme: dark) {
   .start-work {
-    --start-paper: #17141d;
-    --start-ink: #f8f2ff;
-    --start-muted: rgba(248, 242, 255, 0.62);
-    --start-line: rgba(248, 242, 255, 0.14);
-    --start-preview: #28222f;
+    --start-paper: var(--step-08);
+    --start-ink: var(--step-01);
+    --start-muted: color-mix(in srgb, var(--step-01) 62%, transparent);
+    --start-line: color-mix(in srgb, var(--step-01) 14%, transparent);
+    --start-preview: var(--step-07);
   }
 
   .start-work__swap-title {
-    color: #f8f2ff;
+    color: var(--start-ink);
   }
 
   .start-work__scroller {
-    scrollbar-color: rgba(248, 242, 255, 0.28) transparent;
+    scrollbar-color: color-mix(in srgb, var(--step-01) 28%, transparent) transparent;
   }
 
   .start-work__scroller::-webkit-scrollbar-thumb {
-    background: rgba(248, 242, 255, 0.25);
+    background: color-mix(in srgb, var(--step-01) 25%, transparent);
   }
 }
 
@@ -431,7 +431,7 @@ main:has(.start-work:last-of-type) {
   .start-work__col:focus-visible .start-work__name,
   .start-work__col:focus-visible .start-work__desc {
     animation: none;
-    color: #ff4fa3;
+    color: var(--pk-primary);
   }
 }
 

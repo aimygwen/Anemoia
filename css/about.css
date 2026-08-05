@@ -12,14 +12,14 @@
 
 :root {
   /* Pastel purple family */
-  --paper: #ffe6f1;
-  --ink: #2a2433;
-  --pink: #c9a0ef;   /* mid lilac — primary card */
-  --peach: #e2d0f5;  /* soft lavender — light card */
-  --blue: #b8a6e8;   /* dusty periwinkle — deep card */
-  --sky: #bb88ff;
-  --violet-soft: #e2d0f5;
-  --violet-deep: #6e458f;
+  --paper: var(--step-01);
+  --ink: var(--step-08);
+  --pink: var(--pk-soft);   /* mid lilac — primary card */
+  --peach: var(--step-02);  /* soft lavender — light card */
+  --blue: var(--step-03);   /* dusty periwinkle — deep card */
+  --sky: var(--pk-soft);
+  --violet-soft: var(--step-02);
+  --violet-deep: var(--step-07);
 }
 
 * {
@@ -81,10 +81,10 @@ html.lenis-smooth {
   --aimy-accent: var(--pink);
   --aimy-menu-coin: var(--pink);
   --aimy-menu-coin-open: var(--blue);
-  --aimy-r1: #c9a0ef;
-  --aimy-r2: #e2d0f5;
-  --aimy-r3: #b8a6e8;
-  --aimy-r4: #9b7ec8;
+  --aimy-r1: var(--pk-soft);
+  --aimy-r2: var(--step-02);
+  --aimy-r3: var(--step-03);
+  --aimy-r4: var(--pk-soft);
 }
 
 .about-page-body .site-header[data-aimy-chrome] {
@@ -254,7 +254,7 @@ html.lenis-smooth {
   overflow: visible;
   color: var(--ink);
   background:
-    linear-gradient(165deg, #fff7fb 0%, var(--paper) 42%, #ffe0ec 100%);
+    linear-gradient(165deg, var(--step-01) 0%, var(--paper) 42%, var(--step-01) 100%);
   /* Soft torn-sheet silhouette — one piece, not three */
   clip-path: polygon(
     1.2% 0.8%,
@@ -263,8 +263,8 @@ html.lenis-smooth {
     0.4% 99.6%
   );
   box-shadow:
-    0 1.1rem 2.4rem rgba(42, 36, 51, 0.1),
-    0 0.2rem 0.6rem rgba(42, 36, 51, 0.06);
+    0 1.1rem 2.4rem color-mix(in srgb, var(--step-08) 10%, transparent),
+    0 0.2rem 0.6rem color-mix(in srgb, var(--step-08) 6%, transparent);
   transform-origin: 50% 40%;
   will-change: transform;
   transform:
@@ -281,7 +281,7 @@ html.lenis-smooth {
 
 .about-block + .about-block {
   padding-top: clamp(1.25rem, 2.5vh, 1.8rem);
-  border-top: 1px solid rgba(42, 36, 51, 0.12);
+  border-top: 1px solid color-mix(in srgb, var(--step-08) 12%, transparent);
 }
 
 .about-kicker,
@@ -335,7 +335,7 @@ html.lenis-smooth {
   display: grid;
   gap: 0.25rem;
   padding-top: 0.85rem;
-  border-top: 1px solid rgba(42, 36, 51, 0.1);
+  border-top: 1px solid color-mix(in srgb, var(--step-08) 10%, transparent);
 }
 
 .about-likes__label {
@@ -369,7 +369,7 @@ html.lenis-smooth {
 
 .about-closing a:hover,
 .about-closing a:focus-visible {
-  color: #fff;
+  color: var(--step-01);
   background: var(--violet-deep);
   outline: none;
 }

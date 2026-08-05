@@ -19,23 +19,23 @@
 }
 
 .contact-page-body {
-  --chat-paper: #ffd9eb;
-  --chat-ink: #70264f;
-  --chat-muted: color-mix(in srgb, var(--chat-ink) 52%, white);
-  --chat-them: color-mix(in srgb, white 46%, transparent);
+  --chat-paper: var(--step-01);
+  --chat-ink: var(--step-08);
+  --chat-muted: color-mix(in srgb, var(--chat-ink) 52%, var(--step-01));
+  --chat-them: color-mix(in srgb, var(--step-01) 46%, transparent);
   --chat-you: color-mix(in srgb, var(--aimy-primary) 16%, transparent);
-  --chat-you-ink: #70264f;
-  --chat-glass: color-mix(in srgb, white 30%, transparent);
+  --chat-you-ink: var(--step-08);
+  --chat-glass: color-mix(in srgb, var(--step-01) 30%, transparent);
   --chat-line: color-mix(in srgb, var(--aimy-primary) 18%, transparent);
-  --chat-shadow: color-mix(in srgb, #b9417c 16%, transparent);
-  --aimy-primary: #b64f86;
-  --aimy-secondary: #ffc7df;
-  --aimy-tertiary: #5f2243;
-  --aimy-accent: #ff72ad;
-  --aimy-r1: #ff72ad;
-  --aimy-r2: #ffafd0;
-  --aimy-r3: #e5b8f1;
-  --aimy-r4: #c99ae8;
+  --chat-shadow: color-mix(in srgb, var(--pk-primary) 16%, transparent);
+  --aimy-primary: var(--pk-primary);
+  --aimy-secondary: var(--step-02);
+  --aimy-tertiary: var(--step-08);
+  --aimy-accent: var(--pk-accent);
+  --aimy-r1: var(--pk-primary);
+  --aimy-r2: var(--pk-soft);
+  --aimy-r3: var(--step-06);
+  --aimy-r4: var(--step-07);
   --font-ui: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-pixel: "Newpixel", "Courier New", monospace;
   --font-display: "Bold Block", "Arial Black", Impact, sans-serif;
@@ -48,8 +48,8 @@
   background:
     radial-gradient(110% 72% at 8% -8%, color-mix(in srgb, var(--aimy-r1) 60%, transparent), transparent 56%),
     radial-gradient(90% 58% at 96% 2%, color-mix(in srgb, var(--aimy-r3) 38%, transparent), transparent 54%),
-    radial-gradient(72% 44% at 50% 102%, color-mix(in srgb, #ffd27d 22%, transparent), transparent 52%),
-    radial-gradient(54% 42% at 50% 44%, color-mix(in srgb, white 14%, transparent), transparent 72%),
+    radial-gradient(72% 44% at 50% 102%, color-mix(in srgb, var(--step-02) 22%, transparent), transparent 52%),
+    radial-gradient(54% 42% at 50% 44%, color-mix(in srgb, var(--step-01) 14%, transparent), transparent 72%),
     var(--chat-paper);
   font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
@@ -69,7 +69,7 @@
     linear-gradient(color-mix(in srgb, var(--aimy-primary) 7%, transparent) 1px, transparent 1px),
     linear-gradient(90deg, color-mix(in srgb, var(--aimy-primary) 7%, transparent) 1px, transparent 1px);
   background-size: 28px 28px;
-  mask-image: linear-gradient(180deg, transparent, #000 12%, #000 78%, transparent);
+  mask-image: linear-gradient(180deg, transparent, var(--step-08) 12%, var(--step-08) 78%, transparent);
 }
 
 .contact-page-body::after {
@@ -86,18 +86,18 @@
 
 @media (prefers-color-scheme: dark) {
   .contact-page-body {
-    --chat-paper: #000;
-    --chat-ink: #f3eafc;
-    --chat-muted: color-mix(in srgb, #ff9ad0 58%, transparent);
-    --chat-them: color-mix(in srgb, white 10%, transparent);
-    --chat-you: color-mix(in srgb, #c084e8 14%, transparent);
-    --chat-you-ink: #f3eafc;
-    --chat-glass: color-mix(in srgb, #2a1540 40%, transparent);
-    --chat-line: color-mix(in srgb, #c084e8 18%, transparent);
-    --chat-shadow: rgba(0, 0, 0, 0.28);
-    --aimy-primary: #ff87be;
-    --aimy-accent: #ff5da8;
-    background: #000;
+    --chat-paper: var(--step-08);
+    --chat-ink: var(--step-02);
+    --chat-muted: color-mix(in srgb, var(--step-02) 58%, transparent);
+    --chat-them: color-mix(in srgb, var(--step-01) 10%, transparent);
+    --chat-you: color-mix(in srgb, var(--step-06) 14%, transparent);
+    --chat-you-ink: var(--step-02);
+    --chat-glass: color-mix(in srgb, var(--step-08) 40%, transparent);
+    --chat-line: color-mix(in srgb, var(--step-06) 18%, transparent);
+    --chat-shadow: color-mix(in srgb, var(--step-08) 28%, transparent);
+    --aimy-primary: var(--pk-primary);
+    --aimy-accent: var(--pk-accent);
+    background: var(--chat-paper);
   }
 
   .contact-page-body::before {
@@ -173,7 +173,7 @@ html.lenis body {
   flex-shrink: 0;
   border: 0;
   box-shadow: 0 8px 18px color-mix(in srgb, var(--chat-ink) 10%, transparent);
-  background: color-mix(in srgb, white 40%, var(--aimy-secondary));
+  background: color-mix(in srgb, var(--step-01) 40%, var(--aimy-secondary));
 }
 
 .chat__identity-name {
@@ -224,7 +224,7 @@ html.lenis body {
 .chat__sky {
   z-index: 0;
   background:
-    radial-gradient(60% 50% at 50% 40%, color-mix(in srgb, white 35%, transparent), transparent 70%);
+    radial-gradient(60% 50% at 50% 40%, color-mix(in srgb, var(--step-01) 35%, transparent), transparent 70%);
 }
 
 .chat__dither {
@@ -442,7 +442,7 @@ html.lenis body {
   pointer-events: none;
   background: linear-gradient(
     165deg,
-    color-mix(in srgb, white 24%, transparent) 0%,
+    color-mix(in srgb, var(--step-01) 24%, transparent) 0%,
     transparent 55%
   );
 }
@@ -548,14 +548,14 @@ html.lenis body {
 @media (prefers-color-scheme: dark) {
   .chat__bubble {
     filter:
-      drop-shadow(0 0 0.7px color-mix(in srgb, white 22%, transparent))
-      drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
+      drop-shadow(0 0 0.7px color-mix(in srgb, var(--step-01) 22%, transparent))
+      drop-shadow(0 14px 24px color-mix(in srgb, var(--step-08) 35%, transparent));
   }
 
   .chat__bubble--you {
     filter:
       drop-shadow(0 0 0.7px color-mix(in srgb, var(--aimy-primary) 45%, transparent))
-      drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
+      drop-shadow(0 14px 24px color-mix(in srgb, var(--step-08) 35%, transparent));
   }
 
   .chat__dither {
@@ -647,11 +647,11 @@ html.lenis body {
   padding: 0.5rem 0.5rem 0.5rem 1.55rem;
   border-radius: 999px;
   border: none;
-  background: color-mix(in srgb, white 20%, transparent);
+  background: color-mix(in srgb, var(--step-01) 20%, transparent);
   backdrop-filter: blur(22px) saturate(1.4);
   -webkit-backdrop-filter: blur(22px) saturate(1.4);
   box-shadow:
-    inset 0 -1px 0 color-mix(in srgb, white 48%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--step-01) 48%, transparent),
     0 0 0 1px color-mix(in srgb, var(--aimy-primary) 10%, transparent),
     0 6px 18px color-mix(in srgb, var(--chat-ink) 6%, transparent);
   transition:
@@ -672,7 +672,7 @@ html.lenis body {
     180deg,
     color-mix(in srgb, var(--chat-ink) 7%, transparent) 0%,
     transparent 46%,
-    color-mix(in srgb, white 24%, transparent) 100%
+    color-mix(in srgb, var(--step-01) 24%, transparent) 100%
   );
 }
 
@@ -690,9 +690,9 @@ html.lenis body {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    color-mix(in srgb, white 45%, transparent) 25%,
-    color-mix(in srgb, white 70%, transparent) 50%,
-    color-mix(in srgb, white 45%, transparent) 75%,
+    color-mix(in srgb, var(--step-01) 45%, transparent) 25%,
+    color-mix(in srgb, var(--step-01) 70%, transparent) 50%,
+    color-mix(in srgb, var(--step-01) 45%, transparent) 75%,
     transparent 100%
   );
   opacity: 0.65;
@@ -746,12 +746,12 @@ html.lenis body {
   border-radius: 50%;
   border: none;
   background:
-    radial-gradient(circle at 50% 82%, color-mix(in srgb, white 38%, transparent), transparent 46%),
-    color-mix(in srgb, white 20%, transparent);
+    radial-gradient(circle at 50% 82%, color-mix(in srgb, var(--step-01) 38%, transparent), transparent 46%),
+    color-mix(in srgb, var(--step-01) 20%, transparent);
   color: var(--chat-ink);
   overflow: hidden;
   box-shadow:
-    inset 0 -1px 0 color-mix(in srgb, white 48%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--step-01) 48%, transparent),
     0 0 0 1px color-mix(in srgb, var(--aimy-primary) 12%, transparent);
 }
 
@@ -761,7 +761,7 @@ html.lenis body {
   inset: 0;
   z-index: 0;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--aimy-accent) 55%, white);
+  background: color-mix(in srgb, var(--aimy-accent) 55%, var(--step-01));
   scale: 1 0;
   transform-origin: 50% 100%;
   transition: scale 1.2s var(--f-cubic-in);
@@ -789,16 +789,16 @@ html.lenis body {
 }
 
 .chat__mail-pill__send svg:nth-child(2) {
-  fill: #fff;
+  fill: var(--step-01);
   rotate: calc(-90deg * var(--direction));
 }
 
 .chat__mail-pill:hover,
 .chat__mail-pill:focus-visible {
   transform: translateY(-5px) scale(1.02);
-  background: color-mix(in srgb, white 28%, transparent);
+  background: color-mix(in srgb, var(--step-01) 28%, transparent);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, white 65%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--step-01) 65%, transparent),
     inset 0 -1px 0 color-mix(in srgb, var(--chat-ink) 5%, transparent),
     0 0 0 1px color-mix(in srgb, var(--aimy-primary) 16%, transparent),
     0 18px 40px color-mix(in srgb, var(--chat-ink) 11%, transparent);
@@ -830,7 +830,7 @@ html.lenis body {
 .chat__mail-pill:hover .chat__mail-pill__send,
 .chat__mail-pill:focus-visible .chat__mail-pill__send {
   box-shadow:
-    inset 0 -1px 0 color-mix(in srgb, white 58%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--step-01) 58%, transparent),
     0 0 0 1px color-mix(in srgb, var(--aimy-primary) 18%, transparent);
 }
 
@@ -858,18 +858,18 @@ html.lenis body {
 
 @keyframes aimy-cta-logo-cycle {
   0%,
-  100% { background-color: var(--aimy-r1, #ff7eb6); }
-  25% { background-color: var(--aimy-r2, #e8b4d4); }
-  50% { background-color: var(--aimy-r3, #c9a8e8); }
-  75% { background-color: var(--aimy-r4, #b89ad4); }
+  100% { background-color: var(--aimy-r1, var(--pk-primary)); }
+  25% { background-color: var(--aimy-r2, var(--pk-soft)); }
+  50% { background-color: var(--aimy-r3, var(--step-06)); }
+  75% { background-color: var(--aimy-r4, var(--step-07)); }
 }
 
 @media (prefers-color-scheme: dark) {
   .chat__mail-pill {
-    background: #000;
+    background: var(--chat-paper);
     box-shadow:
-      0 0 0 1px color-mix(in srgb, white 8%, transparent),
-      0 8px 22px rgba(0, 0, 0, 0.34);
+      0 0 0 1px color-mix(in srgb, var(--step-01) 8%, transparent),
+      0 8px 22px color-mix(in srgb, var(--step-08) 34%, transparent);
   }
 
   .chat__mail-pill::before {
@@ -882,7 +882,7 @@ html.lenis body {
 
   .chat__mail-pill:hover,
   .chat__mail-pill:focus-visible {
-    background: #000;
+    background: var(--chat-paper);
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--aimy-primary) 58%, transparent),
       0 0 1.6rem color-mix(in srgb, var(--aimy-accent) 34%, transparent);
@@ -902,9 +902,9 @@ html.lenis body {
   }
 
   .chat__mail-pill__send {
-    background: #000;
+    background: var(--chat-paper);
     box-shadow:
-      0 0 0 1px color-mix(in srgb, white 10%, transparent);
+      0 0 0 1px color-mix(in srgb, var(--step-01) 10%, transparent);
   }
 
   .chat__mail-pill__send svg:first-child {

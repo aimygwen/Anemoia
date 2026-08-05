@@ -41,13 +41,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./css/polykroma.css?v=polykroma-20" />
-<link rel="stylesheet" href="./css/home-overrides.css?v=home-7">
-<link rel="stylesheet" href="./css/start-work.css?v=grey-rest">
+<link rel="stylesheet" href="./css/polykroma.css?v=polykroma-22" />
+<link rel="stylesheet" href="./css/home-overrides.css?v=home-reveal">
+<link rel="stylesheet" href="./css/start-work.css?v=start-work-muted">
 
 <!-- Nuxt entry removed: static 1:1 SSR snapshot -->
 </head>
-<body  class="-imagine-possible"><header class="site-header" data-aimy-chrome><div class="aimy-chrome-bar"><div class="header-left">
+<body  class="-imagine-possible">
+
+<!-- First-load typewriter reveal -->
+<section id="aimy-reveal" class="aimy-reveal" aria-hidden="false">
+  <div class="aimy-reveal__text"></div>
+</section>
+
+<header class="site-header" data-aimy-chrome><div class="aimy-chrome-bar"><div class="header-left">
         <a href="./index.html" class="brand" aria-label="Polly — home">
 <svg class="brand-mark" viewBox="0 0 2048 2048" width="64" height="64" aria-hidden="true" focusable="false">
   <g class="brand-mark-stack">
@@ -172,12 +179,12 @@
 <script src="./js/polyglide.js?v=2" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js" defer></script>
-<script src="./js/home.js?v=home-2" defer></script>
+<script src="./js/home.js?v=home-reveal" defer></script>
 <script src="./js/home-curtain.js?v=creations-above" defer></script>
 <script src="./js/hero-cta-rings.js?v=title-outline-5" defer></script>
 <script src="./js/start-work.js?v=hover-chunky" defer></script>
 <script src="./js/polly-iris.js" defer></script>
 <script src="./js/polly-specular.js" defer></script>
-  <script src="./js/polykroma.js?v=polykroma-20" defer></script>
+  <script src="./js/polykroma.js?v=polykroma-22" defer></script>
 </body>
 </html>

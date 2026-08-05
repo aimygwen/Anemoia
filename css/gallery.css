@@ -13,7 +13,7 @@
 }
 
 html:has(.gallery-page-body) {
-  --gal-bg: #f4f4f2;
+  --gal-bg: var(--step-01);
   min-height: 100%;
   background: var(--gal-bg);
   scroll-behavior: auto;
@@ -31,11 +31,11 @@ html.lenis-smooth {
 }
 
 .gallery-page-body {
-  --gal-bg: #f4f4f2;
-  --gal-ink: #1a1520;
-  --gal-mute: rgba(26, 21, 32, 0.55);
-  --gal-accent: #e879b8;
-  --gal-media-bg: #d8d8dc;
+  --gal-bg: var(--step-01);
+  --gal-ink: var(--step-08);
+  --gal-mute: color-mix(in srgb, var(--step-08) 55%, transparent);
+  --gal-accent: var(--pk-primary);
+  --gal-media-bg: var(--step-02);
   --gal-pad: clamp(1.1rem, 2.4vw, 2.5rem);
   --gal-pad-lg: clamp(1.5rem, 3.5vw, 3.25rem);
   --gal-ui: "Plus Jakarta Sans", system-ui, sans-serif;
@@ -58,11 +58,11 @@ html.lenis-smooth {
 @media (prefers-color-scheme: dark) {
   html:has(.gallery-page-body),
   .gallery-page-body {
-    --gal-bg: #0a0810;
-    --gal-ink: #fff7fb;
-    --gal-mute: rgba(255, 247, 251, 0.62);
-    --gal-accent: #ff8fd2;
-    --gal-media-bg: #1c1528;
+    --gal-bg: var(--step-08);
+    --gal-ink: var(--step-01);
+    --gal-mute: color-mix(in srgb, var(--step-01) 62%, transparent);
+    --gal-accent: var(--step-03);
+    --gal-media-bg: var(--step-08);
   }
 }
 
@@ -246,7 +246,7 @@ html.lenis-smooth {
 }
 
 .gal-card:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--gal-accent) 70%, #fff);
+  outline: 2px solid color-mix(in srgb, var(--gal-accent) 70%, var(--step-01));
   outline-offset: 8px;
   border-radius: 0.35rem;
 }
@@ -277,7 +277,7 @@ html.lenis-smooth {
   position: relative;
   aspect-ratio: 16 / 9;
   max-height: min(78vh, 52rem);
-  background: #050508;
+  background: var(--step-08);
   isolation: isolate;
 }
 
@@ -312,7 +312,7 @@ html.lenis-smooth {
   height: 100%;
   max-height: min(78vh, 52rem);
   object-fit: cover;
-  background: #050508;
+  background: var(--step-08);
 }
 
 .gal-project--film:not(.is-playing) .gal-film-video {
@@ -327,7 +327,7 @@ html.lenis-smooth {
   height: auto;
   object-fit: contain;
   border-radius: 0.35rem;
-  background: #050508;
+  background: var(--step-08);
 }
 
 .gal-title {
@@ -343,10 +343,10 @@ html.lenis-smooth {
   text-align: center;
   text-wrap: balance;
   pointer-events: none;
-  color: #fff7fb;
+  color: var(--step-01);
   text-shadow:
-    0 2px 8px rgba(10, 8, 16, 0.55),
-    0 12px 40px rgba(10, 8, 16, 0.75);
+    0 2px 8px color-mix(in srgb, var(--step-08) 55%, transparent),
+    0 12px 40px color-mix(in srgb, var(--step-08) 75%, transparent);
 }
 
 .gal-go {
@@ -368,7 +368,7 @@ html.lenis-smooth {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--gal-bg) 78%, #000);
+  background: color-mix(in srgb, var(--gal-bg) 78%, var(--step-08));
   border: 1px solid color-mix(in srgb, var(--gal-ink) 18%, transparent);
   transition:
     transform 0.45s cubic-bezier(0.22, 1.4, 0.36, 1),
@@ -378,8 +378,8 @@ html.lenis-smooth {
 
 @media (prefers-color-scheme: dark) {
   .gal-go-disk {
-    background: rgba(10, 8, 16, 0.78);
-    border-color: rgba(255, 247, 251, 0.18);
+    background: color-mix(in srgb, var(--step-08) 78%, transparent);
+    border-color: color-mix(in srgb, var(--step-01) 18%, transparent);
   }
 }
 
@@ -396,7 +396,7 @@ html.lenis-smooth {
 
 @media (prefers-color-scheme: dark) {
   .gal-go-arrow {
-    color: #fff7fb;
+    color: var(--step-01);
   }
 }
 
@@ -409,7 +409,7 @@ html.lenis-smooth {
 
 .gal-card:hover .gal-go-arrow,
 .gal-card:focus-visible .gal-go-arrow {
-  color: #2a2433;
+  color: var(--step-08);
   transform: translateX(2px);
 }
 
@@ -424,7 +424,7 @@ html.lenis-smooth {
     calc(clamp(5rem, 10vw, 7rem) + env(safe-area-inset-top, 0px))
     clamp(1rem, 4vw, 3rem)
     calc(2rem + env(safe-area-inset-bottom, 0px));
-  background: color-mix(in srgb, var(--gal-bg) 94%, #000);
+  background: color-mix(in srgb, var(--gal-bg) 94%, var(--step-08));
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -433,7 +433,7 @@ html.lenis-smooth {
 
 @media (prefers-color-scheme: dark) {
   .gal-lightbox {
-    background: rgba(10, 8, 16, 0.94);
+    background: color-mix(in srgb, var(--step-08) 94%, transparent);
   }
 }
 
