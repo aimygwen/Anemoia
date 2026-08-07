@@ -67,11 +67,11 @@ html, body {
     --c-yellow: var(--step-01);
     --c-yellow-rgb: 254, 240, 254;
 
-    /* Deep plum surfaces / light-section ink */
-    --c-black: var(--step-08);
-    --c-black-rgb: 49, 22, 51;
-    --c-stone: var(--step-07);
-    --c-stone-rgb: 142, 20, 206;
+    /* Off-black surfaces / light-section ink */
+    --c-black: var(--pk-bg);
+    --c-black-rgb: 14, 11, 20;
+    --c-stone: var(--pk-surface);
+    --c-stone-rgb: 22, 18, 28;
 
     /* Readable secondary + accents on dark */
     --c-grey: var(--step-03);
@@ -86,8 +86,8 @@ html, body {
     --c-purple-rgb: 240, 137, 254;
 
     /* Elevated panels (contact, glass, chrome) */
-    --aimy-surface: var(--step-07);
-    --aimy-surface-deep: var(--step-08);
+    --aimy-surface: var(--pk-surface);
+    --aimy-surface-deep: var(--pk-bg);
     --aimy-ink: var(--step-02);
     --aimy-ink-soft: var(--step-03);
     --aimy-primary: var(--pk-primary);
@@ -111,7 +111,7 @@ body {
 @media (prefers-color-scheme: dark) {
   html,
   body {
-    /* Page reads as deep plum with light ink by default */
+    /* Page reads as off-black with light ink by default */
     background-color: var(--c-black) !important;
     color: var(--c-yellow);
   }
@@ -149,9 +149,8 @@ body {
   translate: 0 -30% !important;
   /* Base size (was ~0.72–0.78; 1.0 is a touch under the last 1.05 bump) */
   scale: 1 !important;
-  /* Scroll warp — shrink toward the arch (origin below the art) */
-  transform: translate3d(0, calc(var(--vh, 1vh) * -2), 0)
-    scale(calc(1 - var(--progress, 0) * 0.5)) !important;
+  /* Static hero art — scroll warp disabled for scroll performance */
+  transform: translate3d(0, calc(var(--vh, 1vh) * -2), 0) scale(1) !important;
   transform-origin: 50% 150% !important;
 }
 
@@ -241,8 +240,27 @@ body {
 
 .c-welcome .-w {
   --welcome-title: var(--pk-primary);
+  --progress: 0;
   overflow: visible !important;
   isolation: isolate;
+}
+
+/*
+ * Scroll performance — legacy SSR hero parallax off (45+ inline --progress hooks).
+ * Logo holo tilt (--mx/--my) stays pointer-driven; divider uses home-curtain.js only.
+ */
+.c-welcome,
+.c-welcome[string="progress"] {
+  --progress: 0 !important;
+}
+
+.c-welcome .path[data-v-6c6a6d99],
+.c-welcome .-w .path,
+.c-welcome .-w figure.places,
+.c-welcome .-w figure.items,
+.c-welcome .-w .places[data-v-6c6a6d99],
+.c-welcome .-w .items[data-v-6c6a6d99] {
+  transform: none !important;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -1312,7 +1330,7 @@ label {
   letter-spacing: 0.01em !important;
   text-transform: none !important;
   color: var(--welcome-title) !important;
-  transform: translate3d(0, calc(24vh + var(--progress) * var(--vh, 1vh) * 12), 0) !important;
+  transform: translate3d(0, calc(24vh + 0px), 0) !important;
   transform-origin: center center !important;
   z-index: 4;
 }
@@ -1357,7 +1375,7 @@ label {
 .c-welcome .-w span.title.line-3.is-title-outline,
 .c-welcome .-w span.title.line-3.is-brand-title.is-title-outline {
   -webkit-text-stroke: 0.01em var(--welcome-title) !important;
-  transform: translate3d(0, calc(24vh + var(--progress) * var(--vh, 1vh) * 12), 0) scale(0.985) !important;
+  transform: translate3d(0, calc(24vh + 0px), 0) scale(0.985) !important;
 }
 
 @media (min-width: 1024px) {
@@ -1382,13 +1400,13 @@ label {
     --left: 1 !important;
     --width: 12 !important;
     font-size: clamp(5.75rem, 11vw, 11rem) !important;
-    transform: translate3d(0, calc(26vh + var(--progress) * var(--vh, 1vh) * 12), 0) !important;
+    transform: translate3d(0, calc(26vh + 0px), 0) !important;
   }
 
   .c-welcome .-w span.title.line-3.is-title-outline,
   .c-welcome .-w span.title.line-3.is-brand-title.is-title-outline {
     -webkit-text-stroke: 0.008em var(--welcome-title) !important;
-    transform: translate3d(0, calc(26vh + var(--progress) * var(--vh, 1vh) * 12), 0) scale(0.985) !important;
+    transform: translate3d(0, calc(26vh + 0px), 0) scale(0.985) !important;
   }
 
   .c-welcome .-w span.title.line-3.is-title-outline {
@@ -1399,8 +1417,7 @@ label {
   .c-welcome .-w .stone[data-v-6c6a6d99] {
     scale: 1 !important;
     translate: 0 -26% !important;
-    transform: translate3d(0, calc(var(--vh, 1vh) * -2), 0)
-      scale(calc(1 - var(--progress, 0) * 0.5)) !important;
+    transform: translate3d(0, calc(var(--vh, 1vh) * -2), 0) scale(1) !important;
     transform-origin: 50% 150% !important;
   }
 }
@@ -1419,9 +1436,7 @@ label {
   visibility: visible !important;
   pointer-events: auto !important;
   z-index: 40 !important;
-  margin-top: calc(
-    var(--h1) + 2rem + 24vh + var(--progress) * var(--vh, 1vh) * 5
-  ) !important;
+  margin-top: calc(var(--h1) + 2rem + 24vh) !important;
   transform: none !important;
   translate: none !important;
 }
@@ -1431,9 +1446,7 @@ label {
   .c-welcome .-w .cta[data-v-6c6a6d99] {
     --left: 1 !important;
     --width: 12 !important;
-    margin-top: calc(
-      var(--h1) + 2rem + 26vh + var(--progress) * var(--vh, 1vh) * 5
-    ) !important;
+    margin-top: calc(var(--h1) + 2rem + 26vh) !important;
   }
 }
 
@@ -1681,20 +1694,21 @@ label {
   aspect-ratio: 1557 / 1318;
   transform-style: preserve-3d;
   perspective: 1200px;
+  pointer-events: none;
+  /*
+   * Holo foil — prism texture + tilt vars (hero decorative only).
+   * Rainbow comes from prism.jpg; --mx/--my and --holo-angle pan the foil.
+   */
   transform:
-    translate3d(calc(var(--mx, 0) * -24px), calc(var(--my, 0) * -18px), 0)
-    rotateX(calc(var(--my, 0) * -3.4deg))
-    rotateY(calc(var(--mx, 0) * 3.6deg));
-  will-change: transform;
+    translate3d(calc(var(--mx, 0) * -18px), calc(var(--my, 0) * -14px), 0)
+    rotateX(calc(var(--my, 0) * -2.6deg))
+    rotateY(calc(var(--mx, 0) * 2.8deg));
 }
 
 .aimy-type-logo__text,
 .aimy-type-logo__shadow {
   position: absolute;
   inset: 0;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
   -webkit-mask-size: contain;
   mask-size: contain;
   -webkit-mask-repeat: no-repeat;
@@ -1710,46 +1724,71 @@ label {
   -webkit-mask-image: url("../assets/polykroma/logo/text.svg");
   mask-image: url("../assets/polykroma/logo/text.svg");
   transform: translateZ(6px);
-  filter: drop-shadow(0 0 24px color-mix(in srgb, var(--pk-soft) 32%, transparent));
+  filter: drop-shadow(0 0 20px color-mix(in srgb, var(--pk-soft) 26%, transparent));
 }
 
-/* Shadow layer — holographic foil sheen that follows the "light" */
+/*
+ * Shadow blob — prism foil masked to shadow.svg.
+ * Texture pans with tilt (--mx/--my) and viewing angle (--holo-angle).
+ */
 .aimy-type-logo__shadow {
-  background:
-    /* Liquid-Glass-style rim light: bright edge facing the cursor/light source */
-    radial-gradient(
-      ellipse 130% 130% at calc(50% - var(--mx, 0) * 38%) calc(50% - var(--my, 0) * 38%),
-      transparent 44%,
-      color-mix(in srgb, var(--step-01) 42%, transparent) 62%,
-      transparent 78%
-    ),
-    /* fractal noise glitter texture */
-    url("../assets/polykroma/logo/noise.svg"),
-    /* bright specular glint at the cursor */
-    radial-gradient(
-      circle at calc(50% + var(--mx, 0) * 35%) calc(50% + var(--my, 0) * 35%),
-      color-mix(in srgb, var(--step-01) 55%, transparent) 0%,
-      color-mix(in srgb, var(--step-01) 18%, transparent) 18%,
-      transparent 46%
-    ),
-    /* tilt-based soft rainbow using the Anemoia palette: light → pink → magenta → violet */
-    linear-gradient(
-      calc(var(--logo-light, 0deg)),
-      color-mix(in srgb, var(--step-01) 86%, transparent) 0%,
-      color-mix(in srgb, var(--step-02) 82%, transparent) 14%,
-      color-mix(in srgb, var(--step-03) 80%, transparent) 30%,
-      color-mix(in srgb, var(--pk-soft) 78%, transparent) 48%,
-      color-mix(in srgb, var(--pk-primary) 78%, transparent) 66%,
-      color-mix(in srgb, var(--step-06) 80%, transparent) 82%,
-      color-mix(in srgb, var(--step-07) 86%, transparent) 100%
-    );
-  background-size: 100% 100%, 160px 160px, 100% 100%, 100% 100%;
-  background-blend-mode: screen, overlay, screen, normal;
+  background-color: var(--pk-soft);
+  background-image: url("../assets/polykroma/logo/prism.jpg?v=1");
+  background-size: 255% 255%;
+  background-position:
+    calc(50% + var(--mx, 0) * 32% + cos(calc(var(--holo-angle, 135) * 1deg)) * 5%)
+    calc(50% + var(--my, 0) * 32% + sin(calc(var(--holo-angle, 135) * 1deg)) * 5%);
+  background-repeat: no-repeat;
   -webkit-mask-image: url("../assets/polykroma/logo/shadow.svg");
   mask-image: url("../assets/polykroma/logo/shadow.svg");
   transform: translateZ(-6px);
-  filter: contrast(1.08) brightness(1.08) saturate(1.2);
+  transition: background-position 0.45s ease-out;
   opacity: 0.76;
+}
+
+.aimy-type-logo__shadow::before {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  background-image: url("../assets/polykroma/logo/prism.jpg?v=1");
+  background-size: 190% 190%;
+  background-position:
+    calc(50% - var(--mx, 0) * 22% + cos(calc(var(--holo-angle, 135) * 1deg + 90deg)) * 4%)
+    calc(50% - var(--my, 0) * 22% + sin(calc(var(--holo-angle, 135) * 1deg + 90deg)) * 4%);
+  background-repeat: no-repeat;
+  -webkit-mask-image: url("../assets/polykroma/logo/shadow.svg");
+  mask-image: url("../assets/polykroma/logo/shadow.svg");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  opacity: 0.42;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  transition: background-position 0.45s ease-out;
+}
+
+.aimy-type-logo__shadow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("../assets/polykroma/logo/noise.svg?v=glitter-2");
+  background-size: 72px 72px;
+  background-repeat: repeat;
+  background-position: center;
+  -webkit-mask-image: url("../assets/polykroma/logo/shadow.svg");
+  mask-image: url("../assets/polykroma/logo/shadow.svg");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  opacity: 0.18;
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 /* Keep the front character art in front and give it depth too */
@@ -1757,7 +1796,7 @@ label {
 .c-welcome .-w .stone[data-v-6c6a6d99] {
   transform:
     translate3d(calc(var(--mx, 0) * -7px), calc(var(--my, 0) * -5px + var(--vh, 1vh) * -2), 0)
-    scale(calc((1 - var(--progress, 0) * 0.5) * 0.82))
+    scale(0.82)
     rotateX(calc(var(--my, 0) * -1.8deg))
     rotateY(calc(var(--mx, 0) * 1.8deg))
     translateZ(70px) !important;
@@ -1766,6 +1805,14 @@ label {
 @media (prefers-reduced-motion: reduce) {
   .aimy-type-logo__stage {
     transform: none !important;
+  }
+
+  .aimy-type-logo__shadow {
+    transition: none;
+  }
+
+  .aimy-type-logo__shadow::before {
+    transition: none;
   }
 
   .c-welcome .-w .stone,

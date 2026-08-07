@@ -17,11 +17,11 @@
   /*
    * Anemoia 8-step palette — single source of truth for the whole site.
    */
-  --step-01: #FEF0FE;  /* Soft Blush Glow */
+  --step-01: #F2F0F8;  /* Mist Lavender — neutral page ground */
   --step-02: #FDC3FD;  /* Lavender Bubblegum */
-  --step-03: #F09EFB;  /* Radiant Orchid */
+  --step-03: #F09EFB;  /* Pastel Rose Orchid */
   --step-04: #F089FE;  /* Electric Blossom */
-  --step-05: #E43EFF;  /* Ultra Magenta - Primary Brand Accent */
+  --step-05: #E43EFF;  /* Ultra Magenta */
   --step-06: #B24BFB;  /* Neon Violet */
   --step-07: #8E14CE;  /* Velvet Purple */
   --step-08: #311633;  /* Midnight Eclipse */
@@ -35,11 +35,10 @@
   --pk-heading: var(--step-08);
 
   /*
-   * Muted pastel-lavender accents — professional, less saturated than the raw
-   * magenta step. Derived from step-07 (velvet purple) + step-01 (blush white).
+   * Vibrant pastel rose-violet accents — magenta-violet signal, not grey-blue.
    */
-  --pk-primary: color-mix(in srgb, var(--step-07) 68%, var(--step-01));
-  --pk-accent: color-mix(in srgb, var(--step-06) 58%, var(--step-01));
+  --pk-primary: color-mix(in srgb, var(--step-06) 68%, var(--step-01));
+  --pk-accent: color-mix(in srgb, var(--step-05) 58%, var(--step-01));
   --pk-soft: color-mix(in srgb, var(--step-04) 55%, var(--step-01));
   --pk-cta-bg: var(--pk-primary);
   --pk-cta-text: var(--step-08);
@@ -79,10 +78,24 @@
   --aimy-z: 2147483000;
   --aimy-font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
   --aimy-nav-font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
-  --aimy-r1: var(--pk-soft);
-  --aimy-r2: var(--step-03);
-  --aimy-r3: var(--pk-accent);
-  --aimy-r4: var(--step-06);
+  /*
+   * Rainbow hover cycle — intentional hue diversity outside the 8-step lavender scale.
+   * Restored from legacy ui.css (pink · butter · teal · lilac).
+   */
+  --rainbow-1: #ff7eb6;
+  --rainbow-2: #ffeab0;
+  --rainbow-3: #2dd4bf;
+  --rainbow-4: #cfa2ff;
+  --rainbow-on-fill: var(--step-08);
+  --rainbow-card-fill-mix: 30%;
+  --rainbow-logo-light-1: #00cfe8;
+  --rainbow-logo-light-2: #ff5cad;
+  --rainbow-logo-light-3: #84e018;
+  --rainbow-logo-light-4: #ff9f1c;
+  --aimy-r1: var(--rainbow-1);
+  --aimy-r2: var(--rainbow-2);
+  --aimy-r3: var(--rainbow-3);
+  --aimy-r4: var(--rainbow-4);
 
   /* Polykroma aliases — pages may set either family */
   --polykroma-primary: var(--aimy-primary);
@@ -95,41 +108,54 @@
    * Overlay menu — Soft pastel wash + Newpixel.
    * Pages may override any of these.
    */
-  --polykroma-menu-bg: color-mix(in srgb, var(--step-02) 70%, var(--step-01));
+  --polykroma-menu-bg: color-mix(in srgb, var(--step-02) 42%, var(--step-01));
   --polykroma-menu-ink: var(--step-07);
-  --polykroma-menu-ink-soft: color-mix(in srgb, var(--step-07) 60%, var(--step-01));
-  --polykroma-menu-muted: color-mix(in srgb, var(--step-07) 65%, var(--step-08));
+  --polykroma-menu-ink-soft: color-mix(in srgb, var(--step-06) 52%, var(--step-01));
+  --polykroma-menu-muted: color-mix(in srgb, var(--step-06) 58%, var(--step-08));
   --polykroma-menu-rule: color-mix(in srgb, var(--step-07) 22%, transparent);
   --polykroma-menu-on-block: var(--step-01);
   --polykroma-menu-block: var(--polykroma-menu-ink);
   --polykroma-menu-font: "Newpixel", "Courier New", monospace;
 
   /*
+   * Veil wash strength — lower = more page shows through the menu.
+   */
+  --polykroma-menu-veil-op-1: 68%;
+  --polykroma-menu-veil-op-2: 52%;
+  --polykroma-menu-veil-op-3: 34%;
+  --polykroma-menu-veil-op-4: 10%;
+
+  /*
    * Menu link geometry — locked in px so home html{font-size:20–28px}
    * (and any other rem root) cannot drift Polykroma menu type.
    */
-  --polykroma-menu-link-size: clamp(38px, 7.6vw, 86px);
-  --polykroma-menu-link-size-sm: clamp(40px, 13.5vw, 66px);
+  --polykroma-menu-link-size: clamp(34px, 6.8vw, 76px);
+  --polykroma-menu-link-size-sm: clamp(36px, 12.5vw, 60px);
+  --polykroma-menu-link-weight: bold;
   --polykroma-menu-meta-size: clamp(17px, 2.4vw, 25px);
   --polykroma-menu-meta-size-sm: clamp(18px, 5vw, 24px);
   --polykroma-menu-social-size: clamp(22px, 2.6vw, 28px);
   --polykroma-menu-social-size-sm: clamp(26px, 7.2vw, 32px);
-  --polykroma-menu-link-tracking: 0.06em;
+  --polykroma-menu-link-tracking: 0.035em;
   --polykroma-menu-link-leading: 0.95;
   --polykroma-menu-meta-tracking: 0.12em;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --pk-bg: var(--step-08);
-    --pk-surface: var(--step-07);
-    --pk-hover: var(--step-06);
-    --pk-border: color-mix(in srgb, var(--step-06) 30%, transparent);
+    /*
+     * Off-black grounds — violet whisper on near-black, not purple wash.
+     * Relative oklch keeps hue from step-08 while crushing lightness/chroma.
+     */
+    --pk-bg: oklch(from var(--step-08) 0.105 0.014 h);
+    --pk-surface: oklch(from var(--step-08) 0.148 0.02 h);
+    --pk-hover: oklch(from var(--step-08) 0.188 0.026 h);
+    --pk-border: color-mix(in srgb, var(--step-06) 22%, transparent);
     --pk-text: var(--step-02);
     --pk-heading: var(--step-01);
-    --pk-primary: color-mix(in srgb, var(--step-07) 62%, var(--step-02));
-    --pk-accent: color-mix(in srgb, var(--step-06) 65%, var(--step-02));
-    --pk-soft: color-mix(in srgb, var(--step-04) 45%, var(--step-02));
+    --pk-primary: color-mix(in srgb, var(--step-06) 62%, var(--step-02));
+    --pk-accent: color-mix(in srgb, var(--step-05) 68%, var(--step-02));
+    --pk-soft: color-mix(in srgb, var(--step-04) 48%, var(--step-02));
     --pk-cta-bg: var(--pk-primary);
     --pk-cta-text: var(--step-01);
 
@@ -143,13 +169,32 @@
     --aimy-menu-coin-open: var(--pk-accent);
     --aimy-chrome-ink: var(--aimy-primary);
 
-    --polykroma-menu-bg: color-mix(in srgb, var(--step-07) 80%, var(--step-08));
+    --rainbow-1: #ff2d95;
+    --rainbow-2: #fff044;
+    --rainbow-3: #00ffd9;
+    --rainbow-4: #c77dff;
+    --rainbow-on-fill: var(--step-01);
+    --rainbow-card-fill-mix: 38%;
+    --rainbow-logo-light-1: #00ffff;
+    --rainbow-logo-light-2: #ff3dff;
+    --rainbow-logo-light-3: #ccff00;
+    --rainbow-logo-light-4: #ff7a18;
+    --aimy-r1: var(--rainbow-1);
+    --aimy-r2: var(--rainbow-2);
+    --aimy-r3: var(--rainbow-3);
+    --aimy-r4: var(--rainbow-4);
+
+    --polykroma-menu-bg: color-mix(in srgb, var(--pk-bg) 88%, var(--pk-soft) 12%);
     --polykroma-menu-ink: var(--step-02);
-    --polykroma-menu-ink-soft: color-mix(in srgb, var(--step-02) 70%, var(--step-08));
-    --polykroma-menu-muted: color-mix(in srgb, var(--step-02) 55%, var(--step-08));
-    --polykroma-menu-rule: color-mix(in srgb, var(--step-02) 22%, transparent);
-    --polykroma-menu-on-block: var(--step-08);
+    --polykroma-menu-ink-soft: color-mix(in srgb, var(--step-02) 70%, var(--pk-bg));
+    --polykroma-menu-muted: color-mix(in srgb, var(--step-02) 55%, var(--pk-bg));
+    --polykroma-menu-rule: color-mix(in srgb, var(--step-02) 18%, transparent);
+    --polykroma-menu-on-block: var(--pk-bg);
     --polykroma-menu-block: var(--polykroma-menu-ink);
+    --polykroma-menu-veil-op-1: 58%;
+    --polykroma-menu-veil-op-2: 44%;
+    --polykroma-menu-veil-op-3: 26%;
+    --polykroma-menu-veil-op-4: 8%;
   }
 }
 
@@ -416,6 +461,82 @@ html body .site-header[data-aimy-chrome]::before {
   50% { fill: var(--aimy-r3); }
   75% { fill: var(--aimy-r4); }
   100% { fill: var(--aimy-r1); }
+}
+
+/* Sitewide rainbow hover utilities (legacy ui.css names) */
+@keyframes rainbow-shift {
+  0% { color: var(--rainbow-1); }
+  25% { color: var(--rainbow-2); }
+  50% { color: var(--rainbow-3); }
+  75% { color: var(--rainbow-4); }
+  100% { color: var(--rainbow-1); }
+}
+
+@keyframes rainbow-bg-shift {
+  0% {
+    background-color: var(--rainbow-1);
+    border-color: var(--rainbow-1);
+    color: var(--rainbow-on-fill);
+  }
+  25% {
+    background-color: var(--rainbow-2);
+    border-color: var(--rainbow-2);
+    color: var(--rainbow-on-fill);
+  }
+  50% {
+    background-color: var(--rainbow-3);
+    border-color: var(--rainbow-3);
+    color: var(--rainbow-on-fill);
+  }
+  75% {
+    background-color: var(--rainbow-4);
+    border-color: var(--rainbow-4);
+    color: var(--rainbow-on-fill);
+  }
+  100% {
+    background-color: var(--rainbow-1);
+    border-color: var(--rainbow-1);
+    color: var(--rainbow-on-fill);
+  }
+}
+
+@keyframes rainbow-border-shift {
+  0% { border-color: var(--rainbow-1); }
+  25% { border-color: var(--rainbow-2); }
+  50% { border-color: var(--rainbow-3); }
+  75% { border-color: var(--rainbow-4); }
+  100% { border-color: var(--rainbow-1); }
+}
+
+@keyframes rainbow-logo-light {
+  0% { fill: var(--rainbow-logo-light-1); }
+  25% { fill: var(--rainbow-logo-light-2); }
+  50% { fill: var(--rainbow-logo-light-3); }
+  75% { fill: var(--rainbow-logo-light-4); }
+  100% { fill: var(--rainbow-logo-light-1); }
+}
+
+@keyframes rainbow-card-fill {
+  0% {
+    background-color: color-mix(in srgb, var(--rainbow-1) var(--rainbow-card-fill-mix, 30%), transparent);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--rainbow-1) 20%, transparent);
+  }
+  25% {
+    background-color: color-mix(in srgb, var(--rainbow-2) var(--rainbow-card-fill-mix, 30%), transparent);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--rainbow-2) 20%, transparent);
+  }
+  50% {
+    background-color: color-mix(in srgb, var(--rainbow-3) var(--rainbow-card-fill-mix, 30%), transparent);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--rainbow-3) 20%, transparent);
+  }
+  75% {
+    background-color: color-mix(in srgb, var(--rainbow-4) var(--rainbow-card-fill-mix, 30%), transparent);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--rainbow-4) 20%, transparent);
+  }
+  100% {
+    background-color: color-mix(in srgb, var(--rainbow-1) var(--rainbow-card-fill-mix, 30%), transparent);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--rainbow-1) 20%, transparent);
+  }
 }
 
 /*
@@ -794,11 +915,11 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
 
 @media (prefers-color-scheme: dark) {
   .pk-menu-root {
-    --polykroma-menu-bg: color-mix(in srgb, var(--step-08) 82%, var(--aimy-primary, var(--pk-soft)));
+    --polykroma-menu-bg: color-mix(in srgb, var(--pk-bg) 90%, var(--pk-soft) 10%);
     --polykroma-menu-ink: var(--step-01);
-    --polykroma-menu-ink-soft: color-mix(in srgb, var(--step-01) 72%, var(--aimy-primary, var(--pk-soft)));
+    --polykroma-menu-ink-soft: color-mix(in srgb, var(--step-01) 72%, var(--pk-soft));
     --polykroma-menu-muted: color-mix(in srgb, var(--step-01) 58%, transparent);
-    --polykroma-menu-on-block: var(--step-08);
+    --polykroma-menu-on-block: var(--pk-bg);
     --polykroma-menu-block: var(--aimy-primary, var(--pk-soft));
   }
 }
@@ -1017,10 +1138,10 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   transform: translate3d(-100%, 0, 0);
   background: linear-gradient(
     90deg,
-    color-mix(in srgb, var(--pk-menu-bg) 92%, transparent) 0%,
-    color-mix(in srgb, var(--pk-menu-bg) 78%, transparent) 22%,
-    color-mix(in srgb, var(--pk-menu-bg) 52%, transparent) 48%,
-    color-mix(in srgb, var(--pk-menu-bg) 18%, transparent) 72%,
+    color-mix(in srgb, var(--pk-menu-bg) var(--polykroma-menu-veil-op-1, 68%), transparent) 0%,
+    color-mix(in srgb, var(--pk-menu-bg) var(--polykroma-menu-veil-op-2, 52%), transparent) 22%,
+    color-mix(in srgb, var(--pk-menu-bg) var(--polykroma-menu-veil-op-3, 34%), transparent) 48%,
+    color-mix(in srgb, var(--pk-menu-bg) var(--polykroma-menu-veil-op-4, 10%), transparent) 72%,
     transparent 100%
   );
 }
@@ -1122,7 +1243,7 @@ html body .pk-menu-root .pk-menu-link,
   text-decoration: none !important;
   font-family: var(--polykroma-menu-font);
   font-style: normal;
-  font-weight: normal;
+  font-weight: var(--polykroma-menu-link-weight, bold);
   font-size: var(--polykroma-menu-link-size) !important;
   line-height: var(--polykroma-menu-link-leading) !important;
   letter-spacing: var(--polykroma-menu-link-tracking) !important;
@@ -1172,6 +1293,9 @@ html body .pk-menu-root .pk-menu-link,
   z-index: 1;
   display: inline-block;
   white-space: nowrap;
+  text-shadow:
+    0.035em 0 0 currentColor,
+    -0.035em 0 0 currentColor;
 }
 
 .pk-menu-link__block {
@@ -1308,10 +1432,10 @@ html body .pk-menu-root .pk-menu-link.is-selected .pk-menu-link__block,
 
 @keyframes pk-block-rainbow {
   0%,
-  100% { background-color: var(--aimy-r1, var(--step-03)); }
-  25% { background-color: var(--aimy-r2, var(--step-02)); }
-  50% { background-color: var(--aimy-r3, var(--step-03)); }
-  75% { background-color: var(--aimy-r4, var(--step-03)); }
+  100% { background-color: var(--rainbow-1); }
+  25% { background-color: var(--rainbow-2); }
+  50% { background-color: var(--rainbow-3); }
+  75% { background-color: var(--rainbow-4); }
 }
 
 /* Current page — wipe parked open until hovered / selected */
@@ -1645,7 +1769,7 @@ html.pk-menu-open body {
 
 .aimy-pt__chroma--magenta {
   transform: translate(3px, -1px);
-  filter: grayscale(1) sepia(1) saturate(12) hue-rotate(295deg) brightness(1.1);
+  filter: grayscale(1) sepia(1) saturate(12) hue-rotate(265deg) brightness(1.1);
   mix-blend-mode: multiply;
 }
 
@@ -1698,7 +1822,7 @@ html.pk-menu-open body {
 }
 
 .aimy-pt.is-on-light .aimy-pt__chroma--magenta {
-  filter: grayscale(1) sepia(1) saturate(10) hue-rotate(310deg) brightness(0.9);
+  filter: grayscale(1) sepia(1) saturate(10) hue-rotate(270deg) brightness(0.9);
   mix-blend-mode: multiply;
   opacity: 0.45;
 }

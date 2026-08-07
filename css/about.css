@@ -1,11 +1,29 @@
 /**
  * About — scroll language (sky → paper curtain → sticky hero → deck)
  */
+@import url("./about-sheet.css?v=about-hud-stage-4");
 
 @font-face {
   font-family: "Bold Block";
   src: url("../fonts/Bold Block.ttf") format("truetype");
   font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Voyage";
+  src: url("../fonts/Voyage-Regular.woff2") format("woff2"),
+       url("../fonts/Voyage-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Athemi";
+  src: url("../fonts/athemi.woff") format("woff");
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
@@ -95,6 +113,10 @@ html.lenis-smooth {
 
 .about {
   --menu-reveal: 0;
+  --hero-identity: 0;
+  --hud-pin: 0;
+  --hud-stage-boost: 0.34;
+  --hero-mark-y: 0px;
   --curtain-y: 92vh;
   --mx: 0;
   --my: 0;
@@ -177,13 +199,13 @@ html.lenis-smooth {
 }
 
 /*
- * Fixed hero mark — behind polaroid at rest;
- * rises above the paper curtain once scrolling starts (.is-above-curtain).
+ * Fixed hero mark — behind polaroid at rest; stays below the paper curtain
+ * so it gets covered by the divider edge on scroll (never pops in front).
  */
 .about-hero {
   position: fixed;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
   display: grid;
   place-items: center;
   padding-top: 0;
@@ -191,10 +213,6 @@ html.lenis-smooth {
   transform: translate3d(0, var(--scene-y, 0px), 0);
   transform-style: preserve-3d;
   perspective: 1100px;
-}
-
-.about-hero.is-above-curtain {
-  z-index: 4;
 }
 
 .about-hero__name {
@@ -211,7 +229,11 @@ html.lenis-smooth {
   pointer-events: none;
   will-change: transform;
   transform:
-    translate3d(calc(-50% + var(--mx) * -10px), calc(-50% + var(--my) * -6px), 0)
+    translate3d(
+      calc(-50% + var(--mx) * -10px),
+      calc(-50% + var(--my) * -6px + var(--hero-mark-y, 0px)),
+      0
+    )
     rotateX(calc(var(--my) * -1.2deg))
     rotateY(calc(var(--mx) * 1.2deg));
 }
@@ -225,153 +247,186 @@ html.lenis-smooth {
   filter: none;
 }
 
-/* One paper note on the curtain */
-.about-deck {
-  position: relative;
-  z-index: 6;
-  width: min(46rem, 90vw);
-  margin: 155vh auto 0;
-  padding-bottom: 22vh;
-  opacity: var(--menu-reveal);
-  overflow: visible;
-  perspective: 1100px;
-  perspective-origin: 50% 35%;
-}
-
-.about-card.about-paper {
-  --note-x: 0px;
-  --note-y: 0px;
-  --note-rot: 0deg;
-  --note-rx: 0deg;
-  --note-ry: 0deg;
-  position: relative;
-  display: grid;
-  gap: clamp(1.75rem, 3.5vh, 2.6rem);
-  padding:
-    clamp(2rem, 4.5vw, 3rem)
-    clamp(1.5rem, 4vw, 2.75rem)
-    clamp(2.2rem, 5vw, 3.2rem);
-  overflow: visible;
-  color: var(--ink);
-  background:
-    linear-gradient(165deg, var(--step-01) 0%, var(--paper) 42%, var(--step-01) 100%);
-  /* Soft torn-sheet silhouette — one piece, not three */
-  clip-path: polygon(
-    1.2% 0.8%,
-    98.6% 0.2%,
-    99.8% 97.4%,
-    0.4% 99.6%
+.about-hud-stack {
+  position: fixed;
+  z-index: 8;
+  width: min(90vw, 40rem);
+  pointer-events: none;
+  opacity: var(--hero-identity);
+  left: calc(
+    (1 - var(--hud-pin)) * 50% + var(--hud-pin) * max(var(--aimy-chrome-left, 1rem), env(safe-area-inset-left, 0px))
   );
-  box-shadow:
-    0 1.1rem 2.4rem color-mix(in srgb, var(--step-08) 10%, transparent),
-    0 0.2rem 0.6rem color-mix(in srgb, var(--step-08) 6%, transparent);
-  transform-origin: 50% 40%;
-  will-change: transform;
-  transform:
-    translate3d(var(--note-x), var(--note-y), 0)
-    rotateX(var(--note-rx))
-    rotateY(var(--note-ry))
-    rotate(calc(-1.4deg + var(--note-rot)));
+  top: calc(
+    (1 - var(--hud-pin)) * 46% + var(--hud-pin) * (var(--aimy-chrome-top) + var(--aimy-brand-size) + 0.15rem)
+  );
+  transform: translate3d(
+      calc((1 - var(--hud-pin)) * -50%),
+      calc((1 - var(--hud-pin)) * -50%),
+      0
+    )
+    scale(calc(1 + var(--hud-stage-boost) * (1 - var(--hud-pin))));
+  transform-origin: calc(50% * (1 - var(--hud-pin))) calc(50% * (1 - var(--hud-pin)));
+  will-change: transform, opacity, left, top;
 }
 
-.about-block {
-  display: grid;
-  gap: 0.85rem;
+@media (min-width: 900px) {
+  .about {
+    --hud-stage-boost: 0.56;
+  }
+
+  .about-hud-stack {
+    width: min(94vw, 52rem);
+    top: calc(
+      (1 - var(--hud-pin)) * 46% + var(--hud-pin) * var(--aimy-chrome-top)
+    );
+  }
+
+  .about-hero__identity {
+    margin-top: clamp(0.45rem, 0.9vh, 0.7rem);
+  }
 }
 
-.about-block + .about-block {
-  padding-top: clamp(1.25rem, 2.5vh, 1.8rem);
-  border-top: 1px solid color-mix(in srgb, var(--step-08) 12%, transparent);
-}
-
-.about-kicker,
-.about-title,
-.about-lead,
-.about-card p,
-.about-likes,
-.about-closing {
+.about-lifebar {
   position: relative;
-  z-index: 1;
+  width: 100%;
 }
 
-.about-kicker {
-  margin: 0;
-  font-family: "Arial Black", Impact, sans-serif;
-  font-size: 0.68rem;
-  font-weight: 900;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  opacity: 0.72;
+.about-hero__identity {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: clamp(0.65rem, 1.4vh, 0.95rem);
+  padding-left: 0.12rem;
+  color: var(--ink);
 }
 
-.about-title {
+.about-hero__identity-name {
   margin: 0;
   font-family: "Arial Black", Impact, sans-serif;
-  font-size: clamp(1.85rem, 4.5vw, 2.8rem);
+  font-size: clamp(1.35rem, 2.8vw, 2rem);
   font-weight: 900;
-  line-height: 0.95;
+  line-height: 1.05;
   letter-spacing: -0.02em;
   text-transform: uppercase;
 }
 
-.about-lead,
-.about-card p {
+.about-hero__identity-handle {
   margin: 0;
-  font-size: clamp(1rem, 1.5vw, 1.15rem);
-  line-height: 1.55;
-  font-weight: 600;
-  text-wrap: pretty;
-}
-
-.about-likes {
-  list-style: none;
-  margin: 0.35rem 0 0;
-  padding: 0;
-  display: grid;
-  gap: 1rem;
-}
-
-.about-likes li {
-  display: grid;
-  gap: 0.25rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid color-mix(in srgb, var(--step-08) 10%, transparent);
-}
-
-.about-likes__label {
   font-family: "Arial Black", Impact, sans-serif;
-  font-size: 0.72rem;
+  font-size: clamp(0.95rem, 1.6vw, 1.2rem);
   font-weight: 900;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
-.about-likes__text {
-  font-size: clamp(0.95rem, 1.4vw, 1.08rem);
-  line-height: 1.45;
-  font-weight: 600;
-}
-
-.about-closing {
-  font-size: clamp(1.2rem, 2.2vw, 1.55rem) !important;
-  font-family: "Arial Black", Impact, sans-serif;
-  font-weight: 900 !important;
-  line-height: 1.25 !important;
-  text-transform: uppercase;
-}
-
-.about-closing a {
+.about-hero__identity-handle a {
   color: var(--violet-deep);
-  text-decoration: underline;
-  text-decoration-thickness: 3px;
-  text-underline-offset: 0.15em;
+  text-decoration: none;
+  pointer-events: auto;
 }
 
-.about-closing a:hover,
-.about-closing a:focus-visible {
-  color: var(--step-01);
-  background: var(--violet-deep);
+.about-hero__identity-handle a:hover,
+.about-hero__identity-handle a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.12em;
   outline: none;
+}
+
+.about-lifebar__frame {
+  position: relative;
+  filter: drop-shadow(0 0.45rem 0.95rem color-mix(in srgb, var(--step-08) 16%, transparent));
+}
+
+.about-lifebar__pixel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 933 / 238;
+}
+
+.about-lifebar__pixel-canvas {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+.about-lifebar__sharp {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.about-hud-stack.is-pixel-reveal:not(.is-pixel-done) .about-lifebar__pixel-canvas {
+  display: block;
+}
+
+.about-hud-stack.is-pixel-done .about-lifebar__sharp {
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+}
+
+.about-lifebar__hud {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+.about-lifebar__hp {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.about-lifebar__hp-base {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+
+.about-lifebar__hp-rainbow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    hsl(0 95% 58%) 0%,
+    hsl(28 98% 56%) 11%,
+    hsl(52 100% 54%) 22%,
+    hsl(88 82% 50%) 33%,
+    hsl(145 78% 47%) 44%,
+    hsl(195 94% 55%) 55%,
+    hsl(240 90% 62%) 66%,
+    hsl(285 88% 61%) 77%,
+    hsl(330 94% 59%) 88%,
+    hsl(0 95% 58%) 100%
+  );
+  background-size: 320% 100%;
+  opacity: 0.4;
+  animation: about-lifebar-rainbow 9.5s linear infinite;
+  -webkit-mask-image: url("../assets/polykroma/hp.svg");
+  mask-image: url("../assets/polykroma/hp.svg");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+@keyframes about-lifebar-rainbow {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 320% 50%;
+  }
 }
 
 .about-hint {
@@ -403,9 +458,63 @@ html.lenis-smooth {
     max-height: min(88vh, 36rem);
   }
 
-  .about-deck {
-    margin-top: 145vh;
-    width: min(92vw, 40rem);
+  .about-hud-stack {
+    width: 80vw;
+  }
+
+  .about {
+    --hud-stage-boost: 0;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html:has(.about-page-body) {
+    background: var(--pk-bg);
+  }
+
+  .about-page-body {
+    --paper: var(--pk-bg);
+    --ink: var(--step-02);
+    --pink: color-mix(in srgb, var(--step-06) 38%, var(--pk-bg));
+    --peach: var(--pk-surface);
+    --blue: color-mix(in srgb, var(--step-06) 28%, var(--pk-bg));
+    --sky: var(--pk-bg);
+    --violet-soft: var(--pk-surface);
+    --violet-deep: var(--step-03);
+    --aimy-chrome-ink: var(--pk-primary);
+    --aimy-primary: var(--pk-primary);
+    --aimy-secondary: var(--step-02);
+    --aimy-tertiary: var(--step-08);
+    --aimy-accent: var(--pk-accent);
+    --aimy-menu-coin: var(--pk-primary);
+    --aimy-menu-coin-open: var(--pk-accent);
+    --aimy-r1: color-mix(in srgb, var(--step-07) 70%, var(--step-08));
+    --aimy-r2: color-mix(in srgb, var(--step-06) 45%, var(--step-08));
+    --aimy-r3: color-mix(in srgb, var(--step-07) 55%, var(--step-08));
+    --aimy-r4: color-mix(in srgb, var(--step-06) 35%, var(--step-08));
+    color: var(--ink);
+    background: var(--sky);
+  }
+
+  .about-page-body .site-header[data-aimy-chrome] {
+    --aimy-chrome-ink: var(--pk-primary);
+    --aimy-primary: var(--pk-primary);
+  }
+
+  .about {
+    background: var(--sky);
+  }
+
+  .about-hero__mark {
+    filter: brightness(1.08) saturate(1.05);
+  }
+
+  .about-hero__identity-handle a {
+    color: var(--step-03);
+  }
+
+  .about-hint {
+    color: color-mix(in srgb, var(--step-02) 42%, transparent);
   }
 }
 
@@ -431,13 +540,42 @@ html.lenis-smooth {
   }
 
   .about-hero__name,
-  .about-deck {
+  .about-sheet {
     opacity: 1;
   }
 
-  .about-deck {
+  .about-hud-stack {
+    --hud-pin: 1;
+    opacity: 1;
+    transform: none;
+  }
+
+  .about-hero__identity {
+    display: grid;
+  }
+
+  .about-lifebar__sharp {
+    position: relative;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .about-lifebar__pixel-canvas {
+    display: none !important;
+  }
+
+  .about-lifebar__fill,
+  .about-lifebar__hp-rainbow {
+    animation: none;
+    background-position: 50% 50%;
+  }
+
+  .about-lifebar__frame {
+    filter: none;
+  }
+
+  .about-sheet {
     margin-top: 0;
-    padding: 2rem 0 4rem;
   }
 
   .about-hint {

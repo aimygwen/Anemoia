@@ -465,7 +465,7 @@
 
 @media (prefers-color-scheme: dark) {
     .lowpoly-page-body {
-        --bg: var(--step-08);
+        --bg: var(--pk-bg);
         --primary: var(--step-02);
         --accent: var(--step-02);
         --accent-warm: var(--step-03);

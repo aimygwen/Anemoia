@@ -1,0 +1,527 @@
+/**
+ * About editorial sheet — insights layout mirror (scoped to .about-sheet)
+ * Loaded from about.css via @import for maintainability.
+ */
+
+.about-sheet {
+  --ins-paper: var(--paper);
+  --ins-ink: var(--ink);
+  --ins-muted: color-mix(in srgb, var(--ink) 55%, transparent);
+  --ins-display: "Athemi", "Bodoni Moda", "Voyage", "Instrument Serif", Georgia, serif;
+  --ins-serif: "Instrument Serif", "Voyage", Georgia, serif;
+  --ins-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+
+  position: relative;
+  z-index: 6;
+  width: 100%;
+  margin: 155vh 0 0;
+  opacity: var(--menu-reveal);
+  overflow: visible;
+  font-family: var(--ins-sans);
+  color: var(--ins-ink);
+}
+
+.about-sheet .ins-outline {
+  color: transparent;
+  -webkit-text-stroke: 0.8px var(--ins-ink);
+  text-stroke: 0.8px var(--ins-ink);
+  paint-order: stroke fill;
+}
+
+.about-sheet .ins-fill {
+  color: var(--ins-ink);
+  -webkit-text-stroke: 0;
+}
+
+.about-sheet .ins-intro {
+  position: relative;
+  padding: clamp(4rem, 10vh, 8rem) clamp(1.25rem, 5vw, 4rem) clamp(3rem, 8vh, 6rem);
+  max-width: 90rem;
+  margin: 0 auto;
+}
+
+.about-sheet .ins-info {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2.5rem, 7vw, 7rem);
+  margin-bottom: clamp(3rem, 8vh, 6rem);
+}
+
+@media (min-width: 900px) {
+  .about-sheet .ins-info {
+    grid-template-columns: minmax(14rem, 0.8fr) minmax(24rem, 1.6fr);
+    align-items: start;
+  }
+}
+
+.about-sheet .ins-label {
+  margin: 0 0 0.75rem;
+  font-family: var(--ins-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ins-muted);
+}
+
+.about-sheet .ins-roles-list {
+  margin: 0;
+  font-family: var(--ins-serif);
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.about-sheet .ins-desc p {
+  margin: 0;
+  max-width: 56ch;
+  font-family: var(--ins-sans);
+  font-size: clamp(0.95rem, 1.35vw, 1.1rem);
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--ins-ink) 88%, transparent);
+}
+
+.about-sheet .ins-quote {
+  margin: 0 auto;
+  max-width: 22ch;
+  padding: 0;
+  border: 0;
+  text-align: center;
+  font-family: var(--ins-serif);
+  font-weight: 500;
+  font-style: normal;
+  font-size: clamp(2.4rem, 7.5vw, 7.25rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  color: var(--ins-ink);
+}
+
+.about-sheet .ins-virg {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(2rem, 5vh, 3.5rem);
+  color: var(--ins-ink);
+  opacity: 0.75;
+}
+
+.about-sheet .ins-cover {
+  position: relative;
+  padding: 0 clamp(1rem, 4vw, 3rem) clamp(3rem, 8vh, 6rem);
+}
+
+.about-sheet .ins-cover-figure {
+  margin: 0;
+  width: 100%;
+  max-height: min(92vh, 58rem);
+  overflow: hidden;
+  border-radius: 0.2rem;
+}
+
+.about-sheet .ins-cover-figure img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: min(70vh, 42rem);
+  object-fit: cover;
+  object-position: center;
+}
+
+.about-sheet .ins-cover-caption {
+  position: absolute;
+  left: clamp(1.5rem, 5vw, 4rem);
+  bottom: clamp(4rem, 10vh, 7.5rem);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-family: var(--ins-serif);
+  font-size: clamp(1.1rem, 2.2vw, 1.65rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ins-paper);
+  text-shadow: 0 1px 12px color-mix(in srgb, var(--step-08) 35%, transparent);
+  mix-blend-mode: difference;
+}
+
+.about-sheet .ins-concept {
+  padding: clamp(2rem, 6vh, 4rem) clamp(1.25rem, 5vw, 4rem) clamp(2rem, 5vh, 3.5rem);
+  max-width: 90rem;
+  margin: 0 auto;
+}
+
+.about-sheet .ins-concept-title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
+  font-family: var(--ins-display);
+  font-weight: 400;
+  font-size: clamp(4.5rem, 15.5vw, 13.5rem);
+  line-height: 0.8;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+}
+
+.about-sheet .ins-concept-cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(3rem, 7vw, 7rem);
+  margin-bottom: clamp(3rem, 7vh, 5rem);
+}
+
+@media (min-width: 860px) {
+  .about-sheet .ins-concept-cols {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.about-sheet .ins-col-label {
+  margin: 0 0 1rem;
+  font-family: var(--ins-serif);
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.about-sheet .ins-col p {
+  margin: 0;
+  max-width: 56ch;
+  font-size: clamp(0.92rem, 1.2vw, 1.05rem);
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--ins-ink) 86%, transparent);
+}
+
+.about-sheet .ins-col p + p {
+  margin-top: 0.85em;
+}
+
+.about-sheet .ins-bts-label {
+  margin: 0;
+  font-family: var(--ins-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ins-muted);
+}
+
+.about-sheet .ins-slider {
+  padding: 0 0 clamp(4rem, 10vh, 7rem);
+}
+
+.about-sheet .ins-slider-track {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: min(78vh, 46rem);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--ins-ink) 6%, var(--ins-paper));
+}
+
+.about-sheet .ins-slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+}
+
+.about-sheet .ins-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.about-sheet .ins-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-sheet .ins-slider-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+  font-family: var(--ins-sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+}
+
+.about-sheet .ins-slider-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--ins-ink);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.35rem 0.6rem;
+  opacity: 0.7;
+  transition: opacity 0.25s ease;
+}
+
+.about-sheet .ins-slider-btn:hover {
+  opacity: 1;
+}
+
+.about-sheet .ins-slider-count {
+  min-width: 5.5ch;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--ins-muted);
+}
+
+.about-sheet .ins-track {
+  padding: clamp(3rem, 8vh, 6rem) clamp(1.25rem, 5vw, 4rem) clamp(4rem, 10vh, 7rem);
+  max-width: 82rem;
+  margin: 0 auto;
+}
+
+.about-sheet .ins-track-title {
+  margin: 0 0 clamp(2.5rem, 6vh, 4.5rem);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.08em;
+  font-family: var(--ins-display);
+  font-weight: 400;
+  font-size: clamp(4rem, 13.5vw, 11.5rem);
+  line-height: 0.82;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+}
+
+.about-sheet .ins-chapters {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3rem, 7vh, 5rem);
+}
+
+.about-sheet .ins-chapter {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.35rem 2rem;
+  padding-top: clamp(1.5rem, 3vh, 2rem);
+  border-top: 1px solid color-mix(in srgb, var(--ins-ink) 14%, transparent);
+}
+
+@media (min-width: 800px) {
+  .about-sheet .ins-chapter {
+    grid-template-columns: 10rem minmax(0, 1fr);
+    grid-template-rows: auto auto;
+  }
+
+  .about-sheet .ins-chapter-num {
+    grid-row: 1 / span 2;
+    align-self: start;
+  }
+
+  .about-sheet .ins-chapter-name,
+  .about-sheet .ins-chapter-body {
+    grid-column: 2;
+  }
+}
+
+.about-sheet .ins-chapter-num {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ins-muted);
+}
+
+.about-sheet .ins-chapter-name {
+  margin: 0;
+  font-family: var(--ins-serif);
+  font-weight: 500;
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+}
+
+.about-sheet .ins-chapter-body {
+  margin: 0.35rem 0 0;
+  max-width: 66ch;
+  font-size: clamp(0.92rem, 1.2vw, 1.05rem);
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--ins-ink) 84%, transparent);
+}
+
+.about-sheet .ins-branding {
+  padding: clamp(3rem, 8vh, 6rem) clamp(1.25rem, 5vw, 4rem) clamp(2rem, 5vh, 3.5rem);
+  max-width: 90rem;
+  margin: 0 auto;
+}
+
+.about-sheet .ins-branding-title {
+  margin: 0 0 clamp(2rem, 5vh, 3.5rem);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.08em;
+  font-family: var(--ins-display);
+  font-weight: 400;
+  font-size: clamp(4rem, 13.5vw, 11.5rem);
+  line-height: 0.82;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+}
+
+.about-sheet .ins-closing {
+  padding: clamp(3rem, 8vh, 6rem) clamp(1.25rem, 5vw, 4rem) clamp(4rem, 8vh, 6rem);
+  max-width: 82rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about-sheet .ins-closing-title {
+  margin: 0 0 1.25rem;
+  font-family: var(--ins-display);
+  font-weight: 400;
+  font-size: clamp(4.5rem, 15.5vw, 12.5rem);
+  line-height: 0.82;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+}
+
+.about-sheet .ins-closing-lead {
+  margin: 0 auto 2rem;
+  max-width: 52ch;
+  font-family: var(--ins-serif);
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.about-sheet .ins-discover {
+  margin: 0 0 clamp(2rem, 5vh, 3rem);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ins-muted);
+}
+
+.about-sheet .ins-links {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: color-mix(in srgb, var(--ins-ink) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ins-ink) 14%, transparent);
+  text-align: left;
+  margin-bottom: clamp(2.5rem, 6vh, 4rem);
+}
+
+@media (min-width: 800px) {
+  .about-sheet .ins-links {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.about-sheet .ins-link-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  background: var(--ins-paper);
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+.about-sheet .ins-link-card:hover {
+  background: var(--ins-ink);
+  color: var(--ins-paper);
+}
+
+.about-sheet .ins-link-kicker {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  opacity: 0.55;
+}
+
+.about-sheet .ins-link-name {
+  font-family: var(--ins-serif);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  letter-spacing: -0.02em;
+}
+
+.about-sheet .ins-link-desc {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  opacity: 0.72;
+}
+
+.about-sheet .ins-copy {
+  margin: 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ins-muted);
+}
+
+.about-sheet .ins-next {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: clamp(12rem, 28vh, 18rem);
+  padding: 2rem;
+  background: color-mix(in srgb, var(--ins-ink) 4%, var(--ins-paper));
+  border-top: 1px solid color-mix(in srgb, var(--ins-ink) 12%, transparent);
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+.about-sheet .ins-next span {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.about-sheet .ins-next strong {
+  font-family: var(--ins-serif);
+  font-weight: 500;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  letter-spacing: -0.03em;
+}
+
+.about-sheet .ins-next:hover {
+  background: var(--ins-ink);
+  color: var(--ins-paper);
+}
+
+.about-sheet [data-ins-reveal] {
+  transform: translateY(28px);
+  transition: transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.about-sheet [data-ins-reveal].is-in {
+  transform: none;
+}
+
+@media (max-width: 720px) {
+  .about-sheet {
+    margin-top: 145vh;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .about-sheet {
+    --ins-muted: color-mix(in srgb, var(--ink) 58%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-sheet [data-ins-reveal],
+  .about-sheet .ins-slide {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+  }
+}

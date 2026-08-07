@@ -26,7 +26,7 @@ Plain HTML + CSS + vanilla JS, deployed 1:1 to GitHub Pages.
 
 ## Hard conventions
 
-1. **Cache busting.** Every css/js/asset URL carries a version query, currently `?v=aug3b`. When you change a CSS/JS file, bump the tag **on every page that references it** (grep for the old tag). Keep all pages on one tag — don't mix versions.
+1. **Cache busting.** Every css/js/asset URL carries a version query, currently `?v=aug3b`. When you change a CSS/JS file, bump the tag **on every page that references it** (grep for the old tag). Keep all pages on one tag — don't mix versions. Shared chrome is currently `polykroma-26`.
 2. **Per-page pairing.** Page-specific code goes in that page's own css/js file. Only things shared by ≥2 pages belong in `polykroma.*`. Load order in `<head>`/end of `<body>` matters: CDN libs → `polyglide.js` → `polykroma.js` → page script.
 3. **No dependencies.** CDN only: Lenis 1.1.18, GSAP 3.12.5, simplex-noise 2.4.0. Do not add npm packages or a build tool; if a capability is missing, write it by hand.
 4. **Vanilla JS**, `"use strict"` IIFEs exposing one `window.*` global (see `js/polyglide.js` for the house style). ES5-leaning (`var`) in shared helpers is intentional; match the file you're editing. Every script starts with a short `/** … */` header describing what it owns.
@@ -39,9 +39,9 @@ Plain HTML + CSS + vanilla JS, deployed 1:1 to GitHub Pages.
 
 | Token | Hex | Role |
 |-------|-----|------|
-| `--step-01` | `#FEF0FE` | Soft Blush Glow — lightest surfaces / dark-mode headings |
+| `--step-01` | `#F2F0F8` | Mist Lavender — neutral page ground / dark-mode headings |
 | `--step-02` | `#FDC3FD` | Lavender Bubblegum — card/container surfaces |
-| `--step-03` | `#F09EFB` | Radiant Orchid — hover/active surfaces, soft accents |
+| `--step-03` | `#F09EFB` | Pastel Rose Orchid — hover/active surfaces, soft accents |
 | `--step-04` | `#F089FE` | Electric Blossom — borders, secondary accents |
 | `--step-05` | `#E43EFF` | Ultra Magenta — primary brand accent / CTA fill |
 | `--step-06` | `#B24BFB` | Neon Violet — hover CTA, violet accents |
@@ -56,24 +56,25 @@ Use `--pk-*` (or the older `--aimy-*` aliases) so components flip automatically 
 
 | Token | Light mode | Dark mode |
 |-------|------------|-----------|
-| `--pk-bg` | `--step-01` | `--step-08` |
-| `--pk-surface` | `--step-02` | `--step-07` |
-| `--pk-hover` | `--step-03` | `--step-06` |
-| `--pk-border` | `--pk-soft` | `rgba(178, 75, 251, 0.3)` |
+| `--pk-bg` | `--step-01` | `oklch(from --step-08 0.105 0.014 h)` — off-black ground |
+| `--pk-surface` | `--step-02` | `oklch(from --step-08 0.148 0.02 h)` — elevated panel |
+| `--pk-hover` | `--step-03` | `oklch(from --step-08 0.188 0.026 h)` |
+| `--pk-border` | `--pk-soft` | `color-mix(--step-06 30%, transparent)` |
 | `--pk-text` | `--step-07` | `--step-02` |
 | `--pk-heading` | `--step-08` | `--step-01` |
-| `--pk-primary` | `color-mix(--step-07 68%, --step-01)` | `color-mix(--step-07 62%, --step-02)` |
-| `--pk-accent` | `color-mix(--step-06 58%, --step-01)` | `color-mix(--step-06 65%, --step-02)` |
-| `--pk-soft` | `color-mix(--step-04 55%, --step-01)` | `color-mix(--step-04 45%, --step-02)` |
+| `--pk-primary` | `color-mix(--step-06 68%, --step-01)` | `color-mix(--step-06 62%, --step-02)` |
+| `--pk-accent` | `color-mix(--step-05 58%, --step-01)` | `color-mix(--step-05 68%, --step-02)` |
+| `--pk-soft` | `color-mix(--step-04 55%, --step-01)` | `color-mix(--step-04 48%, --step-02)` |
 | `--pk-cta-bg` | `--pk-primary` | `--pk-primary` |
 | `--pk-cta-text` | `--step-08` | `--step-01` |
 
-`--aimy-primary`, `--aimy-accent`, `--aimy-menu-coin`, and the logo primary use `--pk-primary` / `--pk-accent`, so the brand signal is now a muted pastel lavender rather than the raw magenta step.
+`--aimy-primary`, `--aimy-accent`, `--aimy-menu-coin`, and the logo primary use `--pk-primary` / `--pk-accent` — vibrant pastel rose-violet, not grey-blue periwinkle.
 
 ### Token application rules
 
 - **No hardcoded hex outside the step definitions.** Every CSS color must resolve to a `--step-*` token, a semantic alias, or `color-mix(in srgb, var(--step-XX) N%, transparent)` for opacity.
 - For opacity, prefer `color-mix()` over `rgba(#hex, a)`. Example: `color-mix(in srgb, var(--step-07) 22%, transparent)`.
+- **Rainbow hover tokens** (`--rainbow-1`…`4` in `polykroma.css`) are the deliberate exception — pink / butter / teal / lilac hex cycle restored from legacy `ui.css`; do not remap them to `--step-*` or they collapse into grey-lavender.
 - Use `var(--step-01)` in place of white and `var(--step-08)` in place of black for UI surfaces. The literal keywords `black`/`white` are reserved only for SVG masks where full opacity is required.
 - Dark mode is automatic via `prefers-color-scheme` in `polykroma.css` — write components against the `--pk-*` / `--aimy-*` tokens so they flip for free.
 - Logo color hierarchy is fixed: primary (brand accent) → hairstyle, secondary (lightest pastel) → face/bow/base, tertiary (darkest) → iris/lashes.
@@ -82,7 +83,7 @@ Use `--pk-*` (or the older `--aimy-*` aliases) so components flip automatically 
 ## Motion & feel
 
 - **Polyglide** (`js/polyglide.js`) is the site's weighted Lenis scroll — free inertial scroll, ~1.15s exponential ease. When the user asks for scrolling that feels "slower/smoother/weighted like the other pages", they mean Polyglide: include Lenis CDN + `polyglide.js`, call `Polyglide.boot()`, and use `Polyglide.stop()/start()` around lightboxes/overlays. It is **not** scroll-snap and never page-jumps. Don't boot Lenis inline on a page — use Polyglide so settings stay single-sourced.
-- Motion language: organic blooms, soft blur→clear, gentle fade/scale (GSAP). No harsh snaps, industrial slides, or aggressive spins. This is a warm, cozy, lavender–rosé editorial sanctuary — not cyberpunk, not corporate.
+- Motion language: organic blooms, soft blur→clear, gentle fade/scale (GSAP). No harsh snaps, industrial slides, or aggressive spins. This is a warm, cozy, blue-violet lavender editorial sanctuary — not cyberpunk, not corporate.
 - The legacy `--f-cubic`/`--f-smooth` easings and `--vh`/`--vw` custom-property viewport units in `home.css` are part of the snapshot; reuse them when touching home.
 
 ## Gotchas

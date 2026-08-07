@@ -89,9 +89,9 @@
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    --c-yellow: var(--step-08);
-    --c-yellow-rgb: 49, 22, 51;
-    --c-black: var(--step-08);
+    --c-yellow: var(--pk-bg);
+    --c-yellow-rgb: 14, 11, 20;
+    --c-black: var(--pk-bg);
     --c-black-rgb: 14, 11, 20;
     --aimy-ink: var(--step-01);
     --aimy-ink-soft: var(--step-03);

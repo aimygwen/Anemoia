@@ -83,7 +83,7 @@ html.page-loading .insights-page-body {
 
 @media (prefers-color-scheme: dark) {
   .insights-page-body {
-    --ins-paper: var(--step-08);
+    --ins-paper: var(--pk-bg);
     --ins-ink: var(--step-01);
     --ins-muted: color-mix(in srgb, var(--step-01) 58%, transparent);
     --ins-pink: color-mix(in srgb, var(--step-03) 88%, var(--step-01));

@@ -88,12 +88,8 @@
         else stoneImg.addEventListener("load", queueMaskSync, { once: true });
       }
       window.addEventListener("resize", queueMaskSync, { passive: true });
-      window.addEventListener("scroll", queueMaskSync, { passive: true });
-      document.addEventListener("scroll", queueMaskSync, { passive: true });
       queueMaskSync();
       setTimeout(queueMaskSync, 100);
-      setTimeout(queueMaskSync, 400);
-      setInterval(queueMaskSync, 250);
     }
   }
 

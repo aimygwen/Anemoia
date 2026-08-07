@@ -86,7 +86,7 @@
 
 @media (prefers-color-scheme: dark) {
   .contact-page-body {
-    --chat-paper: var(--step-08);
+    --chat-paper: var(--pk-bg);
     --chat-ink: var(--step-02);
     --chat-muted: color-mix(in srgb, var(--step-02) 58%, transparent);
     --chat-them: color-mix(in srgb, var(--step-01) 10%, transparent);

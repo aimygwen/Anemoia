@@ -1,6 +1,6 @@
 /**
  * Stills & Films — large DOM gallery with scroll stretch.
- * Films: theatre color-blur behind focused clip; others stay paused stills.
+ * Films: preview clip in view; tap opens YouTube.
  */
 (function () {
   "use strict";
@@ -32,9 +32,30 @@
   ];
 
   var films = [
-    { id: "mov1", src: FILM + "mov1.mp4", title: "Soft Static", medium: "Film", width: 1920, height: 1080 },
-    { id: "mov2", src: FILM + "mov2.mp4", title: "Night Bloom", medium: "Film", width: 1920, height: 1080 },
-    { id: "mov3", src: FILM + "mov3.mp4", title: "Loop Garden", medium: "Film", width: 1920, height: 1080 },
+    {
+      id: "mov1",
+      src: FILM + "mov1.mp4",
+      youtube: "https://youtu.be/TOHb_6M-UYU?si=vs5JZHF67W8-UDOg",
+      medium: "Film",
+      width: 1920,
+      height: 1080,
+    },
+    {
+      id: "mov2",
+      src: FILM + "mov2.mp4",
+      youtube: "https://youtu.be/P16WCz7eetA?si=dhVHNvjVG9JGW3rc",
+      medium: "Film",
+      width: 1920,
+      height: 1080,
+    },
+    {
+      id: "mov3",
+      src: FILM + "mov3.mp4",
+      youtube: "https://youtu.be/yk4h39gUqQI?si=OMnJRo1ycladsBi8",
+      medium: "Film",
+      width: 1920,
+      height: 1080,
+    },
   ];
 
   function readView() {
@@ -66,6 +87,10 @@
     var projects = [];
     var dots = [];
     var medias = [];
+
+    function dotLabel(medium, index) {
+      return medium + " " + String(index + 1);
+    }
 
     function setViewLinks() {
       for (var i = 0; i < viewLinks.length; i++) {
@@ -101,15 +126,13 @@
         eyebrow.className = "gal-eyebrow";
         eyebrow.textContent = art.medium;
 
-        var card = document.createElement("button");
-        card.type = "button";
-        card.className = "gal-card";
-        card.setAttribute("aria-label", "Open " + art.title);
+        var card = document.createElement("div");
+        card.className = "gal-card gal-card--still";
 
         var media = document.createElement("div");
         media.className = "gal-media";
         var img = document.createElement("img");
-        img.alt = art.title;
+        img.alt = "";
         img.width = art.width;
         img.height = art.height;
         img.decoding = "async";
@@ -118,24 +141,10 @@
         media.appendChild(img);
         card.appendChild(media);
 
-        var title = document.createElement("h2");
-        title.className = "gal-title";
-        title.textContent = art.title;
-
-        var go = document.createElement("span");
-        go.className = "gal-go";
-        go.setAttribute("aria-hidden", "true");
-        go.innerHTML =
-          '<span class="gal-go-disk"></span><span class="gal-go-arrow">→</span>';
-
-        card.appendChild(title);
-        card.appendChild(go);
-        card.addEventListener("click", openLightbox.bind(null, art, null));
-
         section.appendChild(eyebrow);
         section.appendChild(card);
         frag.appendChild(section);
-        appendDot(art.title, section.id, i === 0);
+        appendDot(dotLabel(art.medium, i), section.id, i === 0);
       }
       main.appendChild(frag);
       collectRefs();
@@ -154,27 +163,15 @@
         eyebrow.className = "gal-eyebrow";
         eyebrow.textContent = film.medium;
 
-        var card = document.createElement("button");
-        card.type = "button";
-        card.className = "gal-card";
-        card.setAttribute("aria-label", "Open " + film.title);
+        var card = document.createElement("a");
+        card.className = "gal-card gal-card--film";
+        card.href = film.youtube;
+        card.target = "_blank";
+        card.rel = "noopener noreferrer";
+        card.setAttribute("aria-label", "Watch film " + String(i + 1) + " on YouTube");
 
         var media = document.createElement("div");
         media.className = "gal-media gal-media--film";
-
-        var theatre = document.createElement("div");
-        theatre.className = "gal-theatre";
-        theatre.setAttribute("aria-hidden", "true");
-        var blurVid = document.createElement("video");
-        blurVid.className = "gal-theatre-video";
-        blurVid.muted = true;
-        blurVid.playsInline = true;
-        blurVid.loop = true;
-        blurVid.preload = "metadata";
-        blurVid.setAttribute("muted", "");
-        blurVid.setAttribute("playsinline", "");
-        blurVid.src = film.src;
-        theatre.appendChild(blurVid);
 
         var vid = document.createElement("video");
         vid.className = "gal-film-video";
@@ -185,43 +182,25 @@
         vid.setAttribute("muted", "");
         vid.setAttribute("playsinline", "");
         vid.src = film.src;
-        vid.setAttribute("aria-label", film.title);
+        vid.setAttribute("aria-label", "Film preview " + String(i + 1));
 
-        /* Seek to a readable still frame once metadata is ready. */
-        (function (v, b) {
+        (function (v) {
           function pinStill() {
             try {
               var t = Math.min(0.35, (v.duration || 1) * 0.08);
               if (Math.abs(v.currentTime - t) > 0.05) v.currentTime = t;
-              if (b && Math.abs(b.currentTime - t) > 0.05) b.currentTime = t;
             } catch (err) {}
           }
-          v.addEventListener("loadedmetadata", pinStill, { once: true });
-          b.addEventListener("loadedmetadata", pinStill, { once: true });
-        })(vid, blurVid);
+          v.addEventListener("loadeddata", pinStill, { once: true });
+        })(vid);
 
-        media.appendChild(theatre);
         media.appendChild(vid);
         card.appendChild(media);
-
-        var title = document.createElement("h2");
-        title.className = "gal-title";
-        title.textContent = film.title;
-
-        var go = document.createElement("span");
-        go.className = "gal-go";
-        go.setAttribute("aria-hidden", "true");
-        go.innerHTML =
-          '<span class="gal-go-disk"></span><span class="gal-go-arrow">→</span>';
-
-        card.appendChild(title);
-        card.appendChild(go);
-        card.addEventListener("click", openLightbox.bind(null, null, film));
 
         section.appendChild(eyebrow);
         section.appendChild(card);
         frag.appendChild(section);
-        appendDot(film.title, section.id, i === 0);
+        appendDot(dotLabel(film.medium, i), section.id, i === 0);
       }
       main.appendChild(frag);
       collectRefs();
@@ -243,7 +222,7 @@
     function collectRefs() {
       projects = main.querySelectorAll(".gal-project");
       dots = dotsNav.querySelectorAll("a");
-      medias = main.querySelectorAll(".gal-media");
+      medias = main.querySelectorAll(".gal-media:not(.gal-media--film)");
       wireDots();
       wireActiveDots();
     }
@@ -305,19 +284,9 @@
       if (!section) return;
       section.classList.add("is-playing");
       var mainVid = section.querySelector(".gal-film-video");
-      var blurVid = section.querySelector(".gal-theatre-video");
-      if (mainVid && blurVid) {
-        try {
-          blurVid.currentTime = mainVid.currentTime || 0;
-        } catch (err) {}
-      }
-      function tryPlay(v) {
-        if (!v) return;
-        var p = v.play();
-        if (p && typeof p.catch === "function") p.catch(function () {});
-      }
-      tryPlay(mainVid);
-      tryPlay(blurVid);
+      if (!mainVid) return;
+      var p = mainVid.play();
+      if (p && typeof p.catch === "function") p.catch(function () {});
     }
 
     function setActiveFilm(index) {

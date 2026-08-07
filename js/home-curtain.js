@@ -43,7 +43,8 @@
   var lastPath = "";
   var lastTitleState = "";
   var BASE_Y = 8;
-  var MAX_BEND = 16;
+  var MAX_BEND = 0;
+  var BEND_ENABLED = false;
 
   function flatPath() {
     return (
@@ -108,7 +109,7 @@
         : 1;
       var reveal = Math.max(0, Math.min(1, (swapProgress - 0.46) / 0.14));
       reveal = reveal * reveal * (3 - 2 * reveal);
-      var titleState = swapProgress.toFixed(4) + ":" + reveal.toFixed(4);
+      var titleState = swapProgress.toFixed(2) + ":" + reveal.toFixed(2);
       if (titleState !== lastTitleState) {
         swapTitle.style.setProperty("--swap-progress", swapProgress.toFixed(4));
         swapTitle.style.opacity = reveal.toFixed(4);
@@ -116,7 +117,7 @@
       }
     }
 
-    if (!reduced && edgeVisible) bendRunning = true;
+    if (!reduced && edgeVisible && BEND_ENABLED) bendRunning = true;
   }
 
   function paintBend(time) {
@@ -169,7 +170,7 @@
 
   function onScroll() {
     syncScroll(performance.now());
-    if (reduced || !edgeVisible) return;
+    if (reduced || !edgeVisible || !BEND_ENABLED) return;
     idleFrames = 0;
     bendRunning = true;
     if (!rafId) rafId = requestAnimationFrame(bendRaf);

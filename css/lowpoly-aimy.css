@@ -41,17 +41,17 @@ html:has(.lowpoly-page-body) {
   --lp-yellow: var(--step-02);
   --lp-yellow-soft: var(--step-02);
   --lp-yellow-deep: var(--step-02);
-  --lp-purple: var(--step-07);
+  --lp-purple: var(--step-06);
   --lp-purple-deep: var(--step-07);
-  --lp-pink: var(--step-03);
+  --lp-pink: var(--step-04);
   --lp-cream: var(--step-01);
 
-  /* Legacy aliases → lavender / purple / yellow-CTA system */
+  /* Legacy aliases → lavender / purple / rose system */
   --lp-cobalt: var(--lp-purple);
   --lp-lime: var(--lp-yellow-deep);
   --lp-periwinkle: var(--lp-pink);
   --lp-mint: var(--lp-lavender-soft);
-  --lp-accent: var(--lp-purple);
+  --lp-accent: var(--step-05);
 
   --lp-lilac: var(--lp-lavender-soft);
   --lp-magenta: var(--lp-purple);
@@ -60,9 +60,9 @@ html:has(.lowpoly-page-body) {
 
   --lp-paper: var(--lp-lavender);
   --lp-hero-paper: var(--lp-lavender-deep);
-  --lp-gallery-paper: var(--lp-lavender-soft);
-  --lp-ink: var(--lp-purple);
-  --lp-muted: color-mix(in srgb, var(--lp-ink) 52%, var(--step-01));
+  --lp-gallery-paper: color-mix(in srgb, var(--step-02) 24%, var(--lp-lavender-soft));
+  --lp-ink: var(--step-08);
+  --lp-muted: color-mix(in srgb, var(--step-06) 52%, var(--step-01));
   --lp-radius: 1.35rem;
   --lp-radius-sm: 999px;
 
@@ -86,30 +86,19 @@ html:has(.lowpoly-page-body) {
   --aimy-surface-deep: color-mix(in srgb, var(--lp-lavender-deep) 55%, var(--step-01));
   --aimy-ink: var(--lp-ink);
   --aimy-ink-soft: var(--lp-muted);
-  --aimy-primary: var(--lp-purple);
+  --aimy-primary: var(--pk-primary);
   --aimy-secondary: var(--lp-yellow-deep);
   --aimy-tertiary: var(--lp-purple-deep);
-  --aimy-accent: var(--lp-pink);
-  --aimy-logo-primary: var(--lp-purple);
-  --aimy-chrome-ink: var(--lp-purple);
-  --aimy-menu-coin: var(--lp-pink);
-  --aimy-menu-coin-open: var(--lp-yellow-deep);
+  --aimy-accent: var(--pk-accent);
+  --aimy-logo-primary: var(--pk-primary);
+  --aimy-chrome-ink: var(--pk-primary);
+  --aimy-menu-coin: var(--pk-primary);
+  --aimy-menu-coin-open: var(--pk-accent);
   --aimy-ink-on-dark: var(--lp-cream);
   --aimy-glass: color-mix(in srgb, var(--step-01) 78%, var(--lp-lavender));
   --aimy-glass-strong: color-mix(in srgb, var(--step-01) 88%, var(--lp-lavender-soft));
   --lp-card-face: color-mix(in srgb, var(--step-01) 86%, var(--lp-lavender-soft));
   --lp-wash: color-mix(in srgb, var(--lp-pink) 12%, transparent);
-  --aimy-r1: var(--lp-yellow-deep);
-  --aimy-r2: var(--lp-pink);
-  --aimy-r3: color-mix(in srgb, var(--lp-pink) 55%, var(--lp-purple));
-  --aimy-r4: var(--lp-purple);
-
-  --rainbow-1: var(--aimy-r1);
-  --rainbow-2: var(--aimy-r2);
-  --rainbow-3: var(--aimy-r3);
-  --rainbow-4: var(--aimy-r4);
-  --rainbow-on-fill: var(--lp-cream);
-  --rainbow-card-fill-mix: 18%;
 
   --bg: var(--lp-paper);
   --primary: var(--lp-ink);
@@ -117,7 +106,7 @@ html:has(.lowpoly-page-body) {
   --accent-warm: var(--lp-pink);
   --on-accent: var(--lp-cream);
 
-  --brand-logo-dark-fill: var(--lp-purple);
+  --brand-logo-dark-fill: var(--pk-primary);
   --brand-logo-light-fill: color-mix(in srgb, var(--lp-yellow-deep) 42%, transparent);
   --brand-logo-mid-fill: var(--lp-pink);
 
@@ -131,7 +120,7 @@ html:has(.lowpoly-page-body) {
   --card-media-bg: transparent;
   --card-media-border: transparent;
 
-  --page-pad-x: clamp(1.25rem, 5vw, 4rem);
+  --page-pad-x: clamp(1.65rem, 5.8vw, 4.25rem);
   --font: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-display: "Bold Block", "Arial Black", Impact, sans-serif;
   --font-pixel: "Newpixel", "Courier New", monospace;
@@ -144,7 +133,11 @@ html:has(.lowpoly-page-body) {
   margin: 0;
   padding: 0;
   overflow-x: clip;
-  background: var(--lp-paper);
+  background:
+    radial-gradient(112% 82% at 8% -8%, color-mix(in srgb, var(--step-03) 38%, transparent), transparent 58%),
+    radial-gradient(92% 68% at 96% 4%, color-mix(in srgb, var(--step-04) 30%, transparent), transparent 54%),
+    radial-gradient(78% 52% at 50% 102%, color-mix(in srgb, var(--step-02) 42%, transparent), transparent 62%),
+    var(--lp-paper);
   color: var(--primary);
   font-family: var(--font);
   font-style: normal;
@@ -154,10 +147,16 @@ html:has(.lowpoly-page-body) {
   color-scheme: light dark;
 }
 
-/* Keep the page wash quiet and paper-like, matching About. */
+/* Soft paper grain + cozy bloom wash */
 .lowpoly-page-body::before {
-  content: none;
-  display: none;
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.42;
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--step-07) 7%, transparent) 0.55px, transparent 0.7px);
+  background-size: 18px 18px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -184,16 +183,16 @@ html:has(.lowpoly-page-body) {
     --lp-candy: var(--lp-pink);
     --lp-sun: var(--lp-yellow-deep);
 
-    --lp-paper: var(--step-08);
-    --lp-hero-paper: var(--step-08);
-    --lp-gallery-paper: var(--step-07);
+    --lp-paper: var(--pk-bg);
+    --lp-hero-paper: var(--pk-bg);
+    --lp-gallery-paper: var(--pk-surface);
     --lp-ink: var(--lp-yellow);
     --lp-muted: color-mix(in srgb, var(--lp-yellow) 55%, transparent);
 
-    --c-yellow: var(--step-08);
-    --c-black: var(--step-08);
-    --aimy-surface: var(--step-08);
-    --aimy-surface-deep: var(--step-08);
+    --c-yellow: var(--pk-bg);
+    --c-black: var(--pk-bg);
+    --aimy-surface: var(--pk-surface);
+    --aimy-surface-deep: var(--pk-bg);
     --aimy-ink: var(--lp-ink);
     --aimy-ink-soft: var(--lp-muted);
     --aimy-primary: var(--lp-yellow-deep);
@@ -205,21 +204,10 @@ html:has(.lowpoly-page-body) {
     --aimy-menu-coin: var(--lp-pink);
     --aimy-menu-coin-open: var(--lp-yellow-deep);
     --aimy-ink-on-dark: var(--lp-cream);
-    --aimy-glass: color-mix(in srgb, var(--step-08) 90%, transparent);
+    --aimy-glass: color-mix(in srgb, var(--pk-bg) 90%, transparent);
     --aimy-glass-strong: color-mix(in srgb, var(--step-08) 95%, transparent);
     --lp-card-face: var(--step-08);
     --lp-wash: color-mix(in srgb, var(--lp-pink) 14%, transparent);
-
-    --aimy-r1: var(--lp-yellow-deep);
-    --aimy-r2: var(--lp-pink);
-    --aimy-r3: color-mix(in srgb, var(--lp-pink) 65%, var(--step-01));
-    --aimy-r4: color-mix(in srgb, var(--step-07) 55%, var(--step-01));
-    --rainbow-1: var(--aimy-r1);
-    --rainbow-2: var(--aimy-r2);
-    --rainbow-3: var(--aimy-r3);
-    --rainbow-4: var(--aimy-r4);
-    --rainbow-on-fill: var(--step-08);
-    --rainbow-card-fill-mix: 20%;
 
     --bg: var(--lp-paper);
     --primary: var(--lp-ink);
@@ -237,12 +225,15 @@ html:has(.lowpoly-page-body) {
     --lightbox-ink: var(--lp-ink);
     --lightbox-ink-muted: var(--lp-muted);
 
-    background: var(--lp-paper);
+    background:
+      radial-gradient(100% 78% at 10% -6%, color-mix(in srgb, var(--step-06) 22%, transparent), transparent 58%),
+      radial-gradient(88% 64% at 92% 8%, color-mix(in srgb, var(--step-05) 18%, transparent), transparent 54%),
+      var(--lp-paper);
     color: var(--primary);
   }
 
   .lowpoly-page-body::before {
-    opacity: 0;
+    opacity: 0.28;
   }
 }
 
@@ -255,9 +246,10 @@ html:has(.lowpoly-page-body) {
   font-synthesis: none;
 }
 
-.lowpoly-page-body .lp-welcome__lede,
+.lowpoly-page-body .lp-polybi-logo__kicker,
 .lowpoly-page-body .lowpoly-subtitle,
 .lowpoly-page-body .lp-featured__lede,
+.lowpoly-page-body .lp-models__pack-desc,
 .lowpoly-page-body .card-info,
 .lowpoly-page-body .card-modpack-copy,
 .lowpoly-page-body .lb-desc,
@@ -273,6 +265,7 @@ html:has(.lowpoly-page-body) {
 .lowpoly-page-body .lowpoly-title,
 .lowpoly-page-body .lp-featured__heading,
 .lowpoly-page-body .lp-featured__title,
+.lowpoly-page-body .lp-models__pack-title,
 .lowpoly-page-body .card-info h3,
 .lowpoly-page-body .card-modpack-title,
 .lowpoly-page-body .lb-title,
@@ -337,366 +330,274 @@ html:has(.lowpoly-page-body) {
 
 /* —— Welcome hero —— */
 .lp-welcome {
-  --lp-welcome-ink: var(--aimy-ink-on-dark, var(--step-01));
   --progress: 0;
   position: relative;
   isolation: isolate;
-  min-height: 100svh;
-  height: auto;
-  display: grid;
-  place-items: stretch;
+  display: block;
   overflow-x: clip;
-  overflow-y: visible;
-  color: var(--lp-welcome-ink);
-  border: 0;
-  box-shadow: none;
-  margin: 0;
-  padding: 0;
+  color: var(--lp-ink);
   background: transparent;
-}
-
-.lp-welcome__sky {
-  position: absolute;
-  inset: 0 0 -12% 0;
-  z-index: 0;
-  width: 100%;
-  max-width: none;
   margin: 0;
-  pointer-events: none;
-  background-color: var(--step-07);
-  background-image: url("../assets/lowpoly_day.jpg");
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-size: cover;
+  padding:
+    calc(clamp(7.5rem, 18vh, 10rem) + env(safe-area-inset-top, 0px))
+    0
+    clamp(1.5rem, 4vh, 2.25rem);
 }
-
-@media (prefers-color-scheme: dark) {
-  .lp-welcome__sky {
-    background-image: url("../assets/lowpoly_night.jpg");
-  }
-}
-
-/* Soft top wash + seamless fade into page paper */
-.lp-welcome__sky::before {
-  content: "";
-  display: block;
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: min(28vh, 16rem);
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--step-07) 45%, transparent) 0%,
-    transparent 100%
-  );
-  pointer-events: none;
-}
-
-.lp-welcome__sky::after {
-  content: "";
-  display: block;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: min(42%, 22rem);
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    color-mix(in srgb, var(--lp-paper) 35%, transparent) 45%,
-    var(--lp-paper) 100%
-  );
-  pointer-events: none;
-}
-
-.lp-welcome__dither {
-  display: none;
-}
-
 
 .lp-welcome__stage {
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-template-rows: 1fr;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  column-gap: clamp(0.5rem, 2vw, 1.5rem);
-  min-height: 100svh;
   width: 100%;
   max-width: none;
   margin: 0;
-  padding:
-    calc(clamp(4.5rem, 10vh, 7rem) + env(safe-area-inset-top, 0px))
-    clamp(1rem, 3.5vw, 3rem)
-    clamp(3rem, 10vh, 6.5rem);
+  padding: 0 var(--page-pad-x);
   box-sizing: border-box;
-  overflow: visible;
 }
 
 .lp-welcome__copy {
-  grid-column: 6 / 12;
-  grid-row: 1;
   position: relative;
   z-index: 5;
   width: 100%;
-  max-width: min(36rem, 100%);
-  margin: 0;
-  justify-self: start;
-  align-self: center;
-  text-align: left;
+  max-width: none;
+  margin: clamp(1.5rem, 4vh, 2.75rem) auto 0;
+  text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: clamp(0.9rem, 2vh, 1.4rem);
+  align-items: center;
+  gap: 0;
   pointer-events: none;
-  transform: translate3d(0, calc(var(--progress) * 5vh), 0);
-  will-change: transform;
-  padding-right: clamp(0.25rem, 1vw, 1rem);
-  margin-left: clamp(-1.5rem, -2vw, 0);
 }
 
 .lp-welcome__copy > * {
   pointer-events: auto;
 }
 
-.lp-welcome__title {
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Polybi vector logo — holo foil treatment (mirrors home aimy-type-logo) */
+.lp-polybi-logo {
+  width: 100%;
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.55rem, 1.2vh, 0.8rem);
+}
+
+.lp-polybi-logo__kicker {
   margin: 0;
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  justify-items: start;
-  gap: 0.06em;
-  color: var(--lp-welcome-ink);
-  font-family: var(--font-display);
+  text-align: center;
+  font-family: var(--font-pixel);
+  font-size: clamp(0.68rem, 0.85vw, 0.82rem);
   font-weight: normal;
-  line-height: 0.88;
-  letter-spacing: 0.01em;
+  font-style: normal;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: color-mix(in srgb, var(--step-06) 78%, var(--step-08));
+  transition: color 0.28s var(--f-soft);
 }
 
-.lp-welcome__line {
-  display: block;
-  width: 100%;
-}
-
-.lp-welcome__line--1 {
-  font-size: clamp(3.6rem, 10vw, 10.5rem);
-  text-align: left;
-  justify-self: start;
-  max-width: none;
-  color: var(--lp-welcome-ink);
-  transform: translate3d(0, calc(var(--progress) * 3vh), 0);
-  will-change: transform;
-}
-
-.lp-welcome__line--3 {
-  font-size: clamp(3.8rem, 10.5vw, 11rem);
-  text-align: left;
-  justify-self: start;
-  transform: translate3d(0, calc(var(--progress) * 7vh), 0);
-  will-change: transform;
-}
-
-.lp-welcome__lede {
-  margin: 0.15rem 0 0;
-  max-width: 32ch;
-  color: color-mix(in srgb, var(--lp-welcome-ink) 78%, transparent);
-  font-family: var(--font-ui);
-  font-size: clamp(1rem, 1.4vw, 1.15rem);
-  font-weight: 500;
-  line-height: 1.45;
-  transform: translate3d(0, calc(var(--progress) * 4vh), 0);
-  opacity: calc(1 - var(--progress) * 0.75);
-  will-change: transform, opacity;
-}
-
-/* Hero art — dominant left splash + main-page style scale/parallax */
-.lp-welcome__art {
-  grid-column: 1 / 7;
-  grid-row: 1;
+.lp-polybi-logo__shell {
   position: relative;
-  z-index: 3;
-  align-self: end;
-  justify-self: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  box-sizing: border-box;
+}
+
+.lp-polybi-logo__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  appearance: none;
+  margin: 0;
+  padding: 0.35rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  line-height: 0;
+  transform: translateY(-50%);
+  transition: transform 0.24s var(--f-soft);
+}
+
+.lp-polybi-logo__nav--prev {
+  left: max(0.25rem, calc(env(safe-area-inset-left, 0px) + 0.15rem));
+}
+
+.lp-polybi-logo__nav--next {
+  right: max(0.25rem, calc(env(safe-area-inset-right, 0px) + 0.15rem));
+}
+
+.lp-polybi-logo__nav-icon {
+  display: block;
+  width: clamp(2.75rem, 6.5vw, 4.25rem);
+  aspect-ratio: 1;
+  background-color: color-mix(in srgb, var(--step-07) 68%, var(--step-08));
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  transition: transform 0.24s var(--f-soft);
+}
+
+.lp-polybi-logo__nav--prev .lp-polybi-logo__nav-icon {
+  -webkit-mask-image: url("../assets/polykroma/icons/arrow_left.svg");
+  mask-image: url("../assets/polykroma/icons/arrow_left.svg");
+}
+
+.lp-polybi-logo__nav--next .lp-polybi-logo__nav-icon {
+  -webkit-mask-image: url("../assets/polykroma/icons/arrow_right.svg");
+  mask-image: url("../assets/polykroma/icons/arrow_right.svg");
+}
+
+.lp-polybi-logo__nav:hover,
+.lp-polybi-logo__nav:focus-visible {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.lp-polybi-logo__nav:hover .lp-polybi-logo__nav-icon,
+.lp-polybi-logo__nav:focus-visible .lp-polybi-logo__nav-icon {
+  animation: rainbow-bg-shift 2.5s linear infinite;
+}
+
+.lp-polybi-logo__nav:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--step-06) 45%, transparent);
+  outline-offset: 4px;
+}
+
+.lp-polybi-logo__hero-art {
+  position: relative;
+  width: min(100%, 56rem);
+  max-width: min(94vw, 56rem);
+  min-width: 0;
+}
+
+.lp-polybi-logo__hero-art [data-lp-hero-art][hidden] {
+  display: none !important;
+}
+
+body[data-lp-universe="hytale"] [data-lp-hero-art="works"] {
+  display: none !important;
+}
+
+body[data-lp-universe="works"] [data-lp-hero-art="hytale"] {
+  display: none !important;
+}
+
+.lp-polybi-logo__shell .lp-polybi-logo__stage {
+  position: relative;
   width: 100%;
-  max-width: min(70vw, 820px);
-  margin: 0 0 clamp(-3rem, -7vh, -1.5rem);
-  margin-left: clamp(-2.5rem, -4vw, 0);
+  max-width: none;
+  aspect-ratio: 1408 / 971;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  perspective: 1200px;
   pointer-events: none;
   transform:
-    translate3d(0, calc(var(--vh, 1vh) * -2 + var(--progress) * 10vh), 0)
-    scale(calc(1.12 - var(--progress) * 0.3));
-  transform-origin: 50% 85%;
+    translate3d(calc(var(--mx, 0) * -20px), calc(var(--my, 0) * -16px), 0)
+    rotateX(calc(var(--my, 0) * -2.6deg))
+    rotateY(calc(var(--mx, 0) * 2.8deg));
   will-change: transform;
 }
 
-.lp-welcome__art picture,
-.lp-welcome__art img {
-  display: block;
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-  background: transparent;
-  filter: none;
-}
-
-.lp-welcome__sticker {
-  position: absolute;
-  z-index: 4;
+.lp-polybi-logo__teaser {
   margin: 0;
-  pointer-events: none;
-  user-select: none;
-}
-
-.lp-welcome__sticker img {
-  display: block;
-  width: auto;
-  height: auto;
-  max-width: min(26vw, 220px);
-  max-height: min(34vh, 280px);
-  object-fit: contain;
-  filter: none;
-}
-
-.lp-welcome__sticker--left {
-  left: clamp(42%, 48vw, 52%);
-  bottom: clamp(8%, 14vh, 20%);
-  transform: rotate(-10deg);
-  animation: lp-sticker-float 5.5s ease-in-out infinite;
-}
-
-.lp-welcome__sticker--right {
-  right: clamp(2%, 5vw, 8%);
-  bottom: clamp(18%, 26vh, 34%);
-  transform: rotate(8deg);
-  animation: lp-sticker-float 6.4s ease-in-out infinite reverse;
-}
-
-@keyframes lp-sticker-float {
-  0%,
-  100% { translate: 0 0; }
-  50% { translate: 0 -10px; }
-}
-
-.lp-welcome__path {
-  position: absolute;
-  inset: 6% 0 auto;
-  z-index: 1;
   width: 100%;
-  height: 78%;
+  aspect-ratio: 1408 / 971;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lp-polybi-logo__teaser img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 16px 36px color-mix(in srgb, var(--step-06) 16%, transparent));
+}
+
+.lp-polybi-logo__text,
+.lp-polybi-logo__shadow {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
   pointer-events: none;
-  opacity: 0.7;
 }
 
-@media (max-width: 900px) {
-  .lp-welcome__stage {
-    grid-template-rows: auto auto;
-    align-items: start;
-    row-gap: clamp(1rem, 3vh, 1.75rem);
-    padding-bottom: clamp(4rem, 12vh, 6rem);
-  }
-
-  .lp-welcome__art {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    max-width: min(84vw, 500px);
-    justify-self: center;
-    margin-left: 0;
-    margin-bottom: clamp(-1.5rem, -4vh, -0.5rem);
-    transform:
-      translate3d(0, calc(var(--progress) * 4vh), 0)
-      scale(calc(1.06 - var(--progress) * 0.18));
-    transform-origin: 50% 80%;
-  }
-
-  .lp-welcome__copy {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    max-width: min(36rem, 100%);
-    justify-self: center;
-    align-items: center;
-    text-align: center;
-    padding-right: 0;
-    margin-left: 0;
-  }
-
-  .lp-welcome__title {
-    justify-items: center;
-  }
-
-  .lp-welcome__line--1,
-  .lp-welcome__line--3 {
-    font-size: clamp(3.6rem, 14vw, 5.5rem);
-    text-align: center;
-    justify-self: center;
-  }
-
-  .lp-welcome__lede {
-    text-align: center;
-  }
-
-  .lp-welcome__sticker img {
-    max-width: min(24vw, 140px);
-    max-height: 150px;
-  }
-
-  .lp-welcome__sticker--left {
-    left: clamp(4%, 8vw, 12%);
-    bottom: auto;
-    top: clamp(38%, 42vh, 48%);
-  }
-
-  .lp-welcome__sticker--right {
-    right: clamp(4%, 8vw, 12%);
-    bottom: auto;
-    top: clamp(28%, 34vh, 40%);
-  }
+.lp-polybi-logo__text {
+  background-color: var(--step-03);
+  -webkit-mask-image: url("../assets/content/lowpoly/polybi.svg");
+  mask-image: url("../assets/content/lowpoly/polybi.svg");
+  transform: translateZ(6px);
 }
 
-@media (min-width: 1024px) {
-  .lp-welcome__stage {
-    padding-top: calc(clamp(3.5rem, 9vh, 6.5rem) + env(safe-area-inset-top, 0px));
-    padding-bottom: clamp(4rem, 12vh, 7.5rem);
-  }
-
-  .lp-welcome__art {
-    grid-column: 1 / 7;
-    max-width: min(64vw, 860px);
-    margin-bottom: clamp(-5rem, -10vh, -2.5rem);
-  }
-
-  .lp-welcome__copy {
-    grid-column: 6 / 12;
-    padding-left: 0;
-    margin-left: clamp(-2.5rem, -3vw, -0.5rem);
-  }
-
-  .lp-welcome__line--1 {
-    font-size: clamp(5rem, 8.5vw, 12rem);
-  }
-
-  .lp-welcome__line--3 {
-    font-size: clamp(5.2rem, 9vw, 12.5rem);
-  }
+.lp-polybi-logo__shadow {
+  background-color: transparent;
+  background-image: url("../assets/polykroma/logo/prism.jpg?v=1");
+  background-size: 165% 165%;
+  background-position:
+    calc(50% + var(--mx, 0) * 42% + cos(calc(var(--holo-angle, 135) * 1deg)) * 7%)
+    calc(50% + var(--my, 0) * 42% + sin(calc(var(--holo-angle, 135) * 1deg)) * 7%);
+  background-repeat: no-repeat;
+  -webkit-mask-image: url("../assets/content/lowpoly/polybi_shadow.svg");
+  mask-image: url("../assets/content/lowpoly/polybi_shadow.svg");
+  transform: translateZ(-6px);
+  transition: background-position 0.45s ease-out;
+  opacity: 1;
+  filter: saturate(1.55) contrast(1.12);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lp-welcome__sticker--left,
-  .lp-welcome__sticker--right {
-    animation: none;
+  .lp-polybi-logo__stage,
+  .lp-polybi-logo__shell .lp-polybi-logo__stage {
+    transform: none !important;
   }
 
-  .lp-welcome__art,
-  .lp-welcome__copy,
-  .lp-welcome__line--1,
-  .lp-welcome__line--3,
-  .lp-welcome__lede {
-    transform: none !important;
-    opacity: 1 !important;
+  .lp-polybi-logo__shadow {
+    transition: none;
+  }
+
+  .lp-polybi-logo__nav,
+  .lp-polybi-logo__nav-icon {
+    transition: none;
+  }
+
+  .lp-polybi-logo__nav:hover .lp-polybi-logo__nav-icon,
+  .lp-polybi-logo__nav:focus-visible .lp-polybi-logo__nav-icon {
+    animation: none;
+    background-color: var(--step-06);
   }
 }
 
-/* Gallery begins directly at the ripple-divider edge. */
 #lowpoly-gallery-content {
   position: relative;
   z-index: 5;
@@ -709,36 +610,12 @@ html:has(.lowpoly-page-body) {
   width: 100%;
   margin-left: 0;
   margin-right: 0;
-  background: var(--lp-gallery-paper);
+  background: transparent;
   border: 0;
   box-shadow: none;
   opacity: 1 !important;
   transform: none !important;
   visibility: visible !important;
-}
-
-.lp-ripple-divider {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  height: 140vh;
-  transform: translate3d(0, 92vh, 0);
-  pointer-events: none;
-  overflow: hidden;
-  backface-visibility: hidden;
-  contain: strict;
-}
-
-.lp-ripple-divider svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.lp-ripple-divider__shape {
-  fill: var(--lp-gallery-paper);
-  shape-rendering: optimizeSpeed;
 }
 
 #models.lowpoly-main-section {
@@ -750,16 +627,6 @@ html:has(.lowpoly-page-body) {
   margin-left: auto;
   margin-right: auto;
   box-sizing: border-box;
-}
-
-.lp-featured__logo {
-  display: block;
-  width: min(34rem, 86vw);
-  height: auto;
-  margin: 0 auto clamp(0.5rem, 1.5vw, 1rem);
-  object-fit: contain;
-  pointer-events: none;
-  user-select: none;
 }
 
 .lowpoly-main-section {
@@ -904,15 +771,16 @@ body.lightbox-open .filter-bar.is-visible {
     color 0.2s ease;
 }
 
-.filter-pill:hover {
+.filter-pill:hover,
+.filter-pill:focus-visible {
   transform: none;
   background: color-mix(in srgb, var(--lp-pink) 28%, transparent);
-  color: var(--lp-ink);
+  animation: rainbow-shift 2.2s linear infinite;
 }
 
 .filter-pill.active {
-  background: var(--lp-purple);
-  color: var(--lp-cream);
+  animation: rainbow-bg-shift 2.5s linear infinite;
+  color: var(--rainbow-on-fill);
   box-shadow: none;
   border-radius: 999px;
 }
@@ -924,7 +792,7 @@ body.lightbox-open .filter-bar.is-visible {
 .filter-pill[data-filter="collectibles"].active,
 .filter-pill[data-filter="consumables"].active,
 .filter-pill[data-filter="misc"].active {
-  background: var(--lp-purple);
+  animation: rainbow-bg-shift 2.5s linear infinite;
   border-color: transparent;
   color: var(--lp-cream);
 }
@@ -946,8 +814,8 @@ body.lightbox-open .filter-bar.is-visible {
   .filter-pill[data-filter="collectibles"].active,
   .filter-pill[data-filter="consumables"].active,
   .filter-pill[data-filter="misc"].active {
-    color: var(--on-accent);
-    background: var(--lp-yellow-deep);
+    color: var(--rainbow-on-fill);
+    animation: rainbow-bg-shift 2.5s linear infinite;
   }
 }
 
@@ -1159,9 +1027,8 @@ body.lightbox-open .filter-bar.is-visible {
 }
 
 .models-grid .bento-card:not(.is-modpack):hover .card-media:not(.card-media--modpack) {
-  animation: none;
-  border-color: color-mix(in srgb, var(--step-01) 88%, transparent) !important;
-  background: color-mix(in srgb, var(--step-01) 72%, transparent) !important;
+  animation: rainbow-card-fill 3s linear infinite;
+  border-color: color-mix(in srgb, var(--rainbow-1) 42%, transparent) !important;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -1433,10 +1300,24 @@ body.lightbox-open .filter-bar.is-visible {
   }
 }
 
-/* Soft wash on hover — no heavy rainbow frame */
+/* Rainbow frame on model tiles */
 .models-grid .bento-card::before {
-  content: none !important;
-  display: none !important;
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 3px solid transparent;
+  border-radius: calc(var(--lp-radius) + 0.2rem);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 24;
+  transition: opacity 0.28s ease;
+  box-sizing: border-box;
+}
+
+.models-grid .bento-card:not(.is-modpack):hover::before,
+.models-grid .bento-card:not(.is-modpack):focus-within::before {
+  opacity: 1;
+  animation: rainbow-border-shift 3s linear infinite;
 }
 
 @keyframes rainbow-card-fill {
@@ -1474,6 +1355,40 @@ body.lightbox-open .filter-bar.is-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .models-grid .bento-card:not(.is-modpack):hover .card-media:not(.card-media--modpack) {
+    animation: none;
+  }
+
+  .models-grid .bento-card:not(.is-modpack):hover::before,
+  .models-grid .bento-card:not(.is-modpack):focus-within::before,
+  .lp-models-rail .models-grid .bento-card:hover::before,
+  .lp-models-rail .models-grid .bento-card:focus-within::before {
+    animation: none;
+    opacity: 0.65;
+    border-color: var(--rainbow-2);
+  }
+
+  .models-grid .bento-card:not(.is-modpack):hover .card-info h3,
+  .models-grid .bento-card:not(.is-modpack):focus-within .card-info h3,
+  .lp-models-rail .models-grid .bento-card:hover .card-title-text,
+  .lp-models-rail .models-grid .bento-card:focus-within .card-title-text,
+  .lp-featured__col:hover .lp-featured__title,
+  .lp-featured__col:focus-within .lp-featured__title,
+  .lp-featured__num:hover,
+  .lp-featured__num:focus-visible,
+  .lp-featured__num.is-pack-filter.is-active {
+    animation: none;
+    color: var(--rainbow-2);
+  }
+
+  .lp-featured__media:hover::before,
+  .lp-featured__media:focus-visible::before,
+  .lp-featured__media:hover::after,
+  .lp-featured__media:focus-visible::after {
+    animation: none;
+  }
+
+  .lp-models-rail .models-grid .bento-card:hover .card-preview-img,
+  .lp-models-rail .models-grid .bento-card:focus-within .card-preview-img {
     animation: none;
   }
 }
@@ -1535,6 +1450,12 @@ body.lightbox-open .filter-bar.is-visible {
   font-weight: normal !important;
   text-transform: none !important;
   letter-spacing: 0.01em;
+  transition: color 0.2s ease;
+}
+
+.models-grid .bento-card:not(.is-modpack):hover .card-info h3,
+.models-grid .bento-card:not(.is-modpack):focus-within .card-info h3 {
+  animation: rainbow-shift 2.4s linear infinite;
 }
 
 .card-modpack-copy {
@@ -2119,7 +2040,7 @@ body.lightbox-open .filter-bar.is-visible {
 /* —— Extension Sets: Featured / Work carousel —— */
 .lp-extensions.lowpoly-main-section {
   /* Match main Featured Work side inset (~g-margin) while staying full-bleed */
-  padding: clamp(3rem, 9vh, 6rem) clamp(1rem, 2.5vw, 2rem) clamp(4rem, 10vh, 7rem);
+  padding: clamp(1.5rem, 4vh, 2.5rem) var(--page-pad-x) clamp(4rem, 10vh, 7rem);
   max-width: none;
   width: 100%;
   box-sizing: border-box;
@@ -2132,7 +2053,7 @@ body.lightbox-open .filter-bar.is-visible {
   margin: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: clamp(1.25rem, 3vw, 2rem);
 }
 
@@ -2143,11 +2064,13 @@ body.lightbox-open .filter-bar.is-visible {
   font-style: normal;
   font-weight: normal;
   line-height: 0.95;
-  text-shadow: 3px 3px 0 color-mix(in srgb, var(--aimy-primary) 14%, transparent);
+  text-shadow:
+    3px 3px 0 color-mix(in srgb, var(--step-03) 22%, transparent),
+    0 0 28px color-mix(in srgb, var(--step-04) 16%, transparent);
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--lp-ink);
-  text-align: center;
+  text-align: left;
 }
 
 .lp-featured__lede {
@@ -2157,8 +2080,8 @@ body.lightbox-open .filter-bar.is-visible {
   font-size: clamp(0.95rem, 1.25vw, 1.05rem);
   font-weight: 500;
   line-height: 1.5;
-  color: var(--lp-muted);
-  text-align: center;
+  color: color-mix(in srgb, var(--step-07) 72%, var(--step-08));
+  text-align: left;
 }
 
 /* Full-width 3-up like main Featured Work */
@@ -2210,14 +2133,20 @@ body.lightbox-open .filter-bar.is-visible {
   overflow: hidden;
   aspect-ratio: 8 / 5;
   isolation: isolate;
-  box-shadow: none;
-  transition: transform 0.4s var(--f-bounce);
+  box-shadow:
+    0 10px 28px color-mix(in srgb, var(--step-07) 10%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--step-01) 65%, transparent);
+  transition:
+    transform 0.4s var(--f-bounce),
+    box-shadow 0.45s var(--f-soft);
 }
 
 .lp-featured__media:hover,
 .lp-featured__media:focus-visible {
-  transform: translateY(-2px);
-  box-shadow: none;
+  transform: translateY(-4px) scale(1.01);
+  box-shadow:
+    0 18px 42px color-mix(in srgb, var(--rainbow-2) 24%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--rainbow-1) 35%, transparent);
 }
 
 .lp-featured__img {
@@ -2239,16 +2168,61 @@ body.lightbox-open .filter-bar.is-visible {
   content: "";
   position: absolute;
   inset: 0;
-  background: color-mix(in srgb, var(--c-var(--step-08), var(--step-07)) 72%, transparent);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--rainbow-1) 38%, transparent),
+    color-mix(in srgb, var(--rainbow-3) 32%, transparent) 52%,
+    color-mix(in srgb, var(--rainbow-4) 34%, transparent)
+  );
   opacity: 0;
   z-index: 3;
-  transition: opacity 0.55s var(--lp-featured-ease);
+  transition: opacity 0.45s var(--lp-featured-ease);
   pointer-events: none;
+  mix-blend-mode: soft-light;
+}
+
+.lp-featured__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 3px solid transparent;
+  border-radius: inherit;
+  opacity: 0;
+  z-index: 5;
+  pointer-events: none;
+  box-sizing: border-box;
+  transition: opacity 0.35s var(--lp-featured-ease);
 }
 
 .lp-featured__media:hover::before,
 .lp-featured__media:focus-visible::before {
+  opacity: 0.72;
+  animation: lp-featured-rainbow-wash 4s ease-in-out infinite;
+}
+
+@keyframes lp-featured-rainbow-wash {
+  0% {
+    filter: hue-rotate(0deg) saturate(1.05);
+    opacity: 0.58;
+  }
+  33% {
+    filter: hue-rotate(14deg) saturate(1.2);
+    opacity: 0.76;
+  }
+  66% {
+    filter: hue-rotate(-10deg) saturate(1.12);
+    opacity: 0.68;
+  }
+  100% {
+    filter: hue-rotate(0deg) saturate(1.05);
+    opacity: 0.58;
+  }
+}
+
+.lp-featured__media:hover::after,
+.lp-featured__media:focus-visible::after {
   opacity: 1;
+  animation: rainbow-border-shift 3s linear infinite;
 }
 
 /* Extension set logo — centered overlay on hover */
@@ -2405,6 +2379,12 @@ body.lightbox-open .filter-bar.is-visible {
   letter-spacing: 0.02em;
   color: var(--aimy-ink);
   text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.lp-featured__col:hover .lp-featured__title,
+.lp-featured__col:focus-within .lp-featured__title {
+  animation: rainbow-shift 2.4s linear infinite;
 }
 
 .lp-featured__caption {
@@ -2464,9 +2444,65 @@ body.lightbox-open .filter-bar.is-visible {
   transform: scale(1);
 }
 
+.lp-featured__num--all {
+  min-width: auto;
+  padding: 0.45rem 1.15rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lp-featured__num.is-pack-filter::before {
+  opacity: 1;
+  transform: scale(1);
+  background: color-mix(in srgb, var(--step-07) 90%, var(--step-01));
+}
+
+.lp-featured__num:hover,
+.lp-featured__num:focus-visible {
+  animation: rainbow-shift 2.2s linear infinite;
+}
+
+.lp-featured__num.is-pack-filter:hover,
+.lp-featured__num.is-pack-filter:focus-visible,
+.lp-featured__num.is-pack-filter.is-active {
+  animation: rainbow-bg-shift 2.5s linear infinite;
+}
+
+.lp-featured__num.is-pack-filter:hover::before,
+.lp-featured__num.is-pack-filter:focus-visible::before,
+.lp-featured__num.is-pack-filter.is-active::before {
+  animation: rainbow-bg-shift 2.5s linear infinite;
+}
+
+.lp-featured__num.is-pack-filter {
+  color: var(--step-01);
+}
+
+.lp-featured__num.is-pack-filter.is-neighbor::before {
+  opacity: 1;
+  background: color-mix(in srgb, var(--step-07) 90%, var(--step-01));
+}
+
+@media (prefers-color-scheme: dark) {
+  .lp-featured__num.is-pack-filter::before {
+    background: color-mix(in srgb, var(--step-06) 82%, var(--step-08));
+  }
+
+  .lp-featured__num.is-pack-filter {
+    color: var(--step-01);
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   .lp-featured__media::before {
-    background: color-mix(in srgb, var(--step-08) 78%, transparent);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--rainbow-1) 32%, transparent),
+      color-mix(in srgb, var(--rainbow-3) 28%, transparent) 52%,
+      color-mix(in srgb, var(--rainbow-4) 30%, transparent)
+    );
   }
 
   .lp-featured__arrow svg {
@@ -2518,6 +2554,119 @@ body.lightbox-open .filter-bar.is-visible {
   }
 }
 
+/* —— Universe panels (Hytale vs other works) —— */
+.lp-universe[hidden] {
+  display: none !important;
+}
+
+.lp-works.lowpoly-main-section {
+  padding:
+    clamp(3rem, 9vh, 6rem)
+    var(--page-pad-x)
+    clamp(4rem, 10vh, 7rem);
+  max-width: min(1480px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.lp-works .lp-featured {
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
+}
+
+.lp-works-grid-wrap {
+  width: 100%;
+}
+
+.lp-works-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr));
+  gap: clamp(0.85rem, 2vw, 1.35rem);
+  width: 100%;
+}
+
+.lp-works-grid .bento-card {
+  width: 100%;
+  min-height: 0;
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: visible;
+  border-radius: var(--lp-radius);
+  transition: transform 0.45s var(--f-bounce);
+}
+
+.lp-works-grid .bento-card:not(.is-modpack):hover {
+  transform: translateY(-6px) scale(1.03);
+  z-index: 5;
+}
+
+.lp-works-grid .card-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: clamp(0.55rem, 1.5vw, 0.9rem);
+  border-radius: calc(var(--lp-radius) - 0.1rem);
+  overflow: visible;
+  background: color-mix(in srgb, var(--step-01) 64%, transparent);
+  border: 1px solid color-mix(in srgb, var(--step-01) 78%, transparent);
+  backdrop-filter: blur(6px) saturate(1.05);
+  -webkit-backdrop-filter: blur(6px) saturate(1.05);
+  box-sizing: border-box;
+  transition: transform 0.35s var(--f-bounce), background 0.3s ease, border-color 0.3s ease;
+}
+
+.lp-works-grid .bento-card:not(.is-modpack):hover .card-media {
+  border-color: color-mix(in srgb, var(--rainbow-1) 38%, var(--step-04));
+  background: color-mix(in srgb, var(--step-01) 78%, var(--step-03));
+}
+
+.lp-works-grid .card-preview-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.lp-works-grid .card-info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.55rem 0.65rem 0.45rem;
+  pointer-events: none;
+}
+
+.lp-works-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: clamp(2.5rem, 6vh, 4rem) clamp(1rem, 4vw, 2rem);
+  text-align: center;
+  font-family: var(--font-ui);
+  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+  font-weight: 500;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--step-07) 70%, var(--step-08));
+  border-radius: var(--lp-radius);
+  border: 1px dashed color-mix(in srgb, var(--step-04) 38%, transparent);
+  background: color-mix(in srgb, var(--step-01) 72%, var(--step-02));
+}
+
+@media (max-width: 640px) {
+  .lp-polybi-logo__nav-icon {
+    width: clamp(2.1rem, 8vw, 2.75rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-polybi-logo__nav,
+  .lp-polybi-logo__nav-icon,
+  .lp-polybi-logo__kicker {
+    transition: none;
+  }
+}
+
 /* Lenis — same solid smooth scroll as main / insights / contact / imprint */
 html.lenis,
 html.lenis body {
@@ -2531,4 +2680,708 @@ html.lenis {
 html:has(.lowpoly-page-body),
 html:has(.lowpoly-page-body) body {
   overscroll-behavior: none;
+}
+
+/* =========================================================
+   Model library — horizontal shelf (replaces vertical grid)
+   ========================================================= */
+
+#models.lp-models {
+  --gallery-peak: clamp(13rem, min(46vh, 54svh), 26rem);
+  --gallery-caption: 3rem;
+  --gallery-caption-gap: clamp(1.1rem, 2.2vh, 1.6rem);
+  --gallery-scale-min: 0.84;
+  --gallery-scale-max: 1.18;
+  --gallery-focus-lift: 0.65rem;
+  --gallery-gap: clamp(5.5rem, 14vw, 11rem);
+  min-height: 100svh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(3.5rem, 6vh, 4.5rem) 0;
+  max-width: none;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+#models.lp-models.lowpoly-main-section {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.lp-models__pack-head {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: min(52rem, 100%);
+  margin: 0 auto clamp(1.25rem, 3vh, 2rem);
+  padding: 0 var(--page-pad-x);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.lp-models__pack-kicker {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-ui);
+  font-size: clamp(0.78rem, 1.05vw, 0.9rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lp-muted);
+}
+
+.lp-models__pack-kicker[hidden] {
+  display: none;
+}
+
+.lp-models__pack-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.35rem, 5.2vw, 4.1rem);
+  font-style: normal;
+  font-weight: normal;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-shadow:
+    3px 3px 0 color-mix(in srgb, var(--step-03) 20%, transparent),
+    0 0 32px color-mix(in srgb, var(--step-04) 14%, transparent);
+  color: var(--lp-ink);
+}
+
+.lp-models__pack-desc {
+  margin: clamp(0.75rem, 1.8vh, 1.1rem) auto 0;
+  max-width: 46ch;
+  font-family: var(--font-ui);
+  font-size: clamp(1rem, 1.35vw, 1.15rem);
+  font-weight: 500;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--step-07) 70%, var(--step-08));
+}
+
+.lp-models__toolbar {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-start;
+  padding: 0 var(--page-pad-x) clamp(0.75rem, 1.8vh, 1.15rem);
+}
+
+.lp-models .filter-bar--inline,
+#models .filter-bar.filter-bar--inline {
+  position: static;
+  left: auto;
+  bottom: auto;
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  z-index: 1;
+  width: 100%;
+  max-width: min(52rem, 100%);
+  margin: 0;
+  padding: 0.35rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--step-07) 12%, transparent);
+  background: color-mix(in srgb, var(--step-02) 55%, transparent);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.lp-models .filter-pill {
+  padding: 0.55rem 0.95rem;
+  min-height: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  background: transparent;
+  color: var(--lp-ink);
+}
+
+.lp-models .filter-pill:hover,
+.lp-models .filter-pill:focus-visible {
+  animation: rainbow-shift 2.2s linear infinite;
+}
+
+.lp-models .filter-pill.active {
+  animation: rainbow-bg-shift 2.5s linear infinite;
+  color: var(--rainbow-on-fill);
+}
+
+.lp-models-rail {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+  scroll-padding-inline: clamp(2rem, 6vw, 4rem);
+  padding:
+    clamp(0.5rem, 1.5vh, 1rem)
+    clamp(2rem, 6vw, 4rem)
+    clamp(0.75rem, 2vh, 1.25rem);
+  cursor: grab;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--step-07) 18%, transparent) transparent;
+}
+
+.lp-models-rail.is-dragging {
+  cursor: grabbing;
+}
+
+.lp-models-rail::-webkit-scrollbar {
+  height: 4px;
+}
+
+.lp-models-rail::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--step-07) 18%, transparent);
+}
+
+/* Gallery row — proportional pieces, generous air */
+.lp-models-rail .models-grid {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center;
+  gap: var(--gallery-gap, clamp(10rem, 24vw, 20rem));
+  width: max-content;
+  min-width: min(100%, max-content);
+  min-height: 100%;
+  padding-block: 0;
+  overflow: visible;
+}
+
+.lp-models-rail-spacer {
+  flex: 0 0 auto;
+  height: 1px;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.lp-models-rail .models-grid .bento-card,
+.lp-models-rail .models-grid .bento-card.card-normal,
+.lp-models-rail .models-grid .bento-card.has-variants {
+  position: relative;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: var(--gallery-w, 10rem);
+  height: auto;
+  aspect-ratio: auto !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  overflow: visible !important;
+  contain: none !important;
+  content-visibility: visible !important;
+  scroll-snap-align: center;
+  transform: none !important;
+  --gallery-focus: 0;
+  transition: opacity 0.25s ease;
+}
+
+.lp-models-rail .models-grid .bento-card:not(.is-modpack):hover,
+.lp-models-rail .models-grid .bento-card.has-variants:hover,
+.lp-models-rail .models-grid .bento-card.has-variants:focus-within {
+  transform: none !important;
+}
+
+/* Open stage — no frame box; images float on the hang line */
+.lp-models-rail .models-grid .card-media,
+.lp-models-rail .models-grid .card-media:not(.card-media--modpack),
+.lp-models-rail .models-grid .bento-card.has-variants .card-media {
+  position: relative !important;
+  inset: auto !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: calc(var(--gallery-peak) * var(--gallery-scale-max)) !important;
+  max-height: none !important;
+  padding: calc(var(--gallery-peak) * (var(--gallery-scale-max) - 1)) 0 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: visible !important;
+  contain: none !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+  box-sizing: border-box;
+}
+
+.lp-models-rail .models-grid .bento-card:not(.is-modpack):hover .card-media:not(.card-media--modpack),
+.lp-models-rail .models-grid .bento-card.has-variants:hover .card-media,
+.lp-models-rail .models-grid .bento-card.has-variants:focus-within .card-media {
+  background: transparent !important;
+  border: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+.lp-models-rail .models-grid .card-preview-img,
+.lp-models-rail .models-grid .card-media .card-preview-img {
+  display: block;
+  width: var(--gallery-w, auto) !important;
+  height: var(--gallery-h, auto) !important;
+  max-width: none !important;
+  max-height: var(--gallery-peak) !important;
+  object-fit: contain !important;
+  object-position: center bottom !important;
+  transform-origin: center bottom;
+  transform:
+    scale(calc(var(--gallery-scale-min) + var(--gallery-focus, 0) * (var(--gallery-scale-max) - var(--gallery-scale-min))))
+    translateY(calc((1 - var(--gallery-focus, 0)) * var(--gallery-focus-lift))) !important;
+  filter: drop-shadow(
+    0 calc(12px + var(--gallery-focus, 0) * 10px)
+    calc(22px + var(--gallery-focus, 0) * 20px)
+    color-mix(in srgb, var(--step-07) calc(10% + var(--gallery-focus, 0) * 9%), transparent)
+  ) !important;
+  transition:
+    transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.42s ease !important;
+  will-change: transform;
+}
+
+.lp-models-rail.is-scrolling .models-grid .card-preview-img,
+.lp-models-rail.is-scrolling .models-grid .card-media .card-preview-img {
+  transition: none !important;
+}
+
+.lp-models-rail.is-loop-jumping .models-grid .card-preview-img,
+.lp-models-rail.is-loop-jumping .models-grid .card-media .card-preview-img {
+  transition: none !important;
+}
+
+.lp-models-rail .models-grid .bento-card.is-center .card-title-text {
+  color: var(--lp-ink);
+  font-weight: 600;
+}
+
+.lp-models-rail .models-grid .bento-card:hover .card-preview-img,
+.lp-models-rail .models-grid .bento-card:hover .card-media .card-preview-img,
+.lp-models-rail .models-grid .bento-card:focus-within .card-preview-img,
+.lp-models-rail .models-grid .bento-card:focus-within .card-media .card-preview-img {
+  transform:
+    scale(calc(var(--gallery-scale-min) + var(--gallery-focus, 0) * (var(--gallery-scale-max) - var(--gallery-scale-min))))
+    translateY(calc((1 - var(--gallery-focus, 0)) * var(--gallery-focus-lift))) !important;
+  animation: rainbow-model-glow 3s linear infinite !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #models.lp-models {
+    --gallery-scale-min: 1;
+    --gallery-scale-max: 1;
+    --gallery-focus-lift: 0;
+  }
+
+  .lp-models-rail .models-grid .card-preview-img,
+  .lp-models-rail .models-grid .card-media .card-preview-img,
+  .lp-models-rail .models-grid .bento-card:hover .card-preview-img,
+  .lp-models-rail .models-grid .bento-card:hover .card-media .card-preview-img {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Captions share one baseline below the hang line */
+.lp-models-rail .models-grid .card-info {
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  flex: 0 0 var(--gallery-caption) !important;
+  width: auto !important;
+  min-width: var(--gallery-w, 10rem) !important;
+  max-width: calc(var(--gallery-w, 10rem) * var(--gallery-scale-max)) !important;
+  min-height: var(--gallery-caption) !important;
+  margin: 0 !important;
+  padding: var(--gallery-caption-gap) 0 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  pointer-events: none;
+  background: transparent !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  box-sizing: border-box;
+}
+
+.lp-models-rail .models-grid .card-title-text {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-ui), "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(0.78rem, 1.05vw, 0.88rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0.05em;
+  color: color-mix(in srgb, var(--lp-ink) 72%, transparent);
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.lp-models-rail .models-grid .card-badge {
+  display: none;
+}
+
+.lp-models-rail .models-grid .card-variant-picker {
+  --radial-radius: 48px;
+  --dot-size: 1.05rem;
+  top: 0;
+  left: 0;
+  z-index: 3;
+}
+
+.lp-models-rail .models-grid .bento-card::before {
+  content: "";
+  position: absolute;
+  inset: -6px -8px calc(var(--gallery-caption) + 0.35rem);
+  border: 3px solid transparent;
+  border-radius: calc(var(--lp-radius) + 0.15rem);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.28s ease;
+  box-sizing: border-box;
+}
+
+.lp-models-rail .models-grid .bento-card:hover::before,
+.lp-models-rail .models-grid .bento-card:focus-within::before {
+  opacity: 1;
+  animation: rainbow-border-shift 3s linear infinite;
+}
+
+.lp-models-rail .models-grid .bento-card:hover .card-title-text,
+.lp-models-rail .models-grid .bento-card:focus-within .card-title-text {
+  animation: rainbow-shift 2.4s linear infinite;
+  font-weight: 600;
+}
+
+@keyframes rainbow-model-glow {
+  0% {
+    filter: drop-shadow(
+      0 14px 26px color-mix(in srgb, var(--rainbow-1) 38%, transparent)
+    );
+  }
+  25% {
+    filter: drop-shadow(
+      0 14px 26px color-mix(in srgb, var(--rainbow-2) 38%, transparent)
+    );
+  }
+  50% {
+    filter: drop-shadow(
+      0 14px 26px color-mix(in srgb, var(--rainbow-3) 38%, transparent)
+    );
+  }
+  75% {
+    filter: drop-shadow(
+      0 14px 26px color-mix(in srgb, var(--rainbow-4) 38%, transparent)
+    );
+  }
+  100% {
+    filter: drop-shadow(
+      0 14px 26px color-mix(in srgb, var(--rainbow-1) 38%, transparent)
+    );
+  }
+}
+
+@media (max-width: 768px) {
+  #models.lp-models {
+    --gallery-peak: clamp(10rem, min(36vh, 44svh), 18rem);
+    --gallery-caption: 2.75rem;
+    --gallery-caption-gap: clamp(0.95rem, 2vh, 1.35rem);
+    --gallery-scale-min: 0.88;
+    --gallery-scale-max: 1.14;
+    --gallery-focus-lift: 0.45rem;
+    --gallery-gap: clamp(7.5rem, 26vw, 13rem);
+    min-height: 100svh;
+    min-height: 100dvh;
+    padding-top: clamp(3.25rem, 6vh, 4.25rem);
+    padding-bottom: clamp(2.5rem, 5vh, 3.5rem);
+  }
+
+  .lp-models .filter-bar--inline {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .lp-models .filter-bar--inline::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lp-models .filter-pill {
+    flex-shrink: 0;
+  }
+
+  .lp-models-rail {
+    padding-inline: clamp(1.25rem, 5vw, 2rem);
+    padding-top: clamp(0.35rem, 1vh, 0.75rem);
+    padding-bottom: clamp(1.75rem, 4vh, 2.75rem);
+  }
+
+  .lp-models-rail .models-grid {
+    gap: var(--gallery-gap, clamp(7.5rem, 26vw, 13rem));
+  }
+}
+
+/* Model library — calm tiles; no rainbow / lift hovers (scroll focus stays) */
+.models-grid .bento-card:not(.is-modpack):hover,
+.models-grid .bento-card.has-variants:hover,
+.models-grid .bento-card.has-variants:focus-within,
+.lp-models-rail .models-grid .bento-card:not(.is-modpack):hover,
+.lp-models-rail .models-grid .bento-card.has-variants:hover,
+.lp-models-rail .models-grid .bento-card.has-variants:focus-within {
+  transform: none !important;
+  z-index: auto;
+}
+
+.models-grid .bento-card:not(.is-modpack):hover .card-media:not(.card-media--modpack),
+.models-grid .bento-card.has-variants:hover .card-media,
+.models-grid .bento-card.has-variants:focus-within .card-media,
+.lp-models-rail .models-grid .bento-card:not(.is-modpack):hover .card-media:not(.card-media--modpack),
+.lp-models-rail .models-grid .bento-card.has-variants:hover .card-media,
+.lp-models-rail .models-grid .bento-card.has-variants:focus-within .card-media {
+  animation: none !important;
+  border-color: color-mix(in srgb, var(--step-01) 78%, transparent) !important;
+  background: color-mix(in srgb, var(--step-01) 64%, transparent) !important;
+  transform: none !important;
+}
+
+.models-grid .bento-card:not(.is-modpack):hover::before,
+.models-grid .bento-card.has-variants:hover::before,
+.models-grid .bento-card.has-variants:focus-within::before,
+.lp-models-rail .models-grid .bento-card:hover::before,
+.lp-models-rail .models-grid .bento-card:focus-within::before {
+  opacity: 0 !important;
+  animation: none !important;
+}
+
+.models-grid .bento-card:not(.is-modpack):hover .card-info h3,
+.models-grid .bento-card.has-variants:hover .card-title-text,
+.models-grid .bento-card.has-variants:focus-within .card-title-text,
+.lp-models-rail .models-grid .bento-card:hover .card-title-text,
+.lp-models-rail .models-grid .bento-card:focus-within .card-title-text {
+  animation: none !important;
+  color: var(--lp-ink);
+  font-weight: 500;
+}
+
+.models-grid .bento-card:hover .card-preview-img,
+.models-grid .bento-card:hover .card-media .card-preview-img,
+.models-grid .bento-card:focus-within .card-preview-img,
+.lp-models-rail .models-grid .bento-card:hover .card-preview-img,
+.lp-models-rail .models-grid .bento-card:hover .card-media .card-preview-img,
+.lp-models-rail .models-grid .bento-card:focus-within .card-preview-img,
+.lp-models-rail .models-grid .bento-card:focus-within .card-media .card-preview-img {
+  animation: none !important;
+}
+
+/* =========================================================
+   Model library — view toggle (shelf ↔ grid)
+   ========================================================= */
+
+.lp-models__view-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: clamp(1rem, 2.2vh, 1.35rem) auto 0;
+  padding: 0.62rem 1.05rem;
+  border: 1px solid color-mix(in srgb, var(--step-07) 16%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--step-02) 58%, var(--step-01));
+  color: var(--lp-ink);
+  font-family: var(--font-ui);
+  font-size: clamp(0.82rem, 1.05vw, 0.92rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.22s ease,
+    border-color 0.22s ease,
+    color 0.22s ease,
+    transform 0.22s ease;
+}
+
+.lp-models__view-toggle:hover {
+  border-color: color-mix(in srgb, var(--pk-primary) 42%, transparent);
+  background: color-mix(in srgb, var(--step-03) 48%, var(--step-01));
+  transform: translateY(-1px);
+}
+
+.lp-models__view-toggle:focus-visible {
+  outline: 2px solid var(--pk-primary);
+  outline-offset: 3px;
+}
+
+.lp-models__view-toggle[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--pk-primary) 38%, transparent);
+  background: color-mix(in srgb, var(--pk-soft) 42%, var(--step-01));
+  color: var(--step-08);
+}
+
+.lp-models__view-toggle-icon {
+  font-size: 1.05em;
+  line-height: 1;
+  opacity: 0.88;
+}
+
+body[data-lp-library-view="grid"] #models.lp-models {
+  min-height: 0;
+  justify-content: flex-start;
+  padding:
+    clamp(2.5rem, 5vh, 3.5rem)
+    0
+    clamp(4rem, 8vh, 6rem);
+}
+
+body[data-lp-library-view="grid"] .lp-models-rail {
+  overflow: visible;
+  cursor: default;
+  flex: none;
+  min-height: 0;
+  display: block;
+  padding: 0 var(--page-pad-x);
+}
+
+body[data-lp-library-view="grid"] .lp-models-rail.is-dragging {
+  cursor: default;
+}
+
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: auto;
+  gap: clamp(0.95rem, 2vw, 1.5rem);
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  align-items: stretch;
+}
+
+@media (min-width: 640px) {
+  body[data-lp-library-view="grid"] .lp-models-rail .models-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  body[data-lp-library-view="grid"] .lp-models-rail .models-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  body[data-lp-library-view="grid"] .lp-models-rail .models-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+body[data-lp-library-view="grid"] .lp-models-rail-spacer,
+body[data-lp-library-view="grid"] .lp-models-rail .bento-card[data-gallery-clone] {
+  display: none !important;
+}
+
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card,
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card.card-normal,
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card.has-variants {
+  flex: unset !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  aspect-ratio: 1 / 1 !important;
+  display: block !important;
+  transform: none !important;
+  opacity: 1 !important;
+  --gallery-focus: 1 !important;
+  transition: transform 0.45s var(--f-bounce);
+}
+
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card:not(.is-modpack):hover,
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card.has-variants:hover,
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card.has-variants:focus-within {
+  transform: translateY(-6px) scale(1.03) !important;
+  z-index: 5;
+}
+
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .card-media,
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .card-media:not(.card-media--modpack),
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card.has-variants .card-media {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: clamp(0.55rem, 1.5vw, 0.9rem) !important;
+  border-radius: calc(var(--lp-radius) - 0.1rem) !important;
+  background: color-mix(in srgb, var(--step-01) 58%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--step-01) 72%, transparent) !important;
+  transform: none !important;
+}
+
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .card-preview-img,
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .card-media .card-preview-img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  transform: none !important;
+  filter: none !important;
+  transition: opacity 0.25s ease !important;
+  will-change: auto;
+}
+
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .card-info {
+  position: absolute !important;
+  left: clamp(1.15rem, 2.4vw, 1.55rem) !important;
+  right: clamp(1.15rem, 2.4vw, 1.55rem) !important;
+  bottom: clamp(1.15rem, 2.4vw, 1.55rem) !important;
+  flex: none !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) {
+  body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card:hover .card-info,
+  body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card:focus-within .card-info {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-lp-library-view="grid"] .lp-models-rail .models-grid .card-info {
+    opacity: 1;
+    transform: none;
+  }
 }

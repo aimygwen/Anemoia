@@ -80,8 +80,8 @@ main:has(.start-work:last-of-type) {
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transform: translate3d(0, calc((1 - var(--swap-progress, 0)) * 1.25rem), 0);
-  will-change: opacity, transform;
+  transform: none;
+  will-change: opacity;
 }
 
 @media (min-width: 1024px) {
@@ -386,11 +386,11 @@ main:has(.start-work:last-of-type) {
 
 @media (prefers-color-scheme: dark) {
   .start-work {
-    --start-paper: var(--step-08);
+    --start-paper: var(--pk-bg);
     --start-ink: var(--step-01);
     --start-muted: color-mix(in srgb, var(--step-01) 62%, transparent);
     --start-line: color-mix(in srgb, var(--step-01) 14%, transparent);
-    --start-preview: var(--step-07);
+    --start-preview: var(--pk-surface);
   }
 
   .start-work__swap-title {

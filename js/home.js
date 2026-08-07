@@ -135,13 +135,18 @@
     document.body.style.height = "auto";
   }
 
-  function bootLenis() {
+  function bootLenis(enableScrollTrigger) {
     if (!window.Polyglide) {
       window.__lenis = null;
       return null;
     }
     var lenis = window.Polyglide.boot();
-    if (lenis && typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
+    if (
+      enableScrollTrigger &&
+      lenis &&
+      typeof gsap !== "undefined" &&
+      typeof ScrollTrigger !== "undefined"
+    ) {
       gsap.registerPlugin(ScrollTrigger);
       lenis.on("scroll", ScrollTrigger.update);
     }
@@ -518,37 +523,52 @@
     );
   }
 
+  /** No-op — --logo-scroll-y is unused; avoids per-frame scroll sync. */
+  function bootTypeLogoScroll() {}
+
   /**
    * 3D mouse tilt for the hero type logo + front art.
-   * Sets --mx/--my on .c-welcome and rotates a "light" angle for the shadow sheen.
+   * Holo rainbow angle follows tilt (--mx/--my); no filters (no strobe).
    */
   function bootTypeLogoTilt() {
     var welcome = document.querySelector(".c-welcome");
-    if (!welcome || reduced) return;
+    var stage = welcome && welcome.querySelector(".aimy-type-logo__stage");
+    if (!welcome || !stage || reduced) return;
 
     var rendered = { x: 0, y: 0 };
     var target = { x: 0, y: 0 };
     var rafId = 0;
-    var lastLight = "";
+    var lastMx = "";
+    var lastMy = "";
+    var lastAngle = 999;
+    var stageRect = stage.getBoundingClientRect();
+
+    function refreshStageRect() {
+      stageRect = stage.getBoundingClientRect();
+    }
 
     function tick() {
-      rendered.x += (target.x - rendered.x) * 0.12;
-      rendered.y += (target.y - rendered.y) * 0.12;
+      rendered.x += (target.x - rendered.x) * 0.1;
+      rendered.y += (target.y - rendered.y) * 0.1;
 
-      var mx = rendered.x.toFixed(4);
-      var my = rendered.y.toFixed(4);
-      welcome.style.setProperty("--mx", mx);
-      welcome.style.setProperty("--my", my);
+      var mx = rendered.x.toFixed(3);
+      var my = rendered.y.toFixed(3);
+      if (mx !== lastMx || my !== lastMy) {
+        welcome.style.setProperty("--mx", mx);
+        welcome.style.setProperty("--my", my);
+        lastMx = mx;
+        lastMy = my;
+      }
 
-      var light = ((Math.atan2(rendered.y, rendered.x) * 180) / Math.PI).toFixed(2);
-      if (light !== lastLight) {
-        welcome.style.setProperty("--logo-light", light + "deg");
-        lastLight = light;
+      var angle = (Math.atan2(rendered.y, rendered.x) * 180) / Math.PI;
+      if (Math.abs(angle - lastAngle) >= 1.2) {
+        stage.style.setProperty("--holo-angle", angle.toFixed(1));
+        lastAngle = angle;
       }
 
       if (
-        Math.abs(target.x - rendered.x) > 0.001 ||
-        Math.abs(target.y - rendered.y) > 0.001
+        Math.abs(target.x - rendered.x) > 0.003 ||
+        Math.abs(target.y - rendered.y) > 0.003
       ) {
         rafId = requestAnimationFrame(tick);
       } else {
@@ -568,15 +588,20 @@
       { passive: true }
     );
 
+    window.addEventListener("resize", refreshStageRect, { passive: true });
+    window.addEventListener("scroll", refreshStageRect, { passive: true });
+
     document.documentElement.addEventListener("pointerleave", function () {
       target.x = 0;
       target.y = 0;
+      lastAngle = 999;
       if (!rafId) rafId = requestAnimationFrame(tick);
     });
 
+    refreshStageRect();
     welcome.style.setProperty("--mx", "0");
     welcome.style.setProperty("--my", "0");
-    welcome.style.setProperty("--logo-light", "180deg");
+    stage.style.setProperty("--holo-angle", "135");
   }
 
   function bootGridStages() {
@@ -591,7 +616,7 @@
     window.addEventListener("resize", apply, { passive: true });
   }
 
-  function bootAimyChrome() {
+  function bootAimyChrome(isStartPage) {
     var header = document.querySelector(".site-header[data-aimy-chrome]");
     if (header && header.parentElement !== document.body) {
       document.body.insertBefore(header, document.body.firstChild);
@@ -604,11 +629,14 @@
       window.Polykroma.bootSocialsScroll({ header: header });
     }
 
-    var sections = document.querySelectorAll(
-      "[data-header-color], #work, #featured, #insights, #about, #contact, .c-welcome, .c-places-after, .c-objects, .c-updates, .c-people, .c-admission"
-    );
+    var sections = isStartPage
+      ? document.querySelectorAll(".c-welcome, [data-start-work]")
+      : document.querySelectorAll(
+          "[data-header-color], #work, #featured, #insights, #about, #contact, .c-welcome, .c-places-after, .c-objects, .c-updates, .c-people, .c-admission"
+        );
 
     var ticking = false;
+    var lastActiveColor = "";
 
     function sync() {
       var mid = window.innerHeight * 0.22;
@@ -632,6 +660,8 @@
         }
       });
 
+      if (activeColor === lastActiveColor) return;
+      lastActiveColor = activeColor;
       header.classList.toggle("is-on-light", activeColor === "light");
       header.classList.toggle("is-on-dark", activeColor === "dark");
     }
@@ -696,22 +726,21 @@
 
       var isStartPage = !!document.querySelector("[data-start-work]");
 
-      bootLenis();
+      bootLenis(!isStartPage);
 
       if (isStartPage) {
-        /* Keep the hero's original scroll parallax without booting removed sections. */
-        bootProgress();
-        bootWelcomePointer();
+        /* Hero: logo holo tilt only — no scroll parallax or pointer path FX. */
         bootTypeLogoTilt();
       } else {
         bootProgress();
         bootGridStages();
         bootSequencers();
         bootWelcomePointer();
+        bootTypeLogoScroll();
         bootTypeLogoTilt();
       }
 
-      bootAimyChrome();
+      bootAimyChrome(isStartPage);
       bootHeaderTheme();
 
       document.documentElement.classList.add("-loaded");
@@ -719,7 +748,7 @@
         document.documentElement.classList.add("-ready");
       }, reduced ? 0 : 50);
 
-      if (typeof ScrollTrigger !== "undefined") {
+      if (!isStartPage && typeof ScrollTrigger !== "undefined") {
         ScrollTrigger.refresh();
         window.addEventListener(
           "load",

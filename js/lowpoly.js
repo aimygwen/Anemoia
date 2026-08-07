@@ -12,6 +12,8 @@
     let lowpolyCatalog = null;
     let lowpolyExtensions = [];
     let floatingAssetsData = [];
+    let activePackFilter = "all";
+    let packFilterNav = { viewAll: null, nums: [], items: [] };
 
     const ASSET_BASE = typeof window !== "undefined" && window.LOWPOLY_ASSET_BASE
         ? String(window.LOWPOLY_ASSET_BASE)
@@ -55,6 +57,11 @@
         return `${resolved}${separator}v=${ASSET_CACHE_VERSION}`;
     }
 
+    function isHytaleCatalogItem(item) {
+        const path = String(item && item.image ? item.image : "").toLowerCase();
+        return path.indexOf("lowpoly/hytale") !== -1;
+    }
+
     function categoryIcon(category) {
         if (window.LowpolyCatalog?.getCategoryIconMarkup) {
             return LowpolyCatalog.getCategoryIconMarkup(category);
@@ -72,6 +79,14 @@
 
     function itemDescription(item) {
         return item.description || item.desc || "";
+    }
+
+    function extensionCardDesc(item) {
+        const caption = item.cardDesc || item.cardDescription || itemDescription(item);
+        if (!caption) return "";
+        return caption.startsWith("+") || caption.startsWith("—")
+            ? caption.replace(/^[+—]\s*/, "")
+            : caption;
     }
 
     function extensionPackLabel(item) {
@@ -212,6 +227,7 @@
             img.src = nextSrc;
             img.removeAttribute("data-src");
             img.alt = `${itemTitle(item)}, ${variant.label}`;
+            bindGalleryImage(img);
         }
 
         if (commit) {
@@ -444,20 +460,35 @@
             };
         });
 
-        items.forEach((_, i) => {
+        const viewAllBtn = document.createElement("button");
+        viewAllBtn.type = "button";
+        viewAllBtn.className = "lp-featured__num lp-featured__num--all is-pack-filter";
+        viewAllBtn.textContent = "View all";
+        viewAllBtn.setAttribute("aria-label", "Show all models in the library");
+        viewAllBtn.setAttribute("aria-pressed", "true");
+        viewAllBtn.addEventListener("click", () => {
+            playSound("select");
+            applyModelPackFilter("all");
+        });
+        nav.appendChild(viewAllBtn);
+
+        const nums = [];
+        items.forEach((item, i) => {
             const btn = document.createElement("button");
             btn.type = "button";
             btn.className = "lp-featured__num";
             btn.innerHTML = `<span>${i + 1}</span>`;
-            btn.setAttribute("aria-label", `Show extension set ${i + 1}`);
+            btn.setAttribute("aria-label", `Show models from ${itemTitle(item)}`);
             btn.addEventListener("click", () => {
                 playSound("select");
                 setIndex(i);
+                applyModelPackFilter(item.id);
             });
             nav.appendChild(btn);
+            nums.push(btn);
         });
 
-        const nums = [...nav.querySelectorAll(".lp-featured__num")];
+        packFilterNav = { viewAll: viewAllBtn, nums, items };
 
         function wrap(i) {
             return ((i % n) + n) % n;
@@ -519,6 +550,7 @@
                     openLightbox(item, undefined, false, slot.media);
                 } else {
                     setIndex(itemIndex);
+                    applyModelPackFilter(item.id);
                 }
                 slot.media.blur();
             });
@@ -545,6 +577,8 @@
             card.setAttribute("tabindex", "0");
             card.setAttribute("aria-label", `View details for ${itemTitle(item)}`);
             card.dataset.category = item.category;
+            if (!isModpacks) card.dataset.extensionPack = item.extensionPack || "";
+            if (!isModpacks && item.id) card.dataset.itemId = item.id;
             if (defaultVariantId) card.dataset.selectedVariant = defaultVariantId;
 
             const variantMarkup = itemHasVariants ? buildCardVariantPicker(item, defaultVariantId) : "";
@@ -571,7 +605,6 @@
             ` : "";
 
             const modelCardMarkup = !isModpacks ? `
-                <span class="card-badge" role="img" aria-label="${categoryLabel(item.category)}">${categoryIcon(item.category)}</span>
                 <div class="card-info">
                     <h3 class="card-title-text">${itemTitle(item)}</h3>
                 </div>
@@ -597,7 +630,10 @@
                 bindCardVariantPicker(card, item);
             }
 
-            card.addEventListener("mouseenter", () => playSound("hover"));
+            if (isModpacks) {
+                card.addEventListener("mouseenter", () => playSound("hover"));
+            }
+
             card.addEventListener("click", () => {
                 playSound("select");
                 openLightbox(item, card.dataset.selectedVariant, !isModpacks, card);
@@ -612,6 +648,473 @@
 
             grid.appendChild(card);
         });
+
+        if (targetGridId === "models-grid") {
+            clearModelsRailLoop();
+            grid.querySelectorAll(".card-preview-img").forEach(bindGalleryImage);
+            if (isModelsRailView()) {
+                scheduleModelsRailLoopSetup({ force: true });
+                scheduleGalleryFocusUpdate();
+            } else {
+                resetImageLazyObserver();
+            }
+        }
+    }
+
+    /** Gallery peak height — mirrors --gallery-peak in lowpoly-aimy.css */
+    function getGalleryPeakPx() {
+        const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+        const vh = window.innerHeight * 0.01;
+        const svh = window.innerHeight * 0.01;
+        const narrow = window.matchMedia("(max-width: 768px)").matches;
+        if (narrow) {
+            return Math.min(Math.max(10 * rem, Math.min(36 * vh, 44 * svh)), 18 * rem);
+        }
+        return Math.min(Math.max(13 * rem, Math.min(46 * vh, 54 * svh)), 26 * rem);
+    }
+
+    function scaleGalleryDimensions(naturalW, naturalH) {
+        const nw = naturalW || 1;
+        const nh = naturalH || 1;
+        const peak = getGalleryPeakPx();
+        const scale = peak / Math.max(nw, nh);
+        return {
+            w: Math.max(1, Math.round(nw * scale)),
+            h: Math.max(1, Math.round(nh * scale)),
+        };
+    }
+
+    function applyGalleryCardSize(card, img) {
+        if (!card || !img || !isModelsRailView()) return;
+        if (!card.closest("[data-models-rail]")) return;
+        const nw = img.naturalWidth;
+        const nh = img.naturalHeight;
+        if (!nw || !nh) return;
+
+        const size = scaleGalleryDimensions(nw, nh);
+        card.style.setProperty("--gallery-w", `${size.w}px`);
+        card.style.setProperty("--gallery-h", `${size.h}px`);
+
+        if (!card.dataset.galleryClone && card.dataset.itemId) {
+            document.querySelectorAll(
+                `.bento-card[data-gallery-clone][data-item-id="${CSS.escape(card.dataset.itemId)}"]`
+            ).forEach((clone) => syncGalleryCloneImage(card, clone));
+        }
+
+        scheduleGalleryFocusUpdate();
+        scheduleModelsRailMetricsRefresh();
+    }
+
+    function bindGalleryImage(img) {
+        const card = img.closest(".bento-card");
+        if (!card || !isModelsRailView()) return;
+        if (!card.closest("[data-models-rail]")) return;
+
+        const apply = () => applyGalleryCardSize(card, img);
+
+        if (img.complete && img.naturalWidth) {
+            apply();
+        } else {
+            img.addEventListener("load", apply, { once: true });
+        }
+    }
+
+    function refreshGalleryCardSizes() {
+        document.querySelectorAll(".lp-models-rail .bento-card").forEach((card) => {
+            const img = card.querySelector(".card-preview-img");
+            if (img && img.naturalWidth) applyGalleryCardSize(card, img);
+        });
+    }
+
+    let galleryResizeTimer;
+
+    function scheduleGalleryResizeRefresh() {
+        clearTimeout(galleryResizeTimer);
+        galleryResizeTimer = setTimeout(() => {
+            refreshGalleryCardSizes();
+            updateModelsRailLayout();
+        }, 120);
+    }
+
+    function getModelItemById(id) {
+        if (!id) return null;
+        for (let i = 0; i < floatingAssetsData.length; i++) {
+            if (floatingAssetsData[i].id === id) return floatingAssetsData[i];
+        }
+        return null;
+    }
+
+    const LP_LIBRARY_VIEW_KEY = "lp-library-view";
+
+    function isModelsRailView() {
+        return document.body.getAttribute("data-lp-library-view") !== "grid";
+    }
+
+    function modelsPackDescDefault() {
+        return isModelsRailView()
+            ? "Individual assets, creatures, and blocks — scroll sideways to browse."
+            : "Individual assets, creatures, and blocks — browse the classic grid.";
+    }
+
+    function syncLibraryViewToggleUI() {
+        const btn = document.querySelector("[data-lp-library-view-toggle]");
+        if (!btn) return;
+        const isGrid = !isModelsRailView();
+        btn.setAttribute("aria-pressed", isGrid ? "true" : "false");
+        const label = btn.querySelector("[data-lp-view-toggle-label]");
+        if (label) {
+            label.textContent = isGrid ? "Switch to shelf view" : "Switch to grid view";
+        }
+    }
+
+    function restoreLibraryViewFromStorage() {
+        let saved = "rail";
+        try {
+            saved = localStorage.getItem(LP_LIBRARY_VIEW_KEY) || "rail";
+        } catch (err) {
+            saved = "rail";
+        }
+        document.body.setAttribute("data-lp-library-view", saved === "grid" ? "grid" : "rail");
+    }
+
+    function resetImageLazyObserver() {
+        if (imgObserver) {
+            imgObserver.disconnect();
+            imgObserver = null;
+        }
+        observeLazyImages();
+    }
+
+    function applyLibraryViewLayout() {
+        const grid = document.getElementById("models-grid");
+        const rail = document.querySelector("[data-models-rail]");
+        if (!grid) return;
+
+        grid.querySelectorAll(".bento-card").forEach((card) => {
+            card.style.removeProperty("--gallery-w");
+            card.style.removeProperty("--gallery-h");
+            card.style.removeProperty("--gallery-focus");
+            card.style.removeProperty("z-index");
+            card.classList.remove("is-center");
+        });
+
+        if (rail) rail.scrollLeft = 0;
+
+        if (isModelsRailView()) {
+            grid.querySelectorAll(".card-preview-img").forEach(bindGalleryImage);
+            scheduleModelsRailLoopSetup({ force: true });
+            scheduleGalleryFocusUpdate();
+        } else {
+            clearModelsRailLoop();
+            resetImageLazyObserver();
+        }
+
+        syncModelsPackHead(activePackFilter);
+        syncLibraryViewToggleUI();
+    }
+
+    function initLibraryViewToggle() {
+        syncLibraryViewToggleUI();
+
+        const btn = document.querySelector("[data-lp-library-view-toggle]");
+        if (!btn) return;
+
+        btn.addEventListener("click", () => {
+            const next = isModelsRailView() ? "grid" : "rail";
+            document.body.setAttribute("data-lp-library-view", next);
+            try {
+                localStorage.setItem(LP_LIBRARY_VIEW_KEY, next);
+            } catch (err) {}
+            applyLibraryViewLayout();
+        });
+    }
+
+    let modelsRailLoopTimer = 0;
+    let modelsRailMetricsTimer = 0;
+    let modelsRailLoopJumping = false;
+
+    function getModelsRailElements() {
+        return {
+            rail: document.querySelector("[data-models-rail]"),
+            grid: document.getElementById("models-grid"),
+        };
+    }
+
+    function getModelsRailOriginals() {
+        return Array.prototype.slice.call(
+            document.querySelectorAll("#models-grid > .bento-card:not([data-gallery-clone]):not(.filter-hidden)")
+        );
+    }
+
+    function createModelsRailSpacer(widthPx, segment) {
+        const spacer = document.createElement("div");
+        spacer.className = "lp-models-rail-spacer";
+        spacer.setAttribute("aria-hidden", "true");
+        spacer.dataset.railSegment = segment;
+        spacer.style.width = `${Math.max(0, Math.round(widthPx))}px`;
+        return spacer;
+    }
+
+    function syncGalleryCloneImage(sourceCard, cloneCard) {
+        const sourceImg = sourceCard.querySelector(".card-preview-img");
+        const cloneImg = cloneCard.querySelector(".card-preview-img");
+        if (!sourceImg || !cloneImg) return;
+
+        if (sourceImg.src && !sourceImg.dataset.src) {
+            cloneImg.src = sourceImg.src;
+            cloneImg.removeAttribute("data-src");
+        } else if (sourceImg.dataset.src) {
+            cloneImg.dataset.src = sourceImg.dataset.src;
+            cloneImg.removeAttribute("src");
+        }
+
+        const sourceW = sourceCard.style.getPropertyValue("--gallery-w");
+        const sourceH = sourceCard.style.getPropertyValue("--gallery-h");
+        if (sourceW) cloneCard.style.setProperty("--gallery-w", sourceW);
+        if (sourceH) cloneCard.style.setProperty("--gallery-h", sourceH);
+    }
+
+    function cloneModelsRailCard(sourceCard, segment) {
+        const clone = sourceCard.cloneNode(true);
+        clone.dataset.galleryClone = "1";
+        clone.dataset.railSegment = segment;
+        clone.setAttribute("aria-hidden", "true");
+        clone.setAttribute("tabindex", "-1");
+        clone.classList.remove("is-center");
+        clone.style.removeProperty("--gallery-focus");
+        clone.style.removeProperty("z-index");
+        syncGalleryCloneImage(sourceCard, clone);
+        return clone;
+    }
+
+    function cloneModelsRailNode(node, segment) {
+        if (node.classList.contains("bento-card")) {
+            return cloneModelsRailCard(node, segment);
+        }
+        if (node.classList.contains("lp-models-rail-spacer")) {
+            const spacer = createModelsRailSpacer(parseFloat(node.style.width) || 0, segment);
+            spacer.dataset.galleryClone = "1";
+            return spacer;
+        }
+        return null;
+    }
+
+    function clearModelsRailLoop() {
+        const grid = document.getElementById("models-grid");
+        if (!grid) return;
+        grid.querySelectorAll("[data-gallery-clone]").forEach((node) => node.remove());
+        grid.querySelectorAll(".lp-models-rail-spacer").forEach((node) => node.remove());
+        grid.querySelectorAll(".bento-card[data-rail-segment]").forEach((card) => {
+            delete card.dataset.railSegment;
+        });
+
+        const rail = document.querySelector("[data-models-rail]");
+        if (rail) {
+            rail.dataset.loopReady = "0";
+            rail.classList.remove("is-loop-jumping");
+        }
+    }
+
+    function getModelsRailLoopMetrics() {
+        const grid = document.getElementById("models-grid");
+        if (!grid) return null;
+
+        const lead = grid.querySelector('[data-rail-segment="middle-lead"]');
+        const trail = grid.querySelector('[data-rail-segment="middle-trail"]');
+        if (!lead || !trail) return null;
+
+        const loopStart = lead.offsetLeft;
+        const setWidth = trail.offsetLeft + trail.offsetWidth - loopStart;
+        if (setWidth <= 0) return null;
+
+        return { loopStart, setWidth };
+    }
+
+    function refreshModelsRailSpacers() {
+        const { rail, grid } = getModelsRailElements();
+        if (!rail || !grid) return;
+        const halfRail = rail.clientWidth * 0.5;
+        grid.querySelectorAll(".lp-models-rail-spacer").forEach((spacer) => {
+            spacer.style.width = `${Math.round(halfRail)}px`;
+        });
+    }
+
+    function wrapRailScroll(target) {
+        const { rail } = getModelsRailElements();
+        if (!rail || rail.dataset.loopReady !== "1") return target;
+
+        const metrics = getModelsRailLoopMetrics();
+        if (!metrics || metrics.setWidth <= 0) return target;
+
+        let next = target;
+        const loopStart = metrics.loopStart;
+        const setWidth = metrics.setWidth;
+
+        while (next >= loopStart + setWidth) next -= setWidth;
+        while (next < loopStart) next += setWidth;
+
+        return next;
+    }
+
+    function applyRailScrollJump(next) {
+        const { rail } = getModelsRailElements();
+        if (!rail || Math.abs(next - rail.scrollLeft) < 0.5) return false;
+
+        modelsRailLoopJumping = true;
+        rail.classList.add("is-loop-jumping");
+        rail.scrollLeft = next;
+
+        requestAnimationFrame(() => {
+            modelsRailLoopJumping = false;
+            rail.classList.remove("is-loop-jumping");
+        });
+
+        return true;
+    }
+
+    function centerModelsRailFirstCard() {
+        const { rail } = getModelsRailElements();
+        const first = getModelsRailOriginals()[0];
+        if (!rail || !first) return;
+        setModelsRailScroll(first.offsetLeft + first.offsetWidth * 0.5 - rail.clientWidth * 0.5);
+    }
+
+    function normalizeModelsRailLoop() {
+        if (modelsRailLoopJumping) return false;
+        const { rail } = getModelsRailElements();
+        if (!rail || rail.dataset.loopReady !== "1") return false;
+        return applyRailScrollJump(wrapRailScroll(rail.scrollLeft));
+    }
+
+    function setModelsRailScroll(target) {
+        const { rail } = getModelsRailElements();
+        if (!rail) return;
+
+        const next = wrapRailScroll(target);
+        if (Math.abs(next - rail.scrollLeft) < 0.5) return;
+
+        if (Math.abs(next - target) > 0.5) {
+            applyRailScrollJump(next);
+        } else {
+            rail.scrollLeft = next;
+        }
+    }
+
+    function updateModelsRailLayout() {
+        const { rail } = getModelsRailElements();
+        if (!rail || rail.dataset.loopReady !== "1") return;
+        refreshModelsRailSpacers();
+        normalizeModelsRailLoop();
+        scheduleGalleryFocusUpdate();
+    }
+
+    function scheduleModelsRailMetricsRefresh() {
+        const { rail } = getModelsRailElements();
+        if (!rail || rail.dataset.loopReady !== "1") return;
+        clearTimeout(modelsRailMetricsTimer);
+        modelsRailMetricsTimer = window.setTimeout(() => {
+            normalizeModelsRailLoop();
+            scheduleGalleryFocusUpdate();
+        }, 180);
+    }
+
+    function shouldRailConsumeWheel(event) {
+        if (!isModelsRailView()) return false;
+        if (event.deltaY < 0) return false;
+        if (!event.target.closest(".models-grid")) return false;
+        if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return false;
+        const { rail } = getModelsRailElements();
+        if (!rail || rail.scrollWidth <= rail.clientWidth + 2) return false;
+        return true;
+    }
+
+    function setupModelsRailLoop(options) {
+        if (!isModelsRailView()) return;
+        const force = !!(options && options.force);
+        const { rail, grid } = getModelsRailElements();
+        if (!rail || !grid) return;
+        if (!force && rail.dataset.loopReady === "1") return;
+
+        clearModelsRailLoop();
+
+        const originals = getModelsRailOriginals();
+        if (!originals.length) {
+            rail.scrollLeft = 0;
+            scheduleGalleryFocusUpdate();
+            return;
+        }
+
+        originals.forEach((card) => {
+            card.dataset.railSegment = "middle";
+        });
+
+        if (originals.length < 2) {
+            const halfRail = rail.clientWidth * 0.5;
+            const lead = createModelsRailSpacer(halfRail, "middle-lead");
+            const trail = createModelsRailSpacer(halfRail, "middle-trail");
+            grid.insertBefore(lead, originals[0]);
+            grid.appendChild(trail);
+            centerModelsRailFirstCard();
+            scheduleGalleryFocusUpdate();
+            return;
+        }
+
+        const halfRail = rail.clientWidth * 0.5;
+        const lead = createModelsRailSpacer(halfRail, "middle-lead");
+        const trail = createModelsRailSpacer(halfRail, "middle-trail");
+        grid.insertBefore(lead, originals[0]);
+        grid.appendChild(trail);
+
+        const middleSet = [lead].concat(originals, [trail]);
+        const afterFrag = document.createDocumentFragment();
+
+        middleSet.forEach((node) => {
+            const afterNode = cloneModelsRailNode(
+                node,
+                node.dataset.railSegment === "middle-lead" ? "after-lead"
+                    : node.dataset.railSegment === "middle-trail" ? "after-trail"
+                        : "after"
+            );
+            if (afterNode) afterFrag.appendChild(afterNode);
+        });
+
+        grid.appendChild(afterFrag);
+
+        rail.dataset.loopReady = "1";
+        centerModelsRailFirstCard();
+        scheduleGalleryFocusUpdate();
+    }
+
+    function scheduleModelsRailLoopSetup(options) {
+        clearTimeout(modelsRailLoopTimer);
+        modelsRailLoopTimer = window.setTimeout(() => {
+            setupModelsRailLoop(options || null);
+        }, 120);
+    }
+
+    function bindModelsRailCloneActivation() {
+        const grid = document.getElementById("models-grid");
+        if (!grid || grid.dataset.cloneClickReady === "1") return;
+        grid.dataset.cloneClickReady = "1";
+
+        grid.addEventListener("click", (event) => {
+            const card = event.target.closest(".bento-card[data-gallery-clone]");
+            if (!card || !grid.contains(card) || event.target.closest(".card-variant-picker")) return;
+            const item = getModelItemById(card.dataset.itemId);
+            if (!item) return;
+            playSound("select");
+            openLightbox(item, card.dataset.selectedVariant, true, card);
+        });
+
+        grid.addEventListener("keydown", (event) => {
+            const card = event.target.closest(".bento-card[data-gallery-clone]");
+            if (!card || (event.key !== "Enter" && event.key !== " ")) return;
+            event.preventDefault();
+            const item = getModelItemById(card.dataset.itemId);
+            if (!item) return;
+            playSound("select");
+            openLightbox(item, card.dataset.selectedVariant, true, card);
+        });
     }
 
     // 5. LAZY IMAGE LOADING via IntersectionObserver
@@ -623,29 +1126,40 @@
         if (!images.length) return;
 
         if (!("IntersectionObserver" in window)) {
-            images.forEach(img => {
+            images.forEach((img) => {
                 img.src = img.dataset.src;
                 img.removeAttribute("data-src");
+                bindGalleryImage(img);
             });
             return;
         }
 
-        if (!imgObserver) {
-            imgObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) return;
-                    const img = entry.target;
-                    img.src = img.dataset.src;
-                    img.removeAttribute("data-src");
-                    imgObserver.unobserve(img);
-                });
-            }, {
-                rootMargin: "240px 0px",
-                threshold: 0
-            });
+        const rail = document.querySelector("[data-models-rail]");
+        const observerRoot = scope === document && rail && isModelsRailView() ? rail : null;
+
+        if (!imgObserver || imgObserver._root !== observerRoot) {
+            if (imgObserver) imgObserver.disconnect();
+            imgObserver = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (!entry.isIntersecting) return;
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.removeAttribute("data-src");
+                        bindGalleryImage(img);
+                        imgObserver.unobserve(img);
+                    });
+                },
+                {
+                    root: observerRoot,
+                    rootMargin: "240px 0px",
+                    threshold: 0,
+                }
+            );
+            imgObserver._root = observerRoot;
         }
 
-        images.forEach(img => imgObserver.observe(img));
+        images.forEach((img) => imgObserver.observe(img));
     }
 
     function initImageLazyLoad() {
@@ -692,90 +1206,262 @@
         observeRevealElements();
     }
 
-    // 7. FILTER BAR LOGIC (Models/Asset library)
-    function initFilterBar() {
-        const bar = document.getElementById("models-filter-bar");
-        if (!bar || bar.dataset.filterReady === "1") return;
-        bar.dataset.filterReady = "1";
+    // 7. EXTENSION-PACK FILTER (Models library — tied to extension carousel nav)
+    function syncModelsPackHead(packId) {
+        const kicker = document.querySelector("[data-models-pack-kicker]");
+        const titleEl = document.querySelector("[data-models-pack-title]");
+        const descEl = document.querySelector("[data-models-pack-desc]");
+        if (!titleEl || !descEl) return;
 
-        bar.addEventListener("click", (e) => {
-            const pill = e.target.closest(".filter-pill");
-            if (!pill || !bar.contains(pill)) return;
+        if (packId === "all") {
+            if (kicker) {
+                kicker.textContent = "";
+                kicker.hidden = true;
+            }
+            titleEl.textContent = "All models";
+            descEl.textContent = modelsPackDescDefault();
+            return;
+        }
 
-            e.preventDefault();
+        const ext = lowpolyExtensions.find((entry) => entry.id === packId);
+        if (!ext) return;
 
-            bar.querySelectorAll(".filter-pill").forEach((p) => {
-                p.classList.toggle("active", p === pill);
-                p.setAttribute("aria-pressed", p === pill ? "true" : "false");
-            });
+        if (kicker) {
+            kicker.textContent = categoryLabel(ext.category);
+            kicker.hidden = false;
+        }
+        titleEl.textContent = itemTitle(ext);
+        descEl.textContent = extensionCardDesc(ext);
+    }
 
-            const filter = pill.getAttribute("data-filter") || "all";
-            const cards = document.querySelectorAll("#models-grid .bento-card");
+    function syncPackFilterNav() {
+        const nav = packFilterNav;
+        if (!nav.viewAll) return;
 
-            cards.forEach((card) => {
-                const category = card.getAttribute("data-category") || card.dataset.category || "";
-                const matches = filter === "all" || category === filter;
-                card.classList.toggle("filter-hidden", !matches);
-                card.hidden = !matches;
-                if (matches) {
-                    card.style.removeProperty("display");
-                }
-            });
+        nav.viewAll.classList.toggle("is-pack-filter", activePackFilter === "all");
+        nav.viewAll.setAttribute("aria-pressed", activePackFilter === "all" ? "true" : "false");
+
+        nav.nums.forEach((btn, i) => {
+            const item = nav.items[i];
+            const isFiltered = Boolean(item && activePackFilter === item.id);
+            btn.classList.toggle("is-pack-filter", isFiltered);
+            btn.setAttribute("aria-pressed", isFiltered ? "true" : "false");
+        });
+    }
+
+    function applyModelPackFilter(packId) {
+        activePackFilter = packId || "all";
+        const cards = document.querySelectorAll("#models-grid .bento-card");
+
+        cards.forEach((card) => {
+            const cardPack = card.dataset.extensionPack || "";
+            const matches = activePackFilter === "all" || cardPack === activePackFilter;
+            card.classList.toggle("filter-hidden", !matches);
+            card.hidden = !matches;
+            if (matches) card.style.removeProperty("display");
+        });
+
+        syncPackFilterNav();
+        syncModelsPackHead(activePackFilter);
+        if (isModelsRailView()) {
+            scheduleModelsRailLoopSetup({ force: true });
+            scheduleGalleryFocusUpdate();
+        }
+    }
+
+    let galleryFocusScheduled = false;
+
+    /**
+     * Smooth scale falloff — 1 at rail center, 0 at falloff edge.
+     */
+    function galleryFocusFromDistance(dist, falloff) {
+        if (falloff <= 0) return 0;
+        const t = Math.min(1, dist / falloff);
+        return Math.cos(t * Math.PI * 0.5);
+    }
+
+    /**
+     * Drive progressive center emphasis via --gallery-focus (0–1) on each card.
+     */
+    function updateGalleryFocus() {
+        if (!isModelsRailView()) return;
+        const rail = document.querySelector("[data-models-rail]");
+        if (!rail || modelsRailLoopJumping) return;
+
+        const cards = rail.querySelectorAll(".bento-card:not(.filter-hidden)");
+        if (!cards.length) return;
+
+        const railRect = rail.getBoundingClientRect();
+        if (railRect.width <= 0) return;
+
+        const railCenter = railRect.left + railRect.width * 0.5;
+        const falloff = railRect.width * 0.46;
+        const nearMargin = railRect.width * 0.65;
+        let focusLeader = null;
+        let focusLeaderValue = -1;
+
+        cards.forEach((card) => {
+            if (card.hidden) {
+                card.style.setProperty("--gallery-focus", "0");
+                card.style.removeProperty("z-index");
+                card.classList.remove("is-center");
+                return;
+            }
+
+            const rect = card.getBoundingClientRect();
+            if (rect.width <= 0 || rect.right < railRect.left - nearMargin || rect.left > railRect.right + nearMargin) {
+                card.style.setProperty("--gallery-focus", "0");
+                card.style.removeProperty("z-index");
+                card.classList.remove("is-center");
+                return;
+            }
+
+            const cardCenter = rect.left + rect.width * 0.5;
+            const dist = Math.abs(cardCenter - railCenter);
+            const focus = galleryFocusFromDistance(dist, falloff);
+
+            card.style.setProperty("--gallery-focus", focus.toFixed(4));
+            card.style.zIndex = String(Math.max(1, Math.round(focus * 12)));
+
+            if (focus > focusLeaderValue) {
+                focusLeaderValue = focus;
+                focusLeader = card;
+            }
+        });
+
+        cards.forEach((card) => {
+            card.classList.toggle("is-center", card === focusLeader && focusLeaderValue > 0.08);
+        });
+    }
+
+    function scheduleGalleryFocusUpdate() {
+        if (galleryFocusScheduled) return;
+        galleryFocusScheduled = true;
+        requestAnimationFrame(() => {
+            galleryFocusScheduled = false;
+            updateGalleryFocus();
         });
     }
 
     /**
-     * Show category dock only while the Models / library section is in view.
-     * IntersectionObserver — no continuous scroll handler.
+     * Horizontal model gallery — direct scroll, light center emphasis.
      */
-    function initFilterDockVisibility() {
-        const bar = document.getElementById("models-filter-bar");
-        const section = document.getElementById("models");
-        if (!bar || !section || bar.dataset.dockVisibilityReady === "1") return;
-        bar.dataset.dockVisibilityReady = "1";
+    function initModelsRail() {
+        const rail = document.querySelector("[data-models-rail]");
+        if (!rail || rail.dataset.railReady === "1") return;
+        rail.dataset.railReady = "1";
 
-        const setVisible = (show) => {
-            bar.classList.toggle("is-visible", show);
-            bar.setAttribute("aria-hidden", show ? "false" : "true");
-            if ("inert" in bar) bar.inert = !show;
-        };
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const modelsSection = document.getElementById("models");
+        let dragging = false;
+        let moved = false;
+        let startX = 0;
+        let startScroll = 0;
+        let scrollIdleTimer = 0;
 
-        setVisible(false);
+        function markRailScrolling() {
+            rail.classList.add("is-scrolling");
+            clearTimeout(scrollIdleTimer);
+            scrollIdleTimer = window.setTimeout(() => {
+                rail.classList.remove("is-scrolling");
+            }, 140);
+        }
 
-        if (!("IntersectionObserver" in window)) {
-            let ticking = false;
-            const update = () => {
-                const rect = section.getBoundingClientRect();
-                const vh = Math.max(window.innerHeight, 1);
-                const show = rect.top < vh * 0.72 && rect.bottom > vh * 0.22;
-                setVisible(show);
-                ticking = false;
-            };
-            const onScroll = () => {
-                if (ticking) return;
-                ticking = true;
-                requestAnimationFrame(update);
-            };
-            window.addEventListener("scroll", onScroll, { passive: true });
-            window.addEventListener("resize", onScroll, { passive: true });
-            update();
+        function onRailScroll() {
+            markRailScrolling();
+            if (!modelsRailLoopJumping) normalizeModelsRailLoop();
+            scheduleGalleryFocusUpdate();
+        }
+
+        function resumeVerticalScroll() {
+            if (window.Polyglide && typeof window.Polyglide.start === "function") {
+                window.Polyglide.start();
+            }
+        }
+
+        window.addEventListener("resize", () => {
+            scheduleGalleryResizeRefresh();
+        }, { passive: true });
+
+        rail.addEventListener(
+            "wheel",
+            (event) => {
+                if (!shouldRailConsumeWheel(event)) {
+                    resumeVerticalScroll();
+                    return;
+                }
+                event.preventDefault();
+                setModelsRailScroll(rail.scrollLeft + event.deltaY);
+                markRailScrolling();
+                scheduleGalleryFocusUpdate();
+            },
+            { passive: false }
+        );
+
+        rail.addEventListener("scroll", onRailScroll, { passive: true });
+
+        if (typeof ResizeObserver !== "undefined") {
+            const railResizeObserver = new ResizeObserver(scheduleGalleryFocusUpdate);
+            railResizeObserver.observe(rail);
+        }
+
+        if (modelsSection) {
+            modelsSection.addEventListener("mouseleave", resumeVerticalScroll);
+        }
+
+        bindModelsRailCloneActivation();
+
+        if (reduced) {
+            scheduleGalleryFocusUpdate();
             return;
         }
 
-        const dockObserver = new IntersectionObserver(
-            (entries) => {
-                for (const entry of entries) {
-                    setVisible(entry.isIntersecting);
-                }
+        rail.addEventListener("pointerdown", (event) => {
+            if (event.pointerType === "mouse" && event.button !== 0) return;
+            dragging = true;
+            moved = false;
+            startX = event.clientX;
+            startScroll = rail.scrollLeft;
+            rail.setPointerCapture(event.pointerId);
+            rail.classList.add("is-dragging");
+        });
+
+        rail.addEventListener("pointermove", (event) => {
+            if (!dragging) return;
+            const dx = event.clientX - startX;
+            if (Math.abs(dx) > 4) moved = true;
+            setModelsRailScroll(startScroll - dx);
+            markRailScrolling();
+            scheduleGalleryFocusUpdate();
+        });
+
+        function endDrag(event) {
+            if (!dragging) return;
+            dragging = false;
+            rail.classList.remove("is-dragging");
+            resumeVerticalScroll();
+            normalizeModelsRailLoop();
+            scheduleGalleryFocusUpdate();
+            try {
+                rail.releasePointerCapture(event.pointerId);
+            } catch (err) {}
+        }
+
+        rail.addEventListener("pointerup", endDrag);
+        rail.addEventListener("pointercancel", endDrag);
+
+        rail.addEventListener(
+            "click",
+            (event) => {
+                if (!moved) return;
+                event.preventDefault();
+                event.stopPropagation();
+                moved = false;
             },
-            {
-                root: null,
-                /* Require a meaningful slice of the models section in view */
-                rootMargin: "-14% 0px -20% 0px",
-                threshold: 0,
-            }
+            true
         );
-        dockObserver.observe(section);
+
+        scheduleGalleryFocusUpdate();
     }
 
     // 7. LIGHTBOX MODAL SYSTEM
@@ -1126,20 +1812,28 @@
             console.error("Failed to load lowpoly catalog:", err);
         }
 
-        renderGrid(floatingAssetsData, false, "models-grid");
+        restoreLibraryViewFromStorage();
+
+        renderGrid(floatingAssetsData.filter(isHytaleCatalogItem), false, "models-grid");
+        renderGrid(floatingAssetsData.filter((item) => !isHytaleCatalogItem(item)), false, "works-grid");
 
         const stage = document.getElementById("extensions-stage");
         const grid = document.getElementById("models-grid");
+        const worksGrid = document.getElementById("works-grid");
         if (stage && !stage.children.length) {
             stage.innerHTML = `<p class="lp-load-error">Extension sets failed to load. Hard-refresh (Cmd+Shift+R) or open via http://127.0.0.1:8765/behind-the-madness/new/lowpoly.html</p>`;
         }
         if (grid && !grid.children.length) {
             grid.innerHTML = `<p class="lp-load-error">Model library failed to load (${floatingAssetsData.length} items in catalog). Hard-refresh or check the console.</p>`;
         }
+        if (worksGrid && !worksGrid.children.length) {
+            worksGrid.innerHTML = `<p class="lp-works-empty">Standalone lowpoly pieces will land here soon — personal worlds, experiments, and commissions outside Hytale.</p>`;
+        }
 
-        // Wire up filter pills + section-gated dock visibility
-        initFilterBar();
-        initFilterDockVisibility();
+        initLibraryViewToggle();
+        initModelsRail();
+        applyModelPackFilter("all");
+        applyLibraryViewLayout();
 
         // Start lazy-loading images (data-src → src when near viewport)
         initImageLazyLoad();
@@ -1175,6 +1869,13 @@
         destroy: function () {
             if (lowpolyAbort) lowpolyAbort.abort();
             lowpolyAbort = null;
+            const rail = document.querySelector("[data-models-rail]");
+            if (rail) delete rail.dataset.railReady;
+            activePackFilter = "all";
+            packFilterNav = { viewAll: null, nums: [], items: [] };
+            const modelsGrid = document.getElementById("models-grid");
+            if (modelsGrid) delete modelsGrid.dataset.cloneClickReady;
+            clearModelsRailLoop();
             const lb = document.getElementById("lightbox");
             if (lb) {
                 lb.classList.remove("active");
