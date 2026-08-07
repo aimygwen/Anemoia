@@ -144,6 +144,7 @@ body {
   overflow: visible !important;
   /* Between filled title (behind) and outline title (in front). */
   z-index: 10 !important;
+  pointer-events: none !important;
   /* Keep original grid slot (--top:3) so title / side pics stay put.
      Nudge only visually with translate (does not affect layout). */
   translate: 0 -30% !important;
@@ -236,6 +237,7 @@ body {
   overflow-x: clip !important;
   overflow-y: visible !important;
   contain: none !important;
+  position: relative !important;
 }
 
 .c-welcome .-w {
@@ -1356,6 +1358,7 @@ label {
 .c-welcome .-w span.title.line-1.is-visions-of.is-title-outline,
 .c-welcome .-w span.title.line-3.is-brand-title.is-title-outline {
   z-index: 20 !important;
+  pointer-events: none !important;
   color: transparent !important;
   -webkit-text-fill-color: transparent !important;
   text-shadow: none !important;
@@ -1428,14 +1431,22 @@ label {
 .c-welcome .-w .cta[data-v-6c6a6d99],
 .c-welcome .-w .cta.-a-to-top {
   --left: 1 !important;
-  --width: 6 !important;
+  --width: 12 !important;
+  grid-column-start: 1 !important;
+  grid-column-end: -1 !important;
   display: flex !important;
   justify-content: center !important;
-  justify-self: center !important;
+  align-items: center !important;
+  justify-self: stretch !important;
+  align-self: start !important;
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
-  z-index: 40 !important;
+  position: relative !important;
+  isolation: isolate !important;
+  z-index: 50 !important;
+  width: 100% !important;
+  max-width: 100% !important;
   margin-top: calc(var(--h1) + 2rem + 24vh) !important;
   transform: none !important;
   translate: none !important;
@@ -1444,8 +1455,6 @@ label {
 @media (min-width: 1024px) {
   .c-welcome .-w .cta,
   .c-welcome .-w .cta[data-v-6c6a6d99] {
-    --left: 1 !important;
-    --width: 12 !important;
     margin-top: calc(var(--h1) + 2rem + 26vh) !important;
   }
 }
@@ -1468,7 +1477,7 @@ label {
   justify-content: center !important;
   align-items: center !important;
   margin-inline: auto !important;
-  padding: 0.8rem !important;
+  padding: 0 !important;
   border-radius: 50% !important;
   border: 0 !important;
   background: transparent !important;
@@ -1480,17 +1489,30 @@ label {
   overflow: visible !important;
   opacity: 1 !important;
   visibility: visible !important;
+  pointer-events: auto !important;
   cursor: pointer;
   text-decoration: none !important;
   color: inherit !important;
   transition: none !important;
+  z-index: 1 !important;
+  touch-action: manipulation;
+  transform: translateX(calc(-1 * var(--g-margin, 0px))) !important;
 }
 
 .c-welcome .-w .cta .button > span:not(.aimy-cta-frost),
+.c-welcome .-w .cta .button > span.text,
+.c-welcome .-w .cta .button > span.aimy-me-label,
 .c-welcome .-w .cta .button > span[data-v-f52f19c3] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
   color: var(--step-01) !important;
   opacity: 1 !important;
-  position: relative;
   z-index: 2;
   font-family: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif !important;
   font-style: normal !important;
@@ -1500,6 +1522,7 @@ label {
   letter-spacing: 0.02em;
   text-align: center;
   text-transform: none !important;
+  white-space: nowrap;
 }
 
 /* Frost disc clipped to the circle (rings stay outside via canvas). */
@@ -1541,7 +1564,7 @@ label {
 .c-welcome .-w .cta .button:not(.-disabled):hover {
   background: transparent !important;
   background-color: transparent !important;
-  transform: none;
+  transform: translateX(calc(-1 * var(--g-margin, 0px))) !important;
   box-shadow: none !important;
 }
 
@@ -1570,7 +1593,7 @@ label {
 }
 
 .c-welcome .-w .cta .button:active {
-  transform: none;
+  transform: translateX(calc(-1 * var(--g-margin, 0px))) !important;
 }
 
 .aimy-cta-noise-rings {
@@ -1669,7 +1692,7 @@ label {
 
 /* Hide the legacy filled/outline title stack and mobile taglines */
 .c-welcome .-w .title,
-.c-welcome .-w .-mm,
+.c-welcome .-w p.-mm,
 .c-welcome .-w .cta-label {
   display: none !important;
 }

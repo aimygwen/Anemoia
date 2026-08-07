@@ -10,6 +10,14 @@
   --ins-display: "Athemi", "Bodoni Moda", "Voyage", "Instrument Serif", Georgia, serif;
   --ins-serif: "Instrument Serif", "Voyage", Georgia, serif;
   --ins-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --ins-hand: "Caveat", "Athemi", cursive;
+  --ins-leading: 1.68;
+  --ins-leading-tight: 1.14;
+  --ins-body: clamp(1.12rem, 1.55vw, 1.32rem);
+  --ins-subtitle: clamp(1.85rem, 3vw, 2.45rem);
+  --ins-lede: clamp(1.45rem, 2.7vw, 2rem);
+  --ins-hand-size: clamp(1.38rem, 2.25vw, 1.88rem);
+  --ins-label: 0.88rem;
 
   position: relative;
   z-index: 6;
@@ -57,7 +65,7 @@
 .about-sheet .ins-label {
   margin: 0 0 0.75rem;
   font-family: var(--ins-sans);
-  font-size: 0.72rem;
+  font-size: var(--ins-label);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -67,8 +75,8 @@
 .about-sheet .ins-roles-list {
   margin: 0;
   font-family: var(--ins-serif);
-  font-size: clamp(1.15rem, 2vw, 1.45rem);
-  line-height: 1.35;
+  font-size: clamp(1.45rem, 2.5vw, 1.95rem);
+  line-height: var(--ins-leading-tight);
   letter-spacing: -0.01em;
 }
 
@@ -76,8 +84,8 @@
   margin: 0;
   max-width: 56ch;
   font-family: var(--ins-sans);
-  font-size: clamp(0.95rem, 1.35vw, 1.1rem);
-  line-height: 1.55;
+  font-size: var(--ins-body);
+  line-height: var(--ins-leading);
   color: color-mix(in srgb, var(--ins-ink) 88%, transparent);
 }
 
@@ -91,7 +99,7 @@
   font-weight: 500;
   font-style: normal;
   font-size: clamp(2.4rem, 7.5vw, 7.25rem);
-  line-height: 0.95;
+  line-height: 1.02;
   letter-spacing: -0.035em;
   color: var(--ins-ink);
 }
@@ -135,8 +143,8 @@
   flex-direction: column;
   gap: 0.15rem;
   font-family: var(--ins-serif);
-  font-size: clamp(1.1rem, 2.2vw, 1.65rem);
-  line-height: 1.15;
+  font-size: var(--ins-lede);
+  line-height: var(--ins-leading-tight);
   letter-spacing: -0.02em;
   color: var(--ins-paper);
   text-shadow: 0 1px 12px color-mix(in srgb, var(--step-08) 35%, transparent);
@@ -157,7 +165,7 @@
   font-family: var(--ins-display);
   font-weight: 400;
   font-size: clamp(4.5rem, 15.5vw, 13.5rem);
-  line-height: 0.8;
+  line-height: 0.92;
   letter-spacing: 0.015em;
   text-transform: uppercase;
 }
@@ -176,18 +184,19 @@
 }
 
 .about-sheet .ins-col-label {
-  margin: 0 0 1rem;
+  margin: 0 0 1.15rem;
   font-family: var(--ins-serif);
-  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  font-size: var(--ins-subtitle);
   font-weight: 500;
   letter-spacing: -0.02em;
+  line-height: var(--ins-leading-tight);
 }
 
 .about-sheet .ins-col p {
   margin: 0;
   max-width: 56ch;
-  font-size: clamp(0.92rem, 1.2vw, 1.05rem);
-  line-height: 1.55;
+  font-size: var(--ins-body);
+  line-height: var(--ins-leading);
   color: color-mix(in srgb, var(--ins-ink) 86%, transparent);
 }
 
@@ -195,10 +204,37 @@
   margin-top: 0.85em;
 }
 
+.about-sheet .ins-col a {
+  color: var(--violet-deep);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.14em;
+  text-decoration-color: color-mix(in srgb, var(--violet-deep) 45%, transparent);
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.about-sheet .ins-col a:hover,
+.about-sheet .ins-col a:focus-visible {
+  color: color-mix(in srgb, var(--pink) 70%, var(--violet-deep));
+  text-decoration-color: currentColor;
+  outline: none;
+}
+
+.about-sheet .ins-branding .ins-concept-cols--triple {
+  margin-bottom: 0;
+}
+
+@media (min-width: 900px) {
+  .about-sheet .ins-branding .ins-concept-cols--triple {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(2rem, 4vw, 3.5rem);
+  }
+}
+
 .about-sheet .ins-bts-label {
   margin: 0;
   font-family: var(--ins-sans);
-  font-size: 0.72rem;
+  font-size: var(--ins-label);
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -206,7 +242,24 @@
 }
 
 .about-sheet .ins-slider {
-  padding: 0 0 clamp(4rem, 10vh, 7rem);
+  padding: 0 0 clamp(2rem, 5vh, 3.5rem);
+}
+
+.about-sheet .ins-bridge {
+  padding: clamp(2rem, 6vh, 4rem) clamp(1.25rem, 5vw, 4rem);
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.about-sheet .ins-bridge-text {
+  margin: 0 auto;
+  max-width: 58ch;
+  font-family: var(--ins-serif);
+  font-size: var(--ins-lede);
+  line-height: var(--ins-leading);
+  letter-spacing: -0.015em;
+  text-align: center;
+  color: color-mix(in srgb, var(--ins-ink) 88%, transparent);
 }
 
 .about-sheet .ins-slider-track {
@@ -283,13 +336,102 @@
   margin: 0 0 clamp(2.5rem, 6vh, 4.5rem);
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
   gap: 0.08em;
   font-family: var(--ins-display);
   font-weight: 400;
   font-size: clamp(4rem, 13.5vw, 11.5rem);
-  line-height: 0.82;
+  line-height: 0.92;
   letter-spacing: 0.015em;
   text-transform: uppercase;
+}
+
+.about-sheet .ins-track--achievements .ins-chapters {
+  gap: clamp(2.5rem, 6vh, 4rem);
+}
+
+.about-sheet .ins-track--achievements .ins-achievement {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "art"
+    "copy";
+  gap: clamp(1.25rem, 3vw, 2rem);
+  padding-top: clamp(2rem, 4vh, 3rem);
+  border-top: 1px solid color-mix(in srgb, var(--ins-ink) 14%, transparent);
+}
+
+.about-sheet .ins-achievement-art {
+  grid-area: art;
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 0.2rem;
+}
+
+.about-sheet .ins-achievement-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-sheet .ins-achievement-copy {
+  grid-area: copy;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.about-sheet .ins-track--achievements .ins-chapter-status {
+  margin: 0;
+  font-family: var(--ins-sans);
+  font-size: var(--ins-label);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ins-muted);
+}
+
+.about-sheet .ins-track--achievements .ins-chapter-name {
+  margin: 0;
+  font-family: var(--ins-serif);
+  font-weight: 500;
+  font-size: var(--ins-subtitle);
+  line-height: var(--ins-leading-tight);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ins-ink);
+}
+
+.about-sheet .ins-chapter-desc {
+  margin: 0;
+  max-width: 58ch;
+  font-family: var(--ins-sans);
+  font-size: var(--ins-body);
+  line-height: var(--ins-leading);
+  color: color-mix(in srgb, var(--ins-ink) 86%, transparent);
+}
+
+.about-sheet .ins-chapter-note {
+  margin: 0.15rem 0 0;
+  max-width: 52ch;
+  font-family: var(--ins-hand);
+  font-size: var(--ins-hand-size);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--ins-ink) 72%, transparent);
+}
+
+@media (min-width: 800px) {
+  .about-sheet .ins-track--achievements .ins-achievement {
+    grid-template-columns: minmax(12rem, 18rem) minmax(0, 1fr);
+    grid-template-areas: "art copy";
+    align-items: start;
+    gap: clamp(2rem, 4vw, 3rem);
+  }
 }
 
 .about-sheet .ins-chapters {
@@ -307,6 +449,11 @@
   gap: 0.35rem 2rem;
   padding-top: clamp(1.5rem, 3vh, 2rem);
   border-top: 1px solid color-mix(in srgb, var(--ins-ink) 14%, transparent);
+}
+
+.about-sheet .ins-track--achievements .ins-chapter {
+  border-top: none;
+  padding-top: 0;
 }
 
 @media (min-width: 800px) {
@@ -328,7 +475,7 @@
 
 .about-sheet .ins-chapter-num {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: var(--ins-label);
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -339,8 +486,8 @@
   margin: 0;
   font-family: var(--ins-serif);
   font-weight: 500;
-  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
-  line-height: 1.05;
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  line-height: var(--ins-leading-tight);
   letter-spacing: -0.025em;
   text-transform: uppercase;
 }
@@ -348,8 +495,8 @@
 .about-sheet .ins-chapter-body {
   margin: 0.35rem 0 0;
   max-width: 66ch;
-  font-size: clamp(0.92rem, 1.2vw, 1.05rem);
-  line-height: 1.55;
+  font-size: var(--ins-body);
+  line-height: var(--ins-leading);
   color: color-mix(in srgb, var(--ins-ink) 84%, transparent);
 }
 
@@ -367,9 +514,48 @@
   font-family: var(--ins-display);
   font-weight: 400;
   font-size: clamp(4rem, 13.5vw, 11.5rem);
-  line-height: 0.82;
+  line-height: 0.92;
   letter-spacing: 0.015em;
   text-transform: uppercase;
+}
+
+.about-sheet .ins-ai-stamp {
+  padding: clamp(2.5rem, 7vh, 5rem) clamp(1.25rem, 5vw, 4rem);
+  max-width: 82rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about-sheet .ins-ai-stamp-lead {
+  margin: 0 auto clamp(1rem, 2.5vh, 1.75rem);
+  max-width: 42ch;
+  font-family: var(--ins-serif);
+  font-size: var(--ins-lede);
+  line-height: var(--ins-leading);
+  letter-spacing: -0.01em;
+  color: color-mix(in srgb, var(--ins-ink) 82%, transparent);
+}
+
+.about-sheet .ins-ai-stamp-punch {
+  margin: 0;
+  font-family: var(--ins-display);
+  font-weight: 400;
+  font-size: clamp(4.5rem, 16vw, 13rem);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ins-ink);
+}
+
+.about-sheet .ins-ai-stamp-heart {
+  display: inline-block;
+  margin-left: 0.06em;
+  font-family: var(--ins-serif);
+  font-size: 0.72em;
+  line-height: 1;
+  color: color-mix(in srgb, var(--step-05) 78%, var(--ins-ink));
+  vertical-align: baseline;
+  transform: translateY(-0.04em);
 }
 
 .about-sheet .ins-closing {
@@ -384,7 +570,7 @@
   font-family: var(--ins-display);
   font-weight: 400;
   font-size: clamp(4.5rem, 15.5vw, 12.5rem);
-  line-height: 0.82;
+  line-height: 0.92;
   letter-spacing: 0.015em;
   text-transform: uppercase;
 }
@@ -393,14 +579,14 @@
   margin: 0 auto 2rem;
   max-width: 52ch;
   font-family: var(--ins-serif);
-  font-size: clamp(1.15rem, 2vw, 1.45rem);
-  line-height: 1.35;
+  font-size: var(--ins-lede);
+  line-height: var(--ins-leading);
   letter-spacing: -0.01em;
 }
 
 .about-sheet .ins-discover {
   margin: 0 0 clamp(2rem, 5vh, 3rem);
-  font-size: 0.72rem;
+  font-size: var(--ins-label);
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -438,26 +624,27 @@
 }
 
 .about-sheet .ins-link-kicker {
-  font-size: 0.68rem;
+  font-size: var(--ins-label);
   letter-spacing: 0.14em;
   opacity: 0.55;
 }
 
 .about-sheet .ins-link-name {
   font-family: var(--ins-serif);
-  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-size: clamp(1.85rem, 3vw, 2.4rem);
   letter-spacing: -0.02em;
+  line-height: var(--ins-leading-tight);
 }
 
 .about-sheet .ins-link-desc {
-  font-size: 0.85rem;
-  line-height: 1.4;
+  font-size: clamp(1rem, 1.3vw, 1.12rem);
+  line-height: var(--ins-leading);
   opacity: 0.72;
 }
 
 .about-sheet .ins-copy {
   margin: 0;
-  font-size: 0.7rem;
+  font-size: var(--ins-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ins-muted);
@@ -477,7 +664,7 @@
 }
 
 .about-sheet .ins-next span {
-  font-size: 0.72rem;
+  font-size: var(--ins-label);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   opacity: 0.55;
@@ -486,8 +673,9 @@
 .about-sheet .ins-next strong {
   font-family: var(--ins-serif);
   font-weight: 500;
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(2.15rem, 5.4vw, 3.75rem);
   letter-spacing: -0.03em;
+  line-height: var(--ins-leading-tight);
 }
 
 .about-sheet .ins-next:hover {

@@ -12,7 +12,7 @@
   var dragging = false;
   var startX = 0;
   var startScroll = 0;
-  var moved = false;
+  var dragDistance = 0;
 
   function drawMosaic(canvas, image, src, rect, pixelSize) {
     var context = canvas.getContext("2d");
@@ -149,26 +149,38 @@
 
   if (reduced) return;
 
+  var activePointer = null;
+
   scroller.addEventListener("pointerdown", function (event) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    dragging = true;
-    moved = false;
+    activePointer = event.pointerId;
+    dragging = false;
+    dragDistance = 0;
+    scroller.setAttribute("data-drag-px", "0");
     startX = event.clientX;
     startScroll = scroller.scrollLeft;
-    scroller.setPointerCapture(event.pointerId);
-    scroller.classList.add("is-dragging");
   });
 
   scroller.addEventListener("pointermove", function (event) {
-    if (!dragging) return;
+    if (event.pointerId !== activePointer) return;
     var dx = event.clientX - startX;
-    if (Math.abs(dx) > 4) moved = true;
+    if (!dragging) {
+      if (Math.abs(dx) < 8) return;
+      dragging = true;
+      scroller.classList.add("is-dragging");
+      try {
+        scroller.setPointerCapture(event.pointerId);
+      } catch (e) {}
+    }
+    dragDistance = Math.max(dragDistance, Math.abs(dx));
     scroller.scrollLeft = startScroll - dx;
   });
 
   function endDrag(event) {
-    if (!dragging) return;
+    if (event.pointerId !== activePointer) return;
+    activePointer = null;
     dragging = false;
+    scroller.setAttribute("data-drag-px", String(dragDistance));
     scroller.classList.remove("is-dragging");
     try {
       scroller.releasePointerCapture(event.pointerId);
@@ -178,11 +190,19 @@
   scroller.addEventListener("pointerup", endDrag);
   scroller.addEventListener("pointercancel", endDrag);
 
-  /* Avoid accidental navigation after a drag */
-  scroller.addEventListener("click", function (event) {
-    if (!moved) return;
-    event.preventDefault();
-    event.stopPropagation();
-    moved = false;
-  }, true);
+  scroller.querySelectorAll(".start-work__col").forEach(function (link) {
+    link.addEventListener("click", function (event) {
+      if (event.defaultPrevented) return;
+      if (Number(scroller.getAttribute("data-drag-px") || 0) >= 12) {
+        event.preventDefault();
+        return;
+      }
+      if (event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (window.AimyPageTransition && typeof window.AimyPageTransition.navigate === "function") {
+        event.preventDefault();
+        window.AimyPageTransition.navigate(link.href);
+      }
+    });
+  });
 })();

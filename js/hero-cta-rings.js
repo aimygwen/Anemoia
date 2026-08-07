@@ -96,8 +96,26 @@
   var button = document.querySelector(".c-welcome .cta .button");
   if (!button) return;
 
-  var label = button.querySelector(":scope > span");
-  if (label) label.textContent = "Me";
+  button.href = "./about.html";
+  button.setAttribute("aria-label", "About me");
+  button.setAttribute("title", "About me");
+
+  var label = button.querySelector(":scope > span.text, :scope > span[data-v-f52f19c3]");
+  if (label) {
+    label.textContent = "Me";
+    label.classList.remove("-mm");
+    label.classList.add("aimy-me-label");
+  }
+
+  button.addEventListener("click", function (event) {
+    if (event.defaultPrevented) return;
+    if (event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (window.AimyPageTransition && typeof window.AimyPageTransition.navigate === "function") {
+      event.preventDefault();
+      window.AimyPageTransition.navigate(button.href);
+    }
+  });
 
   var frost = document.createElement("i");
   frost.className = "aimy-cta-frost";
@@ -110,10 +128,11 @@
   button.appendChild(canvas);
 
   var ctx = canvas.getContext("2d");
-  if (!ctx) return;
 
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var coarse = window.matchMedia("(pointer: coarse)").matches;
+
+  if (!ctx) return;
   var dpi = Math.min(window.devicePixelRatio || 1, 2);
   var noise = typeof SimplexNoise !== "undefined" ? new SimplexNoise() : null;
   var width = 0;

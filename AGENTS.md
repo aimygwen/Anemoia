@@ -26,7 +26,7 @@ Plain HTML + CSS + vanilla JS, deployed 1:1 to GitHub Pages.
 
 ## Hard conventions
 
-1. **Cache busting.** Every css/js/asset URL carries a version query, currently `?v=aug3b`. When you change a CSS/JS file, bump the tag **on every page that references it** (grep for the old tag). Keep all pages on one tag — don't mix versions. Shared chrome is currently `polykroma-26`.
+1. **Cache busting.** Every css/js/asset URL carries a version query, currently `?v=aug3b`. When you change a CSS/JS file, bump the tag **on every page that references it** (grep for the old tag). Keep all pages on one tag — don't mix versions. Shared chrome is currently `polykroma-46`.
 2. **Per-page pairing.** Page-specific code goes in that page's own css/js file. Only things shared by ≥2 pages belong in `polykroma.*`. Load order in `<head>`/end of `<body>` matters: CDN libs → `polyglide.js` → `polykroma.js` → page script.
 3. **No dependencies.** CDN only: Lenis 1.1.18, GSAP 3.12.5, simplex-noise 2.4.0. Do not add npm packages or a build tool; if a capability is missing, write it by hand.
 4. **Vanilla JS**, `"use strict"` IIFEs exposing one `window.*` global (see `js/polyglide.js` for the house style). ES5-leaning (`var`) in shared helpers is intentional; match the file you're editing. Every script starts with a short `/** … */` header describing what it owns.

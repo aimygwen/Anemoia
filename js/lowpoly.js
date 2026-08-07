@@ -11,9 +11,12 @@
 (function () {
     let lowpolyCatalog = null;
     let lowpolyExtensions = [];
+    let featuredExtensions = [];
     let floatingAssetsData = [];
-    let activePackFilter = "all";
-    let packFilterNav = { viewAll: null, nums: [], items: [] };
+    let activePackFilter = "complete-collection";
+    let packFilterNav = { nums: [], items: [] };
+
+    const COMPLETE_COLLECTION_ID = "complete-collection";
 
     const ASSET_BASE = typeof window !== "undefined" && window.LOWPOLY_ASSET_BASE
         ? String(window.LOWPOLY_ASSET_BASE)
@@ -87,6 +90,36 @@
         return caption.startsWith("+") || caption.startsWith("—")
             ? caption.replace(/^[+—]\s*/, "")
             : caption;
+    }
+
+    function buildCompleteCollectionEntry() {
+        return {
+            id: COMPLETE_COLLECTION_ID,
+            title: "Complete Collection",
+            name: "Complete Collection",
+            category: "misc",
+            image: "lowpoly/lowpoly3d.png",
+            cardDesc: "Every model across all Polybi extension sets — browse the full library.",
+            cardDescription: "Every model across all Polybi extension sets — browse the full library.",
+            desc: "Every model across all Polybi extension sets — browse the full library.",
+            description: "Every model across all Polybi extension sets — browse the full library.",
+            isCompleteCollection: true,
+            size: "normal",
+        };
+    }
+
+    function rebuildFeaturedExtensions() {
+        featuredExtensions = [buildCompleteCollectionEntry(), ...lowpolyExtensions];
+        return featuredExtensions;
+    }
+
+    function isCompleteCollectionId(packId) {
+        return packId === COMPLETE_COLLECTION_ID || packId === "all";
+    }
+
+    function findFeaturedExtension(packId) {
+        const id = isCompleteCollectionId(packId) ? COMPLETE_COLLECTION_ID : packId;
+        return featuredExtensions.find((entry) => entry.id === id) || null;
     }
 
     function extensionPackLabel(item) {
@@ -460,25 +493,19 @@
             };
         });
 
-        const viewAllBtn = document.createElement("button");
-        viewAllBtn.type = "button";
-        viewAllBtn.className = "lp-featured__num lp-featured__num--all is-pack-filter";
-        viewAllBtn.textContent = "View all";
-        viewAllBtn.setAttribute("aria-label", "Show all models in the library");
-        viewAllBtn.setAttribute("aria-pressed", "true");
-        viewAllBtn.addEventListener("click", () => {
-            playSound("select");
-            applyModelPackFilter("all");
-        });
-        nav.appendChild(viewAllBtn);
-
         const nums = [];
         items.forEach((item, i) => {
             const btn = document.createElement("button");
             btn.type = "button";
-            btn.className = "lp-featured__num";
-            btn.innerHTML = `<span>${i + 1}</span>`;
-            btn.setAttribute("aria-label", `Show models from ${itemTitle(item)}`);
+            if (item.isCompleteCollection) {
+                btn.className = "lp-featured__num lp-featured__num--all";
+                btn.textContent = "View All";
+                btn.setAttribute("aria-label", "Show all models in the library");
+            } else {
+                btn.className = "lp-featured__num lp-featured__num--set";
+                btn.innerHTML = `<span>${i}</span>`;
+                btn.setAttribute("aria-label", `Show models from ${itemTitle(item)}`);
+            }
             btn.addEventListener("click", () => {
                 playSound("select");
                 setIndex(i);
@@ -488,7 +515,7 @@
             nums.push(btn);
         });
 
-        packFilterNav = { viewAll: viewAllBtn, nums, items };
+        packFilterNav = { nums, items };
 
         function wrap(i) {
             return ((i % n) + n) % n;
@@ -512,11 +539,19 @@
                     slot.packLogo.setAttribute("hidden", "");
                 }
             }
-            slot.status.textContent = categoryLabel(item.category);
-            slot.title.textContent = title;
-            slot.caption.textContent = caption.startsWith("+") || caption.startsWith("—")
-                ? caption
-                : `+ ${caption}`;
+            if (slot.offset === 0) {
+                slot.status.textContent = "";
+                slot.title.textContent = "";
+                slot.caption.textContent = "";
+                slot.col.classList.add("is-hero-slot");
+            } else {
+                slot.col.classList.remove("is-hero-slot");
+                slot.status.textContent = categoryLabel(item.category);
+                slot.title.textContent = title;
+                slot.caption.textContent = caption.startsWith("+") || caption.startsWith("—")
+                    ? caption
+                    : `+ ${caption}`;
+            }
             slot.media.setAttribute(
                 "aria-label",
                 slot.offset === 0 ? `Open ${title}` : `Show ${title}`
@@ -537,6 +572,7 @@
                 btn.classList.toggle("is-neighbor", isNeighbor && !isMain);
                 btn.setAttribute("aria-current", isMain ? "true" : "false");
             });
+            syncPackFilterNav();
         }
 
         columns.forEach((slot) => {
@@ -547,7 +583,12 @@
                 if (!item) return;
                 playSound("select");
                 if (slot.offset === 0) {
-                    openLightbox(item, undefined, false, slot.media);
+                    if (item.isCompleteCollection) {
+                        applyModelPackFilter(item.id);
+                        document.getElementById("models")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    } else {
+                        openLightbox(item, undefined, false, slot.media);
+                    }
                 } else {
                     setIndex(itemIndex);
                     applyModelPackFilter(item.id);
@@ -1213,49 +1254,43 @@
         const descEl = document.querySelector("[data-models-pack-desc]");
         if (!titleEl || !descEl) return;
 
-        if (packId === "all") {
-            if (kicker) {
-                kicker.textContent = "";
-                kicker.hidden = true;
-            }
-            titleEl.textContent = "All models";
-            descEl.textContent = modelsPackDescDefault();
-            return;
-        }
-
-        const ext = lowpolyExtensions.find((entry) => entry.id === packId);
+        const ext = findFeaturedExtension(packId);
         if (!ext) return;
 
         if (kicker) {
-            kicker.textContent = categoryLabel(ext.category);
+            kicker.textContent = "Included in this Set";
             kicker.hidden = false;
         }
         titleEl.textContent = itemTitle(ext);
-        descEl.textContent = extensionCardDesc(ext);
+        const packDesc = extensionCardDesc(ext);
+        descEl.textContent = packDesc || modelsPackDescDefault();
     }
 
     function syncPackFilterNav() {
         const nav = packFilterNav;
-        if (!nav.viewAll) return;
-
-        nav.viewAll.classList.toggle("is-pack-filter", activePackFilter === "all");
-        nav.viewAll.setAttribute("aria-pressed", activePackFilter === "all" ? "true" : "false");
+        if (!nav.nums.length) return;
 
         nav.nums.forEach((btn, i) => {
             const item = nav.items[i];
-            const isFiltered = Boolean(item && activePackFilter === item.id);
+            const isFiltered = Boolean(
+                item && (
+                    activePackFilter === item.id
+                    || (isCompleteCollectionId(activePackFilter) && isCompleteCollectionId(item.id))
+                )
+            );
             btn.classList.toggle("is-pack-filter", isFiltered);
             btn.setAttribute("aria-pressed", isFiltered ? "true" : "false");
         });
     }
 
     function applyModelPackFilter(packId) {
-        activePackFilter = packId || "all";
+        activePackFilter = isCompleteCollectionId(packId) ? COMPLETE_COLLECTION_ID : (packId || COMPLETE_COLLECTION_ID);
+        const showAll = isCompleteCollectionId(activePackFilter);
         const cards = document.querySelectorAll("#models-grid .bento-card");
 
         cards.forEach((card) => {
             const cardPack = card.dataset.extensionPack || "";
-            const matches = activePackFilter === "all" || cardPack === activePackFilter;
+            const matches = showAll || cardPack === activePackFilter;
             card.classList.toggle("filter-hidden", !matches);
             card.hidden = !matches;
             if (matches) card.style.removeProperty("display");
@@ -1790,8 +1825,9 @@
                 lowpolyCatalog = await LowpolyCatalog.loadCatalog();
                 lowpolyExtensions = lowpolyCatalog.extensions || [];
                 floatingAssetsData = lowpolyCatalog.items || [];
+                rebuildFeaturedExtensions();
                 if (document.getElementById("extensions-stage")) {
-                    renderExtensionsFeatured(lowpolyExtensions);
+                    renderExtensionsFeatured(featuredExtensions);
                 } else {
                     renderGrid(lowpolyExtensions, true, "extensions-grid");
                 }
@@ -1800,8 +1836,9 @@
                 lowpolyCatalog = window.LOWPOLY_CATALOG;
                 lowpolyExtensions = lowpolyCatalog.extensions || [];
                 floatingAssetsData = lowpolyCatalog.items || [];
+                rebuildFeaturedExtensions();
                 if (document.getElementById("extensions-stage")) {
-                    renderExtensionsFeatured(lowpolyExtensions);
+                    renderExtensionsFeatured(featuredExtensions);
                 } else {
                     renderGrid(lowpolyExtensions, true, "extensions-grid");
                 }
@@ -1832,7 +1869,7 @@
 
         initLibraryViewToggle();
         initModelsRail();
-        applyModelPackFilter("all");
+        applyModelPackFilter(COMPLETE_COLLECTION_ID);
         applyLibraryViewLayout();
 
         // Start lazy-loading images (data-src → src when near viewport)
@@ -1871,8 +1908,9 @@
             lowpolyAbort = null;
             const rail = document.querySelector("[data-models-rail]");
             if (rail) delete rail.dataset.railReady;
-            activePackFilter = "all";
-            packFilterNav = { viewAll: null, nums: [], items: [] };
+            activePackFilter = COMPLETE_COLLECTION_ID;
+            featuredExtensions = [];
+            packFilterNav = { nums: [], items: [] };
             const modelsGrid = document.getElementById("models-grid");
             if (modelsGrid) delete modelsGrid.dataset.cloneClickReady;
             clearModelsRailLoop();

@@ -71,11 +71,6 @@
     }
 
     async function loadCatalog(catalogUrl) {
-        const embedded = global.LOWPOLY_CATALOG;
-        if (embedded?.items) {
-            return embedded;
-        }
-
         const candidates = [
             catalogUrl,
             typeof global.LOWPOLY_CATALOG_URL === "string" ? global.LOWPOLY_CATALOG_URL : null,
@@ -96,6 +91,11 @@
             } catch (err) {
                 lastErr = err;
             }
+        }
+
+        const embedded = global.LOWPOLY_CATALOG;
+        if (embedded?.items || embedded?.extensions) {
+            return embedded;
         }
 
         console.error(

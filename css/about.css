@@ -1,7 +1,7 @@
 /**
  * About — scroll language (sky → paper curtain → sticky hero → deck)
  */
-@import url("./about-sheet.css?v=about-hud-stage-4");
+@import url("./about-sheet.css?v=about-hud-stage-12");
 
 @font-face {
   font-family: "Bold Block";
@@ -116,6 +116,7 @@ html.lenis-smooth {
   --hero-identity: 0;
   --hud-pin: 0;
   --hud-stage-boost: 0.34;
+  --hud-pinned-scale: 0.72;
   --hero-mark-y: 0px;
   --curtain-y: 92vh;
   --mx: 0;
@@ -264,7 +265,12 @@ html.lenis-smooth {
       calc((1 - var(--hud-pin)) * -50%),
       0
     )
-    scale(calc(1 + var(--hud-stage-boost) * (1 - var(--hud-pin))));
+    scale(
+      calc(
+        (1 + var(--hud-stage-boost) * (1 - var(--hud-pin)))
+        * (1 - var(--hud-pin) * (1 - var(--hud-pinned-scale)))
+      )
+    );
   transform-origin: calc(50% * (1 - var(--hud-pin))) calc(50% * (1 - var(--hud-pin)));
   will-change: transform, opacity, left, top;
 }
@@ -272,6 +278,7 @@ html.lenis-smooth {
 @media (min-width: 900px) {
   .about {
     --hud-stage-boost: 0.56;
+    --hud-pinned-scale: 0.68;
   }
 
   .about-hud-stack {
@@ -280,55 +287,11 @@ html.lenis-smooth {
       (1 - var(--hud-pin)) * 46% + var(--hud-pin) * var(--aimy-chrome-top)
     );
   }
-
-  .about-hero__identity {
-    margin-top: clamp(0.45rem, 0.9vh, 0.7rem);
-  }
 }
 
 .about-lifebar {
   position: relative;
   width: 100%;
-}
-
-.about-hero__identity {
-  display: grid;
-  gap: 0.2rem;
-  margin-top: clamp(0.65rem, 1.4vh, 0.95rem);
-  padding-left: 0.12rem;
-  color: var(--ink);
-}
-
-.about-hero__identity-name {
-  margin: 0;
-  font-family: "Arial Black", Impact, sans-serif;
-  font-size: clamp(1.35rem, 2.8vw, 2rem);
-  font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-}
-
-.about-hero__identity-handle {
-  margin: 0;
-  font-family: "Arial Black", Impact, sans-serif;
-  font-size: clamp(0.95rem, 1.6vw, 1.2rem);
-  font-weight: 900;
-  letter-spacing: 0.02em;
-}
-
-.about-hero__identity-handle a {
-  color: var(--violet-deep);
-  text-decoration: none;
-  pointer-events: auto;
-}
-
-.about-hero__identity-handle a:hover,
-.about-hero__identity-handle a:focus-visible {
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.12em;
-  outline: none;
 }
 
 .about-lifebar__frame {
@@ -509,10 +472,6 @@ html.lenis-smooth {
     filter: brightness(1.08) saturate(1.05);
   }
 
-  .about-hero__identity-handle a {
-    color: var(--step-03);
-  }
-
   .about-hint {
     color: color-mix(in srgb, var(--step-02) 42%, transparent);
   }
@@ -548,10 +507,6 @@ html.lenis-smooth {
     --hud-pin: 1;
     opacity: 1;
     transform: none;
-  }
-
-  .about-hero__identity {
-    display: grid;
   }
 
   .about-lifebar__sharp {

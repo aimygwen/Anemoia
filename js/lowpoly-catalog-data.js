@@ -5,8 +5,8 @@ window.LOWPOLY_CATALOG = {
     "extensions": [
         {
             "id": "crossroads",
-            "title": "Crossroads",
-            "name": "Crossroads",
+            "title": "Crossworlds",
+            "name": "Crossworlds",
             "category": "furnishings",
             "image": "lowpoly/hytale/Thumbnails/crossroads.jpg",
             "logo": "lowpoly/hytale/Thumbnails/crossroads_logo.png",

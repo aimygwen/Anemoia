@@ -1,59 +1,19 @@
 /**
  * Band page transition for multi-page navigations.
  * Exposes window.AimyPageTransition.navigate(href) for the coin menu.
- * Destination page palette drives cover-in + reveal (primary + 2 solid trail hues).
  */
 (function () {
   "use strict";
 
   var FLAG = "aimy-page-transition";
-  var FLAG_PALETTE = "aimy-page-transition-palette";
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var navigating = false;
+  var prefetched = Object.create(null);
 
-  /**
-   * Per-page primary cover + exactly 2 trail hues (closer to primary → further back).
-   * Keyed by HTML basename without extension (about, gallery, …).
-   */
-  var PALETTES = {
-    about: {
-      primary: "#f7eef2",
-      trails: ["#f5a9b8", "#5bcefa"],
-      onLight: true,
-    },
-    index: {
-      primary: "#2a2433",
-      trails: ["#ff8fd2", "#b8a6ff"],
-      onLight: false,
-    },
-    gallery: {
-      primary: "#1a1520",
-      trails: ["#ff8fd2", "#c9b8ff"],
-      onLight: false,
-    },
-    contact: {
-      primary: "#ffd9eb",
-      trails: ["#ff72ad", "#c99ae8"],
-      onLight: true,
-    },
-    insights: {
-      primary: "#e5e3dc",
-      trails: ["#e8a0bc", "#c4789a"],
-      onLight: true,
-    },
-    lowpoly: {
-      primary: "#8F2BB8",
-      trails: ["#EDE4FF", "#E07AE8"],
-      onLight: false,
-    },
-    imprint: {
-      primary: "#e8e0f2",
-      trails: ["#8a48c0", "#e879b8"],
-      onLight: true,
-    },
+  var TRANSITION = {
+    primary: "#E43EFF",
+    trails: ["#B24BFB", "#ffeab0", "#2dd4bf"],
   };
-
-  var DEFAULT_PALETTE = PALETTES.index;
 
   function sameOrigin(href) {
     try {
@@ -90,30 +50,30 @@
     return true;
   }
 
-  function pageKeyFromPath(pathname) {
-    var path = String(pathname || "").replace(/\/+$/, "");
-    var parts = path.split("/");
-    var base = parts[parts.length - 1] || "";
-    if (!base || base.indexOf(".") === -1) {
-      /* Directory URL → treat as index */
-      return "index";
-    }
-    base = base.replace(/\.html?$/i, "").toLowerCase();
-    if (!base || base === "index") return "index";
-    return base;
-  }
-
-  function paletteForKey(key) {
-    return PALETTES[key] || DEFAULT_PALETTE;
-  }
-
-  function paletteForHref(href) {
+  function prefetchPage(href) {
+    var absolute = href;
     try {
-      var url = new URL(href, window.location.href);
-      return paletteForKey(pageKeyFromPath(url.pathname));
+      absolute = new URL(href, window.location.href).href;
     } catch (e) {
-      return DEFAULT_PALETTE;
+      return Promise.resolve();
     }
+
+    if (prefetched[absolute]) return prefetched[absolute];
+
+    var link = document.createElement("link");
+    link.rel = "prefetch";
+    link.as = "document";
+    link.href = absolute;
+    document.head.appendChild(link);
+
+    prefetched[absolute] = fetch(absolute, {
+      method: "GET",
+      credentials: "same-origin",
+      cache: "force-cache",
+      mode: "same-origin",
+    }).catch(function () {});
+
+    return prefetched[absolute];
   }
 
   function hexToRgb(hex) {
@@ -121,7 +81,7 @@
     if (h.length === 3) {
       h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
     }
-    if (h.length !== 6) return [42, 36, 51];
+    if (h.length !== 6) return [228, 62, 255];
     return [
       parseInt(h.slice(0, 2), 16),
       parseInt(h.slice(2, 4), 16),
@@ -129,27 +89,14 @@
     ];
   }
 
-  function applyPalette(el, palette) {
-    if (!el || !palette) return;
-    var primary = palette.primary || DEFAULT_PALETTE.primary;
-    var trails = (palette.trails || DEFAULT_PALETTE.trails).slice(0, 2);
-    var rgb = hexToRgb(primary);
-    var r1 = trails[0] || "#ff8fd2";
-    var r2 = trails[1] || r1;
-
-    el.style.setProperty("--pt-block", primary);
+  function applyPalette(el) {
+    if (!el) return;
+    var rgb = hexToRgb(TRANSITION.primary);
+    el.style.setProperty("--pt-block", TRANSITION.primary);
     el.style.setProperty("--pt-veil", rgb[0] + ", " + rgb[1] + ", " + rgb[2]);
-    el.style.setProperty("--pt-r1", r1);
-    el.style.setProperty("--pt-r2", r2);
-    /* Keep r3/r4 for logo accent cycling (reuse the two trail hues) */
-    el.style.setProperty("--pt-r3", r2);
-    el.style.setProperty("--pt-r4", r1);
-
-    if (palette.onLight) {
-      el.classList.add("is-on-light");
-    } else {
-      el.classList.remove("is-on-light");
-    }
+    el.style.setProperty("--pt-r1", TRANSITION.trails[0]);
+    el.style.setProperty("--pt-r2", TRANSITION.trails[1]);
+    el.style.setProperty("--pt-r3", TRANSITION.trails[2]);
   }
 
   function cloneLogoSvg() {
@@ -166,7 +113,6 @@
     clone.setAttribute("focusable", "false");
     clone.classList.add("aimy-pt__mark");
 
-    /* Avoid duplicate IDs colliding with the live header mark */
     clone.querySelectorAll("[id]").forEach(function (node) {
       node.removeAttribute("id");
     });
@@ -176,35 +122,23 @@
 
   function bandRow(order, orderBack) {
     return (
-      '<span style="--order:' +
+      '<span class="aimy-pt__row" style="--order:' +
       order +
       ";--order-back:" +
       orderBack +
-      '">' +
-      '<i class="aimy-pt__band aimy-pt__band--p" aria-hidden="true"></i>' +
-      '<i class="aimy-pt__band aimy-pt__band--t1" aria-hidden="true"></i>' +
-      '<i class="aimy-pt__band aimy-pt__band--t2" aria-hidden="true"></i>' +
-      "</span>"
+      '"><i class="aimy-pt__band" aria-hidden="true"></i></span>'
     );
   }
 
   function ensureOverlay() {
     var existing = document.querySelector(".aimy-pt");
-    if (existing) return existing;
+    if (existing && existing.parentNode) {
+      existing.parentNode.removeChild(existing);
+    }
 
     var logo = cloneLogoSvg();
     var logoBlock = logo
-      ? '<div class="aimy-pt__logo" style="transform:translate(-50%,-50%)">' +
-        '<div class="aimy-pt__chroma aimy-pt__chroma--cyan" aria-hidden="true">' +
-        logo +
-        "</div>" +
-        '<div class="aimy-pt__chroma aimy-pt__chroma--magenta" aria-hidden="true">' +
-        logo +
-        "</div>" +
-        '<div class="aimy-pt__chroma aimy-pt__chroma--main">' +
-        logo +
-        "</div>" +
-        "</div>"
+      ? '<div class="aimy-pt__logo">' + logo + "</div>"
       : "";
 
     var el = document.createElement("div");
@@ -220,6 +154,7 @@
       '<div class="t">' +
       logoBlock +
       "</div>";
+    applyPalette(el);
     document.body.appendChild(el);
     return el;
   }
@@ -245,39 +180,67 @@
     });
   }
 
+  function waitForBands(el, fallbackMs) {
+    return new Promise(function (resolve) {
+      if (reduced) {
+        resolve();
+        return;
+      }
+      var band = el.querySelector(".g > .aimy-pt__row:last-child .aimy-pt__band");
+      if (!band) {
+        resolve();
+        return;
+      }
+      var done = false;
+      function finish(ev) {
+        if (ev && ev.propertyName !== "transform") return;
+        if (done) return;
+        done = true;
+        band.removeEventListener("transitionend", finish);
+        resolve();
+      }
+      band.addEventListener("transitionend", finish);
+      setTimeout(finish, fallbackMs || 1300);
+    });
+  }
+
   function clearAnimClasses(el) {
     el.classList.remove(
       "is-enter-from",
       "is-enter-active",
+      "is-covered",
       "is-leave-active",
-      "is-leave-to"
+      "is-leave-to",
+      "is-done"
     );
   }
 
-  async function playCover(palette) {
+  async function playCover() {
     var el = ensureOverlay();
-    applyPalette(el, palette || DEFAULT_PALETTE);
     clearAnimClasses(el);
     el.classList.add("is-enter-from");
     el.style.pointerEvents = "auto";
-    /* Force layout so the enter-from state paints before we animate */
     void el.offsetWidth;
     await nextFrame();
     el.classList.add("is-enter-active");
     el.classList.remove("is-enter-from");
-    await wait(reduced ? 0 : 1100);
+    await waitForBands(el, 1200);
+    el.classList.add("is-covered", "is-done");
   }
 
-  async function playReveal(palette) {
+  async function playReveal() {
     var el = ensureOverlay();
-    applyPalette(el, palette || paletteForKey(pageKeyFromPath(window.location.pathname)));
+    applyPalette(el);
     clearAnimClasses(el);
+    el.classList.add("is-covered");
     el.style.pointerEvents = "none";
-    el.classList.add("is-leave-active");
     void el.offsetWidth;
     await nextFrame();
+    el.classList.add("is-leave-active");
+    await nextFrame();
     el.classList.add("is-leave-to");
-    await wait(reduced ? 0 : 1450);
+    await waitForBands(el, 1500);
+    el.classList.add("is-done");
     clearAnimClasses(el);
     if (el.parentNode) el.parentNode.removeChild(el);
   }
@@ -298,21 +261,23 @@
     } catch (e) {}
 
     navigating = true;
-    var destKey = "index";
-    try {
-      destKey = pageKeyFromPath(new URL(href, window.location.href).pathname);
-    } catch (errKey) {}
-    var destPalette = paletteForKey(destKey);
+    var prefetchPromise = prefetchPage(href);
 
     try {
       sessionStorage.setItem(FLAG, "1");
-      sessionStorage.setItem(FLAG_PALETTE, destKey);
     } catch (err) {}
 
-    if (!reduced) {
-      await playCover(destPalette);
+    try {
+      if (!reduced) {
+        await Promise.all([playCover(), prefetchPromise]);
+      } else {
+        await prefetchPromise;
+      }
+      window.location.href = href;
+    } catch (errNav) {
+      navigating = false;
+      window.location.href = href;
     }
-    window.location.href = href;
   }
 
   function onClick(event) {
@@ -323,6 +288,12 @@
     var anchor = event.target && event.target.closest ? event.target.closest("a[href]") : null;
     if (!isInternalNav(anchor)) return;
 
+    var workScroller =
+      anchor.closest && anchor.closest("[data-start-work-scroller]");
+    if (workScroller && Number(workScroller.getAttribute("data-drag-px") || 0) >= 12) {
+      return;
+    }
+
     event.preventDefault();
     event.stopPropagation();
     navigate(anchor.href);
@@ -330,22 +301,13 @@
 
   async function bootReveal() {
     var pending = false;
-    var storedKey = "";
     try {
       pending = sessionStorage.getItem(FLAG) === "1";
-      storedKey = sessionStorage.getItem(FLAG_PALETTE) || "";
-      if (pending) {
-        sessionStorage.removeItem(FLAG);
-        sessionStorage.removeItem(FLAG_PALETTE);
-      }
+      if (pending) sessionStorage.removeItem(FLAG);
     } catch (e) {}
 
     if (!pending || reduced) return;
-
-    var palette = storedKey
-      ? paletteForKey(storedKey)
-      : paletteForKey(pageKeyFromPath(window.location.pathname));
-    await playReveal(palette);
+    await playReveal();
   }
 
   window.AimyPageTransition = {
@@ -367,7 +329,6 @@
       if (el && el.parentNode) el.parentNode.removeChild(el);
       try {
         sessionStorage.removeItem(FLAG);
-        sessionStorage.removeItem(FLAG_PALETTE);
       } catch (e) {}
     }
   });
@@ -385,7 +346,7 @@
 (function (global) {
   "use strict";
 
-  var VERSION = "polykroma-20";
+  var VERSION = "polykroma-46";
   var bootedSocials = false;
   var bootedReveal = false;
   var chromeSettled = false;
@@ -794,8 +755,15 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
         (key === "contact" && href.indexOf("contact") !== -1) ||
         (key === "imprint" && href.indexOf("imprint") !== -1);
       a.classList.toggle("is-current", !!is);
-      if (is) a.setAttribute("aria-current", "page");
-      else a.removeAttribute("aria-current");
+      if (is) {
+        a.setAttribute("aria-current", "page");
+        a.setAttribute("aria-disabled", "true");
+        a.setAttribute("tabindex", "-1");
+      } else {
+        a.removeAttribute("aria-current");
+        a.removeAttribute("aria-disabled");
+        a.removeAttribute("tabindex");
+      }
     });
   }
 
@@ -807,15 +775,16 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
 
     var shell = root.querySelector(".pk-nav-shell");
     var menuEl = root.querySelector(".pk-menu");
-    var veilWash = root.querySelector(".pk-menu-veil-wash");
+    var menuVeil = root.querySelector(".pk-menu-veil");
+    var menuPanel = root.querySelector(".pk-menu-panel");
+    var menuRule = root.querySelector(".pk-menu-rule");
     var hitIn = root.querySelector(".pk-burger-in");
     var hitOut = root.querySelector(".pk-burger-out");
     var coinButton = root.querySelector(".pk-coin-button");
     var coin = root.querySelector(".pk-coin");
     var navLinks = Array.prototype.slice.call(root.querySelectorAll(".pk-menulink"));
-    var leftLinks = root.querySelectorAll('.pk-menu-link[data-enter="left"]');
-    var rightLinks = root.querySelectorAll('.pk-menu-link[data-enter="right"]');
     var allLinks = root.querySelectorAll(".pk-menu-link");
+    var socialLinks = root.querySelectorAll(".pk-menu-social");
     var focusables = [];
     var isOpen = false;
     var canClick = true;
@@ -894,9 +863,9 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       for (var i = 0; i < targets.length; i++) {
         var el = targets[i];
         el.style.transition = on
-          ? "filter 1.25s cubic-bezier(0.16, 1, 0.3, 1)"
-          : "filter 0.65s cubic-bezier(0.4, 0, 1, 1)";
-        el.style.filter = on ? "blur(16px)" : "blur(0px)";
+          ? "filter 1.45s cubic-bezier(0.16, 1, 0.3, 1)"
+          : "filter 1.05s cubic-bezier(0.4, 0, 0.2, 1)";
+        el.style.filter = on ? "blur(11px)" : "blur(0px)";
       }
       if (!on) {
         window.setTimeout(function () {
@@ -905,7 +874,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
             again[j].style.removeProperty("filter");
             again[j].style.removeProperty("transition");
           }
-        }, 700);
+        }, 1100);
       }
     }
 
@@ -919,72 +888,43 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       }
     }
 
-    function linkBits(link) {
-      return {
-        link: link,
-        text: link.querySelector(".pk-menu-link__mask > .pk-menu-link__label"),
-        block: link.querySelector(".pk-menu-link__block"),
-        wipe: link.querySelector(".pk-menu-link__wipe"),
-      };
-    }
-
-    function revealLinkWithBlock(bits, at) {
-      var side = bits.link.getAttribute("data-enter") === "right" ? 1 : -1;
-      var cover = 0.38;
-      var uncover = 0.46;
-      gsap.set(bits.link, { opacity: 1, xPercent: 0 });
-      gsap.set(bits.text, { opacity: 0 });
-      gsap.set(bits.wipe, { clearProps: "clipPath" });
-      gsap.set(bits.block, {
-        scaleX: 0,
-        xPercent: 0,
-        transformOrigin: side < 0 ? "left center" : "right center",
-        opacity: 1,
-      });
-
-      openTimeline
-        .to(bits.block, { scaleX: 1, duration: cover, ease: "power2.in" }, at)
-        .set(bits.text, { opacity: 1 }, at + cover)
-        .set(
-          bits.block,
-          { transformOrigin: side < 0 ? "right center" : "left center" },
-          at + cover
-        )
-        .to(bits.block, { scaleX: 0, duration: uncover, ease: "power2.out" }, at + cover)
-        .set(bits.block, { clearProps: "transform,transformOrigin" }, at + cover + uncover);
-    }
-
-    function hideLinkWithBlock(bits, at) {
-      var side = bits.link.getAttribute("data-enter") === "right" ? 1 : -1;
-      gsap.set(bits.block, {
-        scaleX: 0,
-        transformOrigin: side < 0 ? "left center" : "right center",
-        opacity: 1,
-      });
-
-      openTimeline
-        .to(bits.block, { scaleX: 1, duration: 0.22, ease: "power3.in" }, at)
-        .set(bits.text, { opacity: 0 }, at + 0.22)
-        .set(bits.wipe, { clipPath: "inset(0 100% 0 0)" }, at + 0.22)
-        .set(
-          bits.block,
-          { transformOrigin: side < 0 ? "right center" : "left center" },
-          at + 0.22
-        )
-        .to(bits.block, { scaleX: 0, duration: 0.26, ease: "power3.in" }, at + 0.22)
-        .to(bits.link, { opacity: 0, duration: 0.12, ease: "power2.in" }, at + 0.4);
+    function resetMenuMotionStyles() {
+      var motionTargets = [menuVeil, menuPanel, menuRule].concat(
+        Array.prototype.slice.call(allLinks),
+        Array.prototype.slice.call(socialLinks)
+      );
+      gsap.set(motionTargets, { clearProps: "opacity,transform,filter" });
     }
 
     function animateMenuMotion(open, onDone) {
       if (!hasGsap || reducedMotion) {
         if (open) {
-          if (veilWash) veilWash.style.transform = "translate3d(0,0,0)";
+          if (menuVeil) {
+            menuVeil.style.opacity = "1";
+            menuVeil.style.transform = "scale(1)";
+          }
           allLinks.forEach(function (link) {
             link.style.opacity = "1";
           });
+          socialLinks.forEach(function (link) {
+            link.style.opacity = "1";
+          });
+          if (menuPanel) menuPanel.style.opacity = "1";
+          if (menuRule) menuRule.style.opacity = "1";
           setPageFrost(true);
         } else {
-          if (veilWash) veilWash.style.transform = "translate3d(-100%,0,0)";
+          if (menuVeil) {
+            menuVeil.style.opacity = "0";
+            menuVeil.style.transform = "scale(1.02)";
+          }
+          allLinks.forEach(function (link) {
+            link.style.opacity = "0";
+          });
+          socialLinks.forEach(function (link) {
+            link.style.opacity = "0";
+          });
+          if (menuPanel) menuPanel.style.opacity = "0";
+          if (menuRule) menuRule.style.opacity = "0";
           setPageFrost(false);
           clearPageBlur();
         }
@@ -995,39 +935,102 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       if (openTimeline) openTimeline.kill();
       openTimeline = gsap.timeline({
         onComplete: function () {
+          if (!open) resetMenuMotionStyles();
           if (onDone) onDone();
         },
       });
 
-      var leftBits = Array.prototype.map.call(leftLinks, linkBits);
-      var rightBits = Array.prototype.map.call(rightLinks, linkBits);
-
       if (open) {
-        gsap.set(allLinks, { opacity: 0, xPercent: 0, force3D: true });
-        gsap.set(veilWash, { xPercent: -100, force3D: true });
+        gsap.set(menuVeil, { opacity: 0, scale: 1.045, force3D: true });
+        gsap.set(menuPanel, {
+          opacity: 0,
+          y: 34,
+          scale: 0.965,
+          filter: "blur(10px)",
+          force3D: true,
+        });
+        gsap.set(menuRule, { opacity: 0, scaleX: 0.35, transformOrigin: "center center" });
+        gsap.set(allLinks, { opacity: 0, y: 22, filter: "blur(7px)", force3D: true });
+        gsap.set(socialLinks, { opacity: 0, y: 14, force3D: true });
         setPageFrost(true);
 
-        openTimeline.to(veilWash, { xPercent: 0, duration: 1.35, ease: "expo.out" }, 0);
-
-        leftBits.forEach(function (bits, i) {
-          revealLinkWithBlock(bits, 0.28 + i * 0.1);
-        });
-        rightBits.forEach(function (bits, i) {
-          revealLinkWithBlock(bits, 0.38 + i * 0.1);
-        });
+        openTimeline
+          .to(menuVeil, { opacity: 1, scale: 1, duration: 1.08, ease: "expo.out" }, 0)
+          .to(
+            menuPanel,
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              filter: "blur(0px)",
+              duration: 0.98,
+              ease: "power3.out",
+            },
+            0.14
+          )
+          .to(
+            allLinks,
+            {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              duration: 0.78,
+              ease: "power3.out",
+              stagger: 0.055,
+            },
+            0.3
+          )
+          .to(
+            menuRule,
+            { opacity: 1, scaleX: 1, duration: 0.62, ease: "power2.out" },
+            0.48
+          )
+          .to(
+            socialLinks,
+            { opacity: 1, y: 0, duration: 0.56, ease: "power2.out", stagger: 0.04 },
+            0.58
+          );
       } else {
         setPageFrost(false);
-        leftBits.forEach(function (bits, i) {
-          hideLinkWithBlock(bits, i * 0.035);
-        });
-        rightBits.forEach(function (bits, i) {
-          hideLinkWithBlock(bits, 0.04 + i * 0.035);
-        });
         openTimeline
-          .to(veilWash, { xPercent: -100, duration: 0.7, ease: "power3.in" }, 0.12)
+          .to(
+            allLinks,
+            {
+              opacity: 0,
+              y: -16,
+              filter: "blur(5px)",
+              duration: 0.42,
+              ease: "power2.in",
+              stagger: { each: 0.028, from: "end" },
+            },
+            0
+          )
+          .to(
+            socialLinks,
+            { opacity: 0, y: -10, duration: 0.34, ease: "power2.in", stagger: 0.022 },
+            0.04
+          )
+          .to(
+            menuRule,
+            { opacity: 0, scaleX: 0.2, duration: 0.34, ease: "power2.in" },
+            0.08
+          )
+          .to(
+            menuPanel,
+            {
+              opacity: 0,
+              y: -22,
+              scale: 0.975,
+              filter: "blur(8px)",
+              duration: 0.62,
+              ease: "power3.in",
+            },
+            0.14
+          )
+          .to(menuVeil, { opacity: 0, scale: 1.03, duration: 0.82, ease: "power2.inOut" }, 0.22)
           .add(function () {
             clearPageBlur();
-          });
+          }, 0.9);
       }
     }
 
@@ -1044,12 +1047,19 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       shell.classList.add("is-open");
       stopScroll();
       showHits(true);
-      setSelected(indexOfCurrent());
+      setSelected(-1);
       refreshFocusables();
 
       animateMenuMotion(true, function () {
-        var current = navLinks[selectedIndex] || navLinks[0];
-        if (current) current.focus({ preventScroll: true });
+        var currentIdx = indexOfCurrent();
+        var focusTarget = null;
+        for (var fi = 0; fi < navLinks.length; fi++) {
+          if (fi !== currentIdx) {
+            focusTarget = navLinks[fi];
+            break;
+          }
+        }
+        if (focusTarget) focusTarget.focus({ preventScroll: true });
         canClick = true;
       });
     }
@@ -1115,14 +1125,13 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       closeMenu();
     });
 
-    navLinks.forEach(function (link, i) {
-      link.addEventListener("mouseenter", function () {
-        if (isOpen) setSelected(i);
-      });
-      link.addEventListener("focus", function () {
-        if (isOpen) setSelected(i);
-      });
+    navLinks.forEach(function (link) {
       link.addEventListener("click", function (e) {
+        if (this.classList.contains("is-current")) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
         var href = this.href || this.getAttribute("href");
         if (!href || !isOpen) return;
         e.preventDefault();

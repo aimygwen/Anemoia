@@ -12,9 +12,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <link rel="stylesheet" href="./css/polykroma.css?v=polykroma-26" />
-    <link rel="stylesheet" href="./css/lowpoly.css?v=lowpoly-rail-32" />
-    <link rel="stylesheet" href="./css/lowpoly-aimy.css?v=lowpoly-rail-32" />
+    <link rel="stylesheet" href="./css/polykroma.css?v=polykroma-46" />
+    <link rel="stylesheet" href="./css/lowpoly.css?v=lowpoly-rail-43" />
+    <link rel="stylesheet" href="./css/lowpoly-aimy.css?v=lowpoly-rail-43" />
     <style>
       /* Keep empty-state + filter clipping; fade-in handled by .active without !important */
       #models-grid .bento-card.filter-hidden {
@@ -147,33 +147,44 @@
             <section id="extensions" class="lowpoly-main-section lp-extensions" aria-label="Extension sets">
                 <div class="lp-featured" id="extensions-featured">
                     <h2 class="lp-featured__heading">Extension Sets</h2>
-                    <p class="lp-featured__lede">
-                        Curated Hytale packs — cosmetics, furnishings, and collectibles built as complete looks.
-                    </p>
+                    <div class="lp-featured__lede">
+                        <p>Polybi is a wordplay merging Lowpoly with Komorebi - the feeling of warm sunlight filtering through leaves.</p>
+                        <p>It is my vision for a series of Hytale modpacks that capture the beauty of Japan. From ancient echoes of the past that will leave you spirited away, to the gleaming neon lights of futuristic megacities, Polybi bridges the quiet spaces between history and the future.</p>
+                        <p>Crafted with pure nostalgia and vibes in mind.</p>
+                    </div>
                     <div class="lp-featured__stage" id="extensions-stage" aria-live="polite"></div>
-                    <nav class="lp-featured__nav" id="extensions-nav" aria-label="Filter model library by extension set"></nav>
                 </div>
             </section>
 
             <section id="models" class="lowpoly-main-section lp-models" aria-label="Model library">
                 <header class="lp-models__pack-head" data-models-pack-head aria-live="polite">
-                    <p class="lp-models__pack-kicker" data-models-pack-kicker hidden></p>
-                    <h2 class="lp-models__pack-title" data-models-pack-title>All models</h2>
-                    <p class="lp-models__pack-desc" data-models-pack-desc>
-                        Individual assets, creatures, and blocks — scroll sideways to browse.
-                    </p>
-                    <button
-                        type="button"
-                        class="lp-models__view-toggle"
-                        data-lp-library-view-toggle
-                        aria-pressed="false"
-                    >
-                        <span class="lp-models__view-toggle-icon" aria-hidden="true">▦</span>
-                        <span data-lp-view-toggle-label>Switch to grid view</span>
-                    </button>
+                    <div class="lp-models__pack-copy">
+                        <p class="lp-models__pack-kicker" data-models-pack-kicker>Included in this Set</p>
+                        <h2 class="lp-models__pack-title" data-models-pack-title>Complete Collection</h2>
+                        <p class="lp-models__pack-desc" data-models-pack-desc>
+                            Every model across all Polybi extension sets — browse the full library.
+                        </p>
+                    </div>
+                    <div class="lp-models__toolbar" data-models-pack-toolbar>
+                        <nav
+                            class="lp-featured__nav lp-models__pack-nav"
+                            id="extensions-nav"
+                            aria-label="Filter model library by extension set"
+                        ></nav>
+                        <button
+                            type="button"
+                            class="lp-models__view-toggle"
+                            data-lp-library-view-toggle
+                            aria-pressed="false"
+                        >
+                            <span class="lp-models__view-toggle-icon" aria-hidden="true">▦</span>
+                            <span data-lp-view-toggle-label>Switch to grid view</span>
+                        </button>
+                    </div>
                 </header>
 
                 <div class="lp-models-rail" data-models-rail tabindex="0" aria-label="Model library, scroll horizontally">
+                    <div class="lp-models-rail__plate" aria-hidden="true"></div>
                     <div class="bento-grid models-grid" id="models-grid"></div>
                 </div>
             </section>
@@ -247,12 +258,12 @@
     <script src="./js/polyglide.js?v=2" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.js" defer></script>
-    <script src="./js/lowpoly-catalog-data.js?v=cobalt-lime" defer></script>
-    <script src="./js/lowpoly-catalog.js?v=cobalt-lime" defer></script>
-    <script src="./js/lowpoly.js?v=lowpoly-rail-32" defer></script>
-    <script src="./js/lowpoly-chrome.js?v=lowpoly-rail-32" defer></script>
+    <script src="./js/lowpoly-catalog-data.js?v=lowpoly-rail-43" defer></script>
+    <script src="./js/lowpoly-catalog.js?v=lowpoly-rail-43" defer></script>
+    <script src="./js/lowpoly.js?v=lowpoly-rail-43" defer></script>
+    <script src="./js/lowpoly-chrome.js?v=lowpoly-rail-43" defer></script>
     <script src="./js/polly-iris.js" defer></script>
     <script src="./js/polly-specular.js" defer></script>
-    <script src="./js/polykroma.js?v=polykroma-26" defer></script>
+    <script src="./js/polykroma.js?v=polykroma-46" defer></script>
 </body>
 </html>

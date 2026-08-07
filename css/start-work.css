@@ -16,6 +16,16 @@
   --start-muted: color-mix(in srgb, var(--step-08) 55%, transparent);
   --start-line: color-mix(in srgb, var(--step-08) 14%, transparent);
   --start-preview: var(--step-02);
+  --start-thumb-filter: brightness(0) saturate(0%) invert(72%) sepia(10%) saturate(280%)
+    hue-rotate(232deg) brightness(1.1);
+  --start-thumb-hover-a: brightness(0) saturate(100%) invert(74%) sepia(26%) saturate(720%)
+    hue-rotate(298deg) brightness(1.08);
+  --start-thumb-hover-b: brightness(0) saturate(100%) invert(76%) sepia(18%) saturate(580%)
+    hue-rotate(272deg) brightness(1.1);
+  --start-thumb-hover-c: brightness(0) saturate(100%) invert(71%) sepia(22%) saturate(640%)
+    hue-rotate(212deg) brightness(1.06);
+  --start-thumb-hover-d: brightness(0) saturate(100%) invert(69%) sepia(24%) saturate(660%)
+    hue-rotate(248deg) brightness(1.07);
   position: relative;
   z-index: 3;
   min-height: 100vh;
@@ -190,6 +200,7 @@ main:has(.start-work:last-of-type) {
   background: var(--start-preview);
   box-shadow: none;
   transform: none;
+  pointer-events: none;
 }
 
 .start-work__preview::after {
@@ -248,11 +259,9 @@ main:has(.start-work:last-of-type) {
 .start-work__preview--sketch .start-work__pixel-preview {
   z-index: 2;
   opacity: 1;
-  filter: brightness(0) saturate(100%) invert(78%);
+  filter: var(--start-thumb-filter);
   transform: scale(1);
-  transition:
-    transform 550ms cubic-bezier(0.22, 0.8, 0.2, 1),
-    filter 280ms ease;
+  transition: transform 550ms cubic-bezier(0.22, 0.8, 0.2, 1);
   animation: none;
 }
 
@@ -292,6 +301,7 @@ main:has(.start-work:last-of-type) {
 .start-work__col--sketch:focus-visible .start-work__pixel-preview {
   opacity: 1;
   transform: scale(1.04);
+  transition: transform 550ms cubic-bezier(0.22, 0.8, 0.2, 1);
   animation: start-work-sketch-rainbow 5s linear infinite;
 }
 
@@ -363,24 +373,19 @@ main:has(.start-work:last-of-type) {
 /* Soft pastel shift for sketchbook hover — muted pinks / lavenders / mist */
 @keyframes start-work-sketch-rainbow {
   0% {
-    filter: brightness(0) saturate(100%) invert(78%) sepia(22%) saturate(520%)
-      hue-rotate(295deg) brightness(1.04);
+    filter: var(--start-thumb-hover-a);
   }
   25% {
-    filter: brightness(0) saturate(100%) invert(82%) sepia(14%) saturate(380%)
-      hue-rotate(280deg) brightness(1.05);
+    filter: var(--start-thumb-hover-b);
   }
   50% {
-    filter: brightness(0) saturate(100%) invert(80%) sepia(16%) saturate(420%)
-      hue-rotate(220deg) brightness(1.04);
+    filter: var(--start-thumb-hover-c);
   }
   75% {
-    filter: brightness(0) saturate(100%) invert(76%) sepia(18%) saturate(450%)
-      hue-rotate(250deg) brightness(1.03);
+    filter: var(--start-thumb-hover-d);
   }
   100% {
-    filter: brightness(0) saturate(100%) invert(78%) sepia(22%) saturate(520%)
-      hue-rotate(295deg) brightness(1.04);
+    filter: var(--start-thumb-hover-a);
   }
 }
 
@@ -391,6 +396,16 @@ main:has(.start-work:last-of-type) {
     --start-muted: color-mix(in srgb, var(--step-01) 62%, transparent);
     --start-line: color-mix(in srgb, var(--step-01) 14%, transparent);
     --start-preview: var(--pk-surface);
+    --start-thumb-filter: brightness(0) saturate(0%) invert(38%) sepia(16%) saturate(460%)
+      hue-rotate(242deg) brightness(0.68);
+    --start-thumb-hover-a: brightness(0) saturate(100%) invert(30%) sepia(38%) saturate(1250%)
+      hue-rotate(298deg) brightness(0.62);
+    --start-thumb-hover-b: brightness(0) saturate(100%) invert(26%) sepia(34%) saturate(1150%)
+      hue-rotate(268deg) brightness(0.56);
+    --start-thumb-hover-c: brightness(0) saturate(100%) invert(24%) sepia(32%) saturate(1100%)
+      hue-rotate(202deg) brightness(0.52);
+    --start-thumb-hover-d: brightness(0) saturate(100%) invert(28%) sepia(36%) saturate(1200%)
+      hue-rotate(322deg) brightness(0.58);
   }
 
   .start-work__swap-title {
@@ -415,13 +430,12 @@ main:has(.start-work:last-of-type) {
 
   .start-work__preview--sketch .start-work__pixel-preview {
     animation: none;
-    filter: brightness(0) saturate(100%) invert(78%);
+    filter: var(--start-thumb-filter);
   }
 
   .start-work__col--sketch:hover .start-work__pixel-preview,
   .start-work__col--sketch:focus-visible .start-work__pixel-preview {
-    filter: brightness(0) saturate(100%) invert(78%) sepia(22%) saturate(520%)
-      hue-rotate(295deg) brightness(1.04);
+    filter: var(--start-thumb-hover-a);
   }
 
   .start-work__col:hover .start-work__num,

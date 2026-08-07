@@ -238,7 +238,7 @@
   var FEATURED_UPDATES = [
     {
       status: "Komorebi",
-      title: "Crossroads",
+      title: "Crossworlds",
       caption:
         "Forest biomes, wooden paths, crossroads signals, and cozy lighting for magical journeys.",
     },

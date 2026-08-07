@@ -601,7 +601,7 @@ body[data-lp-universe="works"] [data-lp-hero-art="hytale"] {
 #lowpoly-gallery-content {
   position: relative;
   z-index: 5;
-  margin-top: 0;
+  margin-top: clamp(2.25rem, 5.5vh, 4.5rem);
   padding:
     0
     0
@@ -2040,7 +2040,7 @@ body.lightbox-open .filter-bar.is-visible {
 /* —— Extension Sets: Featured / Work carousel —— */
 .lp-extensions.lowpoly-main-section {
   /* Match main Featured Work side inset (~g-margin) while staying full-bleed */
-  padding: clamp(1.5rem, 4vh, 2.5rem) var(--page-pad-x) clamp(4rem, 10vh, 7rem);
+  padding: clamp(1.5rem, 4vh, 2.5rem) var(--page-pad-x) clamp(1rem, 2.4vh, 1.6rem);
   max-width: none;
   width: 100%;
   box-sizing: border-box;
@@ -2082,6 +2082,14 @@ body.lightbox-open .filter-bar.is-visible {
   line-height: 1.5;
   color: color-mix(in srgb, var(--step-07) 72%, var(--step-08));
   text-align: left;
+}
+
+.lp-featured__lede p {
+  margin: 0;
+}
+
+.lp-featured__lede p + p {
+  margin-top: 0.85em;
 }
 
 /* Full-width 3-up like main Featured Work */
@@ -2537,8 +2545,17 @@ body.lightbox-open .filter-bar.is-visible {
     max-width: 36ch;
   }
 
-  .lp-featured__nav {
+  .lp-models__pack-nav {
     width: 100%;
+  }
+
+  .lp-models__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lp-models__view-toggle {
+    align-self: center;
   }
 }
 
@@ -2694,12 +2711,13 @@ html:has(.lowpoly-page-body) body {
   --gallery-scale-max: 1.18;
   --gallery-focus-lift: 0.65rem;
   --gallery-gap: clamp(5.5rem, 14vw, 11rem);
-  min-height: 100svh;
-  min-height: 100dvh;
+  --lp-head-to-gallery-gap: clamp(5.5rem, 10vh, 7.75rem);
+  min-height: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: clamp(3.5rem, 6vh, 4.5rem) 0;
+  justify-content: flex-start;
+  gap: var(--lp-head-to-gallery-gap);
+  padding: 0 0 clamp(3.5rem, 6vh, 4.5rem);
   max-width: none;
   width: 100%;
   margin-left: 0;
@@ -2714,17 +2732,40 @@ html:has(.lowpoly-page-body) body {
 }
 
 .lp-models__pack-head {
+  --lp-pack-kicker-h: 1.25rem;
+  --lp-pack-title-h: clamp(4.35rem, 8.8vw, 7.35rem);
+  --lp-pack-desc-h: clamp(4.65rem, 8vh, 5.35rem);
+  --lp-pack-copy-gap: 0.45rem;
+  --lp-pack-toolbar-gap: clamp(1.65rem, 3.5vh, 2.45rem);
   flex: 0 0 auto;
   width: 100%;
   max-width: min(52rem, 100%);
-  margin: 0 auto clamp(1.25rem, 3vh, 2rem);
+  margin: clamp(0.65rem, 1.5vh, 1.1rem) auto 0;
   padding: 0 var(--page-pad-x);
   text-align: center;
   box-sizing: border-box;
+  position: relative;
+  z-index: 3;
+}
+
+.lp-models__pack-copy {
+  display: grid;
+  grid-template-rows: var(--lp-pack-kicker-h) var(--lp-pack-title-h) var(--lp-pack-desc-h);
+  gap: var(--lp-pack-copy-gap);
+  align-content: start;
+  justify-items: center;
+  width: 100%;
+  min-height: calc(var(--lp-pack-kicker-h) + var(--lp-pack-title-h) + var(--lp-pack-desc-h) + (var(--lp-pack-copy-gap) * 2));
 }
 
 .lp-models__pack-kicker {
-  margin: 0 0 0.55rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: var(--lp-pack-kicker-h);
+  margin: 0;
+  overflow: hidden;
   font-family: var(--font-ui);
   font-size: clamp(0.78rem, 1.05vw, 0.9rem);
   font-weight: 600;
@@ -2734,11 +2775,18 @@ html:has(.lowpoly-page-body) body {
 }
 
 .lp-models__pack-kicker[hidden] {
-  display: none;
+  visibility: hidden;
 }
 
 .lp-models__pack-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  width: 100%;
+  max-width: 16ch;
+  height: var(--lp-pack-title-h);
   margin: 0;
+  overflow: hidden;
   font-family: var(--font-display);
   font-size: clamp(2.35rem, 5.2vw, 4.1rem);
   font-style: normal;
@@ -2750,23 +2798,150 @@ html:has(.lowpoly-page-body) body {
     3px 3px 0 color-mix(in srgb, var(--step-03) 20%, transparent),
     0 0 32px color-mix(in srgb, var(--step-04) 14%, transparent);
   color: var(--lp-ink);
+  text-overflow: ellipsis;
 }
 
 .lp-models__pack-desc {
-  margin: clamp(0.75rem, 1.8vh, 1.1rem) auto 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  width: 100%;
   max-width: 46ch;
+  height: var(--lp-pack-desc-h);
+  margin: 0;
+  overflow: hidden;
   font-family: var(--font-ui);
   font-size: clamp(1rem, 1.35vw, 1.15rem);
   font-weight: 500;
   line-height: 1.55;
   color: color-mix(in srgb, var(--step-07) 70%, var(--step-08));
+  text-overflow: ellipsis;
 }
 
 .lp-models__toolbar {
-  flex: 0 0 auto;
   display: flex;
-  justify-content: flex-start;
-  padding: 0 var(--page-pad-x) clamp(0.75rem, 1.8vh, 1.15rem);
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 1.8vw, 1.15rem);
+  width: 100%;
+  max-width: min(56rem, 100%);
+  margin: var(--lp-pack-toolbar-gap) auto 0;
+  flex: 0 0 auto;
+}
+
+.lp-models__pack-nav {
+  flex: 1 1 auto;
+  justify-content: center;
+  margin-top: 0;
+  gap: clamp(0.55rem, 1.2vw, 0.85rem);
+}
+
+/* Models toolbar — pill + circle controls (match view toggle) */
+.lp-models__pack-nav .lp-featured__num::before {
+  display: none;
+}
+
+.lp-models__pack-nav .lp-featured__num--all,
+.lp-models__view-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0.62rem 1.05rem;
+  border: 1px solid color-mix(in srgb, var(--step-07) 16%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--step-02) 58%, var(--step-01));
+  color: var(--lp-ink);
+  font-family: var(--font-ui);
+  font-size: clamp(0.82rem, 1.05vw, 0.92rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.22s ease,
+    border-color 0.22s ease,
+    color 0.22s ease,
+    transform 0.22s ease;
+  animation: none !important;
+}
+
+.lp-models__pack-nav .lp-featured__num--all:hover,
+.lp-models__pack-nav .lp-featured__num--all:focus-visible,
+.lp-models__view-toggle:hover,
+.lp-models__view-toggle:focus-visible {
+  border-color: color-mix(in srgb, var(--pk-primary) 42%, transparent);
+  background: color-mix(in srgb, var(--step-03) 48%, var(--step-01));
+  transform: translateY(-1px);
+  animation: none !important;
+}
+
+.lp-models__pack-nav .lp-featured__num--all:focus-visible,
+.lp-models__view-toggle:focus-visible {
+  outline: 2px solid var(--pk-primary);
+  outline-offset: 3px;
+}
+
+.lp-models__pack-nav .lp-featured__num--all.is-pack-filter,
+.lp-models__view-toggle[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--pk-primary) 38%, transparent);
+  background: color-mix(in srgb, var(--pk-soft) 42%, var(--step-01));
+  color: var(--step-08);
+}
+
+.lp-models__pack-nav .lp-featured__num--set {
+  width: 2.75rem;
+  height: 2.75rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--step-07) 16%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--step-02) 58%, var(--step-01));
+  color: var(--lp-ink);
+  font-family: var(--font-ui);
+  font-size: clamp(0.88rem, 1.05vw, 0.98rem);
+  font-weight: 600;
+  line-height: 1;
+  animation: none !important;
+}
+
+.lp-models__pack-nav .lp-featured__num--set span {
+  position: relative;
+  z-index: 1;
+}
+
+.lp-models__pack-nav .lp-featured__num--set:hover,
+.lp-models__pack-nav .lp-featured__num--set:focus-visible {
+  border-color: color-mix(in srgb, var(--pk-primary) 42%, transparent);
+  background: color-mix(in srgb, var(--step-03) 48%, var(--step-01));
+  transform: translateY(-1px);
+  animation: none !important;
+}
+
+.lp-models__pack-nav .lp-featured__num--set:focus-visible {
+  outline: 2px solid var(--pk-primary);
+  outline-offset: 3px;
+}
+
+.lp-models__pack-nav .lp-featured__num--set.is-active:not(.is-pack-filter) {
+  border-color: color-mix(in srgb, var(--step-07) 22%, transparent);
+  background: color-mix(in srgb, var(--step-03) 38%, var(--step-01));
+}
+
+.lp-models__pack-nav .lp-featured__num--set.is-pack-filter,
+.lp-models__pack-nav .lp-featured__num--set.is-neighbor.is-pack-filter {
+  border-color: color-mix(in srgb, var(--pk-primary) 38%, transparent);
+  background: color-mix(in srgb, var(--pk-soft) 42%, var(--step-01));
+  color: var(--step-08);
+}
+
+.lp-models__pack-nav .lp-featured__num--set.is-neighbor:not(.is-pack-filter) {
+  opacity: 0.72;
 }
 
 .lp-models .filter-bar--inline,
@@ -2815,8 +2990,8 @@ html:has(.lowpoly-page-body) body {
 
 .lp-models-rail {
   position: relative;
-  flex: 1 1 auto;
-  min-height: 0;
+  flex: 0 1 auto;
+  min-height: min(72svh, 42rem);
   display: flex;
   align-items: center;
   overflow-x: auto;
@@ -2827,8 +3002,9 @@ html:has(.lowpoly-page-body) body {
   scroll-snap-type: none;
   scroll-behavior: auto;
   scroll-padding-inline: clamp(2rem, 6vw, 4rem);
+  margin-top: 0;
   padding:
-    clamp(0.5rem, 1.5vh, 1rem)
+    clamp(0.75rem, 1.5vh, 1.25rem)
     clamp(2rem, 6vw, 4rem)
     clamp(0.75rem, 2vh, 1.25rem);
   cursor: grab;
@@ -2978,7 +3154,7 @@ html:has(.lowpoly-page-body) body {
   transform:
     scale(calc(var(--gallery-scale-min) + var(--gallery-focus, 0) * (var(--gallery-scale-max) - var(--gallery-scale-min))))
     translateY(calc((1 - var(--gallery-focus, 0)) * var(--gallery-focus-lift))) !important;
-  animation: rainbow-model-glow 3s linear infinite !important;
+  animation: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3103,6 +3279,12 @@ html:has(.lowpoly-page-body) body {
 }
 
 @media (max-width: 768px) {
+  .lp-models__pack-head {
+    --lp-pack-title-h: clamp(3.85rem, 12vw, 5.15rem);
+    --lp-pack-desc-h: clamp(4.15rem, 10vh, 4.85rem);
+    --lp-pack-toolbar-gap: clamp(1.35rem, 3vh, 2rem);
+  }
+
   #models.lp-models {
     --gallery-peak: clamp(10rem, min(36vh, 44svh), 18rem);
     --gallery-caption: 2.75rem;
@@ -3111,9 +3293,9 @@ html:has(.lowpoly-page-body) body {
     --gallery-scale-max: 1.14;
     --gallery-focus-lift: 0.45rem;
     --gallery-gap: clamp(7.5rem, 26vw, 13rem);
-    min-height: 100svh;
-    min-height: 100dvh;
-    padding-top: clamp(3.25rem, 6vh, 4.25rem);
+    --lp-head-to-gallery-gap: clamp(3.35rem, 7vh, 5rem);
+    min-height: auto;
+    padding-top: 0;
     padding-bottom: clamp(2.5rem, 5vh, 3.5rem);
   }
 
@@ -3203,7 +3385,8 @@ html:has(.lowpoly-page-body) body {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  margin: clamp(1rem, 2.2vh, 1.35rem) auto 0;
+  flex: 0 0 auto;
+  margin: 0;
   padding: 0.62rem 1.05rem;
   border: 1px solid color-mix(in srgb, var(--step-07) 16%, transparent);
   border-radius: 999px;
@@ -3312,14 +3495,14 @@ body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card.has-v
   transform: none !important;
   opacity: 1 !important;
   --gallery-focus: 1 !important;
-  transition: transform 0.45s var(--f-bounce);
+  transition: opacity 0.25s ease !important;
 }
 
 body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card:not(.is-modpack):hover,
 body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card.has-variants:hover,
 body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card.has-variants:focus-within {
-  transform: translateY(-6px) scale(1.03) !important;
-  z-index: 5;
+  transform: none !important;
+  z-index: auto;
 }
 
 body[data-lp-library-view="grid"] .lp-models-rail .models-grid .card-media,
@@ -3384,4 +3567,307 @@ body[data-lp-library-view="grid"] .lp-models-rail .models-grid .card-info {
     opacity: 1;
     transform: none;
   }
+}
+
+/* =========================================================
+   Extension Sets + model library polish (atelier pass)
+   ========================================================= */
+
+.lp-extensions.lowpoly-main-section {
+  padding-top: clamp(2.75rem, 7vh, 4.75rem);
+  padding-bottom: clamp(1rem, 2.4vh, 1.6rem);
+}
+
+#extensions.lp-extensions.lowpoly-main-section {
+  padding-bottom: clamp(1rem, 2.4vh, 1.6rem);
+}
+
+.lp-extensions .lp-featured {
+  align-items: center;
+  gap: clamp(1.75rem, 4.5vw, 3.25rem);
+  text-align: center;
+}
+
+.lp-extensions .lp-featured__heading {
+  text-align: center;
+  font-size: clamp(2.5rem, 5.8vw, 4.35rem);
+  max-width: 22ch;
+}
+
+.lp-extensions .lp-featured__lede {
+  text-align: center;
+  max-width: min(46rem, 94vw);
+  font-size: clamp(1.05rem, 1.5vw, 1.22rem);
+  line-height: 1.65;
+}
+
+.lp-extensions .lp-featured__lede p + p {
+  margin-top: 1.05em;
+}
+
+.lp-extensions .lp-featured__stage {
+  padding-top: clamp(1rem, 2.5vw, 2rem);
+  padding-bottom: 0;
+}
+
+.lp-extensions .lp-featured__col--prev,
+.lp-extensions .lp-featured__col--next {
+  position: relative;
+}
+
+/* Side set copy floats below cards without stretching the stage row */
+.lp-extensions .lp-featured__col--prev .lp-featured__meta,
+.lp-extensions .lp-featured__col--next .lp-featured__meta {
+  position: absolute;
+  top: calc(100% + clamp(0.65rem, 1.2vw, 0.9rem));
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 2;
+  height: clamp(5.75rem, 10.5vh, 6.85rem);
+  gap: 0.15rem;
+  overflow: hidden;
+}
+
+.lp-extensions .lp-featured__col--prev .lp-featured__status,
+.lp-extensions .lp-featured__col--next .lp-featured__status {
+  flex: 0 0 1rem;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.lp-extensions .lp-featured__col--prev .lp-featured__title,
+.lp-extensions .lp-featured__col--next .lp-featured__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  flex: 0 0 clamp(2.55rem, 4.8vw, 3.15rem);
+  width: 100%;
+  max-width: 14ch;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lp-extensions .lp-featured__col--prev .lp-featured__caption,
+.lp-extensions .lp-featured__col--next .lp-featured__caption {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  flex: 0 0 clamp(2.65rem, 4.8vh, 3.1rem);
+  width: 100%;
+  max-width: 34ch;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Center hero — image only; pack copy lives in the models header */
+.lp-featured__col--center.is-hero-slot .lp-featured__meta {
+  display: none;
+}
+
+.lp-featured__col--prev .lp-featured__meta {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.lp-featured__col--next .lp-featured__meta {
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* Extension carousel hovers — single rainbow outline (no double ring) */
+.lp-extensions .lp-featured__media:hover,
+.lp-extensions .lp-featured__media:focus-visible {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 18px 42px color-mix(in srgb, var(--rainbow-2) 24%, transparent);
+}
+
+.lp-featured__num:hover,
+.lp-featured__num:focus-visible {
+  animation: none !important;
+}
+
+.lp-featured__num:hover::before,
+.lp-featured__num:focus-visible::before {
+  opacity: 0;
+  transform: scale(0.86);
+}
+
+.lp-featured__num.is-neighbor:hover::before,
+.lp-featured__num.is-neighbor:focus-visible::before {
+  opacity: 0.4;
+  transform: scale(1);
+}
+
+.lp-featured__num.is-active:hover::before,
+.lp-featured__num.is-active:focus-visible::before,
+.lp-featured__num.is-pack-filter.is-active:hover::before,
+.lp-featured__num.is-pack-filter.is-active:focus-visible::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.lp-featured__num.is-pack-filter:hover,
+.lp-featured__num.is-pack-filter:focus-visible {
+  animation: none !important;
+}
+
+.lp-featured__num.is-pack-filter:hover::before,
+.lp-featured__num.is-pack-filter:focus-visible::before {
+  animation: none !important;
+}
+
+.lp-featured__num.is-pack-filter.is-active::before,
+.lp-featured__num.is-pack-filter.is-active:hover::before,
+.lp-featured__num.is-pack-filter.is-active:focus-visible::before {
+  opacity: 1;
+  transform: scale(1);
+  background: color-mix(in srgb, var(--step-07) 90%, var(--step-01));
+}
+
+/* Shelf view — no tile hover chrome (scroll focus only) */
+.lp-models-rail .models-grid .bento-card:not(.is-modpack):hover,
+.lp-models-rail .models-grid .bento-card.has-variants:hover,
+.lp-models-rail .models-grid .bento-card.has-variants:focus-within {
+  transform: none !important;
+  z-index: auto;
+}
+
+.lp-models-rail .models-grid .bento-card:not(.is-modpack):hover .card-media:not(.card-media--modpack),
+.lp-models-rail .models-grid .bento-card.has-variants:hover .card-media,
+.lp-models-rail .models-grid .bento-card.has-variants:focus-within .card-media {
+  animation: none !important;
+  transform: none !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.lp-models-rail .models-grid .bento-card:hover::before,
+.lp-models-rail .models-grid .bento-card:focus-within::before {
+  opacity: 0 !important;
+  animation: none !important;
+}
+
+.lp-models-rail .models-grid .bento-card:hover .card-title-text,
+.lp-models-rail .models-grid .bento-card:focus-within .card-title-text {
+  animation: none !important;
+  color: inherit;
+  font-weight: inherit;
+}
+
+/* Grid view — no hover resize */
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card:not(.is-modpack):hover,
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card.has-variants:hover,
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card.has-variants:focus-within {
+  transform: none !important;
+  z-index: auto;
+}
+
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card:not(.is-modpack):hover .card-media:not(.card-media--modpack),
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card.has-variants:hover .card-media,
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card.has-variants:focus-within .card-media {
+  animation: none !important;
+  transform: none !important;
+  background: color-mix(in srgb, var(--step-01) 58%, transparent) !important;
+  border-color: color-mix(in srgb, var(--step-01) 72%, transparent) !important;
+}
+
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card:hover::before,
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card:focus-within::before {
+  opacity: 0 !important;
+}
+
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card:hover .card-preview-img,
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card:hover .card-media .card-preview-img {
+  transform: none !important;
+  animation: none !important;
+  filter: none !important;
+}
+
+/* Grid view — smaller asset previews inside tiles */
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .card-media,
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .card-media:not(.card-media--modpack),
+body[data-lp-library-view="grid"] .lp-models-rail .models-grid .bento-card.has-variants .card-media {
+  padding: clamp(1.1rem, 3vw, 1.65rem) !important;
+}
+
+@media (max-width: 640px) {
+  body[data-lp-library-view="grid"] .lp-models-rail .models-grid {
+    gap: clamp(1.15rem, 3vw, 1.65rem);
+  }
+
+  .lp-extensions .lp-featured {
+    gap: clamp(1.85rem, 5vw, 2.75rem);
+  }
+
+  .lp-extensions.lowpoly-main-section {
+    padding-bottom: clamp(1rem, 2.4vh, 1.5rem);
+  }
+
+  #models.lp-models {
+    padding-bottom: clamp(4rem, 9vh, 6.5rem);
+  }
+}
+
+/* Shelf view — fixed rainbow presenting plate (rail center) */
+.lp-models-rail__plate {
+  position: absolute;
+  left: 50%;
+  bottom: calc(clamp(0.75rem, 2vh, 1.25rem) + var(--gallery-caption) + 0.1rem);
+  z-index: 0;
+  width: calc(var(--gallery-w, 10rem) * var(--gallery-scale-max, 1.22) * 0.92);
+  height: calc(var(--gallery-w, 10rem) * var(--gallery-scale-max, 1.22) * 0.92);
+  transform: translate(-50%, 18%) rotate(45deg);
+  pointer-events: none;
+  border-radius: 0.45rem;
+  opacity: 0.78;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--step-04) 88%, var(--step-01)),
+    color-mix(in srgb, var(--step-05) 82%, var(--step-01)),
+    color-mix(in srgb, var(--step-06) 78%, var(--step-01)),
+    color-mix(in srgb, var(--step-03) 85%, var(--step-01))
+  );
+  background-size: 280% 280%;
+  animation: rainbow-bg-shift 5s linear infinite;
+}
+
+.lp-models-rail .models-grid {
+  position: relative;
+  z-index: 1;
+}
+
+.lp-models-rail .models-grid .bento-card .card-media,
+.lp-models-rail .models-grid .bento-card .card-preview-img {
+  position: relative;
+  z-index: 1;
+}
+
+body[data-lp-library-view="grid"] .lp-models-rail__plate {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-models-rail__plate {
+    animation: none;
+  }
+}
+
+/* Neutralize base lowpoly.css bento hovers inside the shelf rail */
+.lp-models-rail .models-grid .bento-card:hover,
+.lp-models-rail .models-grid .bento-card:focus-within {
+  transform: none !important;
+}
+
+.lp-models-rail .models-grid .bento-card:hover .card-preview-img,
+.lp-models-rail .models-grid .bento-card:focus-within .card-preview-img {
+  filter: drop-shadow(
+    0 calc(12px + var(--gallery-focus, 0) * 10px)
+    calc(22px + var(--gallery-focus, 0) * 20px)
+    color-mix(in srgb, var(--step-07) calc(10% + var(--gallery-focus, 0) * 9%), transparent)
+  ) !important;
 }
