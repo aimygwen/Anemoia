@@ -25,6 +25,7 @@
   margin: 155vh 0 0;
   opacity: var(--menu-reveal);
   overflow: visible;
+  background: var(--ins-paper);
   font-family: var(--ins-sans);
   color: var(--ins-ink);
 }

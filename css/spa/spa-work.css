@@ -1,0 +1,672 @@
+/**
+ * spa-work.css — Work hub: scrollable deck chooser + docked title + content.
+ */
+
+.spa-view[data-spa-view="work"] {
+  background-color: var(--pk-bg);
+  min-height: calc(100dvh - var(--pk-header-h, 72px));
+}
+
+.work-hub {
+  --work-deck-gap: clamp(2.5rem, 8vw, 6rem);
+  --work-deck-label: clamp(3.25rem, 11vw, 8.5rem);
+  --work-deck-art: clamp(5.5rem, 14vw, 11rem);
+  --work-deck-spread-base: calc(var(--work-deck-art) * 0.78 + var(--work-deck-gap) * 0.28);
+  --work-deck-spread-step: 0px;
+  --work-dock-title: clamp(0.6875rem, 1.6vw, 0.8125rem);
+  --work-dock-top: calc(var(--aimy-chrome-top, 24px) + var(--aimy-brand-size, 72px) + 0.28rem);
+  --work-media-size: clamp(118px, 16vw, 210px);
+  --work-media-gap: clamp(2.75rem, 9vh, 5.5rem);
+
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  min-height: calc(100vh - var(--pk-header-h, 72px));
+}
+
+.work-hub[data-work-phase="choose"] {
+  min-height: calc(100dvh - var(--pk-header-h, 72px));
+  height: calc(100dvh - var(--pk-header-h, 72px));
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+html:has(body.spa-view-work.spa-work-choose),
+body.spa-view-work.spa-work-choose {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+  height: 100%;
+}
+
+body.spa-view-work.spa-work-choose #app-viewport {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.work-hub.spa-scaffold {
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Deck/canvas visibility — phase only */
+.work-hub[data-work-phase="open"] .work-deck {
+  display: none;
+}
+
+/* —— Deck chooser —— */
+.work-deck {
+  position: relative;
+  min-height: calc(100vh - var(--pk-header-h, 72px));
+  display: grid;
+  align-items: center;
+  padding:
+    calc(var(--pk-header-h, 72px) + clamp(1rem, 3vh, 2rem))
+    0
+    clamp(2rem, 5vh, 3rem);
+  overflow: visible;
+}
+
+.work-hub[data-work-phase="choose"] .work-deck {
+  min-height: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding:
+    clamp(0.75rem, 2vh, 1.5rem)
+    0
+    clamp(0.75rem, 2vh, 1.5rem);
+}
+
+.work-deck__scroller {
+  display: flex;
+  align-items: center;
+  gap: var(--work-deck-gap);
+  width: 100%;
+  padding-inline: clamp(calc(var(--work-deck-art) + 1rem), 10vw, calc(var(--work-deck-art) + 3rem));
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: auto;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+  scrollbar-width: none;
+  cursor: grab;
+  touch-action: pan-x;
+}
+
+.work-hub[data-work-phase="choose"] .work-deck__scroller {
+  flex: 0 0 auto;
+  align-self: center;
+  height: auto;
+  min-height: 0;
+}
+
+.work-deck__scroller.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.work-deck__scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.work-deck__scroller,
+.work-deck__scroller:focus,
+.work-deck__scroller:focus-visible,
+.work-deck__pick,
+.work-deck__pick:focus,
+.work-deck__pick:focus-visible {
+  outline: none !important;
+  box-shadow: none;
+}
+
+.work-deck__item {
+  flex: 0 0 auto;
+  align-self: center;
+  transform-origin: center center;
+}
+
+.work-deck__pick {
+  appearance: none;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: clamp(0.35rem, 1vw, 0.65rem) clamp(0.25rem, 1vw, 0.5rem);
+  border: 0;
+  background: transparent;
+  color: var(--pk-heading);
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+  transition: color 0.2s ease;
+}
+
+.work-deck__pick:hover,
+.work-deck__pick:focus-visible {
+  outline: none;
+}
+
+.work-deck__label {
+  display: block;
+  font-family: var(--spa-font-sans, "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif) !important;
+  font-size: var(--work-deck-label);
+  font-weight: var(--spa-font-weight-title, 500);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  transform-origin: center center;
+  color: color-mix(in srgb, var(--pk-heading) 44%, transparent);
+}
+
+.work-deck__art {
+  position: absolute;
+  top: 50%;
+  width: var(--work-deck-art);
+  height: var(--work-deck-art);
+  opacity: 0;
+  overflow: hidden;
+  border-radius: 0.35rem;
+  pointer-events: none;
+  transform: translateY(-50%) scale(0.94);
+  box-shadow:
+    0 16px 40px color-mix(in srgb, var(--step-08) 12%, transparent),
+    0 2px 8px color-mix(in srgb, var(--step-08) 8%, transparent);
+}
+
+.work-deck__art--left {
+  right: calc(100% + clamp(0.75rem, 2vw, 1.25rem));
+  transform-origin: right center;
+}
+
+.work-deck__art--right {
+  left: calc(100% + clamp(0.75rem, 2vw, 1.25rem));
+  transform-origin: left center;
+}
+
+.work-deck__art img {
+  width: var(--work-deck-art);
+  height: var(--work-deck-art);
+  display: block;
+  object-fit: cover;
+}
+
+.work-deck__item.is-active .work-deck__label {
+  color: var(--pk-heading);
+  opacity: 1;
+}
+
+.work-deck__item.is-active .work-deck__art {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+.work-deck__scroller.has-focus .work-deck__item:not(.is-active) .work-deck__label {
+  opacity: 0.58;
+}
+
+/* —— Open state: dock + content —— */
+
+/* Kill flash of lazy-loaded lowpoly UI before lowpoly.css arrives */
+.spa-view-work #lightbox:not(.active) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.spa-view-work #lightbox.active {
+  display: flex !important;
+  visibility: visible !important;
+}
+
+.work-hub__canvas[hidden] {
+  display: none !important;
+}
+
+.work-hub__canvas {
+  position: relative;
+  min-height: calc(100dvh - var(--pk-header-h, 72px));
+  padding:
+    calc(var(--work-dock-top) + 1.85rem)
+    0
+    clamp(2rem, 5vh, 3.5rem);
+}
+
+.work-hub__dock {
+  position: fixed;
+  top: var(--work-dock-top);
+  left: 0;
+  right: 0;
+  z-index: 45;
+  display: grid;
+  grid-template-columns: minmax(4.5rem, 1fr) auto minmax(4.5rem, 1fr);
+  align-items: center;
+  gap: 1rem;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.work-hub__dock[hidden] {
+  display: none !important;
+}
+
+.work-hub__dock.is-visible {
+  opacity: 1;
+}
+
+.work-hub__dock-back {
+  grid-column: 1;
+  justify-self: start;
+  appearance: none;
+  pointer-events: auto;
+  margin: 0;
+  padding: 0.15rem 0;
+  border: 0;
+  background: none;
+  color: color-mix(in srgb, var(--pk-text) 72%, transparent);
+  font-family: var(--spa-font-sans, "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif) !important;
+  font-size: var(--work-dock-title);
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  opacity: 1;
+}
+
+.work-hub__dock:not(.is-visible) .work-hub__dock-back {
+  pointer-events: none;
+}
+
+.work-hub__dock-back:hover,
+.work-hub__dock-back:focus-visible {
+  color: var(--pk-heading);
+  outline: none;
+}
+
+.work-hub__dock-title {
+  grid-column: 2;
+  justify-self: center;
+  margin: 0;
+  font-family: var(--spa-font-sans, "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif) !important;
+  font-size: var(--work-dock-title);
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--pk-heading) 82%, transparent);
+  visibility: hidden;
+}
+
+.work-hub__dock.is-visible .work-hub__dock-title {
+  visibility: visible;
+}
+
+.work-hub__content {
+  position: relative;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.work-hub__category[hidden] {
+  display: none !important;
+}
+
+/* —— Content stream —— */
+body.spa-view-work[data-work-bare="1"] #models-grid,
+body.spa-view-work[data-work-bare="1"] #works-grid,
+body.spa-view-work[data-work-bare="1"] .lp-works-grid,
+body.spa-view-work[data-work-bare="1"] .gal-projects {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: var(--work-media-gap) !important;
+  width: 100% !important;
+  padding:
+    clamp(0.5rem, 1.5vh, 1rem)
+    clamp(0.75rem, 3vw, 1.5rem)
+    clamp(3rem, 10vh, 5rem) !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+
+body.spa-view-work[data-work-bare="1"] .work-content-item,
+body.spa-view-work[data-work-bare="1"] .bento-card,
+body.spa-view-work[data-work-bare="1"] .gal-project {
+  width: var(--work-media-size) !important;
+  max-width: min(84vw, 240px) !important;
+  min-height: 0 !important;
+  height: auto !important;
+  flex: 0 0 auto;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative !important;
+  aspect-ratio: auto !important;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  contain: none !important;
+  content-visibility: visible !important;
+  pointer-events: auto;
+}
+
+body.spa-view-work[data-work-bare="1"] .bento-card .card-media {
+  display: none !important;
+}
+
+body.spa-view-work[data-work-bare="1"] .bento-card .card-preview-img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* —— Category content: bare media only —— */
+.spa-view-work .lp-featured,
+.spa-view-work .lp-featured__heading,
+.spa-view-work .lp-featured__lede,
+.spa-view-work .lp-models__pack-copy,
+.spa-view-work .lp-models__pack-head,
+.spa-view-work .lp-models__toolbar,
+.spa-view-work .lp-models__view-toggle,
+.spa-view-work .lp-featured__nav,
+.spa-view-work .lp-models-rail__plate,
+.spa-view-work .lp-models__pack-nav,
+.spa-view-work .work-hub__category-head,
+.spa-view-work .gal-dots,
+.spa-view-work .gal-eyebrow,
+.spa-view-work .card-info,
+.spa-view-work .card-badge,
+.spa-view-work .card-modpack-copy,
+.spa-view-work .card-modpack-blur,
+.spa-view-work .card-modpack-shade,
+.spa-view-work .card-pack-logo,
+.spa-view-work .card-variant-picker,
+.spa-view-work #extensions,
+.spa-view-work .lp-universe .lp-extensions,
+.spa-view-work #extensions-featured,
+.spa-view-work #extensions-stage {
+  display: none !important;
+}
+
+.spa-view-work .spa-lowpoly-root,
+.spa-view-work .lowpoly-main-section,
+.spa-view-work .lp-models,
+.spa-view-work .lp-works,
+.spa-view-work .lp-works-grid-wrap {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: none !important;
+  border: 0 !important;
+}
+
+.spa-view-work .lp-models-rail {
+  overflow: visible !important;
+  min-height: 0 !important;
+  display: block !important;
+  cursor: default !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.spa-view-work .lp-models-rail .models-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  gap: var(--work-media-gap) !important;
+  padding: 0 !important;
+}
+
+.spa-view-work .lp-models-rail .models-grid .bento-card,
+.spa-view-work .lp-models-rail .models-grid .bento-card.card-normal,
+.spa-view-work .lp-models-rail .models-grid .bento-card.has-variants {
+  min-width: 0 !important;
+  width: var(--work-media-size) !important;
+  max-width: min(88vw, 280px) !important;
+  scroll-snap-align: none !important;
+}
+
+.spa-view-work .lp-models-rail .models-grid .card-preview-img,
+.spa-view-work .lp-models-rail .models-grid .card-media .card-preview-img {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+}
+
+.spa-view-work .lp-models-rail-spacer,
+.spa-view-work .bento-card[data-gallery-clone] {
+  display: none !important;
+}
+
+.spa-view-work .bento-card {
+  aspect-ratio: auto !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  content-visibility: visible !important;
+  contain: none !important;
+  pointer-events: auto;
+}
+
+.spa-view-work .bento-card::before,
+.spa-view-work .bento-card::after,
+.spa-view-work .card-media::before,
+.spa-view-work .card-media::after {
+  display: none !important;
+  content: none !important;
+}
+
+.spa-view-work .card-media,
+.spa-view-work .card-media--modpack {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  background: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.spa-view-work .card-preview-img {
+  width: 100%;
+  height: auto;
+  max-height: none;
+  display: block;
+  object-fit: contain;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: none !important;
+}
+
+.spa-view-work .gal-project,
+.spa-view-work .gal-project--film {
+  min-height: 0 !important;
+}
+
+.spa-view-work .gal-card,
+.spa-view-work .gal-card--still,
+.spa-view-work .gal-card--film {
+  display: block;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.spa-view-work .gal-media,
+.spa-view-work .gal-media--film {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  background: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.spa-view-work .gal-media img,
+.spa-view-work .gal-film-video {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: none !important;
+}
+
+.spa-view-work .models-grid .bento-card:not(.is-modpack):hover,
+.spa-view-work .models-grid .bento-card:not(.is-modpack):hover .card-media:not(.card-media--modpack),
+.spa-view-work .models-grid .bento-card:not(.is-modpack):focus-within,
+.spa-view-work .models-grid .bento-card:not(.is-modpack):focus-within .card-media:not(.card-media--modpack) {
+  animation: none !important;
+  background: none !important;
+  border-color: transparent !important;
+}
+
+.spa-view-work .spa-work-category--gallery {
+  padding: 0;
+}
+
+.spa-view-work .spa-lowpoly-root {
+  opacity: 1;
+}
+
+.spa-view-work #models-grid .bento-card.filter-hidden {
+  display: none !important;
+}
+
+.spa-view-work #models-grid:empty::after,
+.spa-view-work #works-grid:empty::after {
+  content: "Loading…";
+  display: block;
+  padding: 2rem;
+  text-align: center;
+  color: color-mix(in srgb, var(--step-07) 78%, var(--step-01));
+  font-family: var(--spa-font-sans, "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif) !important;
+  font-size: var(--work-dock-title);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+
+body[data-spa-host] .spa-primary-nav {
+  display: none !important;
+}
+
+@media (max-width: 720px) {
+  .work-hub {
+    --work-deck-gap: clamp(1.5rem, 6vw, 2.5rem);
+    --work-deck-label: clamp(2.5rem, 14vw, 4.5rem);
+    --work-deck-art: clamp(4rem, 22vw, 6.5rem);
+  }
+
+  .work-deck__scroller {
+    padding-inline: clamp(1rem, 4vw, 1.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-deck__label,
+  .work-deck__art,
+  .work-deck__pick {
+    transition: none;
+  }
+
+  .work-deck__scroller {
+    scroll-behavior: auto;
+  }
+}
+
+/* Final bare-media kill — must beat dynamically loaded lowpoly sheets */
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .models-grid .bento-card,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .models-grid .bento-card.card-normal,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .models-grid .bento-card.has-variants,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .lp-models-rail .models-grid .bento-card {
+  position: relative !important;
+  aspect-ratio: auto !important;
+  width: var(--work-media-size) !important;
+  height: auto !important;
+  min-height: 0 !important;
+  opacity: 1 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .models-grid .card-media,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .models-grid .card-media:not(.card-media--modpack),
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .models-grid .bento-card.has-variants .card-media,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .lp-models-rail .models-grid .card-media,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] [data-lp-library-view="grid"] .lp-models-rail .models-grid .card-media {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: visible !important;
+}
+
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .models-grid .card-preview-img,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .models-grid .card-media .card-preview-img,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .lp-models-rail .models-grid .card-preview-img {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .card-info,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .card-title-text,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .card-badge,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .card-variant-picker {
+  display: none !important;
+}
+
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .bento-card::before,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .bento-card::after,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .card-media::before,
+body.spa-view-work.lowpoly-page-body[data-work-bare="1"] .card-media::after {
+  display: none !important;
+  content: none !important;
+}

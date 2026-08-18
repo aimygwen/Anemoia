@@ -1,0 +1,44 @@
+/* spa-tokens.css — SPA layout tokens layered on polykroma */
+
+:root {
+  --spa-viewport-max: 72rem;
+  --spa-nav-gap: clamp(0.75rem, 2vw, 1.5rem);
+  --spa-footer-pad: clamp(2rem, 6vw, 4rem);
+  --spa-view-pad: clamp(1.25rem, 4vw, 2.5rem);
+  --spa-font-sans: "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif;
+  --spa-font-weight-ui: 500;
+  --spa-font-weight-title: 500;
+}
+
+/* Beat legacy home-overrides Newpixel on buttons / copy inside SPA views */
+body[data-spa-host] #app-viewport .spa-view,
+body[data-spa-host] #app-viewport .spa-view button,
+body[data-spa-host] #app-viewport .spa-view input,
+body[data-spa-host] #app-viewport .spa-view textarea,
+body[data-spa-host] #app-viewport .spa-view label,
+body[data-spa-host] #app-viewport .spa-view p,
+body[data-spa-host] #app-viewport .spa-view h1,
+body[data-spa-host] #app-viewport .spa-view h2,
+body[data-spa-host] #app-viewport .spa-view h3,
+body[data-spa-host] #app-viewport .spa-view a {
+  font-family: var(--spa-font-sans) !important;
+  font-style: normal !important;
+  font-synthesis: none !important;
+}
+
+.spa-viewport {
+  position: relative;
+  min-height: calc(100vh - var(--pk-header-h, 72px));
+}
+
+.spa-view {
+  width: 100%;
+}
+
+.spa-view[hidden] {
+  display: none !important;
+}
+
+body[data-spa-host]:not(.spa-view-start) .page.home-page {
+  /* legacy hook if start markup remains in DOM while hidden */
+}

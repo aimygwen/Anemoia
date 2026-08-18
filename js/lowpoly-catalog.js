@@ -1,6 +1,6 @@
 /* ----------------------------------------------------
    LOWPOLY ASSET CATALOG — loader
-   Data: behind-the-madness/new/assets/content/lowpoly/catalog.json
+   Data: ./assets/content/lowpoly/catalog.json
          (+ catalog.overrides.json beside it)
    Regenerate after adding/renaming PNGs:
      node scripts/build-lowpoly-catalog.mjs

@@ -1,6 +1,6 @@
 /**
  * Polykroma — shared Aimy UI chrome
- * Owns: nav bar, Polly (mascot / mark), social links, menu coin + overlay menu,
+ * Owns: nav bar, Charm (mascot / mark), social links, menu coin + overlay menu,
  * page transitions. Geometry is single-sourced here (px-locked).
  * Pages theme colors via --aimy-* (aliases: --polykroma-*).
  * Polyglide remains separate (scroll feel).
@@ -68,7 +68,7 @@
   --aimy-menu-coin-open: var(--pk-accent);
   --aimy-chrome-ink: var(--aimy-primary);
   /*
-   * Shared chrome geometry — Polly / socials / menu coin.
+   * Shared chrome geometry — Charm / socials / menu coin.
    * Use px (not rem): the home page scales html font-size to 20–28px,
    * which was making rem-based social icons larger than on other pages.
    */
@@ -84,6 +84,7 @@
   --aimy-chrome-right: max(var(--aimy-pad-x), env(safe-area-inset-right, 0px));
   --aimy-chrome-left: max(var(--aimy-pad-x), env(safe-area-inset-left, 0px));
   --aimy-z: 2147483000;
+  --aimy-charm-glass-blur: 8px;
   --aimy-font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
   --aimy-nav-font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
   /*
@@ -116,7 +117,7 @@
    * Overlay menu — soft pastel wash + Plump Prose.
    * Pages may override any of these.
    */
-  --polykroma-menu-bg: color-mix(in srgb, var(--step-02) 48%, var(--step-01));
+  --polykroma-menu-bg: var(--step-02);
   --polykroma-menu-ink: var(--step-01);
   --polykroma-menu-ink-soft: color-mix(in srgb, var(--step-01) 72%, transparent);
   --polykroma-menu-muted: color-mix(in srgb, var(--step-01) 85%, transparent);
@@ -128,7 +129,7 @@
   /*
    * Full-screen menu wash — step-02 tint so it reads over the page (step-01 alone vanishes).
    */
-  --polykroma-menu-veil-fill: color-mix(in srgb, var(--step-02) 62%, transparent);
+  --polykroma-menu-veil-fill: color-mix(in srgb, var(--step-02) 92%, transparent);
 
   /*
    * Menu link geometry — Plump Prose reads larger than Newpixel at the same px.
@@ -194,14 +195,14 @@
     --aimy-r3: var(--rainbow-3);
     --aimy-r4: var(--rainbow-4);
 
-    --polykroma-menu-bg: color-mix(in srgb, var(--pk-bg) 82%, var(--pk-soft) 18%);
+    --polykroma-menu-bg: var(--pk-surface);
     --polykroma-menu-ink: var(--step-01);
     --polykroma-menu-ink-soft: color-mix(in srgb, var(--step-01) 72%, transparent);
     --polykroma-menu-muted: color-mix(in srgb, var(--step-01) 85%, transparent);
     --polykroma-menu-rule: color-mix(in srgb, var(--step-01) 28%, transparent);
     --polykroma-menu-on-block: var(--step-01);
     --polykroma-menu-block: var(--step-08);
-    --polykroma-menu-veil-fill: color-mix(in srgb, var(--pk-bg) 82%, transparent);
+    --polykroma-menu-veil-fill: color-mix(in srgb, var(--pk-surface) 92%, transparent);
   }
 }
 
@@ -306,6 +307,230 @@ html body .site-header[data-aimy-chrome]::before {
   background: none !important;
   color: var(--aimy-chrome-ink);
   overflow: visible;
+  isolation: isolate;
+}
+
+.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] {
+  isolation: auto;
+}
+
+/* Hover: rainbow orb behind the glass stack (real rainbow hex — survives mono-dev grey remap) */
+.site-header[data-aimy-chrome] .brand::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  z-index: 0;
+  width: calc(var(--aimy-brand-size) * 0.36);
+  height: calc(var(--aimy-brand-size) * 0.36);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.55);
+  background-color: #ff7eb6;
+  --rainbow-1: #ff7eb6;
+  --rainbow-2: #ffeab0;
+  --rainbow-3: #2dd4bf;
+  --rainbow-4: #cfa2ff;
+  mix-blend-mode: plus-lighter;
+  filter: blur(10px) saturate(1.2) brightness(1.06);
+  transition:
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.3, 2.2, 0.4, 0.95);
+}
+
+@media (prefers-color-scheme: dark) {
+  .site-header[data-aimy-chrome] .brand::before {
+    background-color: #ff2d95;
+    --rainbow-1: #ff2d95;
+    --rainbow-2: #fff044;
+    --rainbow-3: #00ffd9;
+    --rainbow-4: #c77dff;
+  }
+}
+
+.site-header[data-aimy-chrome] .brand:hover::before,
+.site-header[data-aimy-chrome] .brand:focus-visible::before {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.08);
+  animation: rainbow-bg-shift 2.5s linear infinite;
+}
+
+/* Glass hosts: inner orb panes carry the glow — keep ::before off so backdrop blur stays clean */
+.site-header[data-aimy-chrome] .brand[data-mono-charm-glass]:hover::before,
+.site-header[data-aimy-chrome] .brand[data-mono-charm-glass]:focus-visible::before {
+  opacity: 0;
+  animation: none;
+  transform: translate(-50%, -50%) scale(0.55);
+}
+
+/* Orb inside each glass pane — animates as content, not via backdrop-filter snapshot */
+.brand-charm-orb-pane {
+  position: absolute;
+  left: 50%;
+  top: 68%;
+  z-index: 0;
+  width: 52%;
+  height: 52%;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  overflow: visible;
+  transform: translate(-50%, -50%);
+  background-color: #ff7eb6;
+  --rainbow-1: #ff7eb6;
+  --rainbow-2: #ffeab0;
+  --rainbow-3: #2dd4bf;
+  --rainbow-4: #cfa2ff;
+  mix-blend-mode: plus-lighter;
+  filter: blur(12px) saturate(1.35) brightness(1.1);
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Soft outer bloom — inherits the shifting fill */
+.brand-charm-orb-pane::after {
+  content: "";
+  position: absolute;
+  inset: -42%;
+  border-radius: 50%;
+  background-color: inherit;
+  filter: blur(18px);
+  opacity: 0.82;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Bright core — reads as light source behind frosted glass */
+.brand-charm-orb-pane::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  width: 46%;
+  height: 46%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--step-01) 96%, transparent) 0%,
+    color-mix(in srgb, var(--step-01) 42%, transparent) 38%,
+    transparent 72%
+  );
+  mix-blend-mode: screen;
+  filter: blur(2px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .brand-charm-orb-pane::before {
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--step-08) 78%, transparent) 0%,
+      color-mix(in srgb, var(--step-08) 28%, transparent) 40%,
+      transparent 74%
+    );
+  }
+}
+
+/* —— Charm frosted glass (charm-glass.js) — per-layer masks —— */
+.brand-glass-portal {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: visible;
+  transform-origin: center;
+  transition: transform 0.65s cubic-bezier(0.3, 2.2, 0.4, 0.95);
+}
+
+.site-header[data-aimy-chrome] .brand:hover .brand-glass-portal {
+  transform: scale(1.08);
+}
+
+.site-header[data-aimy-chrome] .brand-mark {
+  position: relative;
+  z-index: 1;
+}
+
+.mono-charm-glass-layer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--aimy-brand-size);
+  height: var(--aimy-brand-size);
+  margin-left: calc(var(--aimy-brand-size) * -0.5);
+  margin-top: calc(var(--aimy-brand-size) * -0.5);
+  pointer-events: none;
+  overflow: visible;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  backdrop-filter: blur(var(--aimy-charm-glass-blur));
+  -webkit-backdrop-filter: blur(var(--aimy-charm-glass-blur));
+  background: color-mix(in srgb, var(--step-01) 38%, transparent);
+  transition:
+    backdrop-filter 0.35s ease,
+    -webkit-backdrop-filter 0.35s ease;
+}
+
+.mono-charm-glass-layer--charm-base {
+  -webkit-mask-image: url("../assets/polykroma/branding/charm-base.svg?v=branding-10");
+  mask-image: url("../assets/polykroma/branding/charm-base.svg?v=branding-10");
+}
+
+.mono-charm-glass-layer--charm-face {
+  -webkit-mask-image: url("../assets/polykroma/branding/charm-face.svg?v=branding-10");
+  mask-image: url("../assets/polykroma/branding/charm-face.svg?v=branding-10");
+}
+
+.mono-charm-glass-layer--charm-bow {
+  -webkit-mask-image: url("../assets/polykroma/branding/charm-bow.svg?v=branding-10");
+  mask-image: url("../assets/polykroma/branding/charm-bow.svg?v=branding-10");
+}
+
+.mono-charm-glass-layer--charm-hair {
+  -webkit-mask-image: url("../assets/polykroma/branding/charm-hair.svg?v=branding-10");
+  mask-image: url("../assets/polykroma/branding/charm-hair.svg?v=branding-10");
+}
+
+.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-hair path {
+  fill: color-mix(in srgb, var(--aimy-primary) 42%, transparent) !important;
+}
+
+.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-base path,
+.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-face path,
+.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-bow path {
+  fill: color-mix(in srgb, var(--aimy-secondary) 48%, transparent) !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .brand-glass-portal {
+    display: none;
+  }
+
+  .mono-charm-glass-layer {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .brand-charm-orb-pane {
+    background-color: #ff2d95;
+    --rainbow-1: #ff2d95;
+    --rainbow-2: #fff044;
+    --rainbow-3: #00ffd9;
+    --rainbow-4: #c77dff;
+  }
+}
+
+.site-header[data-aimy-chrome] .brand:hover .brand-charm-orb-pane,
+.site-header[data-aimy-chrome] .brand:focus-visible .brand-charm-orb-pane {
+  opacity: 0.92;
+  animation: rainbow-bg-shift 2.5s linear infinite;
 }
 
 .site-header[data-aimy-chrome] .brand-mark,
@@ -365,12 +590,26 @@ html body .site-header[data-aimy-chrome]::before {
   animation: aimy-logo-mid 3s linear infinite;
 }
 
-/* Polly iris pupils — look-at transforms set via SVG attribute in polly-iris.js */
-.site-header[data-aimy-chrome] .brand-layer--iris .iris-pupil {
+/* Charm iris pupils — look-at transforms set via SVG attribute in charm-iris.js */
+.site-header[data-aimy-chrome] .brand-layer--charm-iris .iris-pupil {
   will-change: transform;
 }
 
-/* Specular: per-layer SVG lighting (polly-specular.js) */
+/* Specular edge glow — soft rim on each shape (not outline stroke) */
+.site-header[data-aimy-chrome] .brand-layer--charm-highlight {
+  display: none;
+}
+
+.site-header[data-aimy-chrome] .brand-layer--charm-base path,
+.site-header[data-aimy-chrome] .brand-layer--charm-face path,
+.site-header[data-aimy-chrome] .brand-layer--charm-hair path,
+.site-header[data-aimy-chrome] .brand-layer--charm-bow path {
+  filter:
+    drop-shadow(0 0 0.35px color-mix(in srgb, var(--step-01) 55%, transparent))
+    drop-shadow(-0.35px -0.5px 0.6px color-mix(in srgb, var(--step-01) 20%, transparent));
+}
+
+/* Specular: per-layer SVG lighting (charm-specular.js) */
 .site-header[data-aimy-chrome] .brand-mark {
   overflow: visible;
 }
@@ -603,6 +842,11 @@ html.pk-chrome-boot:not(.pk-chrome-ready) .site-header[data-aimy-chrome] .brand 
   translate: 0 -5.75rem; /* from above / top-outside */
 }
 
+html.pk-chrome-boot:not(.pk-chrome-ready) .site-header[data-aimy-chrome] .aimy-chrome-type-logo {
+  opacity: 0;
+  visibility: hidden;
+}
+
 html.pk-chrome-boot:not(.pk-chrome-ready) .pk-coin-button,
 html.pk-chrome-boot:not(.pk-chrome-ready) .pk-burger-hit {
   opacity: 0;
@@ -763,11 +1007,21 @@ body.menu-open .site-header[data-aimy-chrome].is-nav-hidden .social {
   --pk-coin-turn: 360deg;
 }
 
-.pk-burger-hit:hover ~ .pk-coin-button,
-.pk-burger-hit:focus-visible ~ .pk-coin-button {
+.pk-burger-hit:hover ~ .pk-coin-button:not(.pk-coin-button--select),
+.pk-burger-hit:focus-visible ~ .pk-coin-button:not(.pk-coin-button--select) {
   --pk-coin-scale: 1.09;
   /* Coin body cycles rainbow via --pk-coin-color */
   animation: aimy-coin-body-rainbow 3s linear infinite;
+}
+
+.pk-burger-hit:hover ~ .pk-coin-button--select,
+.pk-burger-hit:focus-visible ~ .pk-coin-button--select {
+  --pk-coin-scale: 1.09;
+}
+
+.pk-burger-hit:hover ~ .pk-coin-button--select .pk-coin-icon,
+.pk-burger-hit:focus-visible ~ .pk-coin-button--select .pk-coin-icon {
+  animation: aimy-coin-icon-rainbow 3s linear infinite;
 }
 
 .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-face,
@@ -899,6 +1153,22 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
     transform: none;
   }
 
+  .site-header[data-aimy-chrome] .brand::before {
+    transition: opacity 0.2s ease;
+  }
+
+  .site-header[data-aimy-chrome] .brand:hover::before,
+  .site-header[data-aimy-chrome] .brand:focus-visible::before {
+    animation: none;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .site-header[data-aimy-chrome] .brand:hover .brand-charm-orb-pane,
+  .site-header[data-aimy-chrome] .brand:focus-visible .brand-charm-orb-pane {
+    animation: none;
+    transform: translate(-50%, -50%);
+  }
+
   .pk-coin-icon {
     transition: opacity 0.12s ease !important;
   }
@@ -926,7 +1196,7 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
 
 @media (prefers-color-scheme: dark) {
   .pk-menu-root {
-    --polykroma-menu-bg: color-mix(in srgb, var(--pk-bg) 82%, var(--pk-soft) 18%);
+    --polykroma-menu-bg: var(--pk-surface);
     --polykroma-menu-ink: var(--step-01);
     --polykroma-menu-ink-soft: color-mix(in srgb, var(--step-01) 72%, transparent);
     --polykroma-menu-muted: color-mix(in srgb, var(--step-01) 85%, transparent);
@@ -1015,6 +1285,76 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
 
 .pk-coin-face--back {
   transform: rotateY(180deg) translateZ(0.46rem);
+}
+
+/* Select-button art stack (edge / face / icon slots — same SVG until split exports) */
+.pk-coin--select {
+  inset: 0;
+}
+
+.pk-select-stack {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-style: preserve-3d;
+}
+
+.pk-select-layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Same SVG in every slot for now — only icon visible until split exports land */
+.pk-select-layer--edge,
+.pk-select-layer--face {
+  opacity: 0;
+}
+
+/* Open/close glyphs only — no legacy coin-face puck */
+.pk-coin-glyphs {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.pk-coin-glyphs--front {
+  transform: translateZ(0.46rem);
+}
+
+.pk-coin-glyphs--back {
+  transform: rotateY(180deg) translateZ(0.46rem);
+}
+
+.pk-coin-button--select {
+  filter: none;
+  isolation: isolate;
+}
+
+.pk-coin-button--select::after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--step-08) 20%, transparent);
+  filter: blur(14px);
+  transform: translate(4px, 7px);
+  opacity: 0.88;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.pk-coin-button--select .pk-coin-state {
+  z-index: 1;
 }
 
 .pk-coin-icon {
@@ -1179,6 +1519,31 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   text-align: left;
   gap: 0;
   will-change: opacity, transform, filter;
+}
+
+.pk-menu:has(.pk-menu-carousel-wrap) {
+  align-items: stretch;
+  justify-content: stretch;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: visible;
+  padding: 0;
+  background: var(--polykroma-menu-bg);
+}
+
+.pk-menu-panel:has(.pk-menu-carousel-wrap) {
+  width: 100%;
+  max-width: none;
+  flex: 1 1 auto;
+  height: 100dvh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-end;
+  text-align: center;
+  pointer-events: none;
+  background: var(--polykroma-menu-bg);
 }
 
 .pk-menu-group {
@@ -1500,7 +1865,7 @@ html.pk-menu-open body {
 }
 
 @media screen and (max-width: 720px) {
-  .pk-menu {
+  .pk-menu:not(:has(.pk-menu-carousel-wrap)) {
     align-items: center;
     padding:
       calc(var(--aimy-chrome-top, 24px) + var(--aimy-brand-size, 72px) + clamp(1.5rem, 4.5vh, 3rem))
@@ -1513,6 +1878,11 @@ html.pk-menu-open body {
     max-width: 22rem;
     align-items: center;
     text-align: center;
+  }
+
+  .pk-menu-panel:has(.pk-menu-carousel-wrap) {
+    max-width: none;
+    width: 100%;
   }
 
   .pk-menu-group {
@@ -1592,10 +1962,15 @@ html.pk-menu-open body {
     --aimy-menu-coin-open: var(--pk-accent);
   }
 
-  .pk-coin-button {
+  .pk-coin-button:not(.pk-coin-button--select) {
     filter:
       drop-shadow(0 0 0.28rem color-mix(in srgb, var(--pk-coin-color) 90%, transparent))
       drop-shadow(0 0 0.72rem color-mix(in srgb, var(--pk-coin-color) 62%, transparent));
+  }
+
+  .pk-coin-button--select::after {
+    background: color-mix(in srgb, var(--step-08) 32%, transparent);
+    opacity: 0.72;
   }
 
   .pk-coin-edge {
@@ -1615,7 +1990,7 @@ html.pk-menu-open body {
 
   .pk-coin-edge::before,
   .pk-coin-edge::after,
-  .pk-coin-face {
+  .pk-coin-face:not(.pk-coin-face--select) {
     background:
       radial-gradient(circle at 28% 20%, color-mix(in srgb, var(--step-01) 98%, transparent), transparent 12%),
       linear-gradient(
@@ -1626,7 +2001,7 @@ html.pk-menu-open body {
       );
   }
 
-  .pk-coin-face {
+  .pk-coin-face:not(.pk-coin-face--select) {
     box-shadow:
       inset 0.12rem 0.16rem 0.34rem color-mix(in srgb, var(--step-01) 72%, transparent),
       inset -0.14rem -0.2rem 0.4rem color-mix(in srgb, var(--step-08) 48%, transparent),
@@ -1711,6 +2086,12 @@ html.pk-menu-open body {
 .aimy-pt.is-leave-to {
   display: block !important;
   visibility: visible !important;
+}
+
+body[data-spa-host] .aimy-pt {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .aimy-pt .g {

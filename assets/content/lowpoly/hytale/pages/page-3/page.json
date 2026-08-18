@@ -1,0 +1,13 @@
+{
+  "topic": "Furnishings",
+  "title": "Pixxel accents",
+  "lede": "Playful pixel blocks and colorways for shelves, desks, and market stalls.",
+  "stickers": [
+    { "image": "lowpoly/hytale/Furnishings/pixxel_blue.png", "label": "Pixxel, Blue", "catalogId": "pixxel" },
+    { "image": "lowpoly/hytale/Furnishings/pixxel_pink.png", "label": "Pixxel, Pink", "catalogId": "pixxel" },
+    { "image": "lowpoly/hytale/Furnishings/pixxel_purple.png", "label": "Pixxel, Purple", "catalogId": "pixxel" },
+    { "image": "lowpoly/hytale/Furnishings/pixxel_yellow.png", "label": "Pixxel, Yellow", "catalogId": "pixxel" },
+    { "image": "lowpoly/hytale/Furnishings/pixxel_glitch.png", "label": "Pixxel, Glitch", "catalogId": "pixxel" },
+    { "image": "lowpoly/hytale/Furnishings/korsadtre.png", "label": "Korsadtre", "catalogId": "korsadtre" }
+  ]
+}

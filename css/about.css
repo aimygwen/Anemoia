@@ -1,8 +1,6 @@
 /**
  * About — scroll language (sky → paper curtain → sticky hero → deck)
  */
-@import url("./about-sheet.css?v=about-hud-stage-12");
-
 @font-face {
   font-family: "Bold Block";
   src: url("../fonts/Bold Block.ttf") format("truetype");
@@ -50,6 +48,11 @@ html {
   scroll-behavior: auto;
   overscroll-behavior: none;
   overflow-x: clip;
+}
+
+html:has(.about-page-body),
+body.about-page-body {
+  background: var(--sky) !important;
 }
 
 .about-page-body {
@@ -111,6 +114,10 @@ html.lenis-smooth {
   will-change: auto;
 }
 
+.about-page-body .site-header[data-aimy-chrome] .aimy-chrome-type-logo {
+  display: none !important;
+}
+
 .about {
   --menu-reveal: 0;
   --hero-identity: 0;
@@ -147,6 +154,8 @@ html.lenis-smooth {
   overflow: visible;
   pointer-events: none;
   perspective: 1100px;
+  opacity: calc(1 - min(1, var(--menu-reveal) * 1.35));
+  transition: opacity 0.35s ease;
 }
 
 .about-underlay img {
@@ -174,7 +183,7 @@ html.lenis-smooth {
 .scroll-curtain {
   position: fixed;
   inset: 0;
-  z-index: 3;
+  z-index: 4;
   height: 140vh;
   pointer-events: none;
   transform: translate3d(0, var(--curtain-y), 0);

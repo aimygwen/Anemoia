@@ -31,11 +31,16 @@
       return null;
     }
 
-    if (global.__lenis && typeof global.__lenis.destroy === "function") {
-      try {
-        global.__lenis.destroy();
-      } catch (e) {}
-      global.__lenis = null;
+    if (global.__lenis) {
+      if (options.force && typeof global.__lenis.destroy === "function") {
+        try {
+          global.__lenis.destroy();
+        } catch (e) {}
+        global.__lenis = null;
+      } else if (typeof global.__lenis.start === "function") {
+        global.__lenis.start();
+        return global.__lenis;
+      }
     }
 
     var lenis = new global.Lenis({

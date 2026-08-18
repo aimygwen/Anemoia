@@ -314,7 +314,11 @@
   }
 
   function getScrollY() {
-    return lenis && typeof lenis.scroll === "number" ? lenis.scroll : window.scrollY || 0;
+    var activeLenis = lenis || window.__lenis;
+    if (activeLenis && typeof activeLenis.scroll === "number") {
+      return activeLenis.scroll;
+    }
+    return window.scrollY || 0;
   }
 
   /* Soft overshoot — closer to the first bounce feel */
@@ -392,7 +396,13 @@
 
     syncAboutReveals(parseFloat(revealStr || "0"));
 
-    if (underlay) underlay.style.opacity = "1";
+    if (underlay) {
+      var underlayOpacity = Math.max(0, 1 - parseFloat(revealStr || "0") * 1.35);
+      var underlayOpacityStr = underlayOpacity.toFixed(3);
+      if (underlay.style.opacity !== underlayOpacityStr) {
+        underlay.style.opacity = underlayOpacityStr;
+      }
+    }
 
     if (!reduced) {
       if (edgeVisible) bendRunning = true;

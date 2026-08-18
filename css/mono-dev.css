@@ -1,0 +1,368 @@
+/**
+ * mono-dev.css — temporary greyscale dev palette (remove when restoring color).
+ * Overrides --step-* greys, flattens gradients, locks Charm to black / dark grey / light grey.
+ */
+
+:root {
+  --mono-hair: #3d3d3d;
+  --mono-lash: #4a4a4a;
+  --mono-light: #e5e5e5;
+  --mono-glass-blur: 12px;
+  --aimy-charm-glass-blur: var(--mono-glass-blur);
+  --mono-glass-fill: color-mix(in srgb, var(--step-01) 42%, transparent);
+  --mono-edge-glow-tight: color-mix(in srgb, var(--step-01) 50%, transparent);
+  --mono-edge-glow-soft: color-mix(in srgb, var(--step-01) 16%, transparent);
+
+  /* Grey 8-step scale (replaces lavender palette for now) */
+  --step-01: #eeeeee;
+  --step-02: #e0e0e0;
+  --step-03: #cccccc;
+  --step-04: #b3b3b3;
+  --step-05: #999999;
+  --step-06: #737373;
+  --step-07: #404040;
+  --step-08: #141414;
+
+  --pk-bg: var(--step-01);
+  --pk-surface: var(--step-02);
+  --pk-hover: var(--step-03);
+  --pk-text: var(--step-07);
+  --pk-heading: var(--step-08);
+  --pk-primary: var(--step-06);
+  --pk-accent: var(--step-05);
+  --pk-soft: var(--step-04);
+  --pk-cta-bg: var(--step-06);
+  --pk-cta-text: var(--step-01);
+
+  --aimy-primary: var(--step-06);
+  --aimy-secondary: var(--mono-light);
+  --aimy-tertiary: var(--mono-lash);
+  --aimy-accent: var(--step-05);
+  --aimy-logo-primary: var(--step-06);
+  --aimy-ink: var(--step-07);
+  --aimy-menu-coin: var(--step-06);
+  --aimy-menu-coin-open: var(--step-05);
+  --aimy-chrome-ink: var(--step-07);
+
+  --rainbow-1: var(--step-05);
+  --rainbow-2: var(--step-04);
+  --rainbow-3: var(--step-06);
+  --rainbow-4: var(--step-03);
+  --rainbow-logo-light-1: var(--step-04);
+  --rainbow-logo-light-2: var(--step-05);
+  --rainbow-logo-light-3: var(--step-03);
+  --rainbow-logo-light-4: var(--step-06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --step-01: #1a1a1a;
+    --step-02: #242424;
+    --step-03: #2e2e2e;
+    --step-04: #3a3a3a;
+    --step-05: #525252;
+    --step-06: #6b6b6b;
+    --step-07: #bdbdbd;
+    --step-08: #f0f0f0;
+
+    --pk-bg: var(--step-01);
+    --pk-surface: var(--step-02);
+    --pk-hover: var(--step-03);
+    --pk-border: color-mix(in srgb, var(--step-04) 70%, transparent);
+    --pk-text: var(--step-07);
+    --pk-heading: var(--step-08);
+    --pk-primary: var(--step-06);
+    --pk-accent: var(--step-05);
+    --pk-soft: var(--step-04);
+    --pk-cta-bg: var(--step-06);
+    --pk-cta-text: var(--step-08);
+
+    --aimy-primary: var(--step-06);
+    --aimy-secondary: var(--mono-light);
+    --aimy-tertiary: var(--mono-lash);
+    --aimy-accent: var(--step-05);
+    --aimy-ink: var(--step-07);
+    --aimy-menu-coin: var(--step-06);
+    --aimy-menu-coin-open: var(--step-05);
+    --aimy-chrome-ink: var(--step-07);
+  }
+}
+
+html,
+body {
+  background-color: var(--pk-bg) !important;
+}
+
+/* —— Charm: frosted glass greyscale overrides (structure in polykroma.css) —— */
+.site-header[data-aimy-chrome] {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-hair path {
+  fill: color-mix(in srgb, var(--mono-hair) 42%, transparent) !important;
+}
+
+.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-base path,
+.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-face path,
+.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-bow path {
+  fill: color-mix(in srgb, var(--mono-light) 48%, transparent) !important;
+}
+
+/* Specular edge glow — soft rim on each shape (not outline stroke) */
+.site-header[data-aimy-chrome] .brand-layer--charm-highlight {
+  display: none !important;
+}
+
+.site-header[data-aimy-chrome] .brand-layer--charm-base path,
+.site-header[data-aimy-chrome] .brand-layer--charm-face path,
+.site-header[data-aimy-chrome] .brand-layer--charm-hair path,
+.site-header[data-aimy-chrome] .brand-layer--charm-bow path {
+  filter:
+    drop-shadow(0 0 0.35px var(--mono-edge-glow-tight))
+    drop-shadow(-0.35px -0.5px 0.6px var(--mono-edge-glow-soft));
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .site-header[data-aimy-chrome] .brand-layer--charm-base path,
+  .site-header[data-aimy-chrome] .brand-layer--charm-face path,
+  .site-header[data-aimy-chrome] .brand-layer--charm-hair path,
+  .site-header[data-aimy-chrome] .brand-layer--charm-bow path {
+    filter: none;
+  }
+}
+
+/* Iris + lashes: fully opaque flat grey — lashes paint last (top-most) */
+.site-header[data-aimy-chrome] .brand-logo-mid,
+.site-header[data-aimy-chrome] .brand-logo-mid *,
+.site-header[data-aimy-chrome] .brand-layer--charm-lashes,
+.site-header[data-aimy-chrome] .brand-layer--charm-lashes *,
+.site-header[data-aimy-chrome] .brand-layer--charm-iris,
+.site-header[data-aimy-chrome] .brand-layer--charm-iris * {
+  fill: var(--mono-lash) !important;
+  fill-opacity: 1 !important;
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-hair,
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-hair * {
+  fill: color-mix(in srgb, var(--mono-hair) 42%, transparent) !important;
+}
+
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-lashes,
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-lashes *,
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-iris,
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-iris * {
+  fill: var(--mono-lash) !important;
+}
+
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-base,
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-base *,
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-face,
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-face *,
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-bow,
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-bow * {
+  fill: var(--mono-light) !important;
+}
+
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-iris .iris-pupil,
+.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-iris .iris-pupil * {
+  fill: var(--mono-lash) !important;
+}
+
+.site-header[data-aimy-chrome] .brand:hover .brand-logo-dark,
+.site-header[data-aimy-chrome] .brand:hover .brand-logo-dark *,
+.site-header[data-aimy-chrome] .brand:hover .brand-logo-light,
+.site-header[data-aimy-chrome] .brand:hover .brand-logo-light *,
+.site-header[data-aimy-chrome] .brand:hover .brand-logo-mid,
+.site-header[data-aimy-chrome] .brand:hover .brand-logo-mid * {
+  animation: none !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .brand-glass-portal {
+    display: none;
+  }
+
+  .site-header[data-aimy-chrome] .brand-layer--charm-hair,
+  .site-header[data-aimy-chrome] .brand-layer--charm-hair * {
+    fill: var(--mono-hair) !important;
+  }
+
+  .site-header[data-aimy-chrome] .brand-layer--charm-lashes,
+  .site-header[data-aimy-chrome] .brand-layer--charm-lashes *,
+  .site-header[data-aimy-chrome] .brand-layer--charm-iris,
+  .site-header[data-aimy-chrome] .brand-layer--charm-iris * {
+    fill: var(--mono-lash) !important;
+  }
+
+  .site-header[data-aimy-chrome] .brand-layer--charm-base,
+  .site-header[data-aimy-chrome] .brand-layer--charm-base *,
+  .site-header[data-aimy-chrome] .brand-layer--charm-face,
+  .site-header[data-aimy-chrome] .brand-layer--charm-face *,
+  .site-header[data-aimy-chrome] .brand-layer--charm-bow,
+  .site-header[data-aimy-chrome] .brand-layer--charm-bow * {
+    fill: var(--mono-light) !important;
+  }
+
+  .site-header[data-aimy-chrome] .brand-layer--charm-iris .iris-pupil,
+  .site-header[data-aimy-chrome] .brand-layer--charm-iris .iris-pupil * {
+    fill: var(--mono-lash) !important;
+  }
+}
+
+/* —— No gradients (flat fills) —— */
+.pk-coin-edge,
+.pk-coin-edge::before,
+.pk-coin-edge::after,
+.pk-coin-face,
+.aimy-pt__band,
+.c-welcome .aimy-type-logo__shadow,
+.c-welcome .aimy-type-logo__shadow::before,
+.c-welcome .aimy-type-logo__shadow::after,
+.site-header[data-aimy-chrome] .aimy-type-logo__shadow,
+.site-header[data-aimy-chrome] .aimy-type-logo__shadow::before,
+.site-header[data-aimy-chrome] .aimy-type-logo__shadow::after,
+.spa-site-footer,
+.c-welcome[data-v-6c6a6d99],
+.c-welcome {
+  background-image: none !important;
+}
+
+.pk-coin-edge,
+.pk-coin-edge::before,
+.pk-coin-edge::after,
+.pk-coin-face {
+  background-color: var(--step-06) !important;
+}
+
+.aimy-pt__band {
+  background-color: var(--step-06) !important;
+}
+
+.c-welcome .aimy-type-logo__shadow,
+.site-header[data-aimy-chrome] .aimy-type-logo__shadow {
+  background-color: var(--step-04) !important;
+  opacity: 0.35 !important;
+}
+
+.c-welcome .aimy-type-logo__shadow::before,
+.c-welcome .aimy-type-logo__shadow::after,
+.site-header[data-aimy-chrome] .aimy-type-logo__shadow::before,
+.site-header[data-aimy-chrome] .aimy-type-logo__shadow::after {
+  display: none !important;
+}
+
+.c-welcome .-w .stone .aimy-type-logo__text,
+.site-header[data-aimy-chrome] .aimy-chrome-type-logo .aimy-type-logo__text {
+  background-color: var(--step-06) !important;
+  filter: none !important;
+}
+
+.c-welcome .-w .stone .aimy-wordmark-holo .aimy-type-logo__text,
+.c-welcome .-w .stone .aimy-wordmark-holo .aimy-type-logo__shadow {
+  background-color: transparent !important;
+  background-image: none !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.c-welcome .aimy-wordmark-holo .aimy-type-logo__text-fill,
+.c-welcome .aimy-wordmark-holo .aimy-type-logo__shadow-fill {
+  background-color: transparent !important;
+  filter: none !important;
+}
+
+.c-welcome[data-aimy-splash-only],
+.c-welcome[data-aimy-splash-only] .welcome-bg {
+  --aimy-splash-ground: #E7CBFF;
+  background-color: var(--aimy-splash-ground) !important;
+  background-image: none !important;
+}
+
+html:has(body.spa-view-start),
+body.spa-view-start {
+  background-color: #E7CBFF !important;
+}
+
+/* Splash hero photo on — mono-dev only tones chrome, not the art */
+.c-welcome[data-aimy-splash-only][data-v-6c6a6d99] {
+  box-shadow: none !important;
+}
+
+.c-welcome .welcome-bg {
+  opacity: 0 !important;
+}
+
+.c-welcome .-w .cta .button:hover > span:not(.aimy-cta-frost),
+.c-welcome .-w .cta .button:not(.-disabled):hover > span[data-v-f52f19c3] {
+  color: var(--step-08) !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  filter: none !important;
+  animation: none !important;
+}
+
+.spa-site-footer,
+footer[data-spa-footer],
+body[data-spa-host] .spa-site-footer {
+  background-image: none !important;
+  background-color: var(--step-02) !important;
+  box-shadow: none !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .spa-site-footer,
+  footer[data-spa-footer],
+  body[data-spa-host] .spa-site-footer {
+    background-color: var(--step-02) !important;
+  }
+}
+
+.site-header[data-aimy-chrome] .social a:hover,
+.pk-menu-link:hover,
+.pk-menu-link:focus-visible,
+.pk-menu-social a:hover,
+.pk-coin-button.is-open .pk-coin-icon,
+.pk-coin-button:hover .pk-coin-icon,
+.aimy-cta-text-rainbow,
+[data-aimy-cta-rainbow] {
+  animation: none !important;
+  color: var(--pk-heading) !important;
+  fill: var(--pk-heading) !important;
+}
+
+/*
+ * Holo sticker wordmark (Start + Insights) — bypass mono-dev flat pass above.
+ */
+.c-welcome .aimy-wordmark-holo .aimy-type-logo__shadow,
+.c-welcome .aimy-wordmark-holo .aimy-type-logo__text,
+.insights-page-body .aimy-wordmark-holo .aimy-type-logo__shadow,
+.insights-page-body .aimy-wordmark-holo .aimy-type-logo__text {
+  background-color: transparent !important;
+  background-image: none !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+.c-welcome .aimy-wordmark-holo .aimy-type-logo__shadow::before,
+.c-welcome .aimy-wordmark-holo .aimy-type-logo__shadow::after,
+.insights-page-body .aimy-wordmark-holo .aimy-type-logo__shadow::before,
+.insights-page-body .aimy-wordmark-holo .aimy-type-logo__shadow::after {
+  display: none !important;
+}
+
+/* Non-Start SPA views — splash node stays in DOM; override any :has([data-aimy-splash-only]) tint. */
+html.spa-route-not-start:has(body.spa-view-work),
+html.spa-route-not-start:has(body.spa-view-insights),
+html.spa-route-not-start:has(body.spa-view-me),
+html.spa-route-not-start:has(body.spa-view-contact),
+html.spa-route-not-start:has(body.spa-view-work) body,
+html.spa-route-not-start:has(body.spa-view-insights) body,
+html.spa-route-not-start:has(body.spa-view-me) body,
+html.spa-route-not-start:has(body.spa-view-contact) body {
+  background-color: var(--pk-bg) !important;
+}

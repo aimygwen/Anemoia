@@ -1,0 +1,603 @@
+/**
+ * work-stickerbook.css — Hytale Work sticker book (holo die-cut assets + page spread).
+ */
+
+.work-stickerbook {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.work-stickerbook__pages {
+  position: relative;
+  width: 100%;
+}
+
+.work-stickerbook__page {
+  --sticker-cols: 4;
+  --sticker-rows: 3;
+  --sticker-gap-x: clamp(0.85rem, 2.4vw, 1.75rem);
+  --sticker-gap-y: clamp(0.95rem, 2.8vh, 1.85rem);
+  --sticker-page-pad-x: clamp(1.35rem, 5vw, 3.75rem);
+  --sticker-page-pad-top: clamp(1.1rem, 3vh, 2rem);
+  --sticker-page-pad-bottom: clamp(4.75rem, 12vh, 7rem);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(1.25rem, 3vh, 2rem);
+  width: 100%;
+  min-height: calc(100dvh - var(--pk-header-h, 72px) - clamp(3rem, 8vh, 4.5rem));
+  margin: 0;
+  padding:
+    var(--sticker-page-pad-top)
+    var(--sticker-page-pad-x)
+    var(--sticker-page-pad-bottom);
+  box-sizing: border-box;
+}
+
+.work-stickerbook__intro {
+  max-width: 42rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.work-stickerbook__topic {
+  margin: 0 0 0.35rem;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(0.68rem, 1.6vw, 0.78rem);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--step-06) 78%, var(--step-07));
+}
+
+.work-stickerbook__title {
+  margin: 0 0 0.55rem;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(1.45rem, 3.8vw, 2.15rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--pk-heading);
+}
+
+.work-stickerbook__lede {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(0.92rem, 2vw, 1.05rem);
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--pk-text) 88%, transparent);
+}
+
+.work-stickerbook__body {
+  margin: 0.85rem 0 0;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: clamp(0.88rem, 1.8vw, 0.98rem);
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--pk-text) 78%, transparent);
+}
+
+.work-stickerbook__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--sticker-cols), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--sticker-rows), minmax(0, auto));
+  grid-auto-rows: minmax(0, auto);
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+  gap: var(--sticker-gap-y) var(--sticker-gap-x);
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+@media (max-width: 559px) {
+  .work-stickerbook__page {
+    --sticker-gap-x: clamp(0.55rem, 3vw, 0.95rem);
+    --sticker-gap-y: clamp(0.75rem, 2.5vh, 1.25rem);
+    --sticker-page-pad-x: clamp(1rem, 4vw, 1.5rem);
+  }
+
+  .work-stickerbook .work-sticker {
+    width: min(100%, clamp(4.25rem, 28vw, 6.5rem));
+    max-width: 6.5rem;
+  }
+}
+
+@media (min-width: 560px) and (max-width: 767px) {
+  .work-stickerbook .work-sticker {
+    width: min(100%, clamp(4.75rem, 22vw, 8rem));
+    max-width: 8rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .work-stickerbook__page {
+    --sticker-gap-x: clamp(1rem, 2.8vw, 2rem);
+    --sticker-gap-y: clamp(1rem, 3vh, 2rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .work-stickerbook__page {
+    --sticker-page-pad-x: clamp(1.75rem, 6vw, 4.5rem);
+  }
+}
+
+.work-stickerbook__nav {
+  position: fixed;
+  right: clamp(0.85rem, 2.5vw, 1.75rem);
+  bottom: clamp(0.85rem, 2.5vh, 1.75rem);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+  pointer-events: none;
+}
+
+.work-stickerbook__next {
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  width: 3.15rem;
+  height: 3.15rem;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--step-04) 42%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--step-02) 88%, var(--step-01));
+  color: var(--step-08);
+  box-shadow:
+    0 0.45rem 1.1rem color-mix(in srgb, var(--step-08) 10%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--step-01) 70%, transparent) inset;
+  cursor: pointer;
+  transition:
+    transform 0.28s cubic-bezier(0.34, 1.42, 0.64, 1),
+    background 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.work-stickerbook__next svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  display: block;
+}
+
+.work-stickerbook__next:hover,
+.work-stickerbook__next:focus-visible {
+  transform: scale(1.06);
+  background: color-mix(in srgb, var(--step-03) 72%, var(--step-01));
+  box-shadow:
+    0 0.65rem 1.35rem color-mix(in srgb, var(--step-08) 14%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--step-01) 80%, transparent) inset;
+}
+
+.work-stickerbook__next:focus-visible {
+  outline: 2px solid var(--step-04);
+  outline-offset: 3px;
+}
+
+.work-stickerbook__count {
+  pointer-events: none;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--step-07) 72%, transparent);
+}
+
+/* —— Sticker placement —— */
+.work-stickerbook .work-sticker {
+  --grain: url("../assets/polykroma/branding/noise.svg?v=glitter-2");
+  --glitter: url("../assets/polykroma/branding/glitter.png?v=1");
+  --glittersize: 25%;
+  --foil: url("../assets/polykroma/branding/illusion.png?v=1");
+  --imgsize: 33%;
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --card-opacity: 0.18;
+  --pointer-from-center: 0.35;
+  --pointer-from-top: 0.5;
+  --pointer-from-left: 0.5;
+  --background-x: 50%;
+  --background-y: 50%;
+  --sticker-rot: 0deg;
+  --sticker-scale: 1;
+  --sticker-size: 1;
+  --sticker-tilt-x: 0;
+  --sticker-tilt-y: 0;
+
+  position: relative;
+  width: min(100%, clamp(5rem, 14vw, 10.5rem));
+  max-width: 10.5rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  transform: rotate(var(--sticker-rot)) scale(calc(var(--sticker-scale) * var(--sticker-size)));
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  perspective: 900px;
+  z-index: 1;
+  cursor: pointer;
+  overflow: visible;
+}
+
+.work-stickerbook .work-sticker.work-sticker--large {
+  --sticker-size: 1.28;
+  z-index: 2;
+}
+
+.work-stickerbook .work-sticker.work-sticker--hero {
+  --sticker-size: 1.65;
+  z-index: 3;
+}
+
+.work-stickerbook .work-sticker.work-sticker--cycle-fade .work-sticker__img {
+  opacity: 0.12;
+}
+
+.work-stickerbook .work-sticker__stage {
+  position: relative;
+  display: grid;
+  grid-template: 1fr / 1fr;
+  width: 100%;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  overflow: visible;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.work-stickerbook .work-sticker.interacting .work-sticker__stage,
+.work-stickerbook .work-sticker__rotator.is-tilting .work-sticker__stage {
+  transform: scale(1.04);
+}
+
+.work-stickerbook .work-sticker__stage > * {
+  grid-area: 1 / 1;
+  width: 100%;
+  pointer-events: none;
+}
+
+.work-stickerbook .work-sticker__shine,
+.work-stickerbook .work-sticker__glare {
+  height: 100%;
+  -webkit-mask-image: var(--sticker-mask, none);
+  mask-image: var(--sticker-mask, none);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.work-stickerbook .work-sticker__translater,
+.work-stickerbook .work-sticker__rotator {
+  display: block;
+  width: 100%;
+  transform-style: preserve-3d;
+}
+
+.work-stickerbook .work-sticker__rotator {
+  pointer-events: none;
+  overflow: visible;
+  transform:
+    translate3d(calc(var(--sticker-tilt-x, 0) * 8px), calc(var(--sticker-tilt-y, 0) * 6px), 0)
+    rotateX(calc(var(--sticker-tilt-y, 0) * -10deg))
+    rotateY(calc(var(--sticker-tilt-x, 0) * 12deg));
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  filter: drop-shadow(0 0.55rem 1rem color-mix(in srgb, var(--step-08) 10%, transparent));
+}
+
+.work-stickerbook .work-sticker.interacting .work-sticker__rotator,
+.work-stickerbook .work-sticker__rotator.is-tilting {
+  transform:
+    translate3d(calc(var(--sticker-tilt-x, 0) * 8px), calc(var(--sticker-tilt-y, 0) * 6px), 0)
+    rotateX(calc(var(--sticker-tilt-y, 0) * -10deg))
+    rotateY(calc(var(--sticker-tilt-x, 0) * 12deg));
+  filter:
+    drop-shadow(0 0.75rem 1.25rem color-mix(in srgb, var(--step-08) 14%, transparent))
+    drop-shadow(0 0 1.2rem color-mix(in srgb, var(--step-06) 18%, transparent));
+}
+
+.work-stickerbook .work-sticker__img {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: auto;
+  align-self: start;
+  object-fit: contain;
+  object-position: center;
+  transform: translate3d(0, 0, 0.02px);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: opacity 0.32s ease;
+  filter:
+    drop-shadow(0 0 0 var(--step-01))
+    drop-shadow(0 0 1px var(--step-01))
+    drop-shadow(0 0 2px var(--step-01))
+    drop-shadow(-2px 0 0 var(--step-01))
+    drop-shadow(2px 0 0 var(--step-01))
+    drop-shadow(0 -2px 0 var(--step-01))
+    drop-shadow(0 2px 0 var(--step-01))
+    drop-shadow(-2px -2px 0 var(--step-01))
+    drop-shadow(2px -2px 0 var(--step-01))
+    drop-shadow(-2px 2px 0 var(--step-01))
+    drop-shadow(2px 2px 0 var(--step-01))
+    drop-shadow(-3px 0 0 var(--step-01))
+    drop-shadow(3px 0 0 var(--step-01))
+    drop-shadow(0 -3px 0 var(--step-01))
+    drop-shadow(0 3px 0 var(--step-01));
+}
+
+.work-stickerbook .work-sticker__stage--sized .work-sticker__img {
+  height: 100%;
+  align-self: stretch;
+}
+
+/* —— Rainbow Rare holo (Insights card parity) —— */
+.work-stickerbook .work-sticker__shine,
+.work-stickerbook .work-sticker__glare {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: opacity 0.24s ease;
+}
+
+.work-stickerbook .work-sticker__shine {
+  display: grid;
+  z-index: 3;
+  transform: translate3d(0, 0, 1px);
+  --r-clr-1: hsl(0 57% 37%);
+  --r-clr-2: hsl(40 53% 39%);
+  --r-clr-3: hsl(90 60% 35%);
+  --r-clr-4: hsl(180 60% 35%);
+  --r-clr-5: hsl(180 60% 35%);
+  --r-clr-6: hsl(210 57% 39%);
+  --r-clr-7: hsl(280 55% 31%);
+  background-image:
+    linear-gradient(-45deg, var(--r-clr-1), var(--r-clr-5)),
+    var(--glitter),
+    linear-gradient(
+      -30deg,
+      var(--r-clr-1),
+      var(--r-clr-2),
+      var(--r-clr-3),
+      var(--r-clr-4),
+      var(--r-clr-5),
+      var(--r-clr-6),
+      var(--r-clr-7),
+      var(--r-clr-1),
+      var(--r-clr-2),
+      var(--r-clr-3),
+      var(--r-clr-4),
+      var(--r-clr-5),
+      var(--r-clr-6),
+      var(--r-clr-7),
+      var(--r-clr-1)
+    );
+  background-blend-mode: luminosity, soft-light;
+  background-size:
+    200% 200%,
+    var(--glittersize) var(--glittersize),
+    400% 400%;
+  background-position:
+    calc(25% + (50% * var(--pointer-from-left))) calc(25% + (50% * var(--pointer-from-top))),
+    center center,
+    calc(25% + (var(--pointer-x) * 0.5)) calc(25% + (var(--pointer-y) * 0.5));
+  filter: brightness(calc((var(--pointer-from-center) * 0.25) + 0.6)) contrast(2.2)
+    saturate(0.75);
+  mix-blend-mode: color-dodge;
+  opacity: var(--card-opacity);
+}
+
+.work-stickerbook .work-sticker__shine::before,
+.work-stickerbook .work-sticker__shine::after {
+  content: "";
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+}
+
+.work-stickerbook .work-sticker__shine::before {
+  background-image: var(--foil);
+  background-size: var(--imgsize);
+  background-position: center center;
+  filter: brightness(2.5) contrast(1);
+  opacity: calc((var(--pointer-from-center) + 0.4) * 0.6);
+  background-blend-mode: difference;
+  mix-blend-mode: darken;
+}
+
+.work-stickerbook .work-sticker__shine::after {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  background-image:
+    var(--glitter),
+    linear-gradient(
+      -60deg,
+      var(--r-clr-1),
+      var(--r-clr-2),
+      var(--r-clr-3),
+      var(--r-clr-4),
+      var(--r-clr-5),
+      var(--r-clr-6),
+      var(--r-clr-7),
+      var(--r-clr-1),
+      var(--r-clr-2),
+      var(--r-clr-3),
+      var(--r-clr-4),
+      var(--r-clr-5),
+      var(--r-clr-6),
+      var(--r-clr-7),
+      var(--r-clr-1)
+    );
+  background-blend-mode: soft-light;
+  background-size: var(--glittersize) var(--glittersize), 400% 400%;
+  background-position: center center, var(--pointer-x) var(--pointer-y);
+  filter: brightness(calc((var(--pointer-from-center) * 0.3) + 0.55)) contrast(2)
+    saturate(1);
+  mix-blend-mode: color-dodge;
+}
+
+.work-stickerbook .work-sticker__glare {
+  z-index: 4;
+  transform: translate3d(0, 0, 1.4px);
+  background-image: radial-gradient(
+    farthest-corner circle at var(--pointer-x) var(--pointer-y),
+    hsl(0 0% 80%),
+    hsl(187 10% 85% / 0.25) 30%,
+    hsl(197 6% 25%) 120%
+  );
+  filter: brightness(0.9) contrast(1.75);
+  opacity: calc(var(--card-opacity) * max(var(--pointer-from-center), 0.35));
+  mix-blend-mode: hard-light;
+}
+
+.work-stickerbook .work-sticker.interacting,
+.work-stickerbook .work-sticker__rotator.is-tilting {
+  z-index: 6;
+  --card-opacity: 1;
+}
+
+/* Work SPA: hide legacy grid when sticker book is active */
+body.spa-view-work[data-work-layout="hytale-stickerbook"] [data-work-category-panel="hytale"] .lp-models-rail,
+body.spa-view-work[data-work-layout="hytale-stickerbook"] [data-work-category-panel="hytale"] #models-grid {
+  display: none !important;
+}
+
+body.spa-view-work[data-work-layout="hytale-stickerbook"] [data-work-stickerbook] {
+  display: block;
+  width: 100%;
+}
+
+body.spa-view-work[data-work-layout="hytale-stickerbook"] #models.lp-models {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  min-height: 0 !important;
+  height: auto !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+body.spa-view-work[data-work-layout="hytale-stickerbook"] .work-stickerbook__page {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: calc(100dvh - var(--pk-header-h, 72px) - clamp(3rem, 8vh, 4.5rem)) !important;
+}
+
+body.spa-view-work[data-work-layout="hytale-stickerbook"] .work-stickerbook__grid {
+  display: grid !important;
+  grid-template-columns: repeat(var(--sticker-cols, 4), minmax(0, 1fr)) !important;
+  grid-template-rows: repeat(var(--sticker-rows, 3), minmax(0, auto)) !important;
+  justify-items: center !important;
+  align-content: center !important;
+  width: 100% !important;
+}
+
+body.spa-view-work[data-work-layout="hytale-stickerbook"][data-work-bare="1"] .work-stickerbook .work-sticker.bento-card,
+body.spa-view-work[data-work-layout="hytale-stickerbook"] .work-stickerbook .work-sticker {
+  position: relative !important;
+  display: block !important;
+  flex: none !important;
+  width: min(100%, clamp(5rem, 14vw, 10.5rem)) !important;
+  max-width: 10.5rem !important;
+  min-width: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  transform: rotate(var(--sticker-rot)) scale(calc(var(--sticker-scale) * var(--sticker-size, 1))) !important;
+}
+
+@media (max-width: 559px) {
+  body.spa-view-work[data-work-layout="hytale-stickerbook"] .work-stickerbook .work-sticker {
+    width: min(100%, clamp(4.25rem, 28vw, 6.5rem)) !important;
+    max-width: 6.5rem !important;
+  }
+}
+
+@media (min-width: 560px) and (max-width: 767px) {
+  body.spa-view-work[data-work-layout="hytale-stickerbook"] .work-stickerbook .work-sticker {
+    width: min(100%, clamp(4.75rem, 22vw, 8rem)) !important;
+    max-width: 8rem !important;
+  }
+}
+
+body.spa-view-work[data-work-layout="hytale-stickerbook"] .work-stickerbook .card-info,
+body.spa-view-work[data-work-layout="hytale-stickerbook"] .work-stickerbook .card-title-text {
+  display: none !important;
+}
+
+body.spa-view-work[data-work-layout="hytale-stickerbook"] .work-stickerbook .work-sticker__stage--sized .work-sticker__img,
+body.spa-view-work[data-work-layout="hytale-stickerbook"] .work-stickerbook .work-sticker__stage--sized .card-preview-img {
+  height: 100% !important;
+}
+
+body.spa-view-work[data-work-layout="hytale-stickerbook"] .work-stickerbook .work-sticker__shine,
+body.spa-view-work[data-work-layout="hytale-stickerbook"] .work-stickerbook .work-sticker__glare {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+body.spa-view-work[data-work-layout="hytale-stickerbook"] .work-stickerbook .work-sticker__img,
+body.spa-view-work[data-work-layout="hytale-stickerbook"] .work-stickerbook .card-preview-img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter:
+    drop-shadow(0 0 0 var(--step-01))
+    drop-shadow(0 0 1px var(--step-01))
+    drop-shadow(0 0 2px var(--step-01))
+    drop-shadow(-2px 0 0 var(--step-01))
+    drop-shadow(2px 0 0 var(--step-01))
+    drop-shadow(0 -2px 0 var(--step-01))
+    drop-shadow(0 2px 0 var(--step-01))
+    drop-shadow(-2px -2px 0 var(--step-01))
+    drop-shadow(2px -2px 0 var(--step-01))
+    drop-shadow(-2px 2px 0 var(--step-01))
+    drop-shadow(2px 2px 0 var(--step-01))
+    drop-shadow(-3px 0 0 var(--step-01))
+    drop-shadow(3px 0 0 var(--step-01))
+    drop-shadow(0 -3px 0 var(--step-01))
+    drop-shadow(0 3px 0 var(--step-01)) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-stickerbook .work-sticker,
+  .work-stickerbook .work-sticker__rotator {
+    --card-opacity: 0.82;
+    --pointer-from-center: 0.42;
+  }
+
+  .work-stickerbook .work-sticker__rotator {
+    transition: none;
+  }
+
+  .work-stickerbook__next {
+    transition: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .work-stickerbook__next {
+    background: color-mix(in srgb, var(--step-08) 72%, var(--step-07));
+    color: var(--step-01);
+    border-color: color-mix(in srgb, var(--step-06) 36%, transparent);
+  }
+
+  .work-stickerbook__count {
+    color: color-mix(in srgb, var(--step-02) 70%, transparent);
+  }
+}

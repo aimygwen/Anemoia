@@ -1,0 +1,79 @@
+/* spa-shell.css — header nav on SPA host */
+
+.spa-site-footer {
+  display: none !important;
+}
+
+.spa-primary-nav {
+  display: none;
+  align-items: center;
+  gap: var(--spa-nav-gap);
+  padding-right: clamp(0.5rem, 2vw, 1rem);
+}
+
+body[data-spa-host] .site-header[data-aimy-chrome] .spa-primary-nav {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  align-self: center;
+}
+
+@media (min-width: 900px) {
+  .spa-primary-nav {
+    display: flex;
+  }
+}
+
+.spa-primary-nav__link {
+  font-family: var(--pk-font-sans, inherit);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: color-mix(in srgb, var(--pk-text) 78%, transparent);
+  padding: 0.35rem 0.15rem;
+  border-bottom: 1px solid transparent;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.spa-primary-nav__link:hover,
+.spa-primary-nav__link:focus-visible {
+  color: var(--pk-heading);
+  border-bottom-color: color-mix(in srgb, var(--pk-accent) 55%, transparent);
+}
+
+.spa-primary-nav__link.is-active,
+.spa-primary-nav__link.is-current {
+  color: var(--pk-heading);
+  border-bottom-color: var(--pk-accent);
+}
+
+.spa-live-region {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+body[data-spa-host] {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body[data-spa-host] #app-viewport {
+  flex: 1 0 auto;
+}
+
+/* Header wordmark lives on Start splash only — coin menu + dock titles elsewhere. */
+
+/* Legacy Nuxt snapshot — keep out of layout + parser cost */
+body[data-spa-host] .vault,
+body[data-spa-host] div[id="Aimy Gwen"] > svg {
+  display: none !important;
+}

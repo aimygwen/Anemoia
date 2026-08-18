@@ -66,10 +66,21 @@
     return "stills";
   }
 
-  function boot() {
-    var main = document.getElementById("main");
-    var dotsNav = document.querySelector(".gal-dots");
-    var lightbox = document.getElementById("gal-lightbox");
+  function mountGallery(options) {
+    options = options || {};
+    var spaMode = !!options.spaMode;
+    var mainSel = options.main || "#main";
+    var dotsSel = options.dots || ".gal-dots";
+    var lightboxSel = options.lightbox || "#gal-lightbox";
+
+    var main =
+      typeof mainSel === "string" ? document.querySelector(mainSel) : mainSel;
+    var dotsNav =
+      typeof dotsSel === "string" ? document.querySelector(dotsSel) : dotsSel;
+    var lightbox =
+      typeof lightboxSel === "string"
+        ? document.querySelector(lightboxSel)
+        : lightboxSel;
     var lbImage = document.getElementById("gal-lightbox-image");
     var lbVideo = document.getElementById("gal-lightbox-video");
     var lbTitle = document.getElementById("gal-lightbox-title");
@@ -77,16 +88,21 @@
     var lbClose = document.getElementById("gal-lightbox-close");
     var body = document.body;
     var viewLinks = document.querySelectorAll(".gal-view-nav [data-gal-view]");
-    if (!main || !dotsNav) return;
+    if (!main || !dotsNav) {
+      return { destroy: function () {} };
+    }
 
     var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var open = false;
-    var view = readView();
+    var view = options.view || readView();
     var activeFilm = -1;
     var filmIO = null;
+    var activeIO = null;
     var projects = [];
     var dots = [];
     var medias = [];
+    var ac = new AbortController();
+    var signal = ac.signal;
 
     function dotLabel(medium, index) {
       return medium + " " + String(index + 1);
@@ -234,7 +250,8 @@
     }
 
     function wireActiveDots() {
-      var activeIO = new IntersectionObserver(
+      if (activeIO) activeIO.disconnect();
+      activeIO = new IntersectionObserver(
         function (entries) {
           for (var e = 0; e < entries.length; e++) {
             if (!entries[e].isIntersecting) continue;
@@ -323,8 +340,10 @@
     function render() {
       clearStage();
       body.setAttribute("data-gal-view", view);
-      document.title =
-        (view === "films" ? "Films" : "Stills") + " — Art of Aimy Gwen";
+      if (!spaMode) {
+        document.title =
+          (view === "films" ? "Films" : "Stills") + " — Art of Aimy Gwen";
+      }
       setViewLinks();
       if (view === "films") buildFilms();
       else buildStills();
@@ -359,16 +378,30 @@
     }
 
     for (var vi = 0; vi < viewLinks.length; vi++) {
-      viewLinks[vi].addEventListener("click", function (ev) {
-        ev.preventDefault();
-        switchView(this.getAttribute("data-gal-view"), true);
-      });
+      viewLinks[vi].addEventListener(
+        "click",
+        function (ev) {
+          ev.preventDefault();
+          switchView(this.getAttribute("data-gal-view"), true);
+        },
+        { signal: signal }
+      );
     }
-    window.addEventListener("hashchange", function () {
-      switchView(readView(), false);
-    });
+    if (!spaMode) {
+      window.addEventListener(
+        "hashchange",
+        function () {
+          switchView(readView(), false);
+        },
+        { signal: signal }
+      );
+    }
 
-    var lenis = window.Polyglide ? window.Polyglide.boot() : null;
+    if (window.Polyglide) {
+      if (window.__lenis) window.Polyglide.start();
+      else window.Polyglide.boot();
+    }
+    var lenis = window.__lenis || null;
 
     /* —— Scroll-velocity stretch —— */
     var lastScroll = 0;
@@ -442,7 +475,7 @@
     }
 
     lastScroll = getScrollY();
-    window.addEventListener("scroll", bumpStretch, { passive: true });
+    window.addEventListener("scroll", bumpStretch, { passive: true, signal: signal });
     if (lenis && typeof lenis.on === "function") {
       lenis.on("scroll", bumpStretch);
     }
@@ -521,31 +554,99 @@
       }, 380);
     }
 
-    lbClose.addEventListener("click", closeLightbox);
-    lightbox.addEventListener("click", function (e) {
-      if (e.target === lightbox) closeLightbox();
-    });
-    window.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && open) {
-        e.preventDefault();
-        closeLightbox();
-      }
-    });
+    if (lbClose) {
+      lbClose.addEventListener("click", closeLightbox, { signal: signal });
+    }
+    if (lightbox) {
+      lightbox.addEventListener(
+        "click",
+        function (e) {
+          if (e.target === lightbox) closeLightbox();
+        },
+        { signal: signal }
+      );
+    }
+    window.addEventListener(
+      "keydown",
+      function (e) {
+        if (e.key === "Escape" && open) {
+          e.preventDefault();
+          closeLightbox();
+        }
+      },
+      { signal: signal }
+    );
 
-    document.addEventListener("visibilitychange", function () {
-      if (document.hidden) {
-        if (view === "films" && activeFilm >= 0) pauseFilmAt(activeFilm);
-      } else if (view === "films" && activeFilm >= 0 && !open && !reduced) {
-        playFilmAt(activeFilm);
-      }
-    });
+    document.addEventListener(
+      "visibilitychange",
+      function () {
+        if (document.hidden) {
+          if (view === "films" && activeFilm >= 0) pauseFilmAt(activeFilm);
+        } else if (view === "films" && activeFilm >= 0 && !open && !reduced) {
+          playFilmAt(activeFilm);
+        }
+      },
+      { signal: signal }
+    );
 
     render();
+
+    return {
+      destroy: function () {
+        ac.abort();
+        if (raf) cancelAnimationFrame(raf);
+        if (filmIO) {
+          filmIO.disconnect();
+          filmIO = null;
+        }
+        if (activeIO) {
+          activeIO.disconnect();
+          activeIO = null;
+        }
+        if (open) closeLightbox();
+        clearStage();
+        body.classList.remove("gal-lightbox-open");
+        if (lenis && typeof lenis.off === "function") {
+          try {
+            lenis.off("scroll", bumpStretch);
+          } catch (errOff) {}
+        }
+      },
+    };
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
-  } else {
-    boot();
+  window.SpaPages = window.SpaPages || {};
+  var galleryRun = null;
+
+  window.SpaPages.gallery = {
+    mount: function (opts) {
+      if (galleryRun && galleryRun.destroy) galleryRun.destroy();
+      galleryRun = mountGallery(opts || {});
+    },
+    unmount: function () {
+      if (galleryRun && galleryRun.destroy) {
+        galleryRun.destroy();
+        galleryRun = null;
+      }
+    },
+  };
+
+  function shouldAutoBootGallery() {
+    if (document.body && document.body.hasAttribute("data-spa-host")) return false;
+    return !!document.getElementById("main");
+  }
+
+  if (shouldAutoBootGallery()) {
+    if (document.readyState === "loading") {
+      document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+          window.SpaPages.gallery.mount();
+        },
+        { once: true }
+      );
+    } else {
+      window.SpaPages.gallery.mount();
+    }
   }
 })();

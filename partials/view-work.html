@@ -1,0 +1,172 @@
+<section class="work-hub spa-scaffold spa-scaffold--work" data-work-hub data-work-phase="choose">
+  <div class="work-deck" data-work-deck>
+    <div class="work-deck__scroller" data-work-scroller data-lenis-prevent role="list" aria-label="Work categories">
+      <article class="work-deck__item" data-work-pick="hytale" role="listitem">
+        <button type="button" class="work-deck__pick">
+          <span class="work-deck__art work-deck__art--left" aria-hidden="true">
+            <img src="./assets/content/lowpoly/hytale/Thumbnails/crossroads.jpg" alt="" decoding="async" />
+          </span>
+          <span class="work-deck__label">Hytale</span>
+          <span class="work-deck__art work-deck__art--right" aria-hidden="true">
+            <img src="./assets/content/lowpoly/hytale/Thumbnails/timelesstekk.jpg" alt="" decoding="async" />
+          </span>
+        </button>
+      </article>
+      <article class="work-deck__item" data-work-pick="lowpoly" role="listitem">
+        <button type="button" class="work-deck__pick">
+          <span class="work-deck__art work-deck__art--left" aria-hidden="true">
+            <img src="./assets/content/lowpoly/lowpoly3d.png" alt="" decoding="async" />
+          </span>
+          <span class="work-deck__label">Lowpoly</span>
+          <span class="work-deck__art work-deck__art--right" aria-hidden="true">
+            <img src="./assets/thumbnails/lowpoly.jpg" alt="" decoding="async" />
+          </span>
+        </button>
+      </article>
+      <article class="work-deck__item" data-work-pick="stills" role="listitem">
+        <button type="button" class="work-deck__pick">
+          <span class="work-deck__art work-deck__art--left" aria-hidden="true">
+            <img src="./assets/content/stills/img1.webp" alt="" decoding="async" />
+          </span>
+          <span class="work-deck__label">Stills</span>
+          <span class="work-deck__art work-deck__art--right" aria-hidden="true">
+            <img src="./assets/content/stills/img3.webp" alt="" decoding="async" />
+          </span>
+        </button>
+      </article>
+      <article class="work-deck__item" data-work-pick="motion" role="listitem">
+        <button type="button" class="work-deck__pick">
+          <span class="work-deck__art work-deck__art--left" aria-hidden="true">
+            <img src="./assets/thumbnails/tapes.jpg" alt="" decoding="async" />
+          </span>
+          <span class="work-deck__label">Motion</span>
+          <span class="work-deck__art work-deck__art--right" aria-hidden="true">
+            <img src="./assets/content/stills/img8.webp" alt="" decoding="async" />
+          </span>
+        </button>
+      </article>
+    </div>
+  </div>
+
+  <div class="work-hub__canvas" data-work-canvas hidden>
+    <header class="work-hub__dock" data-work-dock hidden aria-hidden="true">
+      <button type="button" class="work-hub__dock-back" data-work-back>Back</button>
+      <h1 class="work-hub__dock-title" data-work-dock-title></h1>
+    </header>
+
+    <div class="work-hub__content">
+      <div class="work-hub__category" data-work-category-panel="hytale" hidden>
+        <div id="lowpoly-gallery-content" class="spa-lowpoly-root active">
+          <div class="lp-universe is-active" data-lp-universe="hytale">
+            <section id="extensions" class="lowpoly-main-section lp-extensions" aria-label="Extension sets" hidden>
+              <div class="lp-featured" id="extensions-featured">
+                <div class="lp-featured__stage" id="extensions-stage" aria-live="polite"></div>
+              </div>
+            </section>
+            <section id="models" class="lowpoly-main-section lp-models" aria-label="Model library">
+              <div class="work-stickerbook" data-work-stickerbook hidden aria-label="Hytale sticker book">
+                <div class="work-stickerbook__pages" data-stickerbook-pages></div>
+                <div class="work-stickerbook__nav">
+                  <button type="button" class="work-stickerbook__next" data-stickerbook-next aria-label="Next sticker page">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M5 12h12M13 7l5 5-5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                  <span class="work-stickerbook__count" data-stickerbook-count aria-live="polite"></span>
+                </div>
+              </div>
+              <header class="lp-models__pack-head" data-models-pack-head aria-live="polite" hidden>
+                <div class="lp-models__toolbar" data-models-pack-toolbar>
+                  <nav class="lp-featured__nav lp-models__pack-nav" id="extensions-nav" aria-label="Filter model library by extension set"></nav>
+                  <button type="button" class="lp-models__view-toggle" data-lp-library-view-toggle aria-pressed="false">
+                    <span class="lp-models__view-toggle-icon" aria-hidden="true">▦</span>
+                    <span data-lp-view-toggle-label>Switch to grid view</span>
+                  </button>
+                </div>
+              </header>
+              <div class="lp-models-rail" data-models-rail tabindex="0" aria-label="Model library, scroll horizontally">
+                <div class="lp-models-rail__plate" aria-hidden="true"></div>
+                <div class="bento-grid models-grid" id="models-grid"></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <div class="work-hub__category" data-work-category-panel="lowpoly" hidden>
+        <div class="spa-lowpoly-root spa-lowpoly-root--works active">
+          <div class="lp-universe is-active" data-lp-universe="works">
+            <section id="works" class="lowpoly-main-section lp-works" aria-label="Other lowpoly 3D works">
+              <div class="lp-works-grid-wrap">
+                <div class="bento-grid lp-works-grid" id="works-grid" aria-live="polite"></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <div class="work-hub__category spa-work-category--gallery" data-work-category-panel="stills" hidden>
+        <nav class="gal-dots" data-work-gal-dots="stills" aria-label="Stills"></nav>
+        <main class="gal-projects" data-work-gal-main="stills" aria-label="Stills gallery"></main>
+      </div>
+
+      <div class="work-hub__category spa-work-category--gallery" data-work-category-panel="motion" hidden>
+        <nav class="gal-dots" data-work-gal-dots="motion" aria-label="Motion"></nav>
+        <main class="gal-projects" data-work-gal-main="motion" aria-label="Motion gallery"></main>
+      </div>
+    </div>
+  </div>
+
+  <div id="lightbox" class="lightbox" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="Asset detail view">
+    <div class="lb-backdrop" id="lightbox-backdrop" aria-hidden="true"></div>
+    <div class="lb-content">
+      <div class="lb-image-area">
+        <div class="lb-gallery" id="lightbox-gallery"></div>
+        <div class="lb-image-stage">
+          <button class="lb-nav lb-nav--prev" id="lightbox-prev" aria-label="Previous image">&#8592;</button>
+          <img id="lightbox-main-img" src="" alt="" class="lb-main-img" />
+          <button class="lb-nav lb-nav--next" id="lightbox-next" aria-label="Next image">&#8594;</button>
+        </div>
+        <div class="lb-dots" id="lightbox-dots"></div>
+        <div class="lb-extension-actions">
+          <img id="lightbox-pack-logo" class="lb-pack-logo" src="" alt="" hidden decoding="async" />
+          <div class="lb-action-bar">
+            <a id="lightbox-download-btn" class="lb-download-btn" href="#" download>Download</a>
+            <button type="button" class="lb-close-btn" id="lightbox-close" aria-label="Close detail view">
+              <svg class="lb-close-btn__icon" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+                <path d="M4.25 4.25l9.5 9.5M13.75 4.25l-9.5 9.5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <aside class="lb-info-panel">
+        <h2 id="lightbox-title" class="lb-title">Asset Title</h2>
+        <div class="lb-tags">
+          <span id="lightbox-category" class="lb-tag">Category</span>
+          <span id="lightbox-asset-number" class="lb-tag lb-tag--meta" hidden>#1</span>
+          <span id="lightbox-extension-pack" class="lb-tag lb-tag--pack" hidden>Extension</span>
+        </div>
+        <p id="lightbox-desc" class="lb-desc">Description details...</p>
+        <div class="lb-color-block" id="lightbox-color-block" hidden>
+          <p id="lightbox-variant-label" class="lb-color-name"></p>
+          <div class="lb-color-picker" id="lightbox-color-picker"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="gal-lightbox" id="gal-lightbox" hidden>
+    <button type="button" class="gal-lightbox-close" id="gal-lightbox-close" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <figure class="gal-lightbox-figure">
+      <img id="gal-lightbox-image" src="" alt="" decoding="async" hidden />
+      <video id="gal-lightbox-video" muted playsinline loop controls hidden></video>
+      <figcaption class="gal-lightbox-caption">
+        <h2 id="gal-lightbox-title"></h2>
+        <p id="gal-lightbox-medium"></p>
+      </figcaption>
+    </figure>
+  </div>
+</section>

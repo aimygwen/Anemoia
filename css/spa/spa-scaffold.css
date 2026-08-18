@@ -1,0 +1,47 @@
+/* spa-scaffold.css — shared placeholder layout for Insights / Me / Contact */
+
+.spa-scaffold {
+  max-width: var(--spa-viewport-max, 72rem);
+  margin: 0 auto;
+  padding: calc(var(--pk-header-h, 72px) + 1.5rem) var(--spa-view-pad, 1.5rem) 4rem;
+}
+
+.spa-scaffold__hero {
+  margin-bottom: clamp(1.5rem, 4vw, 2.75rem);
+}
+
+.spa-scaffold__eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--pk-text) 62%, transparent);
+  margin: 0 0 0.5rem;
+}
+
+.spa-scaffold__title {
+  font-family: var(--pk-font-display, inherit);
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1.05;
+  color: var(--pk-heading);
+  margin: 0 0 0.75rem;
+}
+
+.spa-scaffold__lede {
+  max-width: 38ch;
+  font-size: clamp(1rem, 2.2vw, 1.125rem);
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--pk-text) 88%, transparent);
+  margin: 0;
+}
+
+.spa-scaffold__panel {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-radius: 1.25rem;
+  background: var(--pk-surface);
+  border: 1px solid color-mix(in srgb, var(--pk-border) 70%, transparent);
+}
+
+.spa-scaffold__placeholder {
+  margin: 0;
+  color: color-mix(in srgb, var(--pk-text) 75%, transparent);
+}

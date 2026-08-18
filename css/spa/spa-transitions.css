@@ -1,0 +1,18 @@
+/* spa-transitions.css — view crossfade */
+
+.spa-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.spa-view.spa-view--entering,
+.spa-view.spa-view--leaving {
+  will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spa-view.spa-view--entering,
+  .spa-view.spa-view--leaving {
+    will-change: auto;
+  }
+}

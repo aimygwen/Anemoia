@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="pk-chrome-boot" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -14,24 +14,31 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Caveat:wght@500;600&family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="./css/polykroma.css?v=polykroma-46" />
-  <link rel="stylesheet" href="./css/about.css?v=about-hud-stage-12" />
+  <link rel="stylesheet" href="./css/polykroma.css?v=polykroma-81" />
+  <link rel="stylesheet" href="./css/menu-carousel.css?v=menu-carousel-11" />
+  <link rel="stylesheet" href="./css/about.css?v=about-hud-stage-15" />
+  <link rel="stylesheet" href="./css/about-sheet.css?v=about-hud-stage-15" />
+  <style id="about-chrome-critical">
+    .about-page-body .site-header[data-aimy-chrome] .aimy-chrome-type-logo {
+      display: none !important;
+    }
+  </style>
 </head>
 <body class="about-page-body">
   <header class="site-header" data-aimy-chrome>
     <div class="aimy-chrome-bar">
       <div class="header-left">
-        <a href="./index.html" class="brand" aria-label="Polly — home">
+        <a href="./" class="brand brand-link" aria-label="Polly — home">
 <svg class="brand-mark" viewBox="0 0 2048 2048" width="64" height="64" aria-hidden="true" focusable="false">
   <g class="brand-mark-stack">
-    <g class="brand-logo-light brand-layer brand-layer--base" data-spec-edge="1">
+    <g class="brand-logo-light brand-layer brand-layer--charm-base" data-spec-edge="1">
 <g id="Background" transform="matrix(0.970097,0,0,0.970097,722.809649,1078.552006)">
         <g id="Brand">
             <path id="Background1" serif:id="Background" d="M156.554,785.443C-44.71,617.527 -29.582,364.593 66.585,211.716C225.384,-40.729 654.763,-59.691 835.052,96.569C961.91,206.521 1058.052,542.965 815.723,731.772C624.598,880.685 304.372,908.769 156.554,785.443Z" style="fill-opacity:1;"/>
         </g>
     </g>
     </g>
-    <g class="brand-logo-mid brand-layer brand-layer--iris">
+    <g class="brand-logo-mid brand-layer brand-layer--charm-iris">
 <g id="Brand" transform="matrix(1.031992,0,0,1.031992,-70.682676,-47.339953)">
         <g id="Eyes" transform="matrix(1,0,0,1,859.015006,1336.240991)">
             <g class="iris-pupil" data-iris="left">
@@ -43,7 +50,7 @@
         </g>
     </g>
     </g>
-    <g class="brand-logo-light brand-layer brand-layer--face" data-spec-edge="1">
+    <g class="brand-logo-light brand-layer brand-layer--charm-face" data-spec-edge="1">
 <g id="Brand" transform="matrix(1.031992,0,0,1.031992,-70.682676,-47.339953)">
         <g id="Base" transform="matrix(1,0,0,1,742,1067)">
             <g id="Base1" serif:id="Base">
@@ -52,7 +59,7 @@
         </g>
     </g>
     </g>
-    <g class="brand-logo-dark brand-layer brand-layer--hairstyle" data-spec-edge="1">
+    <g class="brand-logo-dark brand-layer brand-layer--charm-hair" data-spec-edge="1">
 <g id="Brand" transform="matrix(1.031992,0,0,1.031992,-70.682676,-47.339953)">
         <g transform="matrix(1.900391,0,0,1.900391,66,62)">
             <g id="Hair">
@@ -61,7 +68,7 @@
         </g>
     </g>
     </g>
-    <g class="brand-logo-mid brand-layer brand-layer--lashes" data-spec-edge="1">
+    <g class="brand-logo-mid brand-layer brand-layer--charm-lashes" data-spec-edge="1">
 <g id="Brand" transform="matrix(1.031992,0,0,1.031992,-70.682676,-47.339953)">
         <g transform="matrix(1.179688,0,0,1.179688,584,1198)">
             <g id="Lashes">
@@ -70,7 +77,7 @@
         </g>
     </g>
     </g>
-    <g class="brand-logo-light brand-layer brand-layer--bow" data-spec-edge="1">
+    <g class="brand-logo-light brand-layer brand-layer--charm-bow" data-spec-edge="1">
 <g id="Brand" transform="matrix(1.031992,0,0,1.031992,-70.682676,-47.339953)">
         <g id="Bow" transform="matrix(1,0,0,1,1076,660)">
             <g id="Bow1" serif:id="Bow">
@@ -79,6 +86,7 @@
         </g>
     </g>
     </g>
+    <g class="brand-logo-spec brand-layer brand-layer--charm-highlight"></g>
   </g>
 </svg>
         </a>
@@ -197,10 +205,10 @@
       <section class="ins-cover" data-ins-reveal>
         <figure class="ins-cover-figure">
           <img
-            src="./assets/polaroid-about.jpg"
-            alt=""
-            width="856"
-            height="1100"
+            src="./assets/thumbnails/studio.jpg"
+            alt="Studio workspace"
+            width="1200"
+            height="800"
             decoding="async"
           />
         </figure>
@@ -261,7 +269,7 @@
             <img src="./assets/thumbnails/studio.jpg" alt="" width="1200" height="800" loading="lazy" />
           </figure>
           <figure class="ins-slide">
-            <img src="./assets/polaroid-about.jpg" alt="" width="856" height="1100" loading="lazy" />
+            <img src="./assets/thumbnails/tapes.jpg" alt="" width="1200" height="800" loading="lazy" />
           </figure>
         </div>
         <div class="ins-slider-nav">
@@ -409,17 +417,17 @@
         <p class="ins-discover">Discover below</p>
 
         <div class="ins-links">
-          <a class="ins-link-card" href="./lowpoly.html">
+          <a class="ins-link-card" href="./work?category=lowpoly">
             <span class="ins-link-kicker">01</span>
             <span class="ins-link-name">Lowpoly</span>
             <span class="ins-link-desc">Lowpoly 3d &amp; Hytale Assets</span>
           </a>
-          <a class="ins-link-card" href="./gallery.html">
+          <a class="ins-link-card" href="./work?category=stills">
             <span class="ins-link-kicker">02</span>
             <span class="ins-link-name">Atelier</span>
             <span class="ins-link-desc">Still illustrations and animations</span>
           </a>
-          <a class="ins-link-card" href="./insights.html">
+          <a class="ins-link-card" href="./insights">
             <span class="ins-link-kicker">03</span>
             <span class="ins-link-name">Insights</span>
             <span class="ins-link-desc">A deeper look behind the madness</span>
@@ -429,7 +437,7 @@
         <p class="ins-copy">© 2026 Aimy Gwen · Placeholder footer</p>
       </section>
 
-      <a class="ins-next" href="./contact.html">
+      <a class="ins-next" href="./contact">
         <span>Next</span>
         <strong>Say hi</strong>
       </a>
@@ -438,13 +446,22 @@
     <p class="about-hint">scroll to explore</p>
   </main>
 
+  <script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
-  <script src="./js/polyglide.js?v=2" defer></script>
+  <script src="./js/polyglide.js?v=aug3b" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.js" defer></script>
-  <script src="./js/about.js?v=about-hud-stage-12" defer></script>
-  <script src="./js/polly-iris.js" defer></script>
-  <script src="./js/polly-specular.js" defer></script>
-  <script src="./js/polykroma.js?v=polykroma-46" defer></script>
+  <script src="./js/about.js?v=about-hud-stage-15" defer></script>
+  <script type="module" src="./js/menu-select.js?v=menu-select-22"></script>
+  <script src="./js/charm-mark.js?v=branding-10" defer></script>
+  <script src="./js/charm-glass.js?v=mono-glass-32" defer></script>
+  <script src="./js/charm-iris.js?v=branding-3" defer></script>
+  <script src="./js/polykroma.js?v=polykroma-84" defer></script>
 </body>
 </html>

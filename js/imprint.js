@@ -1,5 +1,62 @@
 document.addEventListener("DOMContentLoaded", () => {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const SIGNATURE_SVG = "./assets/polykroma/branding/signature.svg?v=branding-10";
+  const SIGNATURE_STROKES = ["G", "w", "en", "stroke", "Dot", "Bun"];
+
+  function signaturePaths(svg) {
+    return SIGNATURE_STROKES.map((id) => {
+      if (id === "Bun") {
+        return svg.querySelector("#Bun path") || null;
+      }
+      return svg.querySelector("#" + id);
+    }).filter(Boolean);
+  }
+
+  function prepSignaturePath(path) {
+    const len = path.getTotalLength();
+    path.style.strokeDasharray = String(len);
+    path.style.strokeDashoffset = "0";
+    return len;
+  }
+
+  function revealSignaturePaths(paths) {
+    paths.forEach((path) => {
+      path.style.strokeDashoffset = "0";
+    });
+  }
+
+  function animateSignatureDraw(section, paths) {
+    if (!paths.length) return;
+    revealSignaturePaths(paths);
+    section.classList.add("is-drawn");
+  }
+
+  function bootSignatureDraw(root) {
+    const section = root.querySelector(".ins-signature");
+    const host = root.querySelector("[data-ins-signature]");
+    if (!section || !host || host.dataset.sigLoaded === "1") return;
+
+    fetch(SIGNATURE_SVG)
+      .then((res) => {
+        if (!res.ok) throw new Error("signature fetch failed");
+        return res.text();
+      })
+      .then((markup) => {
+        host.innerHTML = markup;
+        host.dataset.sigLoaded = "1";
+
+        const svg = host.querySelector("svg");
+        if (!svg) return;
+        svg.classList.add("ins-signature__svg");
+        svg.setAttribute("role", "presentation");
+        svg.setAttribute("focusable", "false");
+
+        animateSignatureDraw(section, signaturePaths(svg));
+      })
+      .catch(() => {
+        /* Fail quietly — hero still reads fine without the draw. */
+      });
+  }
 
   function bootLenis() {
     if (window.Polyglide) return window.Polyglide.boot();
@@ -38,48 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function afterPaint(cb) {
     requestAnimationFrame(() => requestAnimationFrame(cb));
-  }
-
-  let revealObserver = null;
-
-  function markReveal(el, { delay = 0, variant = "" } = {}) {
-    if (!el) return;
-    el.classList.add("imprint-reveal");
-    if (variant) el.classList.add(`imprint-reveal--${variant}`);
-    el.style.setProperty("--reveal-delay", `${delay}ms`);
-    if (reduced) {
-      el.classList.add("is-in");
-      return;
-    }
-    if (revealObserver) revealObserver.observe(el);
-  }
-
-  function bootReveals() {
-    const stage = document.querySelector(".imprint-stage");
-    if (!stage) return;
-
-    if (!reduced && "IntersectionObserver" in window) {
-      revealObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            entry.target.classList.add("is-in");
-            revealObserver.unobserve(entry.target);
-          });
-        },
-        {
-          root: null,
-          rootMargin: "0px 0px -8% 0px",
-          threshold: 0.1,
-        }
-      );
-    }
-
-    markReveal(stage.querySelector(".pl-carousel"), { delay: 40, variant: "title" });
-    markReveal(stage.querySelector(".imprint-foot"), {
-      delay: 80,
-      variant: "soft",
-    });
   }
 
   function bootCarousel() {
@@ -148,11 +163,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function applyPositions(animate, direction) {
       const states = items.map((_, i) => slotState(i));
-      const useGsap =
-        ready &&
-        animate &&
-        !reduced &&
-        typeof gsap !== "undefined";
 
       if (layoutTween) {
         layoutTween.kill();
@@ -162,63 +172,16 @@ document.addEventListener("DOMContentLoaded", () => {
         items.forEach((el) => gsap.killTweensOf(el));
       }
 
-      if (!useGsap) {
-        items.forEach((el, i) => {
-          const state = states[i];
-          const isActive = state.slot === 0;
-          el.style.position = isActive ? "relative" : "absolute";
-          el.style.transform = isActive
-            ? `translate3d(${dragX}px, 0, 0)`
-            : "translate3d(0, 0, 0)";
-          el.style.opacity = String(isActive ? 1 : 0);
-          el.style.filter = "";
-          el.style.clipPath = "";
-        });
-        return;
-      }
-
-      /* Hand off from CSS transforms to GSAP */
-      items.forEach((el) => {
-        el.style.transform = "";
-      });
-
-      layoutTween = gsap.timeline({ defaults: { overwrite: "auto" } });
-
       items.forEach((el, i) => {
         const state = states[i];
         const isActive = state.slot === 0;
         el.style.position = isActive ? "relative" : "absolute";
-
-        layoutTween.to(
-          el,
-          {
-            xPercent: 0,
-            x: isActive ? dragX : 0,
-            opacity: isActive ? 1 : 0,
-            duration: isActive ? 0.48 : 0.28,
-            ease: isActive ? "power3.out" : "power2.out",
-          },
-          0
-        );
-
-        if (isActive) {
-          layoutTween.fromTo(
-            el,
-            {
-              clipPath:
-                direction > 0 ? "inset(0 16% 0 0)" : "inset(0 0 0 16%)",
-              filter: "blur(5px)",
-            },
-            {
-              clipPath: "inset(0 0 0 0)",
-              filter: "blur(0px)",
-              duration: 0.46,
-              ease: "power3.out",
-              clearProps: "clipPath,filter",
-            },
-            0
-          );
-        }
+        el.style.transform = isActive
+          ? `translate3d(${dragX}px, 0, 0)`
+          : "translate3d(0, 0, 0)";
+        el.style.opacity = String(isActive ? 1 : 0);
+        el.style.filter = "";
+        el.style.clipPath = "";
       });
     }
 
@@ -480,58 +443,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function bootTilt() {
-    const carousel = document.querySelector("[data-pl-carousel]");
-    const fine = window.matchMedia("(pointer: fine)").matches;
-    if (!carousel || reduced || !fine) return;
-
-    const pointer = { x: 0, y: 0 };
-    const rendered = { x: 0, y: 0 };
-    let rafId = 0;
-
-    window.addEventListener(
-      "pointermove",
-      (event) => {
-        const w = window.innerWidth || 1;
-        const h = window.innerHeight || 1;
-        pointer.x = (event.clientX / w - 0.5) * 2;
-        pointer.y = (event.clientY / h - 0.5) * 2;
-      },
-      { passive: true }
-    );
-
-    document.documentElement.addEventListener("pointerleave", () => {
-      pointer.x = 0;
-      pointer.y = 0;
-    });
-
-    function paint() {
-      rendered.x += (pointer.x - rendered.x) * 0.08;
-      rendered.y += (pointer.y - rendered.y) * 0.08;
-      carousel.style.setProperty(
-        "--tilt-rx",
-        (rendered.y * -3.2).toFixed(2) + "deg"
-      );
-      carousel.style.setProperty(
-        "--tilt-ry",
-        (rendered.x * 4).toFixed(2) + "deg"
-      );
-      rafId = requestAnimationFrame(paint);
-    }
-
-    rafId = requestAnimationFrame(paint);
-
-    window.addEventListener(
-      "pagehide",
-      () => {
-        if (rafId) cancelAnimationFrame(rafId);
-      },
-      { once: true }
-    );
-  }
-
   bootLenis();
-  bootReveals();
+  bootSignatureDraw(document);
   bootCarousel();
-  bootTilt();
 });

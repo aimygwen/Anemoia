@@ -1738,6 +1738,7 @@
             lightboxModal.style.removeProperty("--lb-from-scale");
         }
 
+        lightboxModal.hidden = false;
         lightboxModal.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
         document.body.classList.add("lightbox-open");
@@ -1767,6 +1768,7 @@
         if (window.Polyglide) window.Polyglide.start();
         setTimeout(() => {
             lightboxModal.setAttribute("aria-hidden", "true");
+            lightboxModal.hidden = true;
             lightboxModal.classList.remove("lb-leaving", "lb-from-card", "lb-settled");
             if (lightboxMainImg) lightboxMainImg.src = "";
             lightboxModal.className = "lightbox";
@@ -1858,7 +1860,7 @@
         const grid = document.getElementById("models-grid");
         const worksGrid = document.getElementById("works-grid");
         if (stage && !stage.children.length) {
-            stage.innerHTML = `<p class="lp-load-error">Extension sets failed to load. Hard-refresh (Cmd+Shift+R) or open via http://127.0.0.1:8765/behind-the-madness/new/lowpoly.html</p>`;
+            stage.innerHTML = `<p class="lp-load-error">Extension sets failed to load. Hard-refresh (Cmd+Shift+R) and try again.</p>`;
         }
         if (grid && !grid.children.length) {
             grid.innerHTML = `<p class="lp-load-error">Model library failed to load (${floatingAssetsData.length} items in catalog). Hard-refresh or check the console.</p>`;
@@ -1903,6 +1905,12 @@
             lowpolyAbort = new AbortController();
             initLowpolyPage(lowpolyAbort.signal);
         },
+        openCatalogItem: function (id, sourceEl) {
+            const item = getModelItemById(id);
+            if (!item) return false;
+            openLightbox(item, item.defaultVariant || undefined, true, sourceEl || null);
+            return true;
+        },
         destroy: function () {
             if (lowpolyAbort) lowpolyAbort.abort();
             lowpolyAbort = null;
@@ -1918,6 +1926,7 @@
             if (lb) {
                 lb.classList.remove("active");
                 lb.setAttribute("aria-hidden", "true");
+                lb.hidden = true;
             }
             document.body.style.overflow = "";
             document.body.classList.remove("lightbox-open");
@@ -1928,7 +1937,8 @@
     };
 
     function bootLowpoly() {
-        // Always boot on this document. SPA hosts can call destroy/init again later.
+        if (document.body && document.body.hasAttribute("data-spa-host")) return;
+        if (!document.getElementById("lowpoly-gallery-content")) return;
         window.SpaPages.lowpoly.init();
     }
 

@@ -15,6 +15,10 @@
     trails: ["#B24BFB", "#ffeab0", "#2dd4bf"],
   };
 
+  function isSpaHost() {
+    return !!(document.body && document.body.hasAttribute("data-spa-host"));
+  }
+
   function sameOrigin(href) {
     try {
       var url = new URL(href, window.location.href);
@@ -37,6 +41,17 @@
       return false;
     }
     if (!sameOrigin(href)) return false;
+
+    /* SPA host: coin menu + AimySpa.bindLinks own in-app routes — avoid double navigate. */
+    if (
+      document.body &&
+      document.body.hasAttribute("data-spa-host") &&
+      window.AimySpa &&
+      typeof window.AimySpa.canHandle === "function" &&
+      window.AimySpa.canHandle(anchor.href || href)
+    ) {
+      return false;
+    }
 
     var url = new URL(href, window.location.href);
     var cur = window.location;
@@ -216,6 +231,7 @@
   }
 
   async function playCover() {
+    if (isSpaHost()) return;
     var el = ensureOverlay();
     clearAnimClasses(el);
     el.classList.add("is-enter-from");
@@ -250,6 +266,36 @@
     if (!href) return;
 
     try {
+      var legalUrl = new URL(href, window.location.href);
+      var legalPath = legalUrl.pathname.toLowerCase();
+      if (legalPath.indexOf("imprint") !== -1 || legalPath.indexOf("legal") !== -1) {
+        legalUrl.pathname = legalUrl.pathname.replace(/\/[^/]*$/, "/imprint.html");
+        legalUrl.searchParams.set("v", "imprint-ins-5");
+        window.location.replace(legalUrl.pathname + legalUrl.search + legalUrl.hash);
+        return;
+      }
+    } catch (e) {}
+
+    /* SPA host — in-app routes use AimySpa; externals go direct (no band overlay). */
+    if (isSpaHost()) {
+      if (window.AimySpa && typeof window.AimySpa.canHandle === "function" && window.AimySpa.canHandle(href)) {
+        return window.AimySpa.navigate(href);
+      }
+      window.location.href = href;
+      return;
+    }
+
+    if (window.AimySpa && typeof window.AimySpa.canHandle === "function" && window.AimySpa.canHandle(href)) {
+      navigating = true;
+      try {
+        await window.AimySpa.navigate(href);
+      } finally {
+        navigating = false;
+      }
+      return;
+    }
+
+    try {
       var url = new URL(href, window.location.href);
       if (url.origin !== window.location.origin) {
         window.location.href = href;
@@ -260,24 +306,7 @@
       }
     } catch (e) {}
 
-    navigating = true;
-    var prefetchPromise = prefetchPage(href);
-
-    try {
-      sessionStorage.setItem(FLAG, "1");
-    } catch (err) {}
-
-    try {
-      if (!reduced) {
-        await Promise.all([playCover(), prefetchPromise]);
-      } else {
-        await prefetchPromise;
-      }
-      window.location.href = href;
-    } catch (errNav) {
-      navigating = false;
-      window.location.href = href;
-    }
+    window.location.href = href;
   }
 
   function onClick(event) {
@@ -288,18 +317,25 @@
     var anchor = event.target && event.target.closest ? event.target.closest("a[href]") : null;
     if (!isInternalNav(anchor)) return;
 
-    var workScroller =
-      anchor.closest && anchor.closest("[data-start-work-scroller]");
-    if (workScroller && Number(workScroller.getAttribute("data-drag-px") || 0) >= 12) {
-      return;
-    }
-
     event.preventDefault();
     event.stopPropagation();
     navigate(anchor.href);
   }
 
   async function bootReveal() {
+    if (isSpaHost()) return;
+    if (
+      document.body &&
+      (document.body.classList.contains("imprint-page-body") ||
+        /imprint|legal/i.test(window.location.pathname || ""))
+    ) {
+      try {
+        sessionStorage.removeItem(FLAG);
+      } catch (e) {}
+      var stuck = document.querySelector(".aimy-pt");
+      if (stuck && stuck.parentNode) stuck.parentNode.removeChild(stuck);
+      return;
+    }
     var pending = false;
     try {
       pending = sessionStorage.getItem(FLAG) === "1";
@@ -314,24 +350,26 @@
     navigate: navigate,
   };
 
-  document.addEventListener("click", onClick, true);
+  if (!isSpaHost()) {
+    document.addEventListener("click", onClick, true);
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bootReveal, { once: true });
-  } else {
-    bootReveal();
-  }
-
-  window.addEventListener("pageshow", function (event) {
-    if (event.persisted) {
-      navigating = false;
-      var el = document.querySelector(".aimy-pt");
-      if (el && el.parentNode) el.parentNode.removeChild(el);
-      try {
-        sessionStorage.removeItem(FLAG);
-      } catch (e) {}
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bootReveal, { once: true });
+    } else {
+      bootReveal();
     }
-  });
+
+    window.addEventListener("pageshow", function (event) {
+      if (event.persisted) {
+        navigating = false;
+        var el = document.querySelector(".aimy-pt");
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+        try {
+          sessionStorage.removeItem(FLAG);
+        } catch (e) {}
+      }
+    });
+  }
 })();
 
 /**
@@ -346,16 +384,28 @@
 (function (global) {
   "use strict";
 
-  var VERSION = "polykroma-46";
+  var VERSION = "polykroma-66";
   var bootedSocials = false;
   var bootedReveal = false;
   var chromeSettled = false;
   var menuBooted = false;
   var socialSync = null;
 
-  /* Hide chrome until reveal boots — avoids FOUC when script is deferred. */
+  function isLegalPage() {
+    var body = document.body;
+    if (body && body.classList.contains("imprint-page-body")) return true;
+    return /imprint|legal/i.test(window.location.pathname || "");
+  }
+
+  /* Hide chrome until reveal boots — legal pages skip the fly-in entirely. */
   if (document.documentElement) {
-    document.documentElement.classList.add("pk-chrome-boot");
+    if (isLegalPage()) {
+      document.documentElement.classList.add("pk-chrome-boot", "pk-chrome-ready", "pk-chrome-settled");
+      bootedReveal = true;
+      chromeSettled = true;
+    } else {
+      document.documentElement.classList.add("pk-chrome-boot");
+    }
   }
 
   function getScrollY() {
@@ -379,6 +429,15 @@
     var html = document.documentElement;
     if (!html.classList.contains("pk-chrome-boot")) {
       html.classList.add("pk-chrome-boot");
+    }
+
+    if (
+      document.body &&
+      (document.body.classList.contains("imprint-page-body") ||
+        /imprint|legal/i.test(window.location.pathname || ""))
+    ) {
+      html.classList.add("pk-chrome-ready", "pk-chrome-settled");
+      return;
     }
 
     var settleMs =
@@ -406,9 +465,16 @@
     }
 
     function afterPaint(cb) {
+      var ran = false;
+      function run() {
+        if (ran) return;
+        ran = true;
+        cb();
+      }
       global.requestAnimationFrame(function () {
-        global.requestAnimationFrame(cb);
+        global.requestAnimationFrame(run);
       });
+      global.setTimeout(run, 64);
     }
 
     var fontsOk =
@@ -509,21 +575,74 @@
   /* —— Overlay menu (coin + shell) —— */
 var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var hasGsap = typeof gsap !== "undefined";
+  var IMPRINT_PAGE_TAG = "imprint-ins-5";
+
+  function imprintPageHref() {
+    return "./imprint.html?v=" + IMPRINT_PAGE_TAG;
+  }
+
+  function isLegalHref(href) {
+    try {
+      var path = new URL(href, window.location.href).pathname.toLowerCase();
+      return path.indexOf("imprint") !== -1 || path.indexOf("legal") !== -1;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function normalizeLegalHref(href) {
+    try {
+      var url = new URL(href, window.location.href);
+      url.pathname = url.pathname.replace(/\/[^/]*$/, "/imprint.html");
+      url.searchParams.set("v", IMPRINT_PAGE_TAG);
+      return url.pathname + url.search + url.hash;
+    } catch (e) {
+      return imprintPageHref();
+    }
+  }
 
   function pageBase() {
-    var path = window.location.pathname || "";
-    if (path.indexOf("/behind-the-madness/new/") !== -1) return "./";
-    if (path.indexOf("/behind-the-madness/") !== -1) return "./new/";
-    if (isNewSiteRoot()) return "./";
-    return "./behind-the-madness/new/";
+    return "./";
+  }
+
+  function selectButtonSrc() {
+    return pageBase() + "assets/polykroma/select/select-button.svg?v=select-1";
+  }
+
+  function selectLayer(layer) {
+    return (
+      '<img class="pk-select-layer pk-select-layer--' +
+      layer +
+      '" src="' +
+      selectButtonSrc() +
+      '" alt="" decoding="async" draggable="false" />'
+    );
+  }
+
+  function selectCoinMarkup() {
+    return (
+      '  <span class="pk-coin-state">' +
+      '    <span class="pk-coin pk-coin--select">' +
+      '      <span class="pk-select-stack" aria-hidden="true">' +
+      selectLayer("edge") +
+      selectLayer("face") +
+      selectLayer("icon") +
+      "      </span>" +
+      '      <span class="pk-coin-glyphs pk-coin-glyphs--front">' +
+      coinIconOpen() +
+      coinIconClose() +
+      "      </span>" +
+      '      <span class="pk-coin-glyphs pk-coin-glyphs--back">' +
+      coinIconOpen() +
+      coinIconClose() +
+      "      </span>" +
+      "    </span>" +
+      "  </span>"
+    );
   }
 
   function isNewSiteRoot() {
-    var s =
-      document.querySelector('script[src*="polykroma.js"]') ||
-      document.querySelector('script[src*="polykroma.js"]');
-    var src = (s && s.getAttribute("src")) || "";
-    return src.indexOf("./js/") === 0 || src.indexOf("js/") === 0;
+    return true;
   }
 
   function coinIconPair(state, file, altFile) {
@@ -568,12 +687,29 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     );
   }
 
-  function primaryItem(num, label, href, side) {
+  function isSpaHost() {
+    return document.body && document.body.hasAttribute("data-spa-host");
+  }
+
+  function menuHref(view) {
+    var base = pageBase();
+    if (isSpaHost()) {
+      if (view === "start") return "./";
+      return "./" + view;
+    }
+    if (view === "start") return base + "index.html";
+    return base + "index.html?view=" + view;
+  }
+
+  function primaryItem(num, label, href, side, viewId) {
+    var navAttr = viewId ? ' data-spa-nav="' + viewId + '"' : "";
     return (
       '<li class="pk-menu-item">' +
       '<a class="pk-menu-link pk-menulink" href="' +
       href +
-      '" data-pk-nav data-enter="' +
+      '"' +
+      navAttr +
+      ' data-pk-nav data-enter="' +
       side +
       '">' +
       '<span class="pk-menu-link__index" aria-hidden="true">' +
@@ -646,6 +782,48 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     );
   }
 
+  function menuCarouselBlock() {
+    return (
+      '<div class="pk-menu-group pk-menu-group--primary pk-menu-group--carousel" aria-label="Navigate">' +
+      '  <div class="pk-menu-carousel-wrap">' +
+      '    <section class="pk-menu-select" data-pk-menu-select aria-label="Site sections">' +
+      '      <div class="pk-menu-select__stage">' +
+      '        <div class="pk-menu-select__viewport" data-menu-select-viewport>' +
+      '          <canvas class="pk-menu-select__canvas" data-menu-select-canvas aria-hidden="true"></canvas>' +
+      '          <div class="pk-menu-select__labels" data-menu-select-labels role="tablist" aria-label="Sections">' +
+      '            <button type="button" class="pk-menu-select__hit is-active" data-menu-select-hit="0" role="tab" aria-selected="true" aria-label="Work">' +
+      '              <span class="pk-menu-select__title is-active" data-menu-select-title="0">Work</span>' +
+      '            </button>' +
+      '            <button type="button" class="pk-menu-select__hit" data-menu-select-hit="1" role="tab" aria-selected="false" tabindex="-1" aria-label="Me">' +
+      '              <span class="pk-menu-select__title" data-menu-select-title="1">Me</span>' +
+      '            </button>' +
+      '            <button type="button" class="pk-menu-select__hit" data-menu-select-hit="2" role="tab" aria-selected="false" tabindex="-1" aria-label="Insights">' +
+      '              <span class="pk-menu-select__title" data-menu-select-title="2">Insights</span>' +
+      '            </button>' +
+      '          </div>' +
+      '        </div>' +
+      '      </div>' +
+      '      <div class="pk-menu-select__controls">' +
+      '        <button type="button" class="pk-menu-select__arrow" data-menu-select-prev aria-label="Previous section">' +
+      '          <svg viewBox="0 0 50 50" aria-hidden="true"><polygon points="48 24.5 3 24.5 12.4 12.3 11.6 11.7 1.4 25 11.6 37.3 12.4 36.7 3.1 25.5 48 25.5 48 24.5"></polygon></svg>' +
+      '        </button>' +
+      '        <button type="button" class="pk-menu-select__open" data-menu-select-open aria-label="Open Work">' +
+      '          <svg class="pk-menu-select__open-ring" viewBox="0 0 36 36" aria-hidden="true">' +
+      '            <circle cx="18" cy="18" r="15.5"></circle>' +
+      '            <circle cx="18" cy="18" r="15.5" pathLength="100"></circle>' +
+      '          </svg>' +
+      '          <svg class="pk-menu-select__open-icon" viewBox="0 0 50 50" aria-hidden="true"><polygon points="38.4 11.7 37.6 12.3 47 24.5 2 24.5 2 25.5 46.9 25.5 37.6 36.7 38.4 37.3 48.6 25 38.4 11.7"></polygon></svg>' +
+      '        </button>' +
+      '        <button type="button" class="pk-menu-select__arrow" data-menu-select-next aria-label="Next section">' +
+      '          <svg viewBox="0 0 50 50" aria-hidden="true"><polygon points="38.4 11.7 37.6 12.3 47 24.5 2 24.5 2 25.5 46.9 25.5 37.6 36.7 38.4 37.3 48.6 25 38.4 11.7"></polygon></svg>' +
+      '        </button>' +
+      '      </div>' +
+      '    </section>' +
+      '  </div>' +
+      '</div>'
+    );
+  }
+
   function buildDOM() {
     var base = pageBase();
     var root = document.createElement("div");
@@ -654,20 +832,8 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     root.innerHTML =
       '<button type="button" class="pk-burger-hit pk-burger-in on" aria-label="Open menu" aria-expanded="false" aria-controls="pk-site-menu"></button>' +
       '<button type="button" class="pk-burger-hit pk-burger-out" aria-label="Close menu" aria-expanded="true" aria-controls="pk-site-menu"></button>' +
-      '<div class="pk-coin-button" aria-hidden="true">' +
-      '  <span class="pk-coin-state">' +
-      '    <span class="pk-coin">' +
-      '      <span class="pk-coin-edge"></span>' +
-      '      <span class="pk-coin-face pk-coin-face--front">' +
-      coinIconOpen() +
-      coinIconClose() +
-      "      </span>" +
-      '      <span class="pk-coin-face pk-coin-face--back">' +
-      coinIconOpen() +
-      coinIconClose() +
-      "      </span>" +
-      "    </span>" +
-      "  </span>" +
+      '<div class="pk-coin-button pk-coin-button--select" aria-hidden="true">' +
+      selectCoinMarkup() +
       "</div>" +
       '<div class="pk-nav-shell" id="pk-nav-shell" hidden>' +
       '  <div class="pk-menu-veil" aria-hidden="true">' +
@@ -675,28 +841,12 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       "  </div>" +
       '  <nav class="pk-menu" id="pk-site-menu" aria-label="Site menu" role="dialog" aria-modal="true">' +
       '    <div class="pk-menu-panel">' +
-      '      <div class="pk-menu-group pk-menu-group--home" aria-label="Home Base">' +
-      '        <ul class="pk-menu-list">' +
-      primaryItem("01", "Start", base + "index.html", "left") +
-      "        </ul>" +
-      "      </div>" +
-      '      <div class="pk-menu-group pk-menu-group--work" aria-label="Work">' +
-      '        <ul class="pk-menu-list">' +
-      primaryItem("02", "Lowpoly", base + "lowpoly.html", "right") +
-      primaryItem("03", "Atelier", base + "gallery.html", "left") +
-      "        </ul>" +
-      "      </div>" +
-      '      <div class="pk-menu-group pk-menu-group--story" aria-label="Story">' +
-      '        <ul class="pk-menu-list">' +
-      primaryItem("04", "Insights", base + "insights.html", "right") +
-      primaryItem("05", "Meee!", base + "about.html", "left") +
-      "        </ul>" +
-      "      </div>" +
+      menuCarouselBlock() +
       '      <div class="pk-menu-rule" aria-hidden="true"></div>' +
       '      <div class="pk-menu-group pk-menu-group--util" aria-label="Utility">' +
       '        <ul class="pk-menu-list pk-menu-list--util">' +
-      utilItem("Contact", base + "contact.html", "right") +
-      utilItem("Imprint", base + "imprint.html", "left") +
+      utilItem("Imprint", imprintPageHref(), "right") +
+      utilItem("Contact", base + "contact", "left") +
       "        </ul>" +
       '        <ul class="pk-menu-list pk-menu-list--social" aria-label="Social">' +
       socialItem(
@@ -731,29 +881,43 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
   }
 
   function pageKey() {
+    if (window.AimySpa && typeof window.AimySpa.isHost === "function" && window.AimySpa.isHost()) {
+      return window.AimySpa.getView();
+    }
+
+    var params = new URLSearchParams(window.location.search || "");
+    var qView = params.get("view");
+    if (qView) return qView;
+
     var path = (window.location.pathname || "").toLowerCase();
+    if (path.match(/\/work\/?$/)) return "work";
+    if (path.match(/\/insights\/?$/)) return "insights";
+    if (path.match(/\/me\/?$/)) return "me";
     if (path.indexOf("contact") !== -1) return "contact";
     if (path.indexOf("imprint") !== -1) return "imprint";
-    if (path.indexOf("lowpoly") !== -1) return "lowpoly";
-    if (path.indexOf("gallery") !== -1) return "gallery";
+    if (path.indexOf("legal") !== -1) return "legal";
+    if (path.indexOf("lowpoly") !== -1) return "work";
+    if (path.indexOf("gallery") !== -1) return "work";
     if (path.indexOf("insights") !== -1) return "insights";
-    if (path.indexOf("about") !== -1) return "about";
-    if (path.indexOf("videos") !== -1) return "gallery";
-    return "index";
+    if (path.indexOf("about") !== -1) return "me";
+    if (path.indexOf("videos") !== -1) return "work";
+    return "start";
   }
 
   function markCurrent(root) {
     var key = pageKey();
     root.querySelectorAll(".pk-menulink").forEach(function (a) {
       var href = (a.getAttribute("href") || "").toLowerCase();
-      var is =
-        (key === "index" && href.indexOf("index.html") !== -1) ||
-        (key === "lowpoly" && href.indexOf("lowpoly") !== -1) ||
-        (key === "gallery" && href.indexOf("gallery") !== -1) ||
-        (key === "insights" && href.indexOf("insights") !== -1) ||
-        (key === "about" && href.indexOf("about") !== -1) ||
-        (key === "contact" && href.indexOf("contact") !== -1) ||
-        (key === "imprint" && href.indexOf("imprint") !== -1);
+      var navId = a.getAttribute("data-spa-nav");
+      var is = navId
+        ? navId === key
+        : (key === "start" && (href === "./" || href.indexOf("index.html") !== -1)) ||
+          (key === "work" && (href.indexOf("work") !== -1 || href.indexOf("lowpoly") !== -1 || href.indexOf("gallery") !== -1)) ||
+          (key === "insights" && href.indexOf("insights") !== -1) ||
+          (key === "me" && href.indexOf("about") !== -1) ||
+          (key === "contact" && href.indexOf("contact") !== -1) ||
+          (key === "imprint" && href.indexOf("imprint") !== -1) ||
+          (key === "legal" && href.indexOf("legal") !== -1);
       a.classList.toggle("is-current", !!is);
       if (is) {
         a.setAttribute("aria-current", "page");
@@ -772,12 +936,17 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
 
     var root = buildDOM();
     markCurrent(root);
+    window.__aimyMarkMenuCurrent = function () {
+      markCurrent(root);
+    };
 
     var shell = root.querySelector(".pk-nav-shell");
     var menuEl = root.querySelector(".pk-menu");
     var menuVeil = root.querySelector(".pk-menu-veil");
     var menuPanel = root.querySelector(".pk-menu-panel");
     var menuRule = root.querySelector(".pk-menu-rule");
+    var menuCarouselWrap = root.querySelector(".pk-menu-carousel-wrap");
+    var menuCarouselOpen = root.querySelector("[data-pk-menu-select] [data-menu-select-open]");
     var hitIn = root.querySelector(".pk-burger-in");
     var hitOut = root.querySelector(".pk-burger-out");
     var coinButton = root.querySelector(".pk-coin-button");
@@ -795,7 +964,9 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
 
     function refreshFocusables() {
       focusables = Array.prototype.slice.call(
-        root.querySelectorAll(".pk-burger-hit.on, .pk-menulink, .pk-menu-social")
+        root.querySelectorAll(
+          ".pk-burger-hit.on, .pk-menu-link, .pk-menu-social, [data-pk-menu-select] [data-menu-select-prev], [data-pk-menu-select] [data-menu-select-next], [data-pk-menu-select] [data-menu-select-open], [data-pk-menu-select] [data-menu-select-hit]"
+        )
       );
     }
 
@@ -897,7 +1068,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     }
 
     function animateMenuMotion(open, onDone) {
-      if (!hasGsap || reducedMotion) {
+      if (!hasGsap || reducedMotion || isLegalPage()) {
         if (open) {
           if (menuVeil) {
             menuVeil.style.opacity = "1";
@@ -951,6 +1122,9 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
         });
         gsap.set(menuRule, { opacity: 0, scaleX: 0.35, transformOrigin: "center center" });
         gsap.set(allLinks, { opacity: 0, y: 22, filter: "blur(7px)", force3D: true });
+        if (menuCarouselWrap) {
+          gsap.set(menuCarouselWrap, { opacity: 0, y: 28, scale: 0.965, filter: "blur(9px)", force3D: true });
+        }
         gsap.set(socialLinks, { opacity: 0, y: 14, force3D: true });
         setPageFrost(true);
 
@@ -979,7 +1153,22 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
               stagger: 0.055,
             },
             0.3
-          )
+          );
+        if (menuCarouselWrap) {
+          openTimeline.to(
+            menuCarouselWrap,
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              filter: "blur(0px)",
+              duration: 0.92,
+              ease: "power3.out",
+            },
+            0.22
+          );
+        }
+        openTimeline
           .to(
             menuRule,
             { opacity: 1, scaleX: 1, duration: 0.62, ease: "power2.out" },
@@ -1004,7 +1193,22 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
               stagger: { each: 0.028, from: "end" },
             },
             0
-          )
+          );
+        if (menuCarouselWrap) {
+          openTimeline.to(
+            menuCarouselWrap,
+            {
+              opacity: 0,
+              y: -18,
+              scale: 0.98,
+              filter: "blur(6px)",
+              duration: 0.4,
+              ease: "power2.in",
+            },
+            0
+          );
+        }
+        openTimeline
           .to(
             socialLinks,
             { opacity: 0, y: -10, duration: 0.34, ease: "power2.in", stagger: 0.022 },
@@ -1050,18 +1254,28 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       setSelected(-1);
       refreshFocusables();
 
-      animateMenuMotion(true, function () {
-        var currentIdx = indexOfCurrent();
-        var focusTarget = null;
-        for (var fi = 0; fi < navLinks.length; fi++) {
-          if (fi !== currentIdx) {
-            focusTarget = navLinks[fi];
-            break;
+      function finishOpen() {
+        if (window.AimyMenuSelect) {
+          if (typeof window.AimyMenuSelect.bootMenu === "function") {
+            window.AimyMenuSelect.bootMenu();
+          }
+          if (typeof window.AimyMenuSelect.syncToView === "function") {
+            window.AimyMenuSelect.syncToView(pageKey());
+          }
+          if (typeof window.AimyMenuSelect.resumeMenu === "function") {
+            window.AimyMenuSelect.resumeMenu();
           }
         }
-        if (focusTarget) focusTarget.focus({ preventScroll: true });
+        window.setTimeout(function () {
+          if (window.AimyMenuSelect && typeof window.AimyMenuSelect.resize === "function") {
+            window.AimyMenuSelect.resize();
+          }
+          if (menuCarouselOpen) menuCarouselOpen.focus({ preventScroll: true });
+        }, 120);
         canClick = true;
-      });
+      }
+
+      animateMenuMotion(true, finishOpen);
     }
 
     function closeMenu(opts) {
@@ -1072,6 +1286,9 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       root.classList.remove("is-menu-open");
       showHits(false);
       setSelected(-1);
+      if (window.AimyMenuSelect && typeof window.AimyMenuSelect.pauseMenu === "function") {
+        window.AimyMenuSelect.pauseMenu();
+      }
       startScroll();
 
       var finish = function () {
@@ -1102,6 +1319,14 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     }
 
     function goTo(href) {
+      if (isLegalHref(href)) {
+        window.location.replace(normalizeLegalHref(href));
+        return;
+      }
+      if (window.AimySpa && typeof window.AimySpa.canHandle === "function" && window.AimySpa.canHandle(href)) {
+        window.AimySpa.navigate(href);
+        return;
+      }
       if (window.AimyPageTransition && typeof window.AimyPageTransition.navigate === "function") {
         window.AimyPageTransition.navigate(href);
       } else {
@@ -1121,7 +1346,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     shell.addEventListener("click", function (e) {
       if (!isOpen || !canClick) return;
       if (performance.now() < shellIgnoreUntil) return;
-      if (e.target.closest(".pk-menulink, .pk-menu-social")) return;
+      if (e.target.closest(".pk-menulink, .pk-menu-social, .pk-menu-panel")) return;
       closeMenu();
     });
 
@@ -1271,6 +1496,8 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       requestAnimationFrame(draw);
     }
 
+    window.__aimyCloseMenu = closeMenu;
+
     showHits(false);
     requestAnimationFrame(draw);
   }
@@ -1281,6 +1508,10 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       hasGsap = typeof gsap !== "undefined";
       bootMenuDom();
       if (typeof onReady === "function") onReady();
+    }
+    if (isLegalPage()) {
+      finish();
+      return;
     }
     if (typeof gsap !== "undefined" || reducedMotion) {
       finish();
@@ -1321,6 +1552,14 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
   };
 
   function start() {
+    var splashOnly = document.querySelector("[data-aimy-splash-only]");
+    if (splashOnly) {
+      bootSocialsScroll();
+      bootOverlayMenu(function () {
+        bootChromeReveal({ settleMs: prefersReducedMotion() ? 40 : 640 });
+      });
+      return;
+    }
     boot();
   }
 

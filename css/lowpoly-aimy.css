@@ -562,7 +562,7 @@ body[data-lp-universe="works"] [data-lp-hero-art="hytale"] {
 
 .lp-polybi-logo__shadow {
   background-color: transparent;
-  background-image: url("../assets/polykroma/logo/prism.jpg?v=1");
+  background-image: url("../assets/polykroma/branding/prism.jpg?v=1");
   background-size: 165% 165%;
   background-position:
     calc(50% + var(--mx, 0) * 42% + cos(calc(var(--holo-angle, 135) * 1deg)) * 7%)

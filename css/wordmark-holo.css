@@ -1,0 +1,363 @@
+/**
+ * wordmark-holo.css — Rainbow Rare holo sticker wordmark (Start splash + Insights identity log).
+ */
+
+.aimy-wordmark-holo {
+  /* Canonical sticker palette — mono-dev greys :root --step-*; these stay lavender */
+  --ins-wm-01: #F2F0F8;
+  --ins-wm-02: #FDC3FD;
+  --ins-wm-03: #F09EFB;
+  --ins-wm-04: #F089FE;
+  --ins-wm-06: #B24BFB;
+  --ins-wm-07: #8E14CE;
+  --ins-wm-08: #311633;
+  --glitter: url("../assets/polykroma/branding/glitter.png?v=1");
+  --glittersize: 25%;
+  --foil: url("../assets/polykroma/branding/illusion.png?v=1");
+  --imgsize: 33%;
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --pointer-from-center: 0.35;
+  --pointer-from-top: 0.5;
+  --pointer-from-left: 0.5;
+  --background-x: 50%;
+  --background-y: 50%;
+  --card-opacity: 0.92;
+}
+
+.aimy-wordmark-holo-wrap {
+  pointer-events: auto;
+  cursor: default;
+  perspective: 1100px;
+  perspective-origin: center center;
+}
+
+.aimy-wordmark-holo .aimy-type-logo__sticker {
+  transform:
+    translate3d(calc(var(--wm-tilt-x, 0) * 10px), calc(var(--wm-tilt-y, 0) * 8px), 0)
+    rotateX(calc(var(--wm-tilt-y, 0) * -12deg))
+    rotateY(calc(var(--wm-tilt-x, 0) * 14deg));
+  scale: 1;
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    scale 0.46s cubic-bezier(0.34, 1.42, 0.64, 1),
+    filter 0.28s ease;
+  filter: drop-shadow(0 0.65rem 1.1rem color-mix(in srgb, var(--ins-wm-08) 10%, transparent));
+}
+
+.aimy-wordmark-holo.is-interacting .aimy-type-logo__sticker {
+  scale: 1.048;
+  filter:
+    drop-shadow(0 0.9rem 1.45rem color-mix(in srgb, var(--ins-wm-08) 14%, transparent))
+    drop-shadow(0 0 1.5rem color-mix(in srgb, var(--ins-wm-06) 22%, transparent));
+}
+
+.aimy-wordmark-holo .aimy-type-logo__sticker.is-tilting {
+  animation: aimy-wordmark-sticker-pop 0.54s cubic-bezier(0.34, 1.45, 0.64, 1) forwards;
+}
+
+@keyframes aimy-wordmark-sticker-pop {
+  0% {
+    scale: 1;
+  }
+
+  52% {
+    scale: 1.062;
+  }
+
+  76% {
+    scale: 1.04;
+  }
+
+  100% {
+    scale: 1.048;
+  }
+}
+
+.aimy-wordmark-holo .aimy-type-logo__stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1557 / 1318;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.aimy-wordmark-holo .aimy-type-logo__shadow,
+.aimy-wordmark-holo .aimy-type-logo__text {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template: 1fr / 1fr;
+  pointer-events: none;
+  background: none;
+  opacity: 1;
+}
+
+.aimy-wordmark-holo .aimy-type-logo__shadow {
+  transform: translateZ(-4px);
+}
+
+.aimy-wordmark-holo .aimy-type-logo__text {
+  transform: translateZ(4px);
+}
+
+.aimy-wordmark-holo .aimy-type-logo__shadow-fill,
+.aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-shine,
+.aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-glare {
+  -webkit-mask-image: url("../assets/polykroma/branding/wordmark-shadow.svg?v=branding-10");
+  mask-image: url("../assets/polykroma/branding/wordmark-shadow.svg?v=branding-10");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.aimy-wordmark-holo .aimy-type-logo__text-fill,
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-shine,
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-glare {
+  -webkit-mask-image: url("../assets/polykroma/branding/wordmark-type.svg?v=branding-10");
+  mask-image: url("../assets/polykroma/branding/wordmark-type.svg?v=branding-10");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.aimy-wordmark-holo .aimy-type-logo__shadow-fill {
+  grid-area: 1 / 1;
+  background: linear-gradient(
+    152deg,
+    color-mix(in srgb, var(--ins-wm-07) 58%, var(--ins-wm-08)) 0%,
+    color-mix(in srgb, var(--ins-wm-06) 44%, var(--ins-wm-08)) 40%,
+    color-mix(in srgb, var(--ins-wm-08) 74%, var(--ins-wm-07)) 100%
+  );
+}
+
+.aimy-wordmark-holo .aimy-type-logo__text-fill {
+  grid-area: 1 / 1;
+  background: linear-gradient(
+    158deg,
+    color-mix(in srgb, var(--ins-wm-02) 78%, var(--ins-wm-01)) 0%,
+    color-mix(in srgb, var(--ins-wm-03) 82%, var(--ins-wm-02)) 48%,
+    color-mix(in srgb, var(--ins-wm-04) 38%, var(--ins-wm-03)) 100%
+  );
+}
+
+.aimy-wordmark-holo.is-interacting {
+  --card-opacity: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+  .aimy-wordmark-holo .aimy-type-logo__text-fill {
+    background: linear-gradient(
+      158deg,
+      color-mix(in srgb, var(--ins-wm-02) 72%, var(--ins-wm-01)) 0%,
+      color-mix(in srgb, var(--ins-wm-03) 76%, var(--ins-wm-02)) 48%,
+      color-mix(in srgb, var(--ins-wm-04) 32%, var(--ins-wm-03)) 100%
+    );
+  }
+
+  .aimy-wordmark-holo .aimy-type-logo__shadow-fill {
+    background: linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--ins-wm-07) 52%, var(--ins-wm-08)) 0%,
+      color-mix(in srgb, var(--ins-wm-06) 40%, var(--ins-wm-08)) 40%,
+      color-mix(in srgb, var(--ins-wm-08) 82%, var(--ins-wm-07)) 100%
+    );
+  }
+}
+
+/* Rainbow Rare holo layers (type + shadow) */
+
+.aimy-wordmark-holo .aimy-type-logo__shadow-fill,
+.aimy-wordmark-holo .aimy-type-logo__text-fill,
+.aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-shine,
+.aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-glare,
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-shine,
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-glare {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-shine,
+.aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-glare,
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-shine,
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-glare {
+  will-change: transform, opacity, background-image, background-size, background-position,
+    background-blend-mode, filter;
+}
+
+.aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-shine,
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-shine {
+  display: grid;
+  z-index: 1;
+  --r-clr-1: hsl(0 57% 37%);
+  --r-clr-2: hsl(40 53% 39%);
+  --r-clr-3: hsl(90 60% 35%);
+  --r-clr-4: hsl(180 60% 35%);
+  --r-clr-5: hsl(180 60% 35%);
+  --r-clr-6: hsl(210 57% 39%);
+  --r-clr-7: hsl(280 55% 31%);
+  background-image:
+    linear-gradient(-45deg, var(--r-clr-1), var(--r-clr-5)),
+    var(--glitter),
+    linear-gradient(
+      -30deg,
+      var(--r-clr-1),
+      var(--r-clr-2),
+      var(--r-clr-3),
+      var(--r-clr-4),
+      var(--r-clr-5),
+      var(--r-clr-6),
+      var(--r-clr-7),
+      var(--r-clr-1),
+      var(--r-clr-2),
+      var(--r-clr-3),
+      var(--r-clr-4),
+      var(--r-clr-5),
+      var(--r-clr-6),
+      var(--r-clr-7),
+      var(--r-clr-1),
+      var(--r-clr-2),
+      var(--r-clr-3),
+      var(--r-clr-4),
+      var(--r-clr-5),
+      var(--r-clr-6),
+      var(--r-clr-7),
+      var(--r-clr-1)
+    );
+  background-blend-mode: luminosity, soft-light;
+  background-size:
+    200% 200%,
+    var(--glittersize) var(--glittersize),
+    400% 400%;
+  background-position:
+    calc(25% + (50% * var(--pointer-from-left))) calc(25% + (50% * var(--pointer-from-top))),
+    center center,
+    calc(25% + (var(--pointer-x) * 0.5)) calc(25% + (var(--pointer-y) * 0.5));
+  filter: brightness(calc((var(--pointer-from-center) * 0.25) + 0.6)) contrast(2.2)
+    saturate(0.75);
+  mix-blend-mode: color-dodge;
+  opacity: var(--card-opacity);
+}
+
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-shine {
+  filter: brightness(calc((var(--pointer-from-center) * 0.2) + 0.72)) contrast(2.05)
+    saturate(0.82);
+  opacity: calc(var(--card-opacity) * 0.76);
+}
+
+.aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-shine::before,
+.aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-shine::after,
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-shine::before,
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-shine::after {
+  content: "";
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+}
+
+.aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-shine::before,
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-shine::before {
+  background-image: var(--foil);
+  background-size: var(--imgsize);
+  background-position: center center;
+  filter: brightness(2.5) contrast(1);
+  opacity: calc((var(--pointer-from-center) + 0.4) * 0.6);
+  background-blend-mode: difference;
+  mix-blend-mode: darken;
+}
+
+.aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-shine::after,
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-shine::after {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  background-image:
+    var(--glitter),
+    linear-gradient(
+      -60deg,
+      var(--r-clr-1),
+      var(--r-clr-2),
+      var(--r-clr-3),
+      var(--r-clr-4),
+      var(--r-clr-5),
+      var(--r-clr-6),
+      var(--r-clr-7),
+      var(--r-clr-1),
+      var(--r-clr-2),
+      var(--r-clr-3),
+      var(--r-clr-4),
+      var(--r-clr-5),
+      var(--r-clr-6),
+      var(--r-clr-7),
+      var(--r-clr-1),
+      var(--r-clr-2),
+      var(--r-clr-3),
+      var(--r-clr-4),
+      var(--r-clr-5),
+      var(--r-clr-6),
+      var(--r-clr-7),
+      var(--r-clr-1)
+    );
+  background-blend-mode: soft-light;
+  background-size: var(--glittersize) var(--glittersize), 400% 400%;
+  background-position: center center, var(--pointer-x) var(--pointer-y);
+  filter: brightness(calc((var(--pointer-from-center) * 0.3) + 0.55)) contrast(2)
+    saturate(1);
+  mix-blend-mode: color-dodge;
+}
+
+.aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-glare,
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-glare {
+  z-index: 2;
+  background-image: radial-gradient(
+    farthest-corner circle at var(--pointer-x) var(--pointer-y),
+    hsl(0 0% 80%),
+    hsl(187 10% 85% / 0.25) 30%,
+    hsl(197 6% 25%) 120%
+  );
+  filter: brightness(0.9) contrast(1.75);
+  opacity: calc(var(--card-opacity) * max(var(--pointer-from-center), 0.35));
+  mix-blend-mode: hard-light;
+}
+
+.aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-glare {
+  opacity: calc(var(--card-opacity) * max(var(--pointer-from-center), 0.28));
+  mix-blend-mode: overlay;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aimy-wordmark-holo .aimy-type-logo__shadow-fill,
+  .aimy-wordmark-holo .aimy-type-logo__text-fill,
+  .aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-shine,
+  .aimy-wordmark-holo .aimy-type-logo__shadow .aimy-type-logo__holo-glare,
+  .aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-shine,
+  .aimy-wordmark-holo .aimy-type-logo__text .aimy-type-logo__holo-glare,
+  .aimy-wordmark-holo .aimy-type-logo__sticker {
+    transition: none;
+  }
+
+  .aimy-wordmark-holo {
+    --card-opacity: 0.88;
+    --pointer-from-center: 0.45;
+  }
+
+  .aimy-wordmark-holo .aimy-type-logo__sticker.is-tilting {
+    animation: none;
+  }
+
+  .aimy-wordmark-holo.is-interacting .aimy-type-logo__sticker {
+    scale: 1.02;
+  }
+}

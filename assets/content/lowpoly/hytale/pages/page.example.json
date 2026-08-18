@@ -1,0 +1,19 @@
+{
+  "topic": "Category eyebrow — optional small label above the title",
+  "title": "Page title",
+  "lede": "One-line intro under the title.",
+  "body": "Optional longer paragraph. Plain text only.",
+  "stickers": [
+    {
+      "image": "my-sticker.png",
+      "label": "Name for accessibility / hover",
+      "catalogId": "optional-id-for-lightbox"
+    },
+    {
+      "image": "lowpoly/hytale/Furnishings/boxx_purple.png",
+      "label": "Boxx",
+      "catalogId": "boxx",
+      "cycleVariants": true
+    }
+  ]
+}

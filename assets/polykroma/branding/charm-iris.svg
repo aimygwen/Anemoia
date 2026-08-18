@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 2048 2048" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="Brand" transform="matrix(1.031992,0,0,1.031992,-70.682676,-47.339953)" fill="#ffffff">
+        <g id="Eyes" transform="matrix(1,0,0,1,859.015006,1336.240991)">
+            <g class="iris-pupil" data-iris="left">
+                <path id="Iris-left" d="M167.589,130.909C177.819,128.492 181.462,122.316 184.861,132.401C186.004,135.79 247.118,306.595 243.586,307.703C222.165,314.419 85.166,355.114 83.455,356.415C75.956,362.119 18.047,218.316 5.557,190.474C0.282,178.714 15.529,179.417 16.616,178.758C18.476,177.633 167.846,133.361 167.589,130.909Z" style="fill-opacity:1;"/>
+            </g>
+            <g class="iris-pupil" data-iris="right">
+                <path id="Iris-right" d="M486.5,46.498C510.322,42.537 653.407,1.301 654.419,6.519C654.99,9.464 708.092,184.14 704.607,184.852C687.01,188.448 550.92,220.666 548.448,221.2C543.571,222.252 478.722,47.792 486.5,46.498Z" style="fill-opacity:1;"/>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Redirecting…</title>
+  <script>
+    (function () {
+      var path = window.location.pathname || "";
+      var search = window.location.search || "";
+      var hash = window.location.hash || "";
+      var base = path.replace(/\/[^/]*$/, "/");
+      if (!base.endsWith("/")) base += "/";
+      var leaf = path.replace(/\/+$/, "").split("/").pop().toLowerCase();
+      if (leaf === "imprint" || leaf === "legal") {
+        window.location.replace(base + "imprint.html?v=imprint-ins-5" + search + hash);
+        return;
+      }
+      try {
+        sessionStorage.setItem("aimySpaRedirect", path + search);
+      } catch (e) {}
+      window.location.replace(base + "index.html");
+    })();
+  </script>
+</head>
+<body></body>
+</html>
