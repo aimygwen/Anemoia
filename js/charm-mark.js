@@ -6,11 +6,11 @@
 (function () {
   "use strict";
 
-  var VERSION = "branding-10";
+  var VERSION = "branding-15";
   var ASSET_DIR = "./assets/polykroma/branding/";
 
   var LAYER_FILES = {
-    "charm-base": "charm-base.svg",
+    "charm-sclera": "charm-sclera.svg",
     "charm-iris": "charm-iris.svg",
     "charm-face": "charm-face.svg",
     "charm-hair": "charm-hair.svg",

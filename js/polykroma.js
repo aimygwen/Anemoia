@@ -606,7 +606,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
   }
 
   function selectButtonSrc() {
-    return pageBase() + "assets/polykroma/select/select-button.svg?v=select-1";
+    return pageBase() + "assets/polykroma/select/select-button.svg?v=select-2";
   }
 
   function selectLayer(layer) {

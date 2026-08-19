@@ -9,7 +9,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
   "use strict";
 
   /* Bump when swapping any ./assets/polykroma/select/*.glb */
-  var SELECT_TAG = "select-2";
+  var SELECT_TAG = "select-3";
 
   var ITEMS = [
     {
@@ -714,10 +714,11 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
           mat.depthWrite = false;
           mat.side = THREE.FrontSide;
         } else {
-          mat.transparent = false;
-          mat.depthWrite = true;
-          mat.opacity = 1;
-          mat.side = THREE.FrontSide;
+          mat.transparent = !!mat.userData.menuGltfTransparent;
+          mat.depthWrite = !mat.transparent;
+          mat.opacity = mat.userData.menuGltfOpacity;
+          mat.alphaTest = mat.userData.menuGltfAlphaTest;
+          mat.side = mat.userData.menuGltfSide || THREE.FrontSide;
         }
 
         mat.needsUpdate = true;
@@ -739,7 +740,6 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
       mesh.renderOrder = idx;
     });
   }
-
   function prepareModelMaterials(root, itemId) {
     root.traverse(function (node) {
       if (!node.isMesh || !node.material) return;

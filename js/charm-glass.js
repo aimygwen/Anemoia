@@ -1,6 +1,6 @@
 /**
  * charm-glass.js
- * Charm stack prep (iris clipped to charm-base) + frosted blur panes for base/face/bow/hair.
+ * Charm stack prep (iris clipped to charm-sclera) + frosted blur panes for sclera/face/bow/hair.
  */
 (function () {
   "use strict";
@@ -8,17 +8,17 @@
   var SVG_NS = "http://www.w3.org/2000/svg";
   var HOST_SELECTOR = ".site-header[data-aimy-chrome] .brand";
   var BLUR_LAYERS = [
-    "charm-base",
+    "charm-sclera",
     "charm-face",
     "charm-bow",
     "charm-hair",
   ];
   var LAYER_STACK = [
-    "charm-base",
+    "charm-iris",
+    "charm-sclera",
     "charm-face",
     "charm-hair",
     "charm-bow",
-    "charm-iris",
     "charm-lashes",
     "charm-highlight",
   ];
@@ -217,7 +217,7 @@
 
   function buildIrisBaseClip(mark, slot) {
     var irisLayer = mark.querySelector(".brand-layer--charm-iris");
-    var baseLayer = mark.querySelector(".brand-layer--charm-base");
+    var baseLayer = mark.querySelector(".brand-layer--charm-sclera");
     if (!irisLayer || !baseLayer) return null;
 
     unwrapIrisMask(irisLayer);
@@ -236,9 +236,70 @@
     mask.setAttribute("width", "2048");
     mask.setAttribute("height", "2048");
 
-    /* Iris visible only inside charm-base.svg geometry (eye sockets). */
-    mask.appendChild(cloneLayerGeometry(baseLayer, "#ffffff", "evenodd"));
+    /*
+     * Iris visible only inside charm-sclera.svg eye socket geometry.
+     * Clone the sclera layer to preserve the transform hierarchy, then
+     * prune to keep only <g> and <path> nodes. <g> is kept for its
+     * transforms; <path> provides the mask geometry. Everything else
+     * (defs, clipPath, image, use) is removed, but paths inside clipPath
+     * are moved up to the clipPath's parent so they stay in the transform
+     * chain. Evenodd fill-rule makes the eye-socket interiors white
+     * (iris visible) and everything else transparent/black (iris hidden).
+     */
+    var maskContent = cloneLayerGeometry(baseLayer, "#ffffff", "evenodd");
 
+    function hasPathDescendant(node) {
+      if (!node || node.nodeType !== 1) return false;
+      if (node.tagName.toLowerCase() === "path") return true;
+      var kids = node.childNodes;
+      for (var i = 0; i < kids.length; i++) {
+        if (hasPathDescendant(kids[i])) return true;
+      }
+      return false;
+    }
+
+    function pruneMaskTree(node) {
+      if (!node || node.nodeType !== 1) return;
+      var tag = node.tagName.toLowerCase();
+
+      if (tag === "path") return;
+
+      /* Prune children first (post-order). */
+      var kids = Array.prototype.slice.call(node.childNodes);
+      for (var i = 0; i < kids.length; i++) pruneMaskTree(kids[i]);
+
+      if (tag === "g") {
+        if (!hasPathDescendant(node)) {
+          if (node.parentNode) node.parentNode.removeChild(node);
+        }
+        return;
+      }
+
+      if (!hasPathDescendant(node)) {
+        if (node.parentNode) node.parentNode.removeChild(node);
+        return;
+      }
+
+      /*
+       * Node has path descendants but is not <g> or <path>
+       * (e.g. <clipPath>). Move paths up to parent, then remove.
+       */
+      var paths = [];
+      var allKids = Array.prototype.slice.call(node.childNodes);
+      for (var i = 0; i < allKids.length; i++) {
+        if (allKids[i].nodeType === 1 && allKids[i].tagName.toLowerCase() === "path") {
+          paths.push(allKids[i]);
+        }
+      }
+      for (var i = 0; i < paths.length; i++) {
+        if (node.parentNode) node.parentNode.insertBefore(paths[i], node);
+      }
+      if (node.parentNode) node.parentNode.removeChild(node);
+    }
+
+    pruneMaskTree(maskContent);
+
+    mask.appendChild(maskContent);
     defs.appendChild(mask);
     mark.insertBefore(defs, mark.firstChild);
     applyIrisMaskWrap(irisLayer, maskId);

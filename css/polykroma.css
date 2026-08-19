@@ -476,9 +476,9 @@ html body .site-header[data-aimy-chrome]::before {
     -webkit-backdrop-filter 0.35s ease;
 }
 
-.mono-charm-glass-layer--charm-base {
-  -webkit-mask-image: url("../assets/polykroma/branding/charm-base.svg?v=branding-10");
-  mask-image: url("../assets/polykroma/branding/charm-base.svg?v=branding-10");
+.mono-charm-glass-layer--charm-sclera {
+  -webkit-mask-image: url("../assets/polykroma/branding/charm-sclera.svg?v=branding-15");
+  mask-image: url("../assets/polykroma/branding/charm-sclera.svg?v=branding-15");
 }
 
 .mono-charm-glass-layer--charm-face {
@@ -500,7 +500,7 @@ html body .site-header[data-aimy-chrome]::before {
   fill: color-mix(in srgb, var(--aimy-primary) 42%, transparent) !important;
 }
 
-.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-base path,
+.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-sclera path,
 .site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-face path,
 .site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-bow path {
   fill: color-mix(in srgb, var(--aimy-secondary) 48%, transparent) !important;
@@ -600,7 +600,7 @@ html body .site-header[data-aimy-chrome]::before {
   display: none;
 }
 
-.site-header[data-aimy-chrome] .brand-layer--charm-base path,
+.site-header[data-aimy-chrome] .brand-layer--charm-sclera path,
 .site-header[data-aimy-chrome] .brand-layer--charm-face path,
 .site-header[data-aimy-chrome] .brand-layer--charm-hair path,
 .site-header[data-aimy-chrome] .brand-layer--charm-bow path {
