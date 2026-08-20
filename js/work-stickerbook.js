@@ -4,9 +4,9 @@
 (function () {
   "use strict";
 
-  var MANIFEST_URL = "./assets/content/lowpoly/hytale/sketchbook/index.json?v=sketchbook-5";
+  var MANIFEST_URL = "./assets/content/lowpoly/hytale/sketchbook/index.json?v=sketchbook-6";
   var ASSET_BASE = "./assets/content/lowpoly/hytale/";
-  var MANIFEST_TAG = "sketchbook-5";
+  var MANIFEST_TAG = "sketchbook-6";
 
   var holoCleanups = [];
   var resizeObserver = null;
@@ -167,7 +167,7 @@
       );
 
       img.decoding = "async";
-      img.loading = "eager";
+      img.loading = "lazy";
       img.src = state.src;
 
       if (img.complete && img.naturalWidth) finish();
@@ -422,10 +422,16 @@
       canvasEl.appendChild(state.el);
     });
 
-    return Promise.all(stickerStates.map(loadStickerImage)).then(function () {
-      layoutStickers();
-      bindResize();
+    layoutStickers();
+    bindResize();
+
+    stickerStates.forEach(function (state) {
+      loadStickerImage(state).then(function () {
+        layoutStickers();
+      });
     });
+
+    return Promise.resolve();
   }
 
   function build(panel) {

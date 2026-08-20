@@ -118,9 +118,9 @@
       partial: "./partials/view-work.html?v=spa-44",
       css: [
         "./css/spa/spa-scaffold.css?v=spa-29",
-        "./css/spa/spa-work.css?v=spa-66",
+        "./css/spa/spa-work.css?v=spa-67",
       ],
-      js: ["./js/spa/views/view-work.js?v=spa-70"],
+      js: ["./js/spa/views/view-work.js?v=spa-71"],
       mount: function (ctx) {
         resetBodyState();
         document.documentElement.classList.add("spa-route-not-start");

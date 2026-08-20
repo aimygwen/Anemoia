@@ -949,7 +949,8 @@ body.menu-open .site-header[data-aimy-chrome].is-nav-hidden .social {
 
 .pk-burger-hit:hover ~ .pk-coin-button--select,
 .pk-burger-hit:focus-visible ~ .pk-coin-button--select {
-  --pk-coin-scale: 1.09;
+  /* Skip 3D hover scale — foreshortening inside perspective reads as squeezed glyph */
+  --pk-coin-scale: 1;
 }
 
 .pk-burger-hit:active ~ .pk-coin-button {
@@ -1348,80 +1349,84 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
  * Base steps out faster; alt steps in slightly delayed so layers overlap mid-phase.
  */
 @media (hover: hover) and (pointer: fine) {
-  .pk-coin-icon:not(.pk-coin-icon--alt) {
+  .pk-coin-button:not(.pk-coin-button--select) .pk-coin-icon:not(.pk-coin-icon--alt) {
     transition:
       opacity 0.34s steps(10, end),
       transform 0.38s cubic-bezier(0.33, 1.2, 0.68, 1);
   }
 
-  .pk-coin-icon--alt {
+  .pk-coin-button:not(.pk-coin-button--select) .pk-coin-icon--alt {
     transform: scale(1);
     transition:
       opacity 0.4s steps(10, end) 0.05s,
       transform 0.4s cubic-bezier(0.33, 1.2, 0.68, 1) 0.05s;
   }
 
-  .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--open:not(.pk-coin-icon--alt),
-  .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--open:not(.pk-coin-icon--alt) {
+  .pk-burger-hit:hover ~ .pk-coin-button:not(.pk-coin-button--select) .pk-coin-icon--open:not(.pk-coin-icon--alt),
+  .pk-burger-hit:focus-visible ~ .pk-coin-button:not(.pk-coin-button--select) .pk-coin-icon--open:not(.pk-coin-icon--alt) {
     opacity: 0;
     transform: scale(1);
   }
 
-  .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--open.pk-coin-icon--alt,
-  .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--open.pk-coin-icon--alt {
+  .pk-burger-hit:hover ~ .pk-coin-button:not(.pk-coin-button--select) .pk-coin-icon--open.pk-coin-icon--alt,
+  .pk-burger-hit:focus-visible ~ .pk-coin-button:not(.pk-coin-button--select) .pk-coin-icon--open.pk-coin-icon--alt {
     opacity: 1;
     transform: scale(1);
   }
 
-  .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--open,
-  .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--open {
+  .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button:not(.pk-coin-button--select) .pk-coin-icon--open,
+  .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button:not(.pk-coin-button--select) .pk-coin-icon--open {
     opacity: 0;
     transform: scale(1);
   }
 
-  .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--close:not(.pk-coin-icon--alt),
-  .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--close:not(.pk-coin-icon--alt) {
+  .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button:not(.pk-coin-button--select) .pk-coin-icon--close:not(.pk-coin-icon--alt),
+  .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button:not(.pk-coin-button--select) .pk-coin-icon--close:not(.pk-coin-icon--alt) {
     opacity: 0;
     transform: scale(1);
   }
 
-  .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--close.pk-coin-icon--alt,
-  .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--close.pk-coin-icon--alt {
+  .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button:not(.pk-coin-button--select) .pk-coin-icon--close.pk-coin-icon--alt,
+  .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button:not(.pk-coin-button--select) .pk-coin-icon--close.pk-coin-icon--alt {
     opacity: 1;
     transform: scale(1);
   }
 
   /*
-   * Select coin — keep base glyph on hover (rainbow only).
-   * Base→alt morph swaps 3 bars for a tight 2×2 grid and reads as squeezed.
+   * Select coin — instant glyph swap (no morph, no 3D scale).
+   * Bar→grid shapes differ; any crossfade reads as squeezed.
    */
-  .pk-burger-hit:hover ~ .pk-coin-button--select .pk-coin-icon,
-  .pk-burger-hit:focus-visible ~ .pk-coin-button--select .pk-coin-icon {
-    transition: opacity 0.2s ease, transform 0.2s ease;
+  .pk-coin-button--select .pk-coin-icon {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .pk-coin-button--select .pk-coin-icon--alt {
+    visibility: hidden;
   }
 
   .pk-burger-hit:hover ~ .pk-coin-button--select .pk-coin-icon--open:not(.pk-coin-icon--alt),
   .pk-burger-hit:focus-visible ~ .pk-coin-button--select .pk-coin-icon--open:not(.pk-coin-icon--alt) {
-    opacity: 1;
-    transform: none;
+    opacity: 0;
+    visibility: hidden;
   }
 
   .pk-burger-hit:hover ~ .pk-coin-button--select .pk-coin-icon--open.pk-coin-icon--alt,
   .pk-burger-hit:focus-visible ~ .pk-coin-button--select .pk-coin-icon--open.pk-coin-icon--alt {
-    opacity: 0;
-    transform: none;
+    opacity: 1;
+    visibility: visible;
   }
 
   .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button--select .pk-coin-icon--close:not(.pk-coin-icon--alt),
   .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button--select .pk-coin-icon--close:not(.pk-coin-icon--alt) {
-    opacity: 1;
-    transform: none;
+    opacity: 0;
+    visibility: hidden;
   }
 
   .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button--select .pk-coin-icon--close.pk-coin-icon--alt,
   .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button--select .pk-coin-icon--close.pk-coin-icon--alt {
-    opacity: 0;
-    transform: none;
+    opacity: 1;
+    visibility: visible;
   }
 }
 

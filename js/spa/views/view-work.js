@@ -12,6 +12,7 @@
   var chooserActive = false;
   var revealToken = 0;
   var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   var REVEAL_MS = 920;
 
   var polRaf = 0;
@@ -341,10 +342,10 @@
   }
 
   function ensureStickerbookAssets() {
-    return loadCss("./css/work-stickerbook.css?v=sketchbook-5").then(function () {
-      return loadScript("./js/work-sticker-holo.js?v=sketchbook-5");
+    return loadCss("./css/work-stickerbook.css?v=sketchbook-6").then(function () {
+      return loadScript("./js/work-sticker-holo.js?v=sketchbook-6");
     }).then(function () {
-      return loadScript("./js/work-stickerbook.js?v=sketchbook-5");
+      return loadScript("./js/work-stickerbook.js?v=sketchbook-6");
     });
   }
 
@@ -1131,7 +1132,7 @@
       }
 
       var flow;
-      var animateOpen = !!chooserActive && !!category && !reducedMotion;
+      var animateOpen = !!chooserActive && !!category && !reducedMotion && finePointer;
       chooserActive = !category;
 
       if (!category) {

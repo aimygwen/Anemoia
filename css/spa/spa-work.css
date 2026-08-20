@@ -833,7 +833,7 @@ body.spa-view-work[data-work-layout="lowpoly-soon"] .work-lowpoly-soon {
 
 .work-lowpoly-soon__mark {
   display: block;
-  width: clamp(3.75rem, 10vw, 5.5rem);
+  width: clamp(4.75rem, 22vw, 4.25rem);
   height: auto;
   margin: 0 auto;
   opacity: 0.46;
@@ -842,13 +842,34 @@ body.spa-view-work[data-work-layout="lowpoly-soon"] .work-lowpoly-soon {
 
 .work-lowpoly-soon__copy {
   margin: 0;
-  max-width: 16rem;
+  max-width: 18rem;
   font-family: var(--spa-font-sans, "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif) !important;
-  font-size: clamp(0.8rem, 1.55vw, 0.94rem);
+  font-size: clamp(0.98rem, 3.4vw, 0.82rem);
   font-weight: 500;
   line-height: 1.45;
   letter-spacing: 0.05em;
   color: color-mix(in srgb, var(--pk-text) 44%, transparent);
+}
+
+@media (max-width: 820px) {
+  .work-lowpoly-soon__mark {
+    width: clamp(5rem, 28vw, 6.5rem);
+  }
+
+  .work-lowpoly-soon__copy {
+    max-width: 20rem;
+    font-size: clamp(1rem, 3.8vw, 1.12rem);
+  }
+}
+
+@media (min-width: 821px) {
+  .work-lowpoly-soon__mark {
+    width: clamp(3.25rem, 5.5vw, 3.85rem);
+  }
+
+  .work-lowpoly-soon__copy {
+    font-size: clamp(0.74rem, 0.95vw, 0.8rem);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
