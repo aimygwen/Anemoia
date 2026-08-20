@@ -342,10 +342,10 @@
   }
 
   function ensureStickerbookAssets() {
-    return loadCss("./css/work-stickerbook.css?v=sketchbook-7").then(function () {
-      return loadScript("./js/work-sticker-holo.js?v=sketchbook-7");
+    return loadCss("./css/work-stickerbook.css?v=sketchbook-8").then(function () {
+      return loadScript("./js/work-sticker-holo.js?v=sketchbook-8");
     }).then(function () {
-      return loadScript("./js/work-stickerbook.js?v=sketchbook-7");
+      return loadScript("./js/work-stickerbook.js?v=sketchbook-8");
     });
   }
 

@@ -4,9 +4,9 @@
 (function () {
   "use strict";
 
-  var MANIFEST_URL = "./assets/content/lowpoly/hytale/sketchbook/index.json?v=sketchbook-7";
+  var MANIFEST_URL = "./assets/content/lowpoly/hytale/sketchbook/index.json?v=sketchbook-8";
   var ASSET_BASE = "./assets/content/lowpoly/hytale/";
-  var MANIFEST_TAG = "sketchbook-7";
+  var MANIFEST_TAG = "sketchbook-8";
 
   var holoCleanups = [];
   var resizeObserver = null;
@@ -40,16 +40,19 @@
     if (
       relativePath.indexOf("data:") === 0 ||
       relativePath.indexOf("http://") === 0 ||
-      relativePath.indexOf("https://") === 0 ||
-      relativePath.indexOf("./") === 0
+      relativePath.indexOf("https://") === 0
     ) {
       return relativePath;
     }
     var base = ASSET_BASE.charAt(ASSET_BASE.length - 1) === "/" ? ASSET_BASE : ASSET_BASE + "/";
+    var combined =
+      relativePath.indexOf("./") === 0 || relativePath.indexOf("/") === 0
+        ? relativePath
+        : base + relativePath;
     try {
-      return new URL(base + relativePath, window.location.href).href;
+      return new URL(combined, document.baseURI || window.location.href).href;
     } catch (err) {
-      return base + relativePath;
+      return combined;
     }
   }
 
