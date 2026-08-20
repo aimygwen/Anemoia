@@ -5,7 +5,7 @@
 (function () {
   "use strict";
 
-  var VERSION = "spa-20";
+  var VERSION = "spa-21";
   var IMPRINT_CANONICAL = "./imprint.html?v=imprint-ins-48";
   var VIEWS = ["start", "work", "insights", "me", "contact"];
   var INSIGHTS_LOGS = ["identity", "workspace", "hytale"];
@@ -22,6 +22,52 @@
     hytale: "hytale",
   };
   var navigating = false;
+  var spaBaseCached = null;
+
+  function spaPrefixFromPath(path) {
+    path = (path || "/").replace(/\/index\.html$/i, "");
+    var m = path.match(SPA_PATH_RE);
+    if (m) {
+      var idx = path.toLowerCase().lastIndexOf("/" + m[1].toLowerCase());
+      if (idx >= 0) return path.slice(0, idx);
+    }
+    return "";
+  }
+
+  function detectSpaBase() {
+    if (spaBaseCached != null) return spaBaseCached;
+
+    var scripts = document.getElementsByTagName("script");
+    var i;
+    for (i = 0; i < scripts.length; i++) {
+      var src = scripts[i].getAttribute("src");
+      if (!src || src.indexOf("spa-router.js") === -1) continue;
+      try {
+        var scriptUrl = new URL(src, window.location.href);
+        spaBaseCached = scriptUrl.pathname.replace(/\/js\/spa\/spa-router\.js.*$/i, "") || "";
+        return spaBaseCached;
+      } catch (e) {}
+    }
+
+    spaBaseCached = spaPrefixFromPath(window.location.pathname);
+    return spaBaseCached;
+  }
+
+  function normalizePathname(pathname) {
+    pathname = (pathname || "/").replace(/\/index\.html$/i, "");
+    pathname = pathname.replace(/\/+$/, "");
+    return pathname || "/";
+  }
+
+  function resolveSpaHref(href) {
+    if (!href) return href;
+    if (/^(https?:|mailto:|tel:)/i.test(href)) return href;
+    if (href.charAt(0) === "/") return href;
+    if (href.indexOf("./") === 0) {
+      return detectSpaBase() + href.slice(1);
+    }
+    return href;
+  }
 
   var LEGACY_PATHS = {
     "index.html": "start",
@@ -176,9 +222,10 @@
   function buildUrl(view, query) {
     view = normalizeView(view);
     query = query || {};
+    var base = detectSpaBase();
 
     if (view === "start") {
-      return "./";
+      return (base || "") + "/";
     }
 
     var parts = [view];
@@ -191,11 +238,12 @@
       if (logSlug) parts.push(logSlug);
     }
 
-    return "./" + parts.join("/");
+    return base + "/" + parts.join("/");
   }
 
   function hrefToRoute(href) {
     try {
+      href = resolveSpaHref(href);
       var url = new URL(href, window.location.href);
       if (url.origin !== window.location.origin) return null;
       return routeFromUrl(url);
@@ -214,10 +262,14 @@
     return url.searchParams.has("category") || url.searchParams.has("log") || url.searchParams.has("view");
   }
 
-  function urlsMatch(relativeHref) {
-    var target = new URL(relativeHref, window.location.href);
+  function urlsMatch(canonicalHref) {
+    var target = new URL(canonicalHref, window.location.origin);
     var current = new URL(window.location.href);
-    return target.pathname === current.pathname && target.search === current.search && target.hash === current.hash;
+    return (
+      normalizePathname(target.pathname) === normalizePathname(current.pathname) &&
+      target.search === current.search &&
+      target.hash === current.hash
+    );
   }
 
   function sanitizeRouteQuery(route) {
@@ -250,9 +302,12 @@
     }
 
     var url = buildUrl(route.view, route.query);
-    var forceReplace = replace || route.legacy || locationHasLegacyQuery() || !urlsMatch(url);
+    var needsCanonical = !!(route.legacy || locationHasLegacyQuery() || !urlsMatch(url));
+    var forceReplace = !!replace || needsCanonical;
 
-    if (forceReplace) {
+    if (needsCanonical) {
+      window.history.replaceState({ spa: route }, "", url);
+    } else if (replace) {
       window.history.replaceState({ spa: route }, "", url);
     } else {
       window.history.pushState({ spa: route }, "", url);
@@ -286,7 +341,7 @@
       window.AimySpaState.setView("start", {});
     }
 
-    window.history.replaceState({ spa: { view: "start", query: {} } }, "", "./");
+    window.history.replaceState({ spa: { view: "start", query: {} } }, "", buildUrl("start", {}));
 
     if (window.AimySpaNav) window.AimySpaNav.syncMenu("start");
     if (window.AimySpaA11y) {
@@ -315,6 +370,7 @@
       window.location.href = href;
       return Promise.resolve();
     }
+    href = resolveSpaHref(href);
     var route = hrefToRoute(href);
     if (!route) {
       window.location.href = href;
@@ -365,9 +421,10 @@
       if (anchor.hasAttribute("download")) return;
       var href = anchor.getAttribute("href");
       if (!href || href.charAt(0) === "#") return;
-      if (!canHandle(anchor.href || href)) return;
+      var spaHref = resolveSpaHref(href);
+      if (!canHandle(spaHref)) return;
       e.preventDefault();
-      navigate(anchor.href || href);
+      navigate(spaHref);
     });
   }
 
