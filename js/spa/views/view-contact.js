@@ -12,10 +12,10 @@
   var fitHandler = null;
 
   var ROTATE_ITEMS = [
-    { label: "Voxels.", href: "./work?category=hytale", aria: "View Voxels work" },
-    { label: "Meshes.", href: "./work?category=lowpoly", aria: "View Meshes work" },
-    { label: "Stills.", href: "./work?category=stills", aria: "View Stills work" },
-    { label: "Films.", href: "./work?category=motion", aria: "View Films work" },
+    { label: "Voxels.", href: "./work/hytale", aria: "View Voxels work" },
+    { label: "Meshes.", href: "./work/lowpoly", aria: "View Meshes work" },
+    { label: "Stills.", href: "./work/stills", aria: "View Stills work" },
+    { label: "Films.", href: "./work/motion", aria: "View Films work" },
   ];
 
   function contactRoot() {

@@ -27,7 +27,7 @@ Aimy Gwen's portfolio. A **static site** — vanilla HTML + CSS + JS, no build s
 - `js/charm-mark.js`, `js/charm-iris.js`, `js/charm-specular.js` — Charm mark hydration + logo micro-interactions (specular file kept but not loaded — paused). Bump `charm-mark.js?v=` when editing `charm-*.svg`.
 - `css/wordmark-holo.css` + `js/wordmark-holo.js` — shared Rainbow Rare holo sticker wordmark (Start splash + Insights identity log). Class `.aimy-wordmark-holo`; boot via `window.AimyWordmarkHolo.boot()`.
 - `js/lowpoly.js`, `js/gallery.js` + matching CSS — Work category content, lazy-loaded from `view-work.js`.
-- `js/work-stickerbook.js`, `js/work-sticker-holo.js`, `css/work-stickerbook.css` — Hytale Work sticker book (holo die-cut spreads + page flip). Loaded from `view-work.js` when `?category=hytale`.
+- `js/work-stickerbook.js`, `js/work-sticker-holo.js`, `css/work-stickerbook.css` — Hytale Work sticker book (holo die-cut spreads + page flip). Loaded from `view-work.js` when Work category is `hytale` (`./work/hytale`).
 - `assets/content/lowpoly/hytale/pages/` — **Hytale sticker book content** (see below). `index.json` lists page folder order; each `page-N/page.json` defines topic/title/text + sticker list. Drop PNGs into the page folder and reference by filename.
 - `js/lowpoly-catalog-data.js` — **auto-generated, do not edit** (built from a lowpoly catalog; the generator script is not in this repo).
 - `assets/` — images (page art at root, `thumbnails/`, `content/` for gallery/lowpoly media, `polykroma/` for brand assets). `fonts/`, `fav/`.
@@ -99,7 +99,7 @@ Use `--pk-*` (or the older `--aimy-*` aliases) so components flip automatically 
 ## SPA routing (vanilla Path 1)
 
 - **Host:** `index.html` only (`body[data-spa-host]`). Views live in `#app-viewport`; Start is inline, others fetch from `partials/view-*.html`.
-- **Routes:** `./` (Start), `./work?category=`, `./insights`, `./me`, `./contact`. Work categories: `lowpoly`, `hytale`, `stills`, `motion`.
+- **Routes:** `./` (Start), `./work`, `./work/<category>`, `./insights`, `./insights/<log>`, `./me`, `./contact`. Work categories: `lowpoly`, `hytale`, `stills`, `motion`. Insights log slugs: `vibes` (identity), `workspace`, `hytale`. Legacy `?category=` / `?log=` query URLs redirect to clean paths on load.
 - **Nav:** coin menu holds the **WebGL portfolio carousel** (Start / Work / Insights / Me / Contact) — no text nav list in the overlay. **Me** opens full-page `about.html`; Imprint/Legal live on `imprint.html` (full-page siblings).
 - **Legacy map:** old `.html` filenames (`lowpoly.html`, `gallery.html`, …) still resolve via `spa-router.js` for bookmarks — those files are gone; routing happens in the SPA. `about.html` is restored as a real page (router treats it as external, not `./me`).
 - **Transitions:** in-app navigations on the host bypass full-page `AimyPageTransition`; coin menu calls `AimySpa.navigate()` when the href is routable.

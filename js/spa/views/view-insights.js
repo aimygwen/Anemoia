@@ -61,7 +61,7 @@
 
     var nextId = LOG_NEXT[logId];
     if (link && nextId) {
-      link.href = "./insights?log=" + encodeURIComponent(nextId);
+      link.href = window.AimySpa.buildUrl("insights", { log: nextId });
       link.setAttribute("data-ins-log-next", nextId);
       link.classList.remove("is-in");
     }
@@ -206,7 +206,7 @@
         e.preventDefault();
         var logId = item.getAttribute("data-ins-log-pick");
         if (!logId || !window.AimySpa || typeof window.AimySpa.navigate !== "function") return;
-        window.AimySpa.navigate("./insights?log=" + encodeURIComponent(logId));
+        window.AimySpa.navigate(window.AimySpa.buildUrl("insights", { log: logId }));
         return;
       }
 
@@ -215,7 +215,7 @@
         e.preventDefault();
         var nextId = nextLink.getAttribute("data-ins-log-next");
         if (!nextId || !window.AimySpa || typeof window.AimySpa.navigate !== "function") return;
-        window.AimySpa.navigate("./insights?log=" + encodeURIComponent(nextId));
+        window.AimySpa.navigate(window.AimySpa.buildUrl("insights", { log: nextId }));
       }
     });
   }

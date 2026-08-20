@@ -1110,7 +1110,9 @@
       if (scroller && Number(scroller.getAttribute("data-drag-px") || 0) >= 12) return;
       var next = pickLink.getAttribute("data-work-pick");
       if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
-        window.AimySpa.navigate("./work?category=" + encodeURIComponent(next));
+        window.AimySpa.navigate(
+          window.AimySpa.buildUrl("work", next ? { category: next } : {})
+        );
       }
     });
   }
