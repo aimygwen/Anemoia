@@ -21,6 +21,31 @@
   font-style: normal;
   font-display: swap;
 }
+
+/* Full-bleed viewport — no browser default body margin frame */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: clip;
+}
+
 :root {
   /*
    * Anemoia 8-step palette — single source of truth for the whole site.
@@ -81,10 +106,16 @@
   --aimy-menu-size: clamp(44px, 3.8vw, 56px);
   --aimy-menu-gap: 36px;
   --aimy-chrome-top: max(var(--aimy-pad-y), env(safe-area-inset-top, 0px));
+  --aimy-chrome-bottom: max(var(--aimy-pad-y), env(safe-area-inset-bottom, 0px));
   --aimy-chrome-right: max(var(--aimy-pad-x), env(safe-area-inset-right, 0px));
   --aimy-chrome-left: max(var(--aimy-pad-x), env(safe-area-inset-left, 0px));
+  --aimy-chrome-edge-inset-top: calc(
+    var(--aimy-chrome-top) + (var(--aimy-brand-size) - var(--aimy-menu-size)) / 2
+  );
+  --aimy-chrome-edge-inset-bottom: calc(
+    var(--aimy-chrome-bottom) + (var(--aimy-brand-size) - var(--aimy-menu-size)) / 2
+  );
   --aimy-z: 2147483000;
-  --aimy-charm-glass-blur: 8px;
   --aimy-font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
   --aimy-nav-font: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
   /*
@@ -150,20 +181,55 @@
   --polykroma-menu-icon-shadow:
     drop-shadow(0 0.1em 0.32em color-mix(in srgb, var(--step-08) 14%, transparent))
     drop-shadow(0 0.22em 0.65em color-mix(in srgb, var(--step-08) 9%, transparent));
+
+  /*
+   * Select carousel menu — px-locked so sizing matches on every page.
+   * (SPA host scales html to 20–28px; sibling pages stay at 16px.)
+   */
+  --polykroma-menu-root-font-size: 16px;
+  --polykroma-menu-carousel-util-size: clamp(18px, 1.55vw, 22px);
+  --polykroma-menu-carousel-util-size-sm: clamp(17px, 4.5vw, 21px);
+  --polykroma-menu-carousel-util-font: "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui, sans-serif;
+  --polykroma-menu-carousel-util-weight: 300;
+  --polykroma-menu-carousel-util-tracking: 0.1em;
+  --polykroma-menu-carousel-util-leading: 1.15;
+  --polykroma-menu-select-title-size: clamp(21px, 2.5vw, 32px);
+  --polykroma-menu-select-title-size-sm: clamp(19px, 4vw, 26px);
+  --polykroma-menu-select-title-bottom: clamp(88px, 11.5vh, 120px);
+  --polykroma-menu-select-title-bottom-sm: clamp(184px, 28vh, 212px);
+  --polykroma-menu-mobile-hint-size: clamp(10px, 2.8vw, 12px);
+  --polykroma-menu-mobile-hint-stack: calc(var(--polykroma-menu-mobile-hint-size) * 1.35 + clamp(10px, 1.4vh, 12px));
+  --polykroma-menu-select-title-weight: 300;
+  --polykroma-menu-select-title-tracking: 0.14em;
+  --polykroma-menu-select-title-leading: 1.12;
+  --polykroma-menu-select-arrow-size: clamp(52px, 6.5vw, 68px);
+  --polykroma-menu-select-arrow-hit: clamp(76px, 10vw, 104px);
+  --polykroma-menu-select-arrow-hover-shift: clamp(8px, 1.5vw, 14px);
+  --polykroma-menu-select-arrow-hover-ms: 1.1s;
+  --polykroma-menu-select-arrow-hover-ease: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  --polykroma-menu-select-arrow: color-mix(in srgb, var(--pk-heading) 52%, transparent);
+  --polykroma-menu-select-arrow-hover: var(--pk-heading);
+  --polykroma-menu-carousel-footer-pad-bottom-sm: var(--aimy-chrome-edge-inset-bottom);
+  --polykroma-menu-select-viewport-top: clamp(52px, 7.5vh, 88px);
+  --polykroma-menu-select-viewport-bottom: clamp(148px, 21vh, 220px);
+  --polykroma-menu-select-viewport-bottom-sm: clamp(136px, 19vh, 196px);
+  --polykroma-menu-select-viewport-bottom-xl: clamp(140px, 18vh, 204px);
+  --polykroma-menu-carousel-footer-pad-x: clamp(28px, 6vw, 56px);
+  --polykroma-menu-carousel-footer-pad-bottom: var(--aimy-chrome-edge-inset-bottom);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     /*
-     * Off-black grounds — violet whisper on near-black, not purple wash.
-     * Relative oklch keeps hue from step-08 while crushing lightness/chroma.
+     * Pure black ground + white headings / light grey body copy.
      */
-    --pk-bg: oklch(from var(--step-08) 0.105 0.014 h);
-    --pk-surface: oklch(from var(--step-08) 0.148 0.02 h);
-    --pk-hover: oklch(from var(--step-08) 0.188 0.026 h);
+    --pk-bg: oklch(0 0 0);
+    --pk-surface: oklch(from var(--step-08) 0.055 0.005 h);
+    --pk-hover: oklch(from var(--step-08) 0.1 0.008 h);
     --pk-border: color-mix(in srgb, var(--step-06) 22%, transparent);
-    --pk-text: var(--step-02);
     --pk-heading: var(--step-01);
+    --pk-text: color-mix(in srgb, var(--step-01) 65%, transparent);
+    --pk-text-muted: color-mix(in srgb, var(--step-01) 48%, transparent);
     --pk-primary: color-mix(in srgb, var(--step-06) 62%, var(--step-02));
     --pk-accent: color-mix(in srgb, var(--step-05) 68%, var(--step-02));
     --pk-soft: color-mix(in srgb, var(--step-04) 48%, var(--step-02));
@@ -174,11 +240,11 @@
     --aimy-secondary: var(--step-02);
     --aimy-tertiary: var(--step-08);
     --aimy-accent: var(--pk-accent);
-    --aimy-ink: var(--step-02);
+    --aimy-ink: var(--pk-text);
     --aimy-ink-on-dark: var(--step-01);
     --aimy-menu-coin: var(--pk-primary);
     --aimy-menu-coin-open: var(--pk-accent);
-    --aimy-chrome-ink: var(--aimy-primary);
+    --aimy-chrome-ink: var(--pk-text);
 
     --rainbow-1: #ff2d95;
     --rainbow-2: #fff044;
@@ -195,14 +261,29 @@
     --aimy-r3: var(--rainbow-3);
     --aimy-r4: var(--rainbow-4);
 
-    --polykroma-menu-bg: var(--pk-surface);
-    --polykroma-menu-ink: var(--step-01);
-    --polykroma-menu-ink-soft: color-mix(in srgb, var(--step-01) 72%, transparent);
-    --polykroma-menu-muted: color-mix(in srgb, var(--step-01) 85%, transparent);
-    --polykroma-menu-rule: color-mix(in srgb, var(--step-01) 28%, transparent);
-    --polykroma-menu-on-block: var(--step-01);
-    --polykroma-menu-block: var(--step-08);
-    --polykroma-menu-veil-fill: color-mix(in srgb, var(--pk-surface) 92%, transparent);
+    --polykroma-menu-bg: var(--pk-bg);
+    --polykroma-menu-ink: var(--pk-heading);
+    --polykroma-menu-ink-soft: var(--pk-text);
+    --polykroma-menu-muted: var(--pk-text-muted);
+    --polykroma-menu-rule: color-mix(in srgb, var(--step-01) 22%, transparent);
+    --polykroma-menu-on-block: var(--pk-heading);
+    --polykroma-menu-block: var(--pk-bg);
+    --polykroma-menu-veil-fill: color-mix(in srgb, var(--pk-bg) 92%, transparent);
+  }
+
+  html,
+  body {
+    background-color: var(--pk-bg);
+    color: var(--pk-text);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--pk-heading);
   }
 }
 
@@ -223,7 +304,7 @@ body > .site-header[data-aimy-chrome],
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
-  width: 100vw !important;
+  width: 100% !important;
   max-width: 100% !important;
   height: auto !important;
   min-height: 0 !important;
@@ -310,231 +391,135 @@ html body .site-header[data-aimy-chrome]::before {
   isolation: isolate;
 }
 
-.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] {
+.site-header[data-aimy-chrome] .brand[data-mono-charm-glass],
+.site-header[data-aimy-chrome] .brand:has(.brand-glass-portal) {
   isolation: auto;
 }
 
-/* Hover: rainbow orb behind the glass stack (real rainbow hex — survives mono-dev grey remap) */
-.site-header[data-aimy-chrome] .brand::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 62%;
-  z-index: 0;
-  width: calc(var(--aimy-brand-size) * 0.36);
-  height: calc(var(--aimy-brand-size) * 0.36);
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.55);
-  background-color: #ff7eb6;
-  --rainbow-1: #ff7eb6;
-  --rainbow-2: #ffeab0;
-  --rainbow-3: #2dd4bf;
-  --rainbow-4: #cfa2ff;
-  mix-blend-mode: plus-lighter;
-  filter: blur(10px) saturate(1.2) brightness(1.06);
-  transition:
-    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.65s cubic-bezier(0.3, 2.2, 0.4, 0.95);
+/* —— Shared under-glow: soft circles below the mark (not centered behind) —— */
+:root {
+  --pk-orb-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --pk-orb-ease-bounce: cubic-bezier(0.3, 2.2, 0.4, 0.95);
+  --pk-orb-light-offset: 0.12rem;
+  --pk-orb-shadow-offset: 0.38rem;
+  --pk-orb-light-size: 0.68;
+  --pk-orb-shadow-size: 0.52;
+  --pk-orb-shadow-bg: color-mix(in srgb, var(--step-08) 32%, transparent);
+  --pk-orb-shadow-blur: 16px;
+  --pk-orb-light-core: var(--step-01);
+  --pk-orb-light-mid: color-mix(in srgb, var(--step-01) 58%, transparent);
+  --pk-orb-light-blur: 14px;
+  --pk-chrome-hover-scale: 1.08;
+  --pk-chrome-press-scale: 0.92;
+  --pk-chrome-press-in: 0.18s cubic-bezier(0.32, 1.15, 0.55, 1);
+  --pk-chrome-press-out: 0.78s cubic-bezier(0.26, 2.35, 0.38, 0.96);
 }
 
 @media (prefers-color-scheme: dark) {
-  .site-header[data-aimy-chrome] .brand::before {
-    background-color: #ff2d95;
-    --rainbow-1: #ff2d95;
-    --rainbow-2: #fff044;
-    --rainbow-3: #00ffd9;
-    --rainbow-4: #c77dff;
+  :root {
+    --pk-orb-shadow-bg: color-mix(in srgb, var(--step-08) 48%, transparent);
+    --pk-orb-light-mid: color-mix(in srgb, var(--step-01) 48%, transparent);
   }
+}
+
+/* Shadow orb — lower, under the white glow */
+.site-header[data-aimy-chrome] .brand::after,
+.pk-coin-button--select::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(100% + var(--pk-orb-shadow-offset));
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.82);
+  background: var(--pk-orb-shadow-bg);
+  filter: blur(var(--pk-orb-shadow-blur));
+  transition:
+    opacity 0.45s var(--pk-orb-ease),
+    transform 0.65s var(--pk-orb-ease-bounce);
+}
+
+.site-header[data-aimy-chrome] .brand::after {
+  width: calc(var(--aimy-brand-size) * var(--pk-orb-shadow-size));
+  height: calc(var(--aimy-brand-size) * var(--pk-orb-shadow-size));
+}
+
+.pk-coin-button--select::after {
+  width: calc(var(--aimy-menu-size) * var(--pk-orb-shadow-size));
+  height: calc(var(--aimy-menu-size) * var(--pk-orb-shadow-size));
+}
+
+/* White light orb — soft circle tucked just under the element */
+.site-header[data-aimy-chrome] .brand::before,
+.pk-coin-button--select::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(100% + var(--pk-orb-light-offset));
+  z-index: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.62);
+  background: radial-gradient(
+    circle,
+    var(--pk-orb-light-core) 0%,
+    var(--pk-orb-light-mid) 44%,
+    transparent 78%
+  );
+  mix-blend-mode: plus-lighter;
+  filter: blur(var(--pk-orb-light-blur)) brightness(1.28) saturate(1.12);
+  transition:
+    opacity 0.45s var(--pk-orb-ease),
+    transform 0.65s var(--pk-orb-ease-bounce);
+}
+
+.site-header[data-aimy-chrome] .brand::before {
+  width: calc(var(--aimy-brand-size) * var(--pk-orb-light-size));
+  height: calc(var(--aimy-brand-size) * var(--pk-orb-light-size));
+}
+
+.pk-coin-button--select::before {
+  width: calc(var(--aimy-menu-size) * var(--pk-orb-light-size));
+  height: calc(var(--aimy-menu-size) * var(--pk-orb-light-size));
+}
+
+@supports not (mix-blend-mode: plus-lighter) {
+  .site-header[data-aimy-chrome] .brand::before,
+  .pk-coin-button--select::before {
+    mix-blend-mode: screen;
+  }
+}
+
+.site-header[data-aimy-chrome] .brand:hover::after,
+.site-header[data-aimy-chrome] .brand:focus-visible::after,
+.pk-burger-hit:hover ~ .pk-coin-button--select::after,
+.pk-burger-hit:focus-visible ~ .pk-coin-button--select::after {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .site-header[data-aimy-chrome] .brand:hover::before,
-.site-header[data-aimy-chrome] .brand:focus-visible::before {
+.site-header[data-aimy-chrome] .brand:focus-visible::before,
+.pk-burger-hit:hover ~ .pk-coin-button--select::before,
+.pk-burger-hit:focus-visible ~ .pk-coin-button--select::before {
   opacity: 1;
-  transform: translate(-50%, -50%) scale(1.08);
-  animation: rainbow-bg-shift 2.5s linear infinite;
+  transform: translate(-50%, -50%) scale(1.14);
 }
 
-/* Glass hosts: inner orb panes carry the glow — keep ::before off so backdrop blur stays clean */
-.site-header[data-aimy-chrome] .brand[data-mono-charm-glass]:hover::before,
-.site-header[data-aimy-chrome] .brand[data-mono-charm-glass]:focus-visible::before {
-  opacity: 0;
-  animation: none;
-  transform: translate(-50%, -50%) scale(0.55);
-}
-
-/* Orb inside each glass pane — animates as content, not via backdrop-filter snapshot */
+/* Inner pane kept for glass boot — under-glow lives on link/coin pseudos */
 .brand-charm-orb-pane {
-  position: absolute;
-  left: 50%;
-  top: 68%;
-  z-index: 0;
-  width: 52%;
-  height: 52%;
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0;
-  overflow: visible;
-  transform: translate(-50%, -50%);
-  background-color: #ff7eb6;
-  --rainbow-1: #ff7eb6;
-  --rainbow-2: #ffeab0;
-  --rainbow-3: #2dd4bf;
-  --rainbow-4: #cfa2ff;
-  mix-blend-mode: plus-lighter;
-  filter: blur(12px) saturate(1.35) brightness(1.1);
-  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  display: none !important;
 }
 
-/* Soft outer bloom — inherits the shifting fill */
-.brand-charm-orb-pane::after {
-  content: "";
-  position: absolute;
-  inset: -42%;
-  border-radius: 50%;
-  background-color: inherit;
-  filter: blur(18px);
-  opacity: 0.82;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* Bright core — reads as light source behind frosted glass */
-.brand-charm-orb-pane::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 44%;
-  width: 46%;
-  height: 46%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  pointer-events: none;
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--step-01) 96%, transparent) 0%,
-    color-mix(in srgb, var(--step-01) 42%, transparent) 38%,
-    transparent 72%
-  );
-  mix-blend-mode: screen;
-  filter: blur(2px);
-}
-
-@media (prefers-color-scheme: dark) {
-  .brand-charm-orb-pane::before {
-    background: radial-gradient(
-      circle,
-      color-mix(in srgb, var(--step-08) 78%, transparent) 0%,
-      color-mix(in srgb, var(--step-08) 28%, transparent) 40%,
-      transparent 74%
-    );
-  }
-}
-
-/* —— Charm frosted glass (charm-glass.js) — per-layer masks —— */
-.brand-glass-portal {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: visible;
-  transform-origin: center;
-  transition: transform 0.65s cubic-bezier(0.3, 2.2, 0.4, 0.95);
-}
-
-.site-header[data-aimy-chrome] .brand:hover .brand-glass-portal {
-  transform: scale(1.08);
-}
-
-.site-header[data-aimy-chrome] .brand-mark {
-  position: relative;
-  z-index: 1;
-}
-
-.mono-charm-glass-layer {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: var(--aimy-brand-size);
-  height: var(--aimy-brand-size);
-  margin-left: calc(var(--aimy-brand-size) * -0.5);
-  margin-top: calc(var(--aimy-brand-size) * -0.5);
-  pointer-events: none;
-  overflow: visible;
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  backdrop-filter: blur(var(--aimy-charm-glass-blur));
-  -webkit-backdrop-filter: blur(var(--aimy-charm-glass-blur));
-  background: color-mix(in srgb, var(--step-01) 38%, transparent);
-  transition:
-    backdrop-filter 0.35s ease,
-    -webkit-backdrop-filter 0.35s ease;
-}
-
-.mono-charm-glass-layer--charm-sclera {
-  -webkit-mask-image: url("../assets/polykroma/branding/charm-sclera.svg?v=branding-15");
-  mask-image: url("../assets/polykroma/branding/charm-sclera.svg?v=branding-15");
-}
-
-.mono-charm-glass-layer--charm-face {
-  -webkit-mask-image: url("../assets/polykroma/branding/charm-face.svg?v=branding-10");
-  mask-image: url("../assets/polykroma/branding/charm-face.svg?v=branding-10");
-}
-
-.mono-charm-glass-layer--charm-bow {
-  -webkit-mask-image: url("../assets/polykroma/branding/charm-bow.svg?v=branding-10");
-  mask-image: url("../assets/polykroma/branding/charm-bow.svg?v=branding-10");
-}
-
-.mono-charm-glass-layer--charm-hair {
-  -webkit-mask-image: url("../assets/polykroma/branding/charm-hair.svg?v=branding-10");
-  mask-image: url("../assets/polykroma/branding/charm-hair.svg?v=branding-10");
-}
-
-.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-hair path {
-  fill: color-mix(in srgb, var(--aimy-primary) 42%, transparent) !important;
-}
-
-.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-sclera path,
-.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-face path,
-.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-bow path {
-  fill: color-mix(in srgb, var(--aimy-secondary) 48%, transparent) !important;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .brand-glass-portal {
-    display: none;
-  }
-
-  .mono-charm-glass-layer {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .brand-charm-orb-pane {
-    background-color: #ff2d95;
-    --rainbow-1: #ff2d95;
-    --rainbow-2: #fff044;
-    --rainbow-3: #00ffd9;
-    --rainbow-4: #c77dff;
-  }
-}
-
-.site-header[data-aimy-chrome] .brand:hover .brand-charm-orb-pane,
-.site-header[data-aimy-chrome] .brand:focus-visible .brand-charm-orb-pane {
-  opacity: 0.92;
-  animation: rainbow-bg-shift 2.5s linear infinite;
-}
+/* Charm mark — css/charm-mark.css (stack, glass pane, layer colors) */
 
 .site-header[data-aimy-chrome] .brand-mark,
 .site-header[data-aimy-chrome] .brand svg {
+  position: relative;
+  z-index: 2;
   width: var(--aimy-brand-size) !important;
   height: var(--aimy-brand-size) !important;
   max-width: var(--aimy-brand-size) !important;
@@ -542,74 +527,22 @@ html body .site-header[data-aimy-chrome]::before {
   overflow: visible;
   transform: none;
   transform-origin: center;
-  transition: transform 0.65s cubic-bezier(0.3, 2.2, 0.4, 0.95);
+  transition: transform var(--pk-chrome-press-out);
 }
 
 .site-header[data-aimy-chrome] .brand:hover .brand-mark,
-.site-header[data-aimy-chrome] .brand:hover svg {
-  transform: scale(1.08);
+.site-header[data-aimy-chrome] .brand:hover svg,
+.site-header[data-aimy-chrome] .brand:focus-visible .brand-mark,
+.site-header[data-aimy-chrome] .brand:focus-visible svg {
+  transform: scale(var(--pk-chrome-hover-scale));
 }
 
-/*
- * Stacked logo layers — hierarchy locked:
- *   brand-logo-dark  → primary   (hairstyle) — most obvious
- *   brand-logo-light → secondary (base, face, bow) — lightest pastel
- *   brand-logo-mid   → tertiary  (iris, lashes) — darkest contrast
- */
-.site-header[data-aimy-chrome] .brand-logo-dark,
-.site-header[data-aimy-chrome] .brand-logo-dark * {
-  fill: var(--aimy-primary);
-  color: var(--aimy-primary);
-  transition: fill 0.35s ease;
+.site-header[data-aimy-chrome] .brand:active .brand-mark,
+.site-header[data-aimy-chrome] .brand:active svg {
+  transform: scale(var(--pk-chrome-press-scale));
+  transition: transform var(--pk-chrome-press-in);
 }
 
-.site-header[data-aimy-chrome] .brand-logo-light,
-.site-header[data-aimy-chrome] .brand-logo-light * {
-  fill: var(--aimy-secondary);
-  transition: fill 0.35s ease;
-}
-
-.site-header[data-aimy-chrome] .brand-logo-mid,
-.site-header[data-aimy-chrome] .brand-logo-mid * {
-  fill: var(--aimy-tertiary);
-  transition: fill 0.35s ease;
-}
-
-.site-header[data-aimy-chrome] .brand:hover .brand-logo-dark,
-.site-header[data-aimy-chrome] .brand:hover .brand-logo-dark * {
-  animation: aimy-rainbow-fill 3s linear infinite;
-}
-
-.site-header[data-aimy-chrome] .brand:hover .brand-logo-light,
-.site-header[data-aimy-chrome] .brand:hover .brand-logo-light * {
-  animation: aimy-logo-light 3s linear infinite;
-}
-
-.site-header[data-aimy-chrome] .brand:hover .brand-logo-mid,
-.site-header[data-aimy-chrome] .brand:hover .brand-logo-mid * {
-  animation: aimy-logo-mid 3s linear infinite;
-}
-
-/* Charm iris pupils — look-at transforms set via SVG attribute in charm-iris.js */
-.site-header[data-aimy-chrome] .brand-layer--charm-iris .iris-pupil {
-  will-change: transform;
-}
-
-/* Specular edge glow — soft rim on each shape (not outline stroke) */
-.site-header[data-aimy-chrome] .brand-layer--charm-highlight {
-  display: none;
-}
-
-.site-header[data-aimy-chrome] .brand-layer--charm-sclera path,
-.site-header[data-aimy-chrome] .brand-layer--charm-face path,
-.site-header[data-aimy-chrome] .brand-layer--charm-hair path,
-.site-header[data-aimy-chrome] .brand-layer--charm-bow path {
-  filter:
-    drop-shadow(0 0 0.35px color-mix(in srgb, var(--step-01) 55%, transparent))
-    drop-shadow(-0.35px -0.5px 0.6px color-mix(in srgb, var(--step-01) 20%, transparent));
-}
-
-/* Specular: per-layer SVG lighting (charm-specular.js) */
 .site-header[data-aimy-chrome] .brand-mark {
   overflow: visible;
 }
@@ -1019,6 +952,14 @@ body.menu-open .site-header[data-aimy-chrome].is-nav-hidden .social {
   --pk-coin-scale: 1.09;
 }
 
+.pk-burger-hit:active ~ .pk-coin-button {
+  --pk-coin-scale: var(--pk-chrome-press-scale);
+}
+
+.pk-burger-hit:active ~ .pk-coin-button .pk-coin-state {
+  transition: transform var(--pk-chrome-press-in);
+}
+
 .pk-burger-hit:hover ~ .pk-coin-button--select .pk-coin-icon,
 .pk-burger-hit:focus-visible ~ .pk-coin-button--select .pk-coin-icon {
   animation: aimy-coin-icon-rainbow 3s linear infinite;
@@ -1145,12 +1086,19 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   .site-header[data-aimy-chrome] .brand:hover .brand-logo-light *,
   .site-header[data-aimy-chrome] .brand:hover .brand-logo-mid,
   .site-header[data-aimy-chrome] .brand:hover .brand-logo-mid *,
+  .site-header[data-aimy-chrome] .brand:active .brand-mark,
+  .site-header[data-aimy-chrome] .brand:active svg,
   .pk-burger-hit:hover ~ .pk-coin-button,
   .pk-burger-hit:focus-visible ~ .pk-coin-button,
+  .pk-burger-hit:active ~ .pk-coin-button,
   .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon,
   .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon {
     animation: none;
     transform: none;
+  }
+
+  .pk-burger-hit:active ~ .pk-coin-button {
+    --pk-coin-scale: 0.97;
   }
 
   .site-header[data-aimy-chrome] .brand::before {
@@ -1158,15 +1106,29 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   }
 
   .site-header[data-aimy-chrome] .brand:hover::before,
-  .site-header[data-aimy-chrome] .brand:focus-visible::before {
+  .site-header[data-aimy-chrome] .brand:focus-visible::before,
+  .site-header[data-aimy-chrome] .brand:hover::after,
+  .site-header[data-aimy-chrome] .brand:focus-visible::after {
     animation: none;
     transform: translate(-50%, -50%) scale(1);
   }
 
-  .site-header[data-aimy-chrome] .brand:hover .brand-charm-orb-pane,
-  .site-header[data-aimy-chrome] .brand:focus-visible .brand-charm-orb-pane {
+  .site-header[data-aimy-chrome] .brand:hover::before,
+  .site-header[data-aimy-chrome] .brand:focus-visible::before {
+    transform: translate(-50%, -50%) scale(1.14);
+  }
+
+  .pk-burger-hit:hover ~ .pk-coin-button--select::before,
+  .pk-burger-hit:focus-visible ~ .pk-coin-button--select::before,
+  .pk-burger-hit:hover ~ .pk-coin-button--select::after,
+  .pk-burger-hit:focus-visible ~ .pk-coin-button--select::after {
     animation: none;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .pk-burger-hit:hover ~ .pk-coin-button--select::before,
+  .pk-burger-hit:focus-visible ~ .pk-coin-button--select::before {
+    transform: translate(-50%, -50%) scale(1.14);
   }
 
   .pk-coin-icon {
@@ -1186,10 +1148,7 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   --pk-link-muted: var(--polykroma-menu-muted);
   --pk-on-block: var(--polykroma-menu-on-block);
   --pk-block: var(--polykroma-menu-block);
-  --polykroma-menu-link-size: clamp(42px, 6.2vw, 76px);
-  --polykroma-menu-link-size-sm: clamp(32px, 9vw, 50px);
-  --polykroma-menu-meta-size: clamp(15px, 1.6vw, 19px);
-  --polykroma-menu-meta-size-sm: clamp(14px, 3.8vw, 17px);
+  font-size: var(--polykroma-menu-root-font-size);
   pointer-events: none;
   color: var(--aimy-logo-primary, var(--aimy-primary));
 }
@@ -1223,6 +1182,10 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
 
 .pk-coin-state {
   transform: rotateY(var(--pk-coin-turn)) scale(var(--pk-coin-scale));
+  transition: transform var(--pk-chrome-press-out);
+}
+
+.pk-menu-root.is-menu-open .pk-coin-button .pk-coin-state {
   transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -1340,21 +1303,8 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   isolation: isolate;
 }
 
-.pk-coin-button--select::after {
-  content: "";
-  position: absolute;
-  inset: 12%;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--step-08) 20%, transparent);
-  filter: blur(14px);
-  transform: translate(4px, 7px);
-  opacity: 0.88;
-  z-index: 0;
-  pointer-events: none;
-}
-
 .pk-coin-button--select .pk-coin-state {
-  z-index: 1;
+  z-index: 2;
 }
 
 .pk-coin-icon {
@@ -1405,8 +1355,8 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   }
 
   .pk-coin-icon--alt {
-    /* Rest slightly undersized so hover settles into place */
-    transform: scale(0.97);
+    /* Rest slightly undersized so hover settles into a tighter cluster */
+    transform: scale(0.94);
     transition:
       opacity 0.4s steps(10, end) 0.05s,
       transform 0.4s cubic-bezier(0.33, 1.2, 0.68, 1) 0.05s;
@@ -1415,31 +1365,31 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--open:not(.pk-coin-icon--alt),
   .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--open:not(.pk-coin-icon--alt) {
     opacity: 0;
-    transform: scale(1.04);
+    transform: scale(1);
   }
 
   .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--open.pk-coin-icon--alt,
   .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--open.pk-coin-icon--alt {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(0.9);
   }
 
   .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--open,
   .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--open {
     opacity: 0;
-    transform: scale(1.04);
+    transform: scale(1);
   }
 
   .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--close:not(.pk-coin-icon--alt),
   .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--close:not(.pk-coin-icon--alt) {
     opacity: 0;
-    transform: scale(1.04);
+    transform: scale(1);
   }
 
   .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--close.pk-coin-icon--alt,
   .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--close.pk-coin-icon--alt {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(0.9);
   }
 }
 
@@ -1966,11 +1916,6 @@ html.pk-menu-open body {
     filter:
       drop-shadow(0 0 0.28rem color-mix(in srgb, var(--pk-coin-color) 90%, transparent))
       drop-shadow(0 0 0.72rem color-mix(in srgb, var(--pk-coin-color) 62%, transparent));
-  }
-
-  .pk-coin-button--select::after {
-    background: color-mix(in srgb, var(--step-08) 32%, transparent);
-    opacity: 0.72;
   }
 
   .pk-coin-edge {

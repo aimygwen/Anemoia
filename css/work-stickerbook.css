@@ -127,65 +127,47 @@
   }
 }
 
-.work-stickerbook__nav {
-  position: fixed;
-  right: clamp(0.85rem, 2.5vw, 1.75rem);
-  bottom: clamp(0.85rem, 2.5vh, 1.75rem);
-  z-index: 50;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.35rem;
-  pointer-events: none;
+/* —— Single-page sections (no pagination) —— */
+.work-stickerbook__section {
+  width: 100%;
+  padding:
+    clamp(1.25rem, 3.5vh, 2.25rem)
+    clamp(1rem, 4vw, 2.5rem)
+    clamp(2.5rem, 6vh, 4rem);
+  box-sizing: border-box;
 }
 
-.work-stickerbook__next {
-  pointer-events: auto;
-  display: grid;
-  place-items: center;
-  width: 3.15rem;
-  height: 3.15rem;
-  padding: 0;
-  border: 1px solid color-mix(in srgb, var(--step-04) 42%, transparent);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--step-02) 88%, var(--step-01));
-  color: var(--step-08);
-  box-shadow:
-    0 0.45rem 1.1rem color-mix(in srgb, var(--step-08) 10%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--step-01) 70%, transparent) inset;
-  cursor: pointer;
-  transition:
-    transform 0.28s cubic-bezier(0.34, 1.42, 0.64, 1),
-    background 0.22s ease,
-    box-shadow 0.22s ease;
+.work-stickerbook__section + .work-stickerbook__section {
+  border-top: 1px solid color-mix(in srgb, var(--step-07) 10%, transparent);
 }
 
-.work-stickerbook__next svg {
-  width: 1.15rem;
-  height: 1.15rem;
-  display: block;
-}
-
-.work-stickerbook__next:hover,
-.work-stickerbook__next:focus-visible {
-  transform: scale(1.06);
-  background: color-mix(in srgb, var(--step-03) 72%, var(--step-01));
-  box-shadow:
-    0 0.65rem 1.35rem color-mix(in srgb, var(--step-08) 14%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--step-01) 80%, transparent) inset;
-}
-
-.work-stickerbook__next:focus-visible {
-  outline: 2px solid var(--step-04);
-  outline-offset: 3px;
-}
-
-.work-stickerbook__count {
-  pointer-events: none;
+.work-stickerbook__section-title {
+  margin: 0 0 clamp(0.85rem, 2.5vh, 1.35rem);
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  color: color-mix(in srgb, var(--step-07) 72%, transparent);
+  font-size: clamp(1.1rem, 2.6vw, 1.55rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--pk-heading);
+}
+
+.work-stickerbook__section-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(4.5rem, 12vw, 9rem), 1fr));
+  gap: clamp(0.85rem, 2.2vw, 1.5rem) clamp(0.75rem, 2vw, 1.25rem);
+  justify-items: center;
+  align-items: start;
+}
+
+.work-stickerbook__section-grid .work-sticker {
+  width: 100%;
+  max-width: clamp(4.5rem, 12vw, 9rem);
+}
+
+.work-stickerbook__nav,
+.work-stickerbook__next,
+.work-stickerbook__count {
+  display: none !important;
 }
 
 /* —— Sticker placement —— */

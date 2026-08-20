@@ -12,28 +12,31 @@
 }
 
 :root {
-  --pl-pad-x: clamp(1.25rem, 5vw, 2.5rem);
-  --pl-pad-top: clamp(1.5rem, 4vh, 2.5rem);
-  --pl-pad-bottom: clamp(2.5rem, 7vh, 4.5rem);
-  --pl-headline-gap: clamp(1.25rem, 3vh, 2rem);
-  --pl-section-y: clamp(1.35rem, 3vh, 2rem);
-  --pl-title-gap: clamp(0.65rem, 1.5vh, 1rem);
-  --pl-text-gap: clamp(0.75rem, 1.5vh, 1.15rem);
-  --pl-meta-gap: clamp(0.85rem, 2vh, 1.25rem);
-  --pl-meta-stack: clamp(0.3rem, 0.8vh, 0.45rem);
-  --pl-foot-gap: clamp(2rem, 5vh, 3.5rem);
-  --pl-measure: 62ch;
-  --pl-content-w: min(100%, 42rem);
-  --pl-hero: clamp(2.85rem, 8.5vw, 4.75rem);
-  --pl-title: clamp(1.85rem, 5vw, 2.75rem);
-  --pl-body: clamp(1.1rem, 2.6vw, 1.32rem);
-  --pl-body-lh: 1.68;
-  --pl-meta: clamp(0.8rem, 1.9vw, 0.95rem);
-  --pl-meta-sm: clamp(0.74rem, 1.7vw, 0.86rem);
-  --pl-foot: clamp(0.95rem, 2.1vw, 1.08rem);
-  --pl-nav-size: clamp(1.35rem, 3vw, 1.85rem);
-  --pl-nav-hit: clamp(2.75rem, 6vw, 3.25rem);
-  --pl-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --imprint-chrome-safe: calc(
+    var(--aimy-chrome-top, 28px) + var(--aimy-brand-size, 72px) + var(--aimy-pad-y, 28px)
+  );
+  --imprint-content-left: 5vw;
+  --imprint-content-width: 90vw;
+  --pl-pad-top: clamp(1.25rem, 3.5vh, 2rem);
+  --pl-pad-bottom: clamp(2.25rem, 6vh, 3.5rem);
+  --pl-section-y: clamp(1.1rem, 2.8vh, 1.75rem);
+  --pl-title-gap: clamp(0.55rem, 1.4vh, 0.9rem);
+  --pl-text-gap: clamp(0.65rem, 1.5vh, 1rem);
+  --pl-meta-gap: clamp(0.75rem, 1.8vh, 1.1rem);
+  --pl-meta-stack: clamp(0.3rem, 0.8vh, 0.5rem);
+  --pl-section-gap: clamp(2.5rem, 7vh, 4rem);
+  --pl-hero-title-gap: clamp(2rem, 5.5vh, 3.25rem);
+  --pl-hero: clamp(4rem, 18vw, 6.75rem);
+  --pl-display: clamp(3.5rem, 15vw, 5.75rem);
+  --pl-title: clamp(1.38rem, 5.4vw, 1.82rem);
+  --pl-body: clamp(1.05rem, 4.1vw, 1.22rem);
+  --pl-body-lh: 1.62;
+  --pl-meta: clamp(0.82rem, 3.2vw, 0.98rem);
+  --pl-meta-sm: clamp(0.76rem, 3vw, 0.92rem);
+  --pl-updated: clamp(0.62rem, 1.75vw, 0.76rem);
+  --imprint-phase-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --imprint-phase-in: 0.68s;
+  --imprint-phase-out: 0.56s;
 }
 
 html:has(.imprint-page-body) {
@@ -42,6 +45,15 @@ html:has(.imprint-page-body) {
 
 body.imprint-page-body {
   position: relative;
+}
+
+body.imprint-page-body > main.imprint-stage {
+  width: var(--imprint-content-width);
+  max-width: var(--imprint-content-width);
+  margin-left: var(--imprint-content-left);
+  margin-right: auto;
+  padding-top: calc(var(--imprint-chrome-safe) + clamp(2.25rem, 6vh, 4rem));
+  box-sizing: border-box;
 }
 
 body.imprint-page-body::before {
@@ -56,10 +68,13 @@ body.imprint-page-body::before {
   position: relative;
   z-index: 2;
   width: 100%;
+  box-sizing: border-box;
   overflow-x: clip;
 }
 
-.imprint-stage.ins-page {
+.imprint-stage.ins-page,
+.imprint-stage.ins-page.active,
+.imprint-stage.ins-page.is-active {
   opacity: 1;
 }
 
@@ -67,215 +82,298 @@ body.imprint-page-body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding:
-    calc(var(--pk-header-h, 72px) + clamp(1rem, 3vh, 2rem))
-    var(--pl-pad-x)
-    clamp(0.35rem, 1vh, 0.75rem);
+  justify-content: center;
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  padding: 0;
   box-sizing: border-box;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  transition:
+    opacity var(--imprint-phase-in) var(--imprint-phase-ease) 0.08s,
+    transform var(--imprint-phase-in) var(--imprint-phase-ease) 0.08s,
+    visibility 0s linear;
 }
 
-.imprint-hub__head {
-  width: min(100%, 52rem);
+.imprint-stage[data-imprint-phase="choose"] .imprint-hub {
+  position: fixed;
+  left: 0;
+  top: var(--imprint-chrome-safe);
+  width: 100vw;
+  height: calc(100svh - var(--imprint-chrome-safe));
+  height: calc(100dvh - var(--imprint-chrome-safe));
+  z-index: 1;
+  pointer-events: auto;
 }
 
-.imprint-hub__lede {
-  max-width: min(34rem, 92vw);
-  font-size: clamp(1.08rem, 2.5vw, 1.22rem);
+.imprint-stage[data-imprint-phase="open"] .imprint-hub {
+  position: fixed;
+  left: 0;
+  top: var(--imprint-chrome-safe);
+  width: 100vw;
+  height: calc(100svh - var(--imprint-chrome-safe));
+  height: calc(100dvh - var(--imprint-chrome-safe));
+  z-index: 1;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-10px) scale(0.985);
+  transition:
+    opacity var(--imprint-phase-out) var(--imprint-phase-ease),
+    transform var(--imprint-phase-out) var(--imprint-phase-ease),
+    visibility 0s linear var(--imprint-phase-out);
+}
+
+.imprint-body {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  padding:
+    var(--pl-pad-top)
+    0
+    var(--pl-pad-bottom);
+  box-sizing: border-box;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(14px);
+  transition:
+    opacity var(--imprint-phase-out) var(--imprint-phase-ease),
+    transform var(--imprint-phase-out) var(--imprint-phase-ease),
+    visibility 0s linear var(--imprint-phase-out);
+}
+
+.imprint-stage[data-imprint-phase="open"] .imprint-body {
+  position: relative;
+  height: auto;
+  overflow: visible;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  transition:
+    opacity var(--imprint-phase-in) var(--imprint-phase-ease) 0.1s,
+    transform var(--imprint-phase-in) var(--imprint-phase-ease) 0.1s,
+    visibility 0s linear 0.1s;
+}
+
+.imprint-stage[data-imprint-phase="choose"] .imprint-body {
+  position: absolute;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+}
+
+.imprint-updated {
+  position: fixed;
+  right: clamp(1.25rem, 5vw, 2.5rem);
+  bottom: clamp(1rem, 2.5vh, 1.75rem);
+  z-index: 3;
+  margin: 0;
+  max-width: min(92vw, 28rem);
+  white-space: nowrap;
+  text-align: right;
+  font-family: var(--ins-sans);
+  font-weight: 400;
+  font-size: var(--pl-updated);
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: var(--ins-muted);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--imprint-phase-out) var(--imprint-phase-ease),
+    visibility 0s linear var(--imprint-phase-out);
+}
+
+.imprint-stage[data-imprint-phase="open"] .imprint-updated {
+  opacity: 0.5;
+  visibility: visible;
+  transition:
+    opacity var(--imprint-phase-in) var(--imprint-phase-ease) 0.14s,
+    visibility 0s linear 0.14s;
+}
+
+body.imprint-page-body > main.imprint-stage[data-imprint-phase="choose"] {
+  min-height: 100svh;
+  min-height: 100dvh;
+  padding-top: var(--imprint-chrome-safe);
+}
+
+.imprint-picker {
+  width: 100%;
+}
+
+.imprint-picker__list {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(1.35rem, 5.5vw, 3.25rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.imprint-picker__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.45rem, 1.2vw, 0.65rem);
+  margin: 0;
+  padding: 0.35rem 0.2rem 0.15rem;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 0.65rem;
+  transition: transform 0.25s ease;
+}
+
+.imprint-picker__btn:hover,
+.imprint-picker__btn:focus-visible {
+  transform: translateY(-2px);
+}
+
+.imprint-picker__btn:focus-visible {
+  outline: 2px solid var(--pk-accent);
+  outline-offset: 4px;
+}
+
+.imprint-picker__btn.is-active {
+  cursor: default;
+}
+
+.imprint-picker__icon {
+  position: relative;
+  display: block;
+  width: clamp(3.65rem, 11vw, 5.15rem);
+  height: clamp(3.65rem, 11vw, 5.15rem);
+  flex-shrink: 0;
+  border-radius: 0.35rem;
+}
+
+.imprint-picker__icon-doc,
+.imprint-picker__icon-outline,
+.imprint-picker__icon-glyph {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  transition: filter 0.35s ease, opacity 0.35s ease, transform 0.25s ease;
+}
+
+.imprint-picker__icon-doc,
+.imprint-picker__icon-outline {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.imprint-picker__icon-doc {
+  filter: brightness(0.92) contrast(0.92);
+}
+
+.imprint-picker__icon-outline {
+  z-index: 2;
+}
+
+.imprint-picker__icon-glyph {
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  width: 58%;
+  height: 58%;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+  opacity: 0.34;
+  filter: brightness(0) saturate(0%);
+}
+
+.imprint-picker__label {
+  display: block;
+  max-width: clamp(5rem, 16vw, 7rem);
+  font-family: var(--ins-sans);
+  font-size: clamp(0.74rem, 2.1vw, 0.92rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  text-align: center;
+  color: color-mix(in srgb, var(--ins-ink) 48%, transparent);
+  transition: color 0.35s ease;
+}
+
+.imprint-picker__btn:hover .imprint-picker__icon-outline,
+.imprint-picker__btn:focus-visible .imprint-picker__icon-outline,
+.imprint-picker__btn:hover .imprint-picker__icon-glyph,
+.imprint-picker__btn:focus-visible .imprint-picker__icon-glyph {
+  animation: aimy-coin-icon-rainbow 2.6s linear infinite;
+}
+
+.imprint-picker__btn:hover .imprint-picker__icon-glyph,
+.imprint-picker__btn:focus-visible .imprint-picker__icon-glyph {
+  transform: translate(-50%, -50%) scale(1.03);
+  opacity: 1;
+}
+
+.imprint-picker__btn:hover .imprint-picker__label,
+.imprint-picker__btn:focus-visible .imprint-picker__label {
+  animation: rainbow-shift 2.6s linear infinite;
+}
+
+.imprint-panel[hidden] {
+  display: none !important;
+}
+
+.imprint-hub__head,
+.imprint-content__head {
+  width: 100%;
+}
+
+.imprint-page-body .ins-logs-hub__head {
+  max-width: none;
+  width: 100%;
+  margin-inline: 0;
+  text-align: left;
+}
+
+.imprint-panel,
+.p-section,
+.pl-text,
+.pl-meta {
+  max-width: none;
+  width: 100%;
 }
 
 .imprint-page-body .ins-logs-hub__title {
   font-family: var(--ins-title);
   font-weight: 500;
+  font-size: var(--pl-hero);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  margin: 0 0 var(--pl-hero-title-gap);
 }
 
-/* —— Legal carousel —— */
-.policy {
+.imprint-panel {
   width: 100%;
-  padding:
-    var(--pl-pad-top)
-    var(--pl-pad-x)
-    var(--pl-pad-bottom);
-  box-sizing: border-box;
+}
+
+.imprint-panel[data-imprint-panel="terms"],
+.imprint-panel[data-imprint-panel="policy"] {
+  padding-bottom: calc(var(--pl-body) * var(--pl-body-lh) * 9);
 }
 
 .p-section {
-  width: var(--pl-content-w);
-  max-width: var(--pl-measure);
+  width: 100%;
   padding-top: var(--pl-section-y);
   padding-bottom: var(--pl-section-y);
 }
 
-.pl-carousel {
-  position: relative;
-  width: min(100%, 52rem);
-  margin: 0 auto;
-}
-
-.pl-selector {
-  --pl-drag-x: 0px;
-  position: relative;
-  margin: 0 0 var(--pl-headline-gap);
-  width: 100%;
-  z-index: 2;
-  touch-action: pan-y;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.pl-selector.is-dragging {
-  cursor: grabbing;
-}
-
-.pl-title-rail {
-  position: relative;
-  display: block;
-  width: 100%;
-  min-height: calc(var(--pl-hero) * 1.05);
-  overflow: hidden;
-  cursor: grab;
-}
-
-.pl-selector.is-dragging .pl-title-rail {
-  cursor: grabbing;
-}
-
-.pl-head {
-  appearance: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  display: block;
-  text-align: left;
-  text-transform: none;
-  font-family: var(--ins-title);
-  font-style: normal;
-  font-weight: 500;
-  font-size: var(--pl-hero);
-  line-height: 0.92;
-  letter-spacing: -0.03em;
-  color: color-mix(in srgb, var(--ins-ink) 42%, transparent);
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translate3d(0, 0, 0);
-  will-change: transform, opacity;
-  transition: color 0.35s ease, opacity 0.35s ease;
-}
-
-.pl-head.is-active {
-  position: relative;
-  z-index: 3;
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  cursor: default;
-  color: var(--ins-ink);
-}
-
-.pl-head:not(.is-active) {
-  opacity: 0 !important;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.pl-track {
-  position: relative;
-  width: min(100%, 44rem);
-  max-width: 100%;
-}
-
-.pl-slide {
-  display: none;
-}
-
-.pl-slide.is-active {
-  display: block;
-}
-
-.pl-slide.is-active .pl-slide-body-inner {
-  opacity: 1;
-  translate: none;
-}
-
-.pl-slide-body,
-.pl-slide-body-inner {
-  width: 100%;
-}
-
-.pl-nav-row {
-  position: absolute;
-  top: 50%;
-  left: calc(-1 * clamp(0.25rem, 2vw, 1rem));
-  right: calc(-1 * clamp(0.25rem, 2vw, 1rem));
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0;
-  padding: 0;
-  pointer-events: none;
-  transform: translateY(-50%);
-}
-
-.pl-nav {
-  appearance: none;
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: var(--pl-nav-hit);
-  height: var(--pl-nav-hit);
-  min-width: 44px;
-  min-height: 44px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  border-radius: 50%;
-  color: var(--ins-ink);
-  pointer-events: auto;
-  transition:
-    opacity 0.45s var(--pl-ease),
-    transform 0.45s var(--pl-ease),
-    color 0.25s ease;
-}
-
-.pl-nav:disabled {
-  opacity: 0.22;
-  cursor: default;
-  pointer-events: none;
-}
-
-.pl-nav:not(:disabled):hover,
-.pl-nav:not(:disabled):focus-visible {
-  transform: scale(1.08);
-  color: var(--ins-pink-deep);
-  outline: none;
-}
-
-.pl-nav-arrow {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: calc(var(--pl-nav-hit) - 0.35rem);
-  height: calc(var(--pl-nav-hit) - 0.35rem);
-  padding: 0.35rem;
-  border-radius: 50%;
-}
-
-.pl-nav-arrow svg {
-  position: relative;
-  width: var(--pl-nav-size);
-  height: var(--pl-nav-size);
-  display: block;
-  fill: currentColor;
+.p-section:first-child {
+  padding-top: 0;
 }
 
 .pl-title {
@@ -284,14 +382,14 @@ body.imprint-page-body::before {
   font-style: normal;
   font-weight: 500;
   font-size: var(--pl-title);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
   color: var(--ins-ink);
 }
 
 .pl-text {
   margin: var(--pl-text-gap) 0;
-  max-width: var(--pl-measure);
+  width: 100%;
   font-family: var(--ins-sans);
   font-size: var(--pl-body);
   font-weight: 400;
@@ -313,78 +411,219 @@ body.imprint-page-body::before {
   color: var(--ins-pink-deep);
 }
 
+/* —— Line-by-line scroll reveals —— */
+.imprint-line {
+  display: block;
+  overflow: hidden;
+  line-height: inherit;
+}
+
+.imprint-reveal-block.pl-text .imprint-line,
+.imprint-reveal-block.pl-title .imprint-line,
+.imprint-reveal-block.ins-logs-hub__title .imprint-line {
+  display: block;
+}
+
+.imprint-reveal-block.pl-text .imprint-line + .imprint-line {
+  margin-top: 0;
+}
+
+.imprint-line__inner {
+  display: block;
+  opacity: 1;
+  transform: none;
+  white-space: normal;
+}
+
+.imprint-line-word {
+  display: inline;
+  white-space: pre-wrap;
+}
+
+.imprint-line-spacer {
+  display: block;
+  min-height: calc(var(--pl-body) * var(--pl-body-lh));
+  min-width: 1px;
+}
+
+body.imprint-reveals-ready:not(.imprint-reveals-reduced) .imprint-line__inner {
+  will-change: opacity, transform;
+  transition:
+    opacity 0.92s var(--imprint-phase-ease),
+    transform 0.92s var(--imprint-phase-ease);
+}
+
+body.imprint-reveals-ready:not(.imprint-reveals-reduced) .imprint-line__inner:not(.is-in) {
+  opacity: 0;
+  transform: translate3d(0, 105%, 0);
+}
+
+body.imprint-reveals-ready .imprint-line__inner.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.imprint-reveal-block {
+  overflow: visible;
+}
+
+.imprint-reveal-block.pl-text {
+  margin: var(--pl-text-gap) 0;
+}
+
+.imprint-reveal-block.pl-title {
+  margin: 0 0 var(--pl-title-gap);
+}
+
+.imprint-reveal-block.ins-logs-hub__title {
+  margin: 0 0 var(--pl-hero-title-gap);
+}
+
+.imprint-line-link {
+  color: inherit;
+}
+
 .pl-meta {
   margin: var(--pl-meta-gap) 0 0;
-  max-width: var(--pl-measure);
+  width: 100%;
   font-family: var(--ins-sans);
   font-weight: 500;
   font-size: var(--pl-meta);
   line-height: 1.55;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ins-muted);
-}
-
-.pl-meta--updated {
-  font-size: var(--pl-meta-sm);
-  letter-spacing: 0.12em;
 }
 
 .pl-meta + .pl-meta {
   margin-top: var(--pl-meta-stack);
 }
 
-.imprint-foot {
-  margin: var(--pl-foot-gap) auto 0;
-  width: var(--pl-content-w);
-  max-width: var(--pl-measure);
-  text-align: center;
-  font-family: var(--ins-sans);
-  font-size: var(--pl-foot);
-  line-height: 1.6;
-  color: color-mix(in srgb, var(--ins-ink) 72%, transparent);
-}
-
-.imprint-foot a {
-  color: inherit;
-  text-decoration: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--ins-ink) 24%, transparent);
-  transition: color 0.25s ease, border-color 0.25s ease;
-}
-
-.imprint-foot a:hover {
-  color: var(--ins-ink);
-  border-bottom-color: currentColor;
-}
-
-@media (max-width: 640px) {
-  .pl-nav-row {
-    left: 0;
-    right: 0;
-  }
-
-  .pl-head,
-  .pl-title {
+@media (max-width: 720px) {
+  .imprint-updated {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
     text-align: center;
   }
+}
 
-  .pl-head.is-active {
-    text-align: center;
-    width: 100%;
-  }
-
-  .p-section,
-  .imprint-foot {
-    margin-inline: auto;
+@media (max-width: 720px) {
+  .imprint-page-body .ins-logs-hub__head,
+  .imprint-content__head,
+  .pl-title,
+  .pl-text,
+  .pl-meta {
     text-align: left;
   }
 }
 
+@media (min-width: 721px) {
+  :root {
+    /*
+     * Desktop layout snaps — left gap always 10vw; content + right = 90vw.
+     * 721–959px:  10% · 80% · 10%
+     */
+    --imprint-content-left: 10vw;
+    --imprint-content-width: 80vw;
+
+    /* Large titles restored — still fluid with viewport */
+    --pl-hero: clamp(7.5rem, 1.2rem + 11vw, 18rem);
+    --pl-display: clamp(6.5rem, 1rem + 8.5vw, 15rem);
+    --pl-title: clamp(2.05rem, 0.78rem + 1.9vw, 3.72rem);
+    --pl-body: clamp(1.16rem, 0.76rem + 0.9vw, 2.08rem);
+    --pl-meta: clamp(0.86rem, 0.6rem + 0.56vw, 1.42rem);
+    --pl-meta-sm: clamp(0.8rem, 0.56rem + 0.5vw, 1.28rem);
+    --pl-updated: clamp(0.66rem, 0.48rem + 0.42vw, 0.82rem);
+
+    /* Spacing tracks width the same way */
+    --pl-pad-top: clamp(1.45rem, 0.8rem + 1.7vw, 3.15rem);
+    --pl-pad-bottom: clamp(2.45rem, 1.4rem + 3.35vw, 5.35rem);
+    --pl-section-y: clamp(1.22rem, 0.72rem + 1.12vw, 2.42rem);
+    --pl-section-gap: clamp(2.6rem, 1.3rem + 3.25vw, 6.35rem);
+    --pl-hero-title-gap: clamp(2.75rem, 1.2rem + 2.8vw, 5.5rem);
+    --pl-title-gap: clamp(0.6rem, 0.36rem + 0.5vw, 1.18rem);
+    --pl-text-gap: clamp(0.7rem, 0.4rem + 0.56vw, 1.38rem);
+    --pl-meta-gap: clamp(0.82rem, 0.48rem + 0.66vw, 1.48rem);
+  }
+
+  body.imprint-page-body > main.imprint-stage {
+    padding-top: calc(var(--imprint-chrome-safe) + clamp(2rem, 1rem + 2.5vw, 4.5rem));
+  }
+}
+
+@media (min-width: 960px) {
+  :root {
+    /* 960–1199px: 10% · 70% · 20% */
+    --imprint-content-width: 70vw;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    /* 1200–1439px: 10% · 60% · 30% */
+    --imprint-content-width: 60vw;
+  }
+}
+
+@media (min-width: 1440px) {
+  :root {
+    /* ≥1440px: 10% · 50% · 40% */
+    --imprint-content-width: 50vw;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .pl-head,
-  .pl-nav,
-  .pl-slide.is-active .pl-slide-body-inner {
+  :root {
+    --imprint-phase-in: 0.01s;
+    --imprint-phase-out: 0.01s;
+  }
+
+  .imprint-hub,
+  .imprint-body,
+  .imprint-updated {
     transition: none !important;
+  }
+
+  .imprint-picker__btn {
+    transition: none;
+  }
+
+  .imprint-picker__icon,
+  .imprint-picker__icon-doc,
+  .imprint-picker__icon-outline,
+  .imprint-picker__icon-glyph,
+  .imprint-picker__label {
+    transition: none;
     animation: none !important;
+  }
+
+  .imprint-picker__btn:hover,
+  .imprint-picker__btn:focus-visible {
+    transform: none;
+  }
+
+  .imprint-picker__btn:hover .imprint-picker__icon-outline,
+  .imprint-picker__btn:focus-visible .imprint-picker__icon-outline,
+  .imprint-picker__btn:hover .imprint-picker__icon-glyph,
+  .imprint-picker__btn:focus-visible .imprint-picker__icon-glyph {
+    filter: brightness(0) saturate(100%) invert(72%) sepia(42%) saturate(2200%) hue-rotate(295deg) brightness(1.05);
+    opacity: 1;
+  }
+
+  .imprint-picker__btn:hover .imprint-picker__icon-glyph,
+  .imprint-picker__btn:focus-visible .imprint-picker__icon-glyph {
+    transform: translate(-50%, -50%) scale(1.03);
+  }
+
+  .imprint-picker__btn:hover .imprint-picker__label,
+  .imprint-picker__btn:focus-visible .imprint-picker__label {
+    color: var(--pk-accent);
+  }
+
+  .imprint-line__inner {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }

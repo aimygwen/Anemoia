@@ -1,56 +1,32 @@
 <section class="work-hub spa-scaffold spa-scaffold--work" data-work-hub data-work-phase="choose">
   <div class="work-deck" data-work-deck>
-    <div class="work-deck__scroller" data-work-scroller data-lenis-prevent role="list" aria-label="Work categories">
-      <article class="work-deck__item" data-work-pick="hytale" role="listitem">
-        <button type="button" class="work-deck__pick">
-          <span class="work-deck__art work-deck__art--left" aria-hidden="true">
-            <img src="./assets/content/lowpoly/hytale/Thumbnails/crossroads.jpg" alt="" decoding="async" />
-          </span>
-          <span class="work-deck__label">Hytale</span>
-          <span class="work-deck__art work-deck__art--right" aria-hidden="true">
-            <img src="./assets/content/lowpoly/hytale/Thumbnails/timelesstekk.jpg" alt="" decoding="async" />
-          </span>
-        </button>
-      </article>
-      <article class="work-deck__item" data-work-pick="lowpoly" role="listitem">
-        <button type="button" class="work-deck__pick">
-          <span class="work-deck__art work-deck__art--left" aria-hidden="true">
-            <img src="./assets/content/lowpoly/lowpoly3d.png" alt="" decoding="async" />
-          </span>
-          <span class="work-deck__label">Lowpoly</span>
-          <span class="work-deck__art work-deck__art--right" aria-hidden="true">
-            <img src="./assets/thumbnails/lowpoly.jpg" alt="" decoding="async" />
-          </span>
-        </button>
-      </article>
-      <article class="work-deck__item" data-work-pick="stills" role="listitem">
-        <button type="button" class="work-deck__pick">
-          <span class="work-deck__art work-deck__art--left" aria-hidden="true">
-            <img src="./assets/content/stills/img1.webp" alt="" decoding="async" />
-          </span>
-          <span class="work-deck__label">Stills</span>
-          <span class="work-deck__art work-deck__art--right" aria-hidden="true">
-            <img src="./assets/content/stills/img3.webp" alt="" decoding="async" />
-          </span>
-        </button>
-      </article>
-      <article class="work-deck__item" data-work-pick="motion" role="listitem">
-        <button type="button" class="work-deck__pick">
-          <span class="work-deck__art work-deck__art--left" aria-hidden="true">
-            <img src="./assets/thumbnails/tapes.jpg" alt="" decoding="async" />
-          </span>
-          <span class="work-deck__label">Motion</span>
-          <span class="work-deck__art work-deck__art--right" aria-hidden="true">
-            <img src="./assets/content/stills/img8.webp" alt="" decoding="async" />
-          </span>
-        </button>
-      </article>
+    <div class="work-picker" data-work-picker data-work-preview="hytale">
+      <div class="work-picker__preview-stage" aria-hidden="true">
+        <figure class="work-picker__preview-figure" data-work-preview-figure>
+          <div class="work-picker__preview-photo" data-work-preview-photo>
+            <img class="work-picker__preview-img is-active" data-work-preview-img="hytale" src="./assets/content/lowpoly/hytale/Thumbnails/crossroads.jpg" alt="" decoding="async" />
+            <img class="work-picker__preview-img" data-work-preview-img="lowpoly" src="./assets/content/lowpoly/lowpoly3d.png" alt="" decoding="async" />
+            <img class="work-picker__preview-img" data-work-preview-img="stills" src="./assets/content/stills/img1.webp" alt="" decoding="async" />
+            <img class="work-picker__preview-img" data-work-preview-img="motion" src="./assets/thumbnails/tapes.jpg" alt="" decoding="async" />
+          </div>
+        </figure>
+      </div>
+      <div class="work-picker__stage">
+        <p class="work-picker__lead">I create</p>
+        <div class="work-picker__scroller" data-work-scroller data-lenis-prevent role="list" aria-label="Work categories">
+          <div class="work-picker__rail">
+            <a href="./work?category=hytale" class="work-picker__item is-active" data-work-pick="hytale" role="listitem"><span class="work-picker__label">Hytale</span></a>
+            <a href="./work?category=lowpoly" class="work-picker__item" data-work-pick="lowpoly" role="listitem"><span class="work-picker__label">Lowpoly</span></a>
+            <a href="./work?category=stills" class="work-picker__item" data-work-pick="stills" role="listitem"><span class="work-picker__label">Artworks</span></a>
+            <a href="./work?category=motion" class="work-picker__item" data-work-pick="motion" role="listitem"><span class="work-picker__label">Animations</span></a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="work-hub__canvas" data-work-canvas hidden>
     <header class="work-hub__dock" data-work-dock hidden aria-hidden="true">
-      <button type="button" class="work-hub__dock-back" data-work-back>Back</button>
       <h1 class="work-hub__dock-title" data-work-dock-title></h1>
     </header>
 

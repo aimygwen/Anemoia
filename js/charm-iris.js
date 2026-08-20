@@ -1,6 +1,6 @@
 /**
  * Charm iris — pupils look toward the cursor, clamped inside each eye socket.
- * Iris clipped to charm-sclera.svg eye sockets (charm-glass.js).
+ * Iris clipped to charm-sclera eye sockets (charm-glass.js).
  * Supports marks added later (e.g. Insights logo-focus fly clone).
  */
 (function () {
@@ -18,7 +18,6 @@
   var pointerY = null;
   var active = false;
   var raf = 0;
-  var booted = false;
   var listenersAttached = false;
 
   function measureRest(p) {
@@ -26,6 +25,7 @@
     var r = p.el.getBoundingClientRect();
     p.restX = r.left + r.width * 0.5;
     p.restY = r.top + r.height * 0.5;
+    p.parent = p.el.parentNode;
   }
 
   function markVisible(svg) {
@@ -106,18 +106,18 @@
   }
 
   function toLocalDelta(p, screenDx, screenDy) {
-    var ctm = p.parent.getScreenCTM && p.parent.getScreenCTM();
-    if (!ctm) return { x: 0, y: 0 };
-    var inv = ctm.inverse();
+    var parent = p.el.parentNode;
+    if (!parent || !parent.getScreenCTM) return { x: 0, y: 0 };
+    var inv = parent.getScreenCTM().inverse();
     var a = p.svg.createSVGPoint();
     a.x = p.restX;
     a.y = p.restY;
     var b = p.svg.createSVGPoint();
     b.x = p.restX + screenDx;
     b.y = p.restY + screenDy;
-    var la = a.matrixTransform(inv);
-    var lb = b.matrixTransform(inv);
-    return { x: lb.x - la.x, y: lb.y - la.y };
+    var lo = a.matrixTransform(inv);
+    var lt = b.matrixTransform(inv);
+    return { x: lt.x - lo.x, y: lt.y - lo.y };
   }
 
   function onMove(e) {
@@ -145,7 +145,7 @@
 
       var ease = active ? EASE : RESET_EASE;
 
-      if (active && pointerX != null) {
+      if (active && pointerX != null && pointerY != null) {
         var dx = pointerX - p.restX;
         var dy = pointerY - p.restY;
         var dist = Math.hypot(dx, dy) || 1;
@@ -187,7 +187,6 @@
 
   function boot() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    booted = true;
     attachListeners();
     if (window.AimyCharmMark && window.AimyCharmMark.ready) {
       window.AimyCharmMark.ready.then(rescan);

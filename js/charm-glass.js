@@ -1,78 +1,31 @@
 /**
  * charm-glass.js
- * Charm stack prep (iris clipped to charm-sclera) + frosted blur panes for sclera/face/bow/hair.
+ * Charm stack: shape blur pane + layer order; iris clipped to sclera eye sockets.
  */
 (function () {
   "use strict";
 
   var SVG_NS = "http://www.w3.org/2000/svg";
-  var HOST_SELECTOR = ".site-header[data-aimy-chrome] .brand";
-  var BLUR_LAYERS = [
-    "charm-sclera",
-    "charm-face",
-    "charm-bow",
-    "charm-hair",
-  ];
+  var HOST_SELECTOR =
+    ".site-header[data-aimy-chrome] .brand, .ins-logo-pin-inner, .lp-logo-pin-inner";
+  var BLUR_LAYERS = ["charm-shape"];
   var LAYER_STACK = [
-    "charm-iris",
+    "charm-shape",
     "charm-sclera",
+    "charm-iris",
     "charm-face",
     "charm-hair",
     "charm-bow",
     "charm-lashes",
-    "charm-highlight",
   ];
   var markCounter = 0;
 
   function whenGlassReady(cb) {
-    var markReady = false;
-    var chromeReady =
-      document.documentElement.classList.contains("pk-chrome-settled");
-    var ran = false;
-
-    function tryRun() {
-      if (ran || !markReady || !chromeReady) return;
-      ran = true;
-      cb();
-    }
-
-    function onMarkReady() {
-      markReady = true;
-      tryRun();
-    }
-
-    function markChromeReady() {
-      if (chromeReady) return;
-      chromeReady = true;
-      tryRun();
-    }
-
     if (window.AimyCharmMark && window.AimyCharmMark.ready) {
-      window.AimyCharmMark.ready.then(onMarkReady);
-    } else {
-      document.addEventListener("aimy-charm-mark-ready", onMarkReady, {
-        once: true,
-      });
+      window.AimyCharmMark.ready.then(cb);
+      return;
     }
-
-    if (chromeReady) {
-      tryRun();
-    }
-
-    var obs = new MutationObserver(function () {
-      if (!document.documentElement.classList.contains("pk-chrome-settled")) {
-        return;
-      }
-      obs.disconnect();
-      markChromeReady();
-    });
-    obs.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    /* Fallback if chrome reveal never settles (menu boot delay, etc.). */
-    window.setTimeout(markChromeReady, 2400);
+    document.addEventListener("aimy-charm-mark-ready", cb, { once: true });
   }
 
   function supportsBlur() {
@@ -106,7 +59,9 @@
       var portal = host.querySelector(".brand-glass-portal");
       if (portal && portal.parentNode) portal.parentNode.removeChild(portal);
       host.removeAttribute("data-mono-charm-glass");
+      host.removeAttribute("data-mono-charm-glass-fallback");
       host.removeAttribute("data-brand-glass-portal");
+      host.style.isolation = "";
     }
     if (mark) mark.removeAttribute("data-mono-charm-glass");
   }
@@ -131,9 +86,16 @@
 
   function verifyBlur(pane) {
     var style = window.getComputedStyle(pane);
+    var webkitBlur = style.webkitBackdropFilter || "";
+    var blur = style.backdropFilter || "";
     var blurOk =
-      style.webkitBackdropFilter !== "none" || style.backdropFilter !== "none";
+      (webkitBlur && webkitBlur !== "none") || (blur && blur !== "none");
     return blurOk && pane.offsetWidth > 0 && pane.offsetHeight > 0;
+  }
+
+  function enableGlassSampling(host) {
+    /* isolation:isolate on .brand traps backdrop samples — release before verify. */
+    host.style.isolation = "auto";
   }
 
   function reorderLayerStack(mark) {
@@ -145,62 +107,6 @@
       var layer = stack.querySelector(".brand-layer--" + LAYER_STACK[i]);
       if (layer) stack.appendChild(layer);
     }
-  }
-
-  function sanitizeMaskNode(node) {
-    if (!node || node.nodeType !== 1) return;
-
-    node.removeAttribute("id");
-    node.removeAttribute("class");
-    node.removeAttribute("data-iris");
-    node.removeAttribute("data-spec-edge");
-    node.removeAttribute("serif:id");
-
-    var kids = node.childNodes;
-    var i;
-    for (i = 0; i < kids.length; i++) sanitizeMaskNode(kids[i]);
-  }
-
-  function paintFillRecursive(node, fill, fillRule) {
-    if (!node || node.nodeType !== 1) return;
-
-    var tag = node.tagName.toLowerCase();
-    if (
-      tag === "path" ||
-      tag === "circle" ||
-      tag === "rect" ||
-      tag === "ellipse" ||
-      tag === "polygon" ||
-      tag === "polyline"
-    ) {
-      node.setAttribute("fill", fill);
-      if (fillRule) {
-        node.setAttribute("fill-rule", fillRule);
-        node.setAttribute("clip-rule", fillRule);
-      }
-      node.removeAttribute("style");
-    }
-
-    var kids = node.childNodes;
-    var i;
-    for (i = 0; i < kids.length; i++) paintFillRecursive(kids[i], fill, fillRule);
-  }
-
-  function cloneLayerGeometry(layer, fill, fillRule) {
-    var group = document.createElementNS(SVG_NS, "g");
-    if (!layer) return group;
-
-    if (!fillRule) fillRule = layer.getAttribute("fill-rule");
-    if (fillRule) group.setAttribute("fill-rule", fillRule);
-
-    var i;
-    for (i = 0; i < layer.childNodes.length; i++) {
-      var clone = layer.childNodes[i].cloneNode(true);
-      sanitizeMaskNode(clone);
-      paintFillRecursive(clone, fill, fillRule);
-      group.appendChild(clone);
-    }
-    return group;
   }
 
   function applyIrisMaskWrap(irisLayer, maskId) {
@@ -215,15 +121,48 @@
     return wrap;
   }
 
-  function buildIrisBaseClip(mark, slot) {
+  function buildTransformChain(scleraLayer, clipPathEl) {
+    var charmRoot =
+      scleraLayer.querySelector("[id*='Charm']") || scleraLayer.firstElementChild;
+    var scleraNode = clipPathEl && clipPathEl.parentNode;
+
+    var outer = document.createElementNS(SVG_NS, "g");
+    if (charmRoot && charmRoot.getAttribute("transform")) {
+      outer.setAttribute("transform", charmRoot.getAttribute("transform"));
+    }
+
+    var inner = document.createElementNS(SVG_NS, "g");
+    if (
+      scleraNode &&
+      scleraNode !== charmRoot &&
+      scleraNode.getAttribute &&
+      scleraNode.getAttribute("transform")
+    ) {
+      inner.setAttribute("transform", scleraNode.getAttribute("transform"));
+    }
+
+    var paths = clipPathEl.querySelectorAll("path");
+    var i;
+    for (i = 0; i < paths.length; i++) {
+      inner.appendChild(paths[i].cloneNode(true));
+    }
+
+    outer.appendChild(inner);
+    return outer;
+  }
+
+  function buildIrisScleraClip(mark, slot) {
     var irisLayer = mark.querySelector(".brand-layer--charm-iris");
-    var baseLayer = mark.querySelector(".brand-layer--charm-sclera");
-    if (!irisLayer || !baseLayer) return null;
+    var scleraLayer = mark.querySelector(".brand-layer--charm-sclera");
+    if (!irisLayer || !scleraLayer) return null;
+
+    var clipPathEl = scleraLayer.querySelector("clipPath");
+    if (!clipPathEl || !clipPathEl.querySelector("path")) return null;
 
     unwrapIrisMask(irisLayer);
     removeIrisDefs(mark);
 
-    var maskId = "mono-charm-iris-base-" + slot;
+    var maskId = "mono-charm-iris-sclera-" + slot;
     var defs = document.createElementNS(SVG_NS, "defs");
     defs.setAttribute("class", "mono-charm-glass-defs");
 
@@ -236,68 +175,15 @@
     mask.setAttribute("width", "2048");
     mask.setAttribute("height", "2048");
 
-    /*
-     * Iris visible only inside charm-sclera.svg eye socket geometry.
-     * Clone the sclera layer to preserve the transform hierarchy, then
-     * prune to keep only <g> and <path> nodes. <g> is kept for its
-     * transforms; <path> provides the mask geometry. Everything else
-     * (defs, clipPath, image, use) is removed, but paths inside clipPath
-     * are moved up to the clipPath's parent so they stay in the transform
-     * chain. Evenodd fill-rule makes the eye-socket interiors white
-     * (iris visible) and everything else transparent/black (iris hidden).
-     */
-    var maskContent = cloneLayerGeometry(baseLayer, "#ffffff", "evenodd");
+    var maskContent = buildTransformChain(scleraLayer, clipPathEl);
+    var paths = maskContent.querySelectorAll("path");
+    var i;
 
-    function hasPathDescendant(node) {
-      if (!node || node.nodeType !== 1) return false;
-      if (node.tagName.toLowerCase() === "path") return true;
-      var kids = node.childNodes;
-      for (var i = 0; i < kids.length; i++) {
-        if (hasPathDescendant(kids[i])) return true;
-      }
-      return false;
+    for (i = 0; i < paths.length; i++) {
+      paths[i].setAttribute("fill", "#ffffff");
+      paths[i].removeAttribute("id");
+      paths[i].removeAttribute("style");
     }
-
-    function pruneMaskTree(node) {
-      if (!node || node.nodeType !== 1) return;
-      var tag = node.tagName.toLowerCase();
-
-      if (tag === "path") return;
-
-      /* Prune children first (post-order). */
-      var kids = Array.prototype.slice.call(node.childNodes);
-      for (var i = 0; i < kids.length; i++) pruneMaskTree(kids[i]);
-
-      if (tag === "g") {
-        if (!hasPathDescendant(node)) {
-          if (node.parentNode) node.parentNode.removeChild(node);
-        }
-        return;
-      }
-
-      if (!hasPathDescendant(node)) {
-        if (node.parentNode) node.parentNode.removeChild(node);
-        return;
-      }
-
-      /*
-       * Node has path descendants but is not <g> or <path>
-       * (e.g. <clipPath>). Move paths up to parent, then remove.
-       */
-      var paths = [];
-      var allKids = Array.prototype.slice.call(node.childNodes);
-      for (var i = 0; i < allKids.length; i++) {
-        if (allKids[i].nodeType === 1 && allKids[i].tagName.toLowerCase() === "path") {
-          paths.push(allKids[i]);
-        }
-      }
-      for (var i = 0; i < paths.length; i++) {
-        if (node.parentNode) node.parentNode.insertBefore(paths[i], node);
-      }
-      if (node.parentNode) node.parentNode.removeChild(node);
-    }
-
-    pruneMaskTree(maskContent);
 
     mask.appendChild(maskContent);
     defs.appendChild(mask);
@@ -311,12 +197,32 @@
 
     reorderLayerStack(mark);
     markCounter += 1;
-    buildIrisBaseClip(mark, markCounter);
+    buildIrisScleraClip(mark, markCounter);
     mark.setAttribute("data-charm-stack-ready", "1");
 
-    if (window.AimyBrandEyes && typeof window.AimyBrandEyes.remeasure === "function") {
+    if (window.AimyBrandEyes && typeof window.AimyBrandEyes.rescan === "function") {
+      window.AimyBrandEyes.rescan();
+    } else if (
+      window.AimyBrandEyes &&
+      typeof window.AimyBrandEyes.remeasure === "function"
+    ) {
       window.AimyBrandEyes.remeasure();
     }
+  }
+
+  function buildGlassPane(layerId, withOrb) {
+    var pane = document.createElement("div");
+    pane.className = "mono-charm-glass-layer mono-charm-glass-layer--" + layerId;
+    pane.setAttribute("aria-hidden", "true");
+
+    if (withOrb) {
+      var orb = document.createElement("span");
+      orb.className = "brand-charm-orb-pane";
+      orb.setAttribute("aria-hidden", "true");
+      pane.appendChild(orb);
+    }
+
+    return pane;
   }
 
   function buildPortal() {
@@ -328,13 +234,7 @@
     var i;
 
     for (i = 0; i < BLUR_LAYERS.length; i++) {
-      var pane = document.createElement("div");
-      pane.className =
-        "mono-charm-glass-layer mono-charm-glass-layer--" + BLUR_LAYERS[i];
-      var orb = document.createElement("span");
-      orb.className = "brand-charm-orb-pane";
-      orb.setAttribute("aria-hidden", "true");
-      pane.appendChild(orb);
+      var pane = buildGlassPane(BLUR_LAYERS[i], i === 0);
       portal.appendChild(pane);
       panes.push(pane);
     }
@@ -342,7 +242,21 @@
     return { portal: portal, panes: panes };
   }
 
+  function resolveHost(host) {
+    if (!host) return null;
+    if (host.classList && host.classList.contains("brand")) return host;
+    if (
+      host.classList &&
+      (host.classList.contains("ins-logo-pin-inner") ||
+        host.classList.contains("lp-logo-pin-inner"))
+    ) {
+      return host;
+    }
+    return host.closest(".brand") || host;
+  }
+
   function glassifyHost(host) {
+    host = resolveHost(host);
     if (!host) return;
 
     var mark = host.querySelector(".brand-mark");
@@ -351,7 +265,20 @@
     prepareMarkStack(mark);
 
     if (!supportsBlur()) return;
-    if (host.getAttribute("data-mono-charm-glass") === "1") return;
+
+    var existingPortal = host.querySelector(".brand-glass-portal");
+    if (host.getAttribute("data-mono-charm-glass") === "1") {
+      if (existingPortal && existingPortal.querySelector(".mono-charm-glass-layer")) {
+        enableGlassSampling(host);
+        return;
+      }
+      cleanupGlassPortal(host, mark);
+      host.removeAttribute("data-mono-charm-glass");
+      if (mark) mark.removeAttribute("data-mono-charm-glass");
+    }
+    if (existingPortal && !existingPortal.querySelector(".mono-charm-glass-layer")) {
+      cleanupGlassPortal(host, mark);
+    }
     if (host.querySelector(".brand-glass-portal")) return;
 
     cleanupGlassPortal(host, mark);
@@ -359,19 +286,26 @@
     function finish() {
       var built = buildPortal();
       host.insertBefore(built.portal, mark);
+      enableGlassSampling(host);
 
-      function commitGlass() {
+      function commitGlass(fallback) {
         host.setAttribute("data-mono-charm-glass", "1");
         mark.setAttribute("data-mono-charm-glass", "1");
+        if (fallback) {
+          host.setAttribute("data-mono-charm-glass-fallback", "1");
+        } else {
+          host.removeAttribute("data-mono-charm-glass-fallback");
+        }
       }
 
       function tryVerify(attempt) {
+        enableGlassSampling(host);
         if (verifyBlur(built.panes[0])) {
-          commitGlass();
+          commitGlass(false);
           return;
         }
-        if (attempt >= 20) {
-          cleanupGlassPortal(host, mark);
+        if (attempt >= 24) {
+          commitGlass(true);
           return;
         }
         window.setTimeout(function () {
@@ -400,6 +334,7 @@
   window.AimyCharmGlass = {
     boot: boot,
     prepareMarkStack: prepareMarkStack,
+    glassifyHost: glassifyHost,
   };
 
   if (document.readyState === "loading") {

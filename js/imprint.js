@@ -1,61 +1,34 @@
+/**
+ * imprint.js — Legal page: hub picker, panel views, line reveals, hash routing.
+ */
 document.addEventListener("DOMContentLoaded", () => {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const SIGNATURE_SVG = "./assets/polykroma/branding/signature.svg?v=branding-10";
-  const SIGNATURE_STROKES = ["G", "w", "en", "stroke", "Dot", "Bun"];
+  const stage = document.querySelector(".imprint-stage[data-imprint-phase]");
+  const hub = document.querySelector("[data-imprint-hub]");
+  const content = document.querySelector("[data-imprint-content]");
+  const pickerBtns = document.querySelectorAll(".imprint-picker__btn[data-imprint-panel]");
+  const panels = document.querySelectorAll(".imprint-panel[data-imprint-panel]");
 
-  function signaturePaths(svg) {
-    return SIGNATURE_STROKES.map((id) => {
-      if (id === "Bun") {
-        return svg.querySelector("#Bun path") || null;
-      }
-      return svg.querySelector("#" + id);
-    }).filter(Boolean);
-  }
+  const PANEL_TITLES = {
+    imprint: "Imprint.",
+    terms: "Terms",
+    policy: "Policy",
+  };
 
-  function prepSignaturePath(path) {
-    const len = path.getTotalLength();
-    path.style.strokeDasharray = String(len);
-    path.style.strokeDashoffset = "0";
-    return len;
-  }
+  const VALID_PANELS = Object.keys(PANEL_TITLES);
+  const revealObservers = [];
+  let resizeTimer = null;
+  let revealFallbackTimer = null;
+  let phaseTimer = null;
+  let scrollRevealHandler = null;
+  let scrollRevealRaf = null;
+  let contentReadyToken = 0;
+  let imprintHashLock = false;
+  const PHASE_MS = reduced ? 0 : 680;
 
-  function revealSignaturePaths(paths) {
-    paths.forEach((path) => {
-      path.style.strokeDashoffset = "0";
-    });
-  }
-
-  function animateSignatureDraw(section, paths) {
-    if (!paths.length) return;
-    revealSignaturePaths(paths);
-    section.classList.add("is-drawn");
-  }
-
-  function bootSignatureDraw(root) {
-    const section = root.querySelector(".ins-signature");
-    const host = root.querySelector("[data-ins-signature]");
-    if (!section || !host || host.dataset.sigLoaded === "1") return;
-
-    fetch(SIGNATURE_SVG)
-      .then((res) => {
-        if (!res.ok) throw new Error("signature fetch failed");
-        return res.text();
-      })
-      .then((markup) => {
-        host.innerHTML = markup;
-        host.dataset.sigLoaded = "1";
-
-        const svg = host.querySelector("svg");
-        if (!svg) return;
-        svg.classList.add("ins-signature__svg");
-        svg.setAttribute("role", "presentation");
-        svg.setAttribute("focusable", "false");
-
-        animateSignatureDraw(section, signaturePaths(svg));
-      })
-      .catch(() => {
-        /* Fail quietly — hero still reads fine without the draw. */
-      });
+  function setRevealMode(armed) {
+    document.body.classList.toggle("imprint-reveals-ready", armed);
+    document.body.classList.toggle("imprint-reveals-reduced", armed && reduced);
   }
 
   function bootLenis() {
@@ -64,386 +37,710 @@ document.addEventListener("DOMContentLoaded", () => {
     return null;
   }
 
-  function scrollToTarget(target, options = {}) {
-    if (window.Polyglide) {
-      window.Polyglide.to(target, {
-        offset: options.offset ?? 0,
-        duration: options.duration,
+  function scrollToTop(options = {}) {
+    const immediate = options.immediate === true || options.duration === 0.01;
+
+    if (window.__lenis && typeof window.__lenis.scrollTo === "function") {
+      window.__lenis.scrollTo(0, {
+        immediate: immediate,
+        duration: immediate ? 0 : options.duration != null ? options.duration : 1.15,
       });
-      return;
-    }
-    if (typeof target === "number") {
-      window.scrollTo({ top: target, behavior: reduced ? "auto" : "smooth" });
-      return;
-    }
-    if (target && target.scrollIntoView) {
-      target.scrollIntoView({
-        behavior: reduced ? "auto" : "smooth",
-        block: "start",
+    } else {
+      window.scrollTo({
+        top: 0,
+        behavior: immediate || reduced ? "auto" : "smooth",
       });
     }
   }
 
-  function fontsReady(budgetMs = 320) {
-    const fontsOk =
-      document.fonts && document.fonts.ready
-        ? document.fonts.ready
-        : Promise.resolve();
-    const budget = new Promise((resolve) => setTimeout(resolve, budgetMs));
-    return Promise.race([fontsOk, budget]);
+  function scrollToTopImmediate() {
+    scrollToTop({ immediate: true, duration: 0.01 });
   }
 
-  function afterPaint(cb) {
-    requestAnimationFrame(() => requestAnimationFrame(cb));
+  function normalizePanel(id) {
+    return VALID_PANELS.indexOf(id) !== -1 ? id : "imprint";
   }
 
-  function bootCarousel() {
-    const root = document.querySelector("[data-pl-carousel]");
-    const selector = document.querySelector("[data-pl-selector]");
-    const rail = document.querySelector("[data-pl-rail]");
-    const items = Array.from(document.querySelectorAll("[data-pl-item]"));
-    const slides = Array.from(document.querySelectorAll(".pl-slide"));
-    const prevBtn = document.querySelector("[data-pl-prev]");
-    const nextBtn = document.querySelector("[data-pl-next]");
-    if (!root || !selector || !rail || items.length < 2 || slides.length < 2) {
+  function syncBackChrome(visible) {
+    if (!window.AimySpaSubBack) return;
+    if (!visible) {
+      window.AimySpaSubBack.hide();
       return;
     }
-
-    const ids = items.map((el) => el.dataset.id);
-    let index = 0;
-    let initialized = false;
-    let ready = false;
-    let layoutTween = null;
-    let dragX = 0;
-
-    function slotState(i) {
-      const slot = i - index;
-
-      if (slot === 0) {
-        return {
-          slot,
-          xPercent: 0,
-          opacity: 1,
-          className: "is-active",
-        };
-      }
-      if (slot === 1) {
-        return {
-          slot,
-          xPercent: 0,
-          opacity: 0,
-          className: "is-next",
-        };
-      }
-      if (slot === -1) {
-        return {
-          slot,
-          xPercent: 0,
-          opacity: 0,
-          className: "is-prev",
-        };
-      }
-      return {
-        slot,
-        xPercent: 0,
-        opacity: 0,
-        className: "is-far",
-      };
-    }
-
-    function applySlotClasses() {
-      items.forEach((el, i) => {
-        const state = slotState(i);
-        el.classList.remove("is-active", "is-prev", "is-next", "is-far");
-        el.classList.add(state.className);
-        el.setAttribute("aria-selected", state.slot === 0 ? "true" : "false");
-        el.tabIndex = state.slot === 0 ? 0 : -1;
-      });
-    }
-
-    function applyPositions(animate, direction) {
-      const states = items.map((_, i) => slotState(i));
-
-      if (layoutTween) {
-        layoutTween.kill();
-        layoutTween = null;
-      }
-      if (typeof gsap !== "undefined") {
-        items.forEach((el) => gsap.killTweensOf(el));
-      }
-
-      items.forEach((el, i) => {
-        const state = states[i];
-        const isActive = state.slot === 0;
-        el.style.position = isActive ? "relative" : "absolute";
-        el.style.transform = isActive
-          ? `translate3d(${dragX}px, 0, 0)`
-          : "translate3d(0, 0, 0)";
-        el.style.opacity = String(isActive ? 1 : 0);
-        el.style.filter = "";
-        el.style.clipPath = "";
-      });
-    }
-
-    function layoutTitles({ animate = true, direction = 1 } = {}) {
-      applySlotClasses();
-      applyPositions(animate, direction);
-    }
-
-    function setDragOffset(px) {
-      dragX = px;
-      selector.style.setProperty("--pl-drag-x", `${px}px`);
-      if (typeof gsap !== "undefined" && ready && !reduced) {
-        const active = items[index];
-        if (active) gsap.set(active, { xPercent: 0, x: dragX });
-        items.forEach((el, i) => {
-          if (i === index) return;
-          gsap.set(el, { xPercent: 0, x: 0, opacity: 0 });
+    window.setTimeout(
+      function () {
+        if (!stage || stage.dataset.imprintPhase !== "open") return;
+        window.AimySpaSubBack.show({
+          onClick: function () {
+            setPhase("choose", null, { updateHash: true, scrollTop: true });
+          },
         });
-        return;
-      }
-      applyPositions(false, 1);
+      },
+      reduced ? 0 : 280
+    );
+  }
+
+  function unbindScrollReveals() {
+    if (scrollRevealRaf) {
+      cancelAnimationFrame(scrollRevealRaf);
+      scrollRevealRaf = null;
+    }
+    if (!scrollRevealHandler) return;
+    if (window.__lenis && typeof window.__lenis.off === "function") {
+      window.__lenis.off("scroll", scrollRevealHandler);
+    } else {
+      window.removeEventListener("scroll", scrollRevealHandler);
+    }
+    scrollRevealHandler = null;
+  }
+
+  function teardownReveals() {
+    while (revealObservers.length) {
+      const observer = revealObservers.pop();
+      if (observer && observer.disconnect) observer.disconnect();
+    }
+    unbindScrollReveals();
+    if (revealFallbackTimer) {
+      window.clearTimeout(revealFallbackTimer);
+      revealFallbackTimer = null;
+    }
+    setRevealMode(false);
+  }
+
+  function revealAllLines(lines) {
+    lines.forEach((line) => revealLine(line));
+  }
+
+  function scheduleRevealFallback(lines) {
+    if (revealFallbackTimer) window.clearTimeout(revealFallbackTimer);
+    revealFallbackTimer = window.setTimeout(() => {
+      revealFallbackTimer = null;
+      revealLinesInView(pendingRevealLines(lines));
+    }, 480);
+  }
+
+  function afterLayout(callback) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(callback);
+    });
+  }
+
+  function whenContentReady(callback) {
+    const token = contentReadyToken;
+
+    function finish() {
+      if (token !== contentReadyToken) return;
+      afterLayout(callback);
     }
 
-    function clearDragOffset({ animate = true } = {}) {
-      const from = dragX;
-      dragX = 0;
-      selector.style.setProperty("--pl-drag-x", "0px");
+    if (!PHASE_MS) {
+      finish();
+      return;
+    }
 
-      if (!animate || reduced || typeof gsap === "undefined" || !ready) {
-        layoutTitles({ animate: false });
-        return;
+    let settled = false;
+
+    function done() {
+      if (settled || token !== contentReadyToken) return;
+      settled = true;
+      if (content) content.removeEventListener("transitionend", onTransitionEnd);
+      window.clearTimeout(fallbackTimer);
+      finish();
+    }
+
+    function onTransitionEnd(event) {
+      if (!content || event.target !== content) return;
+      if (event.propertyName !== "opacity" && event.propertyName !== "transform") return;
+      done();
+    }
+
+    if (content) {
+      content.addEventListener("transitionend", onTransitionEnd);
+      const style = getComputedStyle(content);
+      if (parseFloat(style.opacity) >= 0.99 && style.visibility === "visible") {
+        window.setTimeout(done, 120);
       }
+    }
 
-      const active = items[index];
-      if (active) {
-        gsap.fromTo(
-          active,
-          { x: from, xPercent: 0 },
-          {
-            x: 0,
-            xPercent: 0,
-            duration: 0.32,
-            ease: "power3.out",
-            overwrite: "auto",
+    const fallbackTimer = window.setTimeout(done, PHASE_MS + 180);
+  }
+
+  function afterPhaseTransition(callback) {
+    if (phaseTimer) window.clearTimeout(phaseTimer);
+    if (!PHASE_MS) {
+      afterLayout(callback);
+      return;
+    }
+    phaseTimer = window.setTimeout(() => {
+      phaseTimer = null;
+      afterLayout(callback);
+    }, PHASE_MS);
+  }
+
+  function clearPhaseTimer() {
+    if (!phaseTimer) return;
+    window.clearTimeout(phaseTimer);
+    phaseTimer = null;
+  }
+
+  function restorePanelReveals(panel) {
+    if (!panel) return;
+    panel.querySelectorAll(".imprint-reveal-block[data-imprint-lines-ready]").forEach((block) => {
+      if (block.dataset.imprintOriginal != null) {
+        block.innerHTML = block.dataset.imprintOriginal;
+      }
+      block.classList.remove("imprint-reveal-block");
+      delete block.dataset.imprintLinesReady;
+      delete block.dataset.imprintOriginal;
+    });
+  }
+
+  function restoreHeroReveal() {
+    if (!content) return;
+    const hero = content.querySelector(".imprint-content__head .ins-logs-hub__title");
+    if (!hero || hero.dataset.imprintLinesReady !== "1") return;
+
+    if (hero.dataset.imprintOriginal != null) {
+      hero.innerHTML = hero.dataset.imprintOriginal;
+    }
+    hero.classList.remove("imprint-reveal-block");
+    delete hero.dataset.imprintLinesReady;
+    delete hero.dataset.imprintOriginal;
+  }
+
+  function restoreAllPanelReveals() {
+    panels.forEach((panel) => restorePanelReveals(panel));
+    restoreHeroReveal();
+  }
+
+  function wrapWordsInBlock(block) {
+    function processNode(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const parts = node.textContent.split(/(\s+)/);
+        const frag = document.createDocumentFragment();
+        parts.forEach((part) => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(part));
+          } else {
+            const span = document.createElement("span");
+            span.className = "imprint-line-word";
+            span.textContent = part;
+            frag.appendChild(span);
           }
-        );
-      }
-      items.forEach((el, i) => {
-        if (i === index) return;
-        gsap.set(el, { x: 0, xPercent: 0, opacity: 0 });
-      });
-    }
-
-    function setIndex(next, { updateHash = true, animate = true } = {}) {
-      const nextIndex = Math.max(0, Math.min(slides.length - 1, next));
-      if (initialized && nextIndex === index) {
-        if (dragX) clearDragOffset({ animate });
+        });
+        node.replaceWith(frag);
         return;
       }
-      const direction = nextIndex >= index ? 1 : -1;
-      index = nextIndex;
-      dragX = 0;
-      selector.style.setProperty("--pl-drag-x", "0px");
 
-      slides.forEach((slide, i) => {
-        const active = i === index;
-        slide.classList.toggle("is-active", active);
-        slide.setAttribute("aria-hidden", active ? "false" : "true");
-      });
+      if (node.nodeType !== Node.ELEMENT_NODE) return;
 
-      const activeId = ids[index];
-      layoutTitles({ animate: animate && ready, direction });
-
-      if (prevBtn) prevBtn.disabled = index <= 0;
-      if (nextBtn) nextBtn.disabled = index >= slides.length - 1;
-
-      if (updateHash) {
-        const url = new URL(window.location.href);
-        if (activeId === "imprint") {
-          history.replaceState(null, "", url.pathname + url.search);
-        } else {
-          history.replaceState(
-            null,
-            "",
-            url.pathname + url.search + "#" + activeId
-          );
-        }
+      if (node.tagName === "BR") {
+        const marker = document.createElement("span");
+        marker.className = "imprint-line-break";
+        marker.setAttribute("aria-hidden", "true");
+        node.replaceWith(marker);
+        return;
       }
 
-      initialized = true;
+      if (node.tagName === "A") {
+        node.classList.add("imprint-line-word", "imprint-line-link");
+        return;
+      }
+
+      Array.from(node.childNodes).forEach(processNode);
     }
 
-    function go(delta) {
-      setIndex(index + delta);
-    }
+    Array.from(block.childNodes).forEach(processNode);
+  }
 
-    /* —— Pointer drag / swipe —— */
-    const DRAG_CLICK_PX = 10;
-    const DRAG_FLIP_PX = 56;
-    let pointerId = null;
-    let startX = 0;
-    let startY = 0;
-    let dragging = false;
-    let moved = false;
-    let suppressClick = false;
+  function segmentIsBlank(nodes) {
+    if (!nodes.length) return true;
+    return nodes.every(function (node) {
+      return node.nodeType === Node.TEXT_NODE && !node.textContent.trim();
+    });
+  }
 
-    function onPointerDown(e) {
-      if (e.button != null && e.button !== 0) return;
-      if (e.target.closest(".pl-nav")) return;
-      pointerId = e.pointerId;
-      startX = e.clientX;
-      startY = e.clientY;
-      dragging = false;
-      moved = false;
-      suppressClick = false;
-      try {
-        rail.setPointerCapture(pointerId);
-      } catch (_) {
-        /* ignore */
+  function flattenSegmentNodes(nodes) {
+    const flat = [];
+
+    function walk(node) {
+      if (node instanceof Element && node.classList.contains("imprint-line-break")) {
+        flat.push(node);
+        return;
+      }
+      if (node instanceof Element && node.classList.contains("imprint-line-word")) {
+        flat.push(node);
+        return;
+      }
+      if (node.nodeType === Node.TEXT_NODE) {
+        if (node.textContent) flat.push(node);
+        return;
+      }
+      if (node instanceof Element) {
+        Array.from(node.childNodes).forEach(walk);
       }
     }
 
-    function onPointerMove(e) {
-      if (pointerId == null || e.pointerId !== pointerId) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      if (!dragging) {
-        if (Math.abs(dx) < DRAG_CLICK_PX && Math.abs(dy) < DRAG_CLICK_PX) {
-          return;
-        }
-        if (Math.abs(dy) > Math.abs(dx)) {
-          /* vertical scroll wins — abort drag */
-          pointerId = null;
-          return;
-        }
-        dragging = true;
-        moved = true;
-        selector.classList.add("is-dragging");
+    nodes.forEach(walk);
+    return flat;
+  }
+
+  function collectLineGroups(block) {
+    const segments = [];
+    let segment = [];
+
+    Array.from(block.childNodes).forEach((node) => {
+      if (node instanceof Element && node.classList.contains("imprint-line-break")) {
+        segments.push(segmentIsBlank(segment) ? [] : segment);
+        segment = [];
+        return;
       }
-      e.preventDefault();
-      setDragOffset(dx);
-    }
-
-    function finishPointer(e) {
-      if (pointerId == null || (e && e.pointerId !== pointerId)) return;
-      const dx = dragX;
-      const wasDragging = dragging;
-      pointerId = null;
-      selector.classList.remove("is-dragging");
-      dragging = false;
-
-      if (wasDragging && Math.abs(dx) >= DRAG_FLIP_PX) {
-        suppressClick = true;
-        const dir = dx < 0 ? 1 : -1;
-        const next = index + dir;
-        if (next >= 0 && next < slides.length) {
-          setIndex(next);
-        } else {
-          clearDragOffset({ animate: true });
-        }
-      } else if (wasDragging) {
-        suppressClick = true;
-        clearDragOffset({ animate: true });
-      }
-
-      if (wasDragging || moved) {
-        moved = false;
-        setTimeout(() => {
-          suppressClick = false;
-        }, 40);
-      }
-    }
-
-    rail.addEventListener("pointerdown", onPointerDown);
-    rail.addEventListener("pointermove", onPointerMove);
-    rail.addEventListener("pointerup", finishPointer);
-    rail.addEventListener("pointercancel", finishPointer);
-    rail.addEventListener("lostpointercapture", finishPointer);
-
-    items.forEach((el, i) => {
-      el.addEventListener("click", (e) => {
-        if (suppressClick || moved) {
-          e.preventDefault();
-          moved = false;
-          return;
-        }
-        if (i !== index) setIndex(i);
-      });
+      segment.push(node);
     });
 
-    if (prevBtn) prevBtn.addEventListener("click", () => go(-1));
-    if (nextBtn) nextBtn.addEventListener("click", () => go(1));
+    if (segment.length && !segmentIsBlank(segment)) segments.push(segment);
+    if (!segments.length) segments.push([]);
 
-    /* —— Horizontal wheel / trackpad over selector —— */
-    let wheelLock = false;
-    selector.addEventListener(
-      "wheel",
-      (e) => {
-        const absX = Math.abs(e.deltaX);
-        const absY = Math.abs(e.deltaY);
-        const horizontal =
-          absX > absY + 2 || (e.shiftKey && absY > 4);
-        if (!horizontal) return;
+    const groups = [];
 
-        e.preventDefault();
-        if (wheelLock) return;
+    segments.forEach((nodes) => {
+      if (!nodes.length) {
+        groups.push([]);
+        return;
+      }
 
-        const delta = e.shiftKey && absX <= absY ? e.deltaY : e.deltaX;
-        if (Math.abs(delta) < 6) return;
+      const flat = flattenSegmentNodes(nodes);
+      if (!flat.length) {
+        groups.push([]);
+        return;
+      }
 
-        wheelLock = true;
-        go(delta > 0 ? 1 : -1);
-        setTimeout(() => {
-          wheelLock = false;
-        }, reduced ? 120 : 420);
+      let line = [];
+      let lastTop = null;
+
+      flat.forEach((node) => {
+        if (node instanceof Element && node.classList.contains("imprint-line-word")) {
+          const top = Math.round(node.offsetTop);
+          if (lastTop !== null && top > lastTop + 1) {
+            if (line.length) groups.push(line);
+            line = [];
+          }
+          lastTop = top;
+          line.push(node);
+          return;
+        }
+
+        if (line.length) line.push(node);
+      });
+
+      if (line.length) groups.push(line);
+    });
+
+    return groups;
+  }
+
+  function appendBlankRevealLine(block) {
+    const line = createRevealLine([]);
+    const spacer = document.createElement("span");
+    spacer.className = "imprint-line-spacer";
+    spacer.setAttribute("aria-hidden", "true");
+    spacer.textContent = "\u00a0";
+    line.querySelector(".imprint-line__inner").appendChild(spacer);
+    block.appendChild(line);
+    return line;
+  }
+
+  function createRevealLine(nodes) {
+    const line = document.createElement("span");
+    line.className = "imprint-line";
+    const inner = document.createElement("span");
+    inner.className = "imprint-line__inner";
+    nodes.forEach((node) => inner.appendChild(node));
+    line.appendChild(inner);
+    return line;
+  }
+
+  function splitBlockIntoLines(block) {
+    if (block.dataset.imprintLinesReady === "1") {
+      const existing = Array.from(block.querySelectorAll(".imprint-line"));
+      if (existing.length) return existing;
+      if (block.dataset.imprintOriginal != null) {
+        block.innerHTML = block.dataset.imprintOriginal;
+      }
+      block.classList.remove("imprint-reveal-block");
+      delete block.dataset.imprintLinesReady;
+      delete block.dataset.imprintOriginal;
+    }
+
+    block.dataset.imprintOriginal = block.innerHTML;
+    block.innerHTML = block.dataset.imprintOriginal;
+    wrapWordsInBlock(block);
+
+    const groups = collectLineGroups(block);
+
+    if (!groups.length && block.textContent.trim()) {
+      const fallback = document.createElement("span");
+      fallback.className = "imprint-line-word";
+      fallback.textContent = block.textContent.trim();
+      groups.push([fallback]);
+    }
+
+    block.textContent = "";
+    block.classList.add("imprint-reveal-block");
+    block.dataset.imprintLinesReady = "1";
+
+    return groups.map((nodes) => {
+      if (!nodes.length) return appendBlankRevealLine(block);
+      const line = createRevealLine(nodes);
+      block.appendChild(line);
+      return line;
+    });
+  }
+
+  function revealTargetsForPanel(panel) {
+    const blocks = [];
+    if (content) {
+      const hero = content.querySelector(".imprint-content__head .ins-logs-hub__title");
+      if (hero) blocks.push(hero);
+    }
+    panel.querySelectorAll(".pl-text, .pl-title").forEach((block) => blocks.push(block));
+    return blocks;
+  }
+
+  function revealLine(line, delayMs) {
+    const inner = line.querySelector(".imprint-line__inner");
+    if (!inner || inner.classList.contains("is-in")) return;
+
+    if (delayMs > 0) {
+      window.setTimeout(function () {
+        if (inner.isConnected && !inner.classList.contains("is-in")) {
+          inner.classList.add("is-in");
+        }
+      }, delayMs);
+      return;
+    }
+
+    inner.classList.add("is-in");
+  }
+
+  function pendingRevealLines(lines) {
+    return lines.filter((line) => {
+      const inner = line.querySelector(".imprint-line__inner");
+      return inner && !inner.classList.contains("is-in");
+    });
+  }
+
+  function revealLinesInView(lines, options) {
+    options = options || {};
+    const stagger = options.stagger || 0;
+    const edge = window.innerHeight * 0.96;
+    let index = 0;
+
+    lines.forEach((line) => {
+      const inner = line.querySelector(".imprint-line__inner");
+      if (!inner || inner.classList.contains("is-in")) return;
+      const rect = line.getBoundingClientRect();
+      if (rect.top < edge && rect.bottom > 0) {
+        revealLine(line, stagger ? index * stagger : 0);
+        index++;
+      }
+    });
+  }
+
+  function bindScrollReveals(lines) {
+    unbindScrollReveals();
+    if (reduced || !lines.length) return;
+
+    scrollRevealHandler = function () {
+      const pending = pendingRevealLines(lines);
+      if (!pending.length) {
+        unbindScrollReveals();
+        return;
+      }
+      revealLinesInView(pending);
+    };
+
+    if (window.__lenis && typeof window.__lenis.on === "function") {
+      window.__lenis.on("scroll", scrollRevealHandler);
+    }
+    window.addEventListener("scroll", scrollRevealHandler, { passive: true });
+
+    function tick() {
+      if (!scrollRevealHandler) return;
+      scrollRevealHandler();
+      if (scrollRevealHandler) {
+        scrollRevealRaf = requestAnimationFrame(tick);
+      }
+    }
+
+    scrollRevealRaf = requestAnimationFrame(tick);
+  }
+
+  function bootLineObservers(lines) {
+    if (reduced || !("IntersectionObserver" in window)) {
+      lines.forEach((line) => revealLine(line));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          revealLine(entry.target);
+          observer.unobserve(entry.target);
+        });
+        if (!pendingRevealLines(lines).length) unbindScrollReveals();
       },
-      { passive: false }
+      { root: null, rootMargin: "0px 0px -2% 0px", threshold: 0.01 }
     );
 
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight") go(1);
-      if (e.key === "ArrowLeft") go(-1);
+    lines.forEach((line) => observer.observe(line));
+    revealObservers.push(observer);
+    bindScrollReveals(lines);
+  }
+
+  function bootPanelReveals(panel) {
+    if (!panel) return;
+
+    teardownReveals();
+
+    afterLayout(() => {
+      if (!panel.isConnected || panel.hidden) return;
+
+      const blocks = revealTargetsForPanel(panel);
+      if (!blocks.length) return;
+
+      const lines = [];
+      blocks.forEach((block) => {
+        splitBlockIntoLines(block).forEach((line) => lines.push(line));
+      });
+
+      if (!lines.length) return;
+
+      if (reduced) {
+        revealAllLines(lines);
+        return;
+      }
+
+      setRevealMode(true);
+      void document.body.offsetHeight;
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          revealLinesInView(lines, { stagger: 52 });
+          bootLineObservers(lines);
+          scheduleRevealFallback(lines);
+        });
+      });
+    });
+  }
+
+  function scheduleRevealBoot(panelId) {
+    const id = normalizePanel(panelId);
+
+    whenContentReady(function () {
+      if (!stage || stage.dataset.imprintPhase !== "open") return;
+      const panel = document.querySelector('.imprint-panel.is-active[data-imprint-panel="' + id + '"]');
+      bootPanelReveals(panel);
+    });
+  }
+
+  function openPanel(panelId, options) {
+    options = options || {};
+    scrollToTopImmediate();
+    const id = normalizePanel(panelId);
+
+    function resolvePanel() {
+      return document.querySelector('.imprint-panel.is-active[data-imprint-panel="' + id + '"]');
+    }
+
+    function boot() {
+      bootPanelReveals(resolvePanel());
+    }
+
+    if (options.waitForTransition) {
+      scheduleRevealBoot(id);
+      window.setTimeout(function () {
+        if (document.body.classList.contains("imprint-reveals-ready")) return;
+        if (document.querySelector(".imprint-line")) return;
+        boot();
+      }, PHASE_MS + 420);
+      return;
+    }
+
+    boot();
+  }
+
+  function setActivePanel(panelId, options = {}) {
+    const id = normalizePanel(panelId);
+    const restoreOthers = options.restoreOthers !== false;
+
+    pickerBtns.forEach((btn) => {
+      const active = btn.dataset.imprintPanel === id;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
     });
 
+    panels.forEach((panel) => {
+      const active = panel.dataset.imprintPanel === id;
+      if (restoreOthers && !active) restorePanelReveals(panel);
+      panel.classList.toggle("is-active", active);
+      panel.hidden = !active;
+    });
+
+    const heroTitle = content && content.querySelector(".imprint-content__head .ins-logs-hub__title");
+    if (heroTitle && PANEL_TITLES[id]) {
+      if (heroTitle.dataset.imprintLinesReady === "1") {
+        restoreHeroReveal();
+      }
+      heroTitle.innerHTML =
+        '<span class="ins-logs-hub__title-line" data-imprint-title>' + PANEL_TITLES[id] + "</span>";
+    }
+
+    return id;
+  }
+
+  function setPhase(phase, panelId, options = {}) {
+    const open = phase === "open";
+    const updateHash = options.updateHash !== false;
+    const wasOpen = stage && stage.dataset.imprintPhase === "open";
+    const nextId = normalizePanel(panelId || "imprint");
+
+    if (open && wasOpen) {
+      const currentId = document.querySelector(".imprint-panel.is-active")?.dataset.imprintPanel;
+      if (currentId === nextId) return;
+
+      clearPhaseTimer();
+      contentReadyToken++;
+      const id = setActivePanel(nextId);
+
+      if (updateHash) {
+        const nextHash = "#" + id;
+        if (window.location.hash !== nextHash) {
+          imprintHashLock = true;
+          history.replaceState(null, "", nextHash);
+          window.setTimeout(function () {
+            imprintHashLock = false;
+          }, 0);
+        }
+      }
+
+      if (options.scrollTop !== false) {
+        scrollToTopImmediate();
+      }
+
+      openPanel(id);
+      return;
+    }
+
+    clearPhaseTimer();
+    contentReadyToken++;
+
+    if (stage) stage.dataset.imprintPhase = open ? "open" : "choose";
+
+    if (hub) hub.hidden = false;
+    if (content) content.hidden = false;
+
+    document.body.classList.toggle("imprint-phase-choose", !open);
+    document.body.classList.toggle("imprint-phase-open", open);
+
+    syncBackChrome(open);
+
+    if (!open) {
+      teardownReveals();
+
+      pickerBtns.forEach((btn) => {
+        btn.classList.remove("is-active");
+        btn.setAttribute("aria-pressed", "false");
+      });
+
+      if (updateHash) {
+        const base = window.location.pathname + window.location.search;
+        if (window.location.hash) {
+          history.replaceState(null, "", base);
+        }
+      }
+
+      if (options.scrollTop !== false) {
+        scrollToTop({ duration: reduced ? 0.01 : 0.85 });
+      }
+
+      afterPhaseTransition(() => {
+        if (!stage || stage.dataset.imprintPhase !== "choose") return;
+        restoreAllPanelReveals();
+        if (content) content.hidden = true;
+      });
+      return;
+    }
+
+    const id = setActivePanel(nextId);
+
+    if (updateHash) {
+      const nextHash = "#" + id;
+      if (window.location.hash !== nextHash) {
+        imprintHashLock = true;
+        history.replaceState(null, "", nextHash);
+        window.setTimeout(function () {
+          imprintHashLock = false;
+        }, 0);
+      }
+    }
+
+    if (options.scrollTop !== false) {
+      scrollToTopImmediate();
+    }
+
+    openPanel(id, { waitForTransition: !options.immediateReveals });
+  }
+
+  function bootImprintHub() {
+    if (!pickerBtns.length || !panels.length) return;
+
+    pickerBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        setPhase("open", btn.dataset.imprintPanel, { updateHash: true, scrollTop: true });
+      });
+    });
+
+    const hashId = window.location.hash.replace("#", "");
+    if (hashId && VALID_PANELS.indexOf(hashId) !== -1) {
+      setPhase("open", hashId, { updateHash: false, immediateReveals: true });
+    } else {
+      setPhase("choose", null, { updateHash: false, scrollTop: false });
+    }
+
     window.addEventListener("hashchange", () => {
+      if (imprintHashLock) return;
       const id = window.location.hash.replace("#", "");
-      const i = ids.indexOf(id);
-      if (i >= 0) setIndex(i, { updateHash: false });
-      else if (!id) setIndex(0, { updateHash: false });
+      if (!id) {
+        setPhase("choose", null, { updateHash: false, scrollTop: true });
+        return;
+      }
+      if (VALID_PANELS.indexOf(id) !== -1) {
+        const currentId = document.querySelector(".imprint-panel.is-active")?.dataset.imprintPanel;
+        if (stage && stage.dataset.imprintPhase === "open" && currentId === id) return;
+        setPhase("open", id, { updateHash: false, scrollTop: true });
+      }
     });
 
     window.addEventListener("resize", () => {
-      if (!ready) return;
-      layoutTitles({ animate: false });
-    });
-
-    const hash = window.location.hash.replace("#", "");
-    const fromHash = ids.indexOf(hash);
-
-    /* Initial CSS-safe state before fonts — only active visible */
-    setIndex(fromHash >= 0 ? fromHash : 0, {
-      updateHash: false,
-      animate: false,
-    });
-
-    fontsReady().then(() => {
-      afterPaint(() => {
-        ready = true;
-        selector.classList.add("is-ready");
-        layoutTitles({ animate: false, direction: 1 });
-
-        if (fromHash > 0) {
-          setTimeout(
-            () => scrollToTarget(root, { offset: -16, duration: 1.15 }),
-            160
-          );
-        }
-      });
+      if (!stage || stage.dataset.imprintPhase !== "open") return;
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        const panel = document.querySelector(".imprint-panel.is-active");
+        if (!panel) return;
+        restorePanelReveals(panel);
+        restoreHeroReveal();
+        bootPanelReveals(panel);
+      }, 220);
     });
   }
 
+  if (stage) {
+    stage.classList.add("active", "is-active");
+  }
+
   bootLenis();
-  bootSignatureDraw(document);
-  bootCarousel();
+  bootImprintHub();
 });

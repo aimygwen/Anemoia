@@ -8,7 +8,7 @@
 
   var LOG_IDS = ["identity", "workspace", "hytale"];
   var LOG_LABELS = {
-    identity: { title: "Identity", sub: "Branding" },
+    identity: { title: "Vibe shit", sub: "Branding" },
     workspace: { title: "Workspace", sub: "My desk and how I work" },
     hytale: { title: "Hytale", sub: "Models, UV mapping, and structure" },
   };
@@ -24,7 +24,6 @@
   var mountToken = 0;
   var deckRevealTimers = [];
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var logBackBtn = null;
   var logNextLink = null;
   var logNextScrollRaf = 0;
   var logNextScrollBound = false;
@@ -146,34 +145,27 @@
     }
   }
 
-  function ensureLogBack() {
-    if (logBackBtn && document.body.contains(logBackBtn)) return logBackBtn;
-    logBackBtn = document.createElement("button");
-    logBackBtn.type = "button";
-    logBackBtn.className = "ins-log-back";
-    logBackBtn.setAttribute("data-ins-log-back", "");
-    logBackBtn.setAttribute("aria-label", "Back to Insights");
-    logBackBtn.textContent = "Back";
-    logBackBtn.hidden = true;
-    logBackBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
-        window.AimySpa.navigate("./insights");
-      }
-    });
-    document.body.appendChild(logBackBtn);
-    return logBackBtn;
-  }
-
   function syncLogBackChrome(visible, logId) {
-    var back = ensureLogBack();
-    back.hidden = !visible;
-    back.setAttribute("aria-hidden", visible ? "false" : "true");
     if (visible && logId) {
       document.body.setAttribute("data-ins-active-log", logId);
     } else {
       document.body.removeAttribute("data-ins-active-log");
     }
+
+    if (!window.AimySpaSubBack) return;
+    if (!visible || !logId) {
+      window.AimySpaSubBack.hide();
+      return;
+    }
+
+    window.AimySpaSubBack.show({
+      tone: logId === "workspace" ? "light" : null,
+      onClick: function () {
+        if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
+          window.AimySpa.navigate("./insights");
+        }
+      },
+    });
   }
 
   function syncLogNextChrome(visible, logId) {
@@ -400,10 +392,7 @@
       activeLog = null;
       document.body.classList.remove("ins-logs-choose", "ins-logs-open");
       document.body.removeAttribute("data-ins-active-log");
-      if (logBackBtn) {
-        logBackBtn.hidden = true;
-        logBackBtn.setAttribute("aria-hidden", "true");
-      }
+      if (window.AimySpaSubBack) window.AimySpaSubBack.hide();
       restoreLogNextFooter();
       var nextScroll = document.querySelector("[data-ins-log-next-scroll]");
       if (nextScroll) {

@@ -446,17 +446,17 @@ html.lenis-smooth {
 
   .about-page-body {
     --paper: var(--pk-bg);
-    --ink: var(--step-02);
+    --ink: var(--pk-text);
     --pink: color-mix(in srgb, var(--step-06) 38%, var(--pk-bg));
     --peach: var(--pk-surface);
     --blue: color-mix(in srgb, var(--step-06) 28%, var(--pk-bg));
     --sky: var(--pk-bg);
     --violet-soft: var(--pk-surface);
     --violet-deep: var(--step-03);
-    --aimy-chrome-ink: var(--pk-primary);
+    --aimy-chrome-ink: var(--pk-text);
     --aimy-primary: var(--pk-primary);
-    --aimy-secondary: var(--step-02);
-    --aimy-tertiary: var(--step-08);
+    --aimy-secondary: var(--pk-text);
+    --aimy-tertiary: var(--pk-heading);
     --aimy-accent: var(--pk-accent);
     --aimy-menu-coin: var(--pk-primary);
     --aimy-menu-coin-open: var(--pk-accent);
@@ -468,8 +468,15 @@ html.lenis-smooth {
     background: var(--sky);
   }
 
+  .about-page-body h1,
+  .about-page-body h2,
+  .about-page-body h3,
+  .about-page-body h4 {
+    color: var(--pk-heading);
+  }
+
   .about-page-body .site-header[data-aimy-chrome] {
-    --aimy-chrome-ink: var(--pk-primary);
+    --aimy-chrome-ink: var(--pk-text);
     --aimy-primary: var(--pk-primary);
   }
 

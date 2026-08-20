@@ -270,7 +270,7 @@
       var legalPath = legalUrl.pathname.toLowerCase();
       if (legalPath.indexOf("imprint") !== -1 || legalPath.indexOf("legal") !== -1) {
         legalUrl.pathname = legalUrl.pathname.replace(/\/[^/]*$/, "/imprint.html");
-        legalUrl.searchParams.set("v", "imprint-ins-5");
+        legalUrl.searchParams.set("v", "imprint-ins-48");
         window.location.replace(legalUrl.pathname + legalUrl.search + legalUrl.hash);
         return;
       }
@@ -384,7 +384,7 @@
 (function (global) {
   "use strict";
 
-  var VERSION = "polykroma-66";
+  var VERSION = "polykroma-95";
   var bootedSocials = false;
   var bootedReveal = false;
   var chromeSettled = false;
@@ -420,6 +420,13 @@
       global.matchMedia &&
       global.matchMedia("(prefers-reduced-motion: reduce)").matches
     );
+  }
+
+  function charmMarkReady() {
+    if (global.AimyCharmMark && global.AimyCharmMark.ready) {
+      return global.AimyCharmMark.ready;
+    }
+    return Promise.resolve();
   }
 
   function bootChromeReveal(options) {
@@ -485,9 +492,13 @@
       global.setTimeout(resolve, 280);
     });
 
-    Promise.race([fontsOk, fontsBudget]).then(function () {
-      afterPaint(reveal);
-    });
+    Promise.race([fontsOk, fontsBudget])
+      .then(function () {
+        return charmMarkReady();
+      })
+      .then(function () {
+        afterPaint(reveal);
+      });
   }
 
   function bootSocialsScroll(options) {
@@ -575,7 +586,7 @@
   /* —— Overlay menu (coin + shell) —— */
 var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var hasGsap = typeof gsap !== "undefined";
-  var IMPRINT_PAGE_TAG = "imprint-ins-5";
+  var IMPRINT_PAGE_TAG = "imprint-ins-48";
 
   function imprintPageHref() {
     return "./imprint.html?v=" + IMPRINT_PAGE_TAG;
@@ -782,6 +793,27 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     );
   }
 
+  /* Geometry from assets/polykroma/icons/arrow-left.svg + arrow-right.svg */
+  var MENU_ARROW_PATH =
+    "M209,114C208.999,134.209 237.423,210 359,210L59,210L359,210C229.831,210 209,285.362 209,306";
+
+  function menuSelectArrowSvg(direction) {
+    var transform =
+      direction === "prev"
+        ? "matrix(-1.453333,0,0,2.270833,524.746667,-255.875)"
+        : "matrix(1.453333,0,0,2.270833,-82.746667,-255.875)";
+    return (
+      '<svg class="pk-menu-select__arrow-svg" viewBox="0 0 442 442" aria-hidden="true" focusable="false">' +
+      '<g transform="' +
+      transform +
+      '">' +
+      '<path d="' +
+      MENU_ARROW_PATH +
+      '" fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5"></path>' +
+      "</g></svg>"
+    );
+  }
+
   function menuCarouselBlock() {
     return (
       '<div class="pk-menu-group pk-menu-group--primary pk-menu-group--carousel" aria-label="Navigate">' +
@@ -804,18 +836,11 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       '        </div>' +
       '      </div>' +
       '      <div class="pk-menu-select__controls">' +
-      '        <button type="button" class="pk-menu-select__arrow" data-menu-select-prev aria-label="Previous section">' +
-      '          <svg viewBox="0 0 50 50" aria-hidden="true"><polygon points="48 24.5 3 24.5 12.4 12.3 11.6 11.7 1.4 25 11.6 37.3 12.4 36.7 3.1 25.5 48 25.5 48 24.5"></polygon></svg>' +
+      '        <button type="button" class="pk-menu-select__arrow pk-menu-select__arrow--prev" data-menu-select-prev aria-label="Previous section">' +
+      menuSelectArrowSvg("prev") +
       '        </button>' +
-      '        <button type="button" class="pk-menu-select__open" data-menu-select-open aria-label="Open Work">' +
-      '          <svg class="pk-menu-select__open-ring" viewBox="0 0 36 36" aria-hidden="true">' +
-      '            <circle cx="18" cy="18" r="15.5"></circle>' +
-      '            <circle cx="18" cy="18" r="15.5" pathLength="100"></circle>' +
-      '          </svg>' +
-      '          <svg class="pk-menu-select__open-icon" viewBox="0 0 50 50" aria-hidden="true"><polygon points="38.4 11.7 37.6 12.3 47 24.5 2 24.5 2 25.5 46.9 25.5 37.6 36.7 38.4 37.3 48.6 25 38.4 11.7"></polygon></svg>' +
-      '        </button>' +
-      '        <button type="button" class="pk-menu-select__arrow" data-menu-select-next aria-label="Next section">' +
-      '          <svg viewBox="0 0 50 50" aria-hidden="true"><polygon points="38.4 11.7 37.6 12.3 47 24.5 2 24.5 2 25.5 46.9 25.5 37.6 36.7 38.4 37.3 48.6 25 38.4 11.7"></polygon></svg>' +
+      '        <button type="button" class="pk-menu-select__arrow pk-menu-select__arrow--next" data-menu-select-next aria-label="Next section">' +
+      menuSelectArrowSvg("next") +
       '        </button>' +
       '      </div>' +
       '    </section>' +
@@ -824,8 +849,20 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     );
   }
 
+  function menuCarouselHint() {
+    return (
+      '<div class="pk-menu-select__hint" aria-hidden="true">' +
+      '  <div class="pk-menu-select__hint-desktop">' +
+      '    <span class="pk-menu-select__hint-line">ENTER — select</span>' +
+      '    <span class="pk-menu-select__hint-line">ESC — return</span>' +
+      '    <span class="pk-menu-select__hint-line">Drag, Swipe, Scroll, Or ← Arrow Keys → — navigate</span>' +
+      "  </div>" +
+      '  <p class="pk-menu-select__hint-mobile">swipe or use ← arrows → to navigate</p>' +
+      "</div>"
+    );
+  }
+
   function buildDOM() {
-    var base = pageBase();
     var root = document.createElement("div");
     root.className = "pk-menu-root";
     root.setAttribute("data-pk-menu", "1");
@@ -846,7 +883,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       '      <div class="pk-menu-group pk-menu-group--util" aria-label="Utility">' +
       '        <ul class="pk-menu-list pk-menu-list--util">' +
       utilItem("Imprint", imprintPageHref(), "right") +
-      utilItem("Contact", base + "contact", "left") +
+      utilItem("Contact", menuHref("contact"), "left") +
       "        </ul>" +
       '        <ul class="pk-menu-list pk-menu-list--social" aria-label="Social">' +
       socialItem(
@@ -873,6 +910,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       "        </ul>" +
       "      </div>" +
       "    </div>" +
+      menuCarouselHint() +
       "  </nav>" +
       "</div>";
     document.body.appendChild(root);
@@ -939,6 +977,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     window.__aimyMarkMenuCurrent = function () {
       markCurrent(root);
     };
+    window.__aimyPageKey = pageKey;
 
     var shell = root.querySelector(".pk-nav-shell");
     var menuEl = root.querySelector(".pk-menu");
@@ -946,7 +985,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     var menuPanel = root.querySelector(".pk-menu-panel");
     var menuRule = root.querySelector(".pk-menu-rule");
     var menuCarouselWrap = root.querySelector(".pk-menu-carousel-wrap");
-    var menuCarouselOpen = root.querySelector("[data-pk-menu-select] [data-menu-select-open]");
+    var menuCarouselFocus = root.querySelector("[data-pk-menu-select] [data-menu-select-hit].is-active");
     var hitIn = root.querySelector(".pk-burger-in");
     var hitOut = root.querySelector(".pk-burger-out");
     var coinButton = root.querySelector(".pk-coin-button");
@@ -965,7 +1004,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     function refreshFocusables() {
       focusables = Array.prototype.slice.call(
         root.querySelectorAll(
-          ".pk-burger-hit.on, .pk-menu-link, .pk-menu-social, [data-pk-menu-select] [data-menu-select-prev], [data-pk-menu-select] [data-menu-select-next], [data-pk-menu-select] [data-menu-select-open], [data-pk-menu-select] [data-menu-select-hit]"
+          ".pk-burger-hit.on, .pk-menu-link, .pk-menu-social, [data-pk-menu-select] [data-menu-select-prev], [data-pk-menu-select] [data-menu-select-next], [data-pk-menu-select] [data-menu-select-hit]"
         )
       );
     }
@@ -1067,6 +1106,23 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       gsap.set(motionTargets, { clearProps: "opacity,transform,filter" });
     }
 
+    function beginMenuCarouselReveal(open) {
+      var ms = window.AimyMenuSelect;
+      if (!ms) return;
+      if (open) {
+        if (typeof ms.playMenuReveal === "function") {
+          ms.playMenuReveal(true);
+        }
+        if (typeof ms.resumeMenu === "function") {
+          ms.resumeMenu({ revealing: true });
+        }
+        return;
+      }
+      if (typeof ms.playMenuReveal === "function") {
+        ms.playMenuReveal(open);
+      }
+    }
+
     function animateMenuMotion(open, onDone) {
       if (!hasGsap || reducedMotion || isLegalPage()) {
         if (open) {
@@ -1082,7 +1138,9 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
           });
           if (menuPanel) menuPanel.style.opacity = "1";
           if (menuRule) menuRule.style.opacity = "1";
+          if (menuCarouselWrap) menuCarouselWrap.style.opacity = "1";
           setPageFrost(true);
+          if (open) beginMenuCarouselReveal(true);
         } else {
           if (menuVeil) {
             menuVeil.style.opacity = "0";
@@ -1123,7 +1181,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
         gsap.set(menuRule, { opacity: 0, scaleX: 0.35, transformOrigin: "center center" });
         gsap.set(allLinks, { opacity: 0, y: 22, filter: "blur(7px)", force3D: true });
         if (menuCarouselWrap) {
-          gsap.set(menuCarouselWrap, { opacity: 0, y: 28, scale: 0.965, filter: "blur(9px)", force3D: true });
+          gsap.set(menuCarouselWrap, { opacity: 0, filter: "blur(8px)", force3D: true });
         }
         gsap.set(socialLinks, { opacity: 0, y: 14, force3D: true });
         setPageFrost(true);
@@ -1159,14 +1217,15 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
             menuCarouselWrap,
             {
               opacity: 1,
-              y: 0,
-              scale: 1,
               filter: "blur(0px)",
               duration: 0.92,
-              ease: "power3.out",
+              ease: "power2.out",
             },
             0.22
           );
+          openTimeline.add(function () {
+            beginMenuCarouselReveal(true);
+          }, 0.22);
         }
         openTimeline
           .to(
@@ -1199,13 +1258,11 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
             menuCarouselWrap,
             {
               opacity: 0,
-              y: -18,
-              scale: 0.98,
               filter: "blur(6px)",
-              duration: 0.4,
+              duration: 0.48,
               ease: "power2.in",
             },
-            0
+            0.08
           );
         }
         openTimeline
@@ -1254,23 +1311,19 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       setSelected(-1);
       refreshFocusables();
 
+      if (window.AimyMenuSelect && typeof window.AimyMenuSelect.bootMenu === "function") {
+        window.AimyMenuSelect.bootMenu();
+      }
+
       function finishOpen() {
-        if (window.AimyMenuSelect) {
-          if (typeof window.AimyMenuSelect.bootMenu === "function") {
-            window.AimyMenuSelect.bootMenu();
-          }
-          if (typeof window.AimyMenuSelect.syncToView === "function") {
-            window.AimyMenuSelect.syncToView(pageKey());
-          }
-          if (typeof window.AimyMenuSelect.resumeMenu === "function") {
-            window.AimyMenuSelect.resumeMenu();
-          }
+        if (window.AimyMenuSelect && typeof window.AimyMenuSelect.bootMenu === "function") {
+          window.AimyMenuSelect.bootMenu();
         }
         window.setTimeout(function () {
           if (window.AimyMenuSelect && typeof window.AimyMenuSelect.resize === "function") {
             window.AimyMenuSelect.resize();
           }
-          if (menuCarouselOpen) menuCarouselOpen.focus({ preventScroll: true });
+          if (menuCarouselFocus) menuCarouselFocus.focus({ preventScroll: true });
         }, 120);
         canClick = true;
       }
@@ -1286,12 +1339,11 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       root.classList.remove("is-menu-open");
       showHits(false);
       setSelected(-1);
-      if (window.AimyMenuSelect && typeof window.AimyMenuSelect.pauseMenu === "function") {
-        window.AimyMenuSelect.pauseMenu();
-      }
-      startScroll();
 
-      var finish = function () {
+      function finishClose() {
+        if (window.AimyMenuSelect && typeof window.AimyMenuSelect.pauseMenu === "function") {
+          window.AimyMenuSelect.pauseMenu();
+        }
         menuEl.classList.remove("is-visible");
         shell.classList.remove("is-open");
         shell.hidden = true;
@@ -1302,15 +1354,24 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
           } catch (e) {}
         }
         canClick = true;
-      };
+      }
 
-      if (reducedMotion || !hasGsap) {
-        animateMenuMotion(false);
-        finish();
+      function runCloseUiMotion() {
+        startScroll();
+        if (reducedMotion || !hasGsap) {
+          animateMenuMotion(false);
+          finishClose();
+          return;
+        }
+        animateMenuMotion(false, finishClose);
+      }
+
+      if (window.AimyMenuSelect && typeof window.AimyMenuSelect.playMenuReveal === "function") {
+        window.AimyMenuSelect.playMenuReveal(false, runCloseUiMotion);
         return;
       }
 
-      animateMenuMotion(false, finish);
+      runCloseUiMotion();
     }
 
     function toggle() {
@@ -1450,6 +1511,8 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
         if (canClick) closeMenu();
         return;
       }
+
+      if (menuCarouselWrap) return;
 
       if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.preventDefault();

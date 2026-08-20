@@ -1,26 +1,36 @@
 /**
- * work-stickerbook.js — Hytale Work sticker book from assets/content/lowpoly/hytale/pages/.
+ * work-stickerbook.js — Hytale Work sticker book (single page, catalog-driven).
  */
 (function () {
   "use strict";
 
-  var PAGES_INDEX_URL = "./assets/content/lowpoly/hytale/pages/index.json?v=hytale-pages-7";
-  var PAGES_BASE = "./assets/content/lowpoly/hytale/pages/";
   var CONTENT_BASE = "./assets/content/";
 
   var holoCleanups = [];
   var variantCycleCleanups = [];
   var built = false;
-  var currentPage = 0;
-  var pageCount = 0;
   var pagesHost = null;
-  var countEl = null;
-  var nextBtn = null;
-  var onNextClick = null;
-  var pageData = [];
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var resizeTimer = 0;
   var onResize = null;
+
+  var CATEGORY_ORDER = ["battlegear", "consumables", "collectibles", "cosmetics", "furnishings", "misc"];
+  var CATEGORY_LABELS = {
+    battlegear: "Battlegear",
+    consumables: "Consumables",
+    collectibles: "Collectibles",
+    cosmetics: "Cosmetics",
+    furnishings: "Furnishings",
+    misc: "Misc",
+  };
+  var CATEGORY_LEDES = {
+    battlegear: "Weapons, instruments, and gear built for adventure.",
+    consumables: "Food, potions, and items that keep you going.",
+    collectibles: "Plushies, treasures, and rare finds worth keeping.",
+    cosmetics: "Outfits, accessories, and flair for every mood.",
+    furnishings: "Modular storage, seating, lighting, and decor.",
+    misc: "Torii gates, arcades, and everything in between.",
+  };
 
   function hashSeed(str) {
     var h = 0;
@@ -76,7 +86,7 @@
     return null;
   }
 
-  function collectVariantFrames(sticker, pageFolder) {
+  function collectVariantFrames(sticker) {
     var baseLabel = sticker.label || sticker.title || sticker.name || "Sticker";
     var frames = [];
 
@@ -86,7 +96,7 @@
         var suffix =
           variant.label && variant.label !== "Default" ? ", " + variant.label : "";
         frames.push({
-          image: resolveStickerImage(pageFolder, variant.image),
+          image: resolveImageSrc(variant.image),
           label: baseLabel + suffix,
         });
       });
@@ -98,7 +108,7 @@
           var suffix =
             variant.label && variant.label !== "Default" ? ", " + variant.label : "";
           frames.push({
-            image: resolveStickerImage(pageFolder, variant.image),
+            image: resolveImageSrc(variant.image),
             label: baseLabel + suffix,
           });
         });
@@ -110,7 +120,7 @@
     if (sticker.image) {
       return [
         {
-          image: resolveStickerImage(pageFolder, sticker.image),
+          image: resolveImageSrc(sticker.image),
           label: baseLabel,
         },
       ];
@@ -140,9 +150,9 @@
     }, 220);
   }
 
-  function startVariantCycle(card, img, sticker, pageFolder) {
+  function startVariantCycle(card, img, sticker) {
     if (reduced) return null;
-    var frames = collectVariantFrames(sticker, pageFolder);
+    var frames = collectVariantFrames(sticker);
     if (frames.length < 2) return null;
 
     var index = 0;
@@ -156,8 +166,6 @@
 
     function tick() {
       if (!card.isConnected) return;
-      var page = card.closest(".work-stickerbook__page");
-      if (!page || !page.classList.contains("is-active") || page.hidden) return;
       index = (index + 1) % frames.length;
       swapStickerFrame(card, img, frames[index]);
     }
@@ -173,23 +181,16 @@
     };
   }
 
-  function syncPageVariantCycles(page) {
+  function syncPageVariantCycles() {
     stopAllVariantCycles();
-    if (!page || reduced) return;
-    page.querySelectorAll(".work-sticker").forEach(function (card) {
+    if (reduced) return;
+    if (!pagesHost) return;
+    pagesHost.querySelectorAll(".work-sticker").forEach(function (card) {
       var sticker = card.__stickerConfig;
-      var pageFolder = card.__pageFolder;
       var img = card.querySelector(".work-sticker__img, .card-preview-img");
       if (!sticker || !img) return;
-      var cleanup = startVariantCycle(card, img, sticker, pageFolder);
+      var cleanup = startVariantCycle(card, img, sticker);
       if (cleanup) variantCycleCleanups.push(cleanup);
-    });
-  }
-
-  function fetchJson(url) {
-    return fetch(url).then(function (res) {
-      if (!res.ok) throw new Error("Failed to load " + url);
-      return res.json();
     });
   }
 
@@ -203,28 +204,16 @@
     ) {
       return raw;
     }
+    var base = window.LOWPOLY_ASSET_BASE || CONTENT_BASE;
+    if (base && raw.indexOf("./") !== 0 && raw.indexOf("/") !== 0) {
+      var sep = base.charAt(base.length - 1) === "/" ? "" : "/";
+      raw = base + sep + raw;
+    }
     try {
       return new URL(raw, window.location.href).href;
     } catch (err) {
       return raw;
     }
-  }
-
-  function resolveStickerImage(pageFolder, imagePath) {
-    if (!imagePath) return "";
-    var clean = String(imagePath).trim();
-    if (/^(https?:|data:|\/\/)/.test(clean)) return clean;
-
-    if (clean.indexOf("./") === 0 || clean.indexOf("../") === 0) {
-      return resolveImageSrc(PAGES_BASE + pageFolder + "/" + clean.replace(/^\.\//, ""));
-    }
-
-    if (clean.indexOf("lowpoly/") === 0 || clean.indexOf("content/") === 0) {
-      var rel = clean.indexOf("content/") === 0 ? clean.slice("content/".length) : clean;
-      return resolveImageSrc(CONTENT_BASE + rel);
-    }
-
-    return resolveImageSrc(PAGES_BASE + pageFolder + "/" + clean);
   }
 
   function syncStickerImages(card, src) {
@@ -300,65 +289,57 @@
     card.classList.add("work-sticker--" + sticker.size);
   }
 
-  function applyStickerStyle(card, sticker, pageIndex, indexInPage) {
-    var id = card.dataset.itemId || String(indexInPage);
-    var seed = hashSeed(id + ":p" + pageIndex);
+  function applyStickerStyle(card, sectionIndex, indexInSection) {
+    var id = card.dataset.itemId || String(indexInSection);
+    var seed = hashSeed(id + ":s" + sectionIndex);
     var rot = -10 + seededRandom(seed + 23) * 20;
     var scale = 0.94 + seededRandom(seed + 37) * 0.08;
     var sizeMult = 1;
 
-    if (sticker && sticker.size === "hero") {
+    if (indexInSection === 0) {
       rot = -5 + seededRandom(seed + 23) * 10;
       scale = 1;
       sizeMult = heroSizeMultiplier();
-    } else if (sticker && sticker.size === "large") {
-      scale = 1;
-      sizeMult = 1.28;
-    }
-
-    if (sticker && typeof sticker.scale === "number" && sticker.scale > 0) {
-      sizeMult = sticker.scale;
     }
 
     card.style.setProperty("--sticker-rot", rot.toFixed(2) + "deg");
     card.style.setProperty("--sticker-scale", scale.toFixed(3));
     card.style.setProperty("--sticker-size", sizeMult.toFixed(3));
-    applyStickerSize(card, sticker);
+    applyStickerSize(card, null);
   }
 
-  function layoutSticker(card, pageIndex, indexInPage, totalOnPage, sticker) {
-    var spec = gridSpec(totalOnPage);
+  function layoutSticker(card, sectionIndex, indexInSection, totalInSection) {
+    var spec = gridSpec(totalInSection);
     var cols = spec.cols;
-    var col = indexInPage % cols;
-    var row = Math.floor(indexInPage / cols);
-    var totalRows = Math.ceil(totalOnPage / cols);
-    var itemsThisRow = Math.max(1, Math.min(cols, totalOnPage - row * cols));
+    var col = indexInSection % cols;
+    var row = Math.floor(indexInSection / cols);
+    var totalRows = Math.ceil(totalInSection / cols);
+    var itemsThisRow = Math.max(1, Math.min(cols, totalInSection - row * cols));
     var isLastRow = row === totalRows - 1;
     var rowOffset = isLastRow ? (cols - itemsThisRow) * 0.5 : 0;
 
     card.style.gridColumn = String(Math.round(rowOffset + col) + 1);
     card.style.gridRow = String(row + 1);
-    applyStickerStyle(card, sticker, pageIndex, indexInPage);
+    applyStickerStyle(card, sectionIndex, indexInSection);
   }
 
-  function relayoutPage(pageEl, stickers, pageIndex) {
-    if (!pageEl || !stickers || !stickers.length) return;
+  function relayoutSection(sectionEl, stickers, sectionIndex) {
+    if (!sectionEl || !stickers || !stickers.length) return;
     var spec = gridSpec(stickers.length);
-    pageEl.style.setProperty("--sticker-cols", String(spec.cols));
-    pageEl.style.setProperty("--sticker-rows", String(spec.rows));
-    var cards = pageEl.querySelectorAll(".work-sticker");
+    sectionEl.style.setProperty("--sticker-cols", String(spec.cols));
+    sectionEl.style.setProperty("--sticker-rows", String(spec.rows));
+    var cards = sectionEl.querySelectorAll(".work-sticker");
     stickers.forEach(function (sticker, index) {
       var card = cards[index];
-      if (card) layoutSticker(card, pageIndex, index, stickers.length, sticker);
+      if (card) layoutSticker(card, sectionIndex, index, stickers.length);
     });
   }
 
-  function relayoutAllPages() {
-    if (!pagesHost || !pageData.length) return;
-    pageData.forEach(function (entry, pageIndex) {
-      var page = pagesHost.querySelector('[data-stickerbook-page="' + pageIndex + '"]');
-      if (!page) return;
-      relayoutPage(page, entry.config.stickers || [], pageIndex);
+  function relayoutAllSections() {
+    if (!pagesHost) return;
+    pagesHost.querySelectorAll(".work-stickerbook__section").forEach(function (section, index) {
+      var stickers = section.__sectionStickers || [];
+      relayoutSection(section, stickers, index);
     });
   }
 
@@ -368,7 +349,7 @@
       if (resizeTimer) window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(function () {
         resizeTimer = 0;
-        relayoutAllPages();
+        relayoutAllSections();
       }, 120);
     };
     window.addEventListener("resize", onResize, { passive: true });
@@ -407,11 +388,11 @@
     });
   }
 
-  function createStickerCard(sticker, pageFolder, pageIndex, indexInPage, totalOnPage) {
+  function createStickerCard(sticker, sectionIndex, indexInSection, totalInSection) {
     var label = sticker.label || sticker.title || sticker.name || "Sticker";
     var stickerId = sticker.id || sticker.catalogId || label;
-    var frames = collectVariantFrames(sticker, pageFolder);
-    var imageRaw = frames.length ? frames[0].image : resolveStickerImage(pageFolder, sticker.image);
+    var frames = collectVariantFrames(sticker);
+    var imageRaw = frames.length ? frames[0].image : resolveImageSrc(sticker.image);
     var card = document.createElement("div");
 
     card.className = "bento-card card-normal work-sticker card interactive";
@@ -423,7 +404,6 @@
     if (sticker.catalogId) card.dataset.catalogId = sticker.catalogId;
     card.setAttribute("data-sticker-src", imageRaw);
     card.__stickerConfig = sticker;
-    card.__pageFolder = pageFolder;
 
     var translater = document.createElement("div");
     translater.className = "card__translater work-sticker__translater";
@@ -453,7 +433,7 @@
     translater.appendChild(rotator);
     card.appendChild(translater);
 
-    layoutSticker(card, pageIndex, indexInPage, totalOnPage, sticker);
+    layoutSticker(card, sectionIndex, indexInSection, totalInSection);
     bindStickerHolo(card);
     bindStickerClick(card, sticker);
     ensureStickerImage(img, card, imageRaw);
@@ -461,70 +441,131 @@
     return card;
   }
 
-  function appendIntro(pageEl, config) {
-    if (!config.topic && !config.title && !config.lede && !config.body) return;
+  function appendSectionIntro(sectionEl, category) {
+    var label = CATEGORY_LABELS[category] || category;
+    var lede = CATEGORY_LEDES[category] || "";
 
     var intro = document.createElement("header");
     intro.className = "work-stickerbook__intro";
 
-    if (config.topic) {
-      var topic = document.createElement("p");
-      topic.className = "work-stickerbook__topic";
-      topic.textContent = config.topic;
-      intro.appendChild(topic);
+    var topic = document.createElement("p");
+    topic.className = "work-stickerbook__topic";
+    topic.textContent = label;
+    intro.appendChild(topic);
+
+    if (lede) {
+      var ledeEl = document.createElement("p");
+      ledeEl.className = "work-stickerbook__lede";
+      ledeEl.textContent = lede;
+      intro.appendChild(ledeEl);
     }
 
-    if (config.title) {
-      var title = document.createElement("h2");
-      title.className = "work-stickerbook__title";
-      title.textContent = config.title;
-      intro.appendChild(title);
-    }
-
-    if (config.lede) {
-      var lede = document.createElement("p");
-      lede.className = "work-stickerbook__lede";
-      lede.textContent = config.lede;
-      intro.appendChild(lede);
-    }
-
-    if (config.body) {
-      var body = document.createElement("p");
-      body.className = "work-stickerbook__body";
-      body.textContent = config.body;
-      intro.appendChild(body);
-    }
-
-    pageEl.appendChild(intro);
+    sectionEl.appendChild(intro);
   }
 
-  function buildPageElement(entry, pageIndex) {
-    var config = entry.config;
-    var stickers = Array.isArray(config.stickers) ? config.stickers : [];
-    if (!stickers.length) return null;
+  function buildSectionElement(category, items, sectionIndex) {
+    var section = document.createElement("section");
+    section.className = "work-stickerbook__section";
+    section.setAttribute("data-stickerbook-section", category);
 
-    var spec = gridSpec(stickers.length);
-    var page = document.createElement("article");
-    page.className = "work-stickerbook__page";
-    page.setAttribute("data-stickerbook-page", String(pageIndex));
-    page.setAttribute("data-stickerbook-folder", entry.id);
-    page.style.setProperty("--sticker-cols", String(spec.cols));
-    page.style.setProperty("--sticker-rows", String(spec.rows));
-    page.hidden = pageIndex !== 0;
-    page.setAttribute("aria-hidden", pageIndex === 0 ? "false" : "true");
-    if (pageIndex === 0) page.classList.add("is-active");
+    var spec = gridSpec(items.length);
+    section.style.setProperty("--sticker-cols", String(spec.cols));
+    section.style.setProperty("--sticker-rows", String(spec.rows));
+    section.__sectionStickers = items;
 
-    appendIntro(page, config);
+    appendSectionIntro(section, category);
 
     var grid = document.createElement("div");
     grid.className = "work-stickerbook__grid";
-    page.appendChild(grid);
+    section.appendChild(grid);
 
-    stickers.forEach(function (sticker, index) {
-      grid.appendChild(createStickerCard(sticker, entry.id, pageIndex, index, stickers.length));
+    items.forEach(function (item, index) {
+      grid.appendChild(createStickerCard(item, sectionIndex, index, items.length));
     });
 
-    return page;
+    return section;
+  }
+
+  function catalogItemToSticker(item) {
+    return {
+      id: item.id,
+      catalogId: item.id,
+      label: item.name || item.title || item.id,
+      title: item.title,
+      name: item.name,
+      image: item.image,
+      cycleVariants: Array.isArray(item.variants) && item.variants.length > 1,
+      variants: item.variants,
+    };
+  }
+
+  function groupCatalogItems() {
+    if (!window.LOWPOLY_CATALOG || !Array.isArray(window.LOWPOLY_CATALOG.items)) {
+      return {};
+    }
+
+    var groups = {};
+    window.LOWPOLY_CATALOG.items.forEach(function (item) {
+      if (!item.image || item.image.indexOf("lowpoly/hytale/") === -1) return;
+      if (item.image.indexOf("Thumbnails/") !== -1) return;
+
+      var cat = item.category || "misc";
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push(catalogItemToSticker(item));
+    });
+
+    return groups;
+  }
+
+  function renderSections(groups) {
+    if (!pagesHost) return;
+    pagesHost.innerHTML = "";
+
+    var sectionIndex = 0;
+    CATEGORY_ORDER.forEach(function (category) {
+      var items = groups[category];
+      if (!items || !items.length) return;
+      var section = buildSectionElement(category, items, sectionIndex);
+      pagesHost.appendChild(section);
+      sectionIndex++;
+    });
+  }
+
+  function build(panel) {
+    panel = panel || document.querySelector('[data-work-category-panel="hytale"]');
+    if (!panel) return Promise.resolve();
+
+    var shell = panel.querySelector("[data-work-stickerbook]");
+    var grid = panel.querySelector("#models-grid");
+    if (!shell) return Promise.resolve();
+
+    if (shell.dataset.stickerbookReady === "1" && shell.querySelector(".work-stickerbook__section")) {
+      pagesHost = shell.querySelector("[data-stickerbook-pages]");
+      relayoutAllSections();
+      syncPageVariantCycles();
+      return Promise.resolve();
+    }
+
+    teardown();
+
+    pagesHost = shell.querySelector("[data-stickerbook-pages]");
+    if (!pagesHost) return Promise.resolve();
+
+    var groups = groupCatalogItems();
+    renderSections(groups);
+
+    shell.hidden = false;
+    if (grid) {
+      grid.hidden = true;
+      grid.setAttribute("aria-hidden", "true");
+    }
+
+    built = pagesHost.querySelectorAll(".work-stickerbook__section").length > 0;
+    shell.dataset.stickerbookReady = built ? "1" : "0";
+    if (built) bindResize();
+    syncPageVariantCycles();
+
+    return Promise.resolve();
   }
 
   function bindStickerHolo(card) {
@@ -547,150 +588,6 @@
     );
   }
 
-  function updateCountLabel() {
-    if (!countEl) return;
-    countEl.textContent = pageCount ? currentPage + 1 + " / " + pageCount : "";
-  }
-
-  function hydratePageImages(page) {
-    if (!page) return;
-    page.querySelectorAll(".work-sticker").forEach(function (card) {
-      ensureStickerImage(
-        card.querySelector(".work-sticker__img, .card-preview-img"),
-        card
-      );
-    });
-  }
-
-  function showPage(index, animate) {
-    if (!pagesHost || !pageCount) return;
-    var nextIndex = ((index % pageCount) + pageCount) % pageCount;
-    var pages = pagesHost.querySelectorAll(".work-stickerbook__page");
-
-    pages.forEach(function (page, i) {
-      var active = i === nextIndex;
-      page.hidden = !active;
-      page.classList.toggle("is-active", active);
-      page.setAttribute("aria-hidden", active ? "false" : "true");
-    });
-
-    if (animate && !reduced && typeof gsap !== "undefined") {
-      var activePage = pages[nextIndex];
-      if (activePage) {
-        gsap.fromTo(
-          activePage,
-          { opacity: 0, y: 14 },
-          { opacity: 1, y: 0, duration: 0.42, ease: "power2.out" }
-        );
-      }
-    }
-
-    currentPage = nextIndex;
-    updateCountLabel();
-    hydratePageImages(pages[nextIndex]);
-    syncPageVariantCycles(pages[nextIndex]);
-
-    if (window.Polyglide && typeof window.Polyglide.to === "function") {
-      window.Polyglide.to(pagesHost, { offset: 0 });
-    }
-  }
-
-  function nextPage() {
-    showPage(currentPage + 1, true);
-  }
-
-  function getShell(panel) {
-    panel = panel || document.querySelector('[data-work-category-panel="hytale"]');
-    if (!panel) return null;
-    return panel.querySelector("[data-work-stickerbook]");
-  }
-
-  function loadPageManifest() {
-    return fetchJson(PAGES_INDEX_URL).then(function (index) {
-      var ids = Array.isArray(index.pages) ? index.pages : [];
-      return Promise.all(
-        ids.map(function (id) {
-          return fetchJson(PAGES_BASE + id + "/page.json?v=hytale-pages-7").then(function (config) {
-            return { id: id, config: config };
-          });
-        })
-      );
-    });
-  }
-
-  function renderPages(entries) {
-    pageData = entries.filter(function (entry) {
-      return Array.isArray(entry.config.stickers) && entry.config.stickers.length;
-    });
-
-    pagesHost.innerHTML = "";
-    pageCount = pageData.length;
-    currentPage = 0;
-
-    pageData.forEach(function (entry, index) {
-      var page = buildPageElement(entry, index);
-      if (page) pagesHost.appendChild(page);
-    });
-
-    pageCount = pagesHost.querySelectorAll(".work-stickerbook__page").length;
-    updateCountLabel();
-    var activePage = pagesHost.querySelector(".work-stickerbook__page.is-active");
-    hydratePageImages(activePage);
-    syncPageVariantCycles(activePage);
-  }
-
-  function build(panel) {
-    panel = panel || document.querySelector('[data-work-category-panel="hytale"]');
-    if (!panel) return Promise.resolve();
-
-    var shell = getShell(panel);
-    var grid = panel.querySelector("#models-grid");
-    if (!shell) return Promise.resolve();
-
-    if (shell.dataset.stickerbookReady === "1" && shell.querySelector(".work-stickerbook__page")) {
-      pagesHost = shell.querySelector("[data-stickerbook-pages]");
-      relayoutAllPages();
-      var cachedActive = shell.querySelector(".work-stickerbook__page.is-active");
-      hydratePageImages(cachedActive);
-      syncPageVariantCycles(cachedActive);
-      return Promise.resolve();
-    }
-
-    teardown();
-
-    pagesHost = shell.querySelector("[data-stickerbook-pages]");
-    countEl = shell.querySelector("[data-stickerbook-count]");
-    nextBtn = shell.querySelector("[data-stickerbook-next]");
-    if (!pagesHost) return Promise.resolve();
-
-    return loadPageManifest()
-      .then(function (entries) {
-        renderPages(entries);
-
-        shell.hidden = false;
-        if (grid) {
-          grid.hidden = true;
-          grid.setAttribute("aria-hidden", "true");
-        }
-
-        if (nextBtn) {
-          onNextClick = function () {
-            nextPage();
-          };
-          nextBtn.addEventListener("click", onNextClick);
-        }
-
-        built = pageCount > 0;
-        shell.dataset.stickerbookReady = built ? "1" : "0";
-        if (built) bindResize();
-      })
-      .catch(function (err) {
-        console.error("[WorkStickerbook] Failed to load pages:", err);
-        built = false;
-        delete shell.dataset.stickerbookReady;
-      });
-  }
-
   function teardown() {
     unbindResize();
     stopAllVariantCycles();
@@ -698,13 +595,6 @@
       if (typeof fn === "function") fn();
     });
     holoCleanups = [];
-
-    if (nextBtn && onNextClick) {
-      nextBtn.removeEventListener("click", onNextClick);
-    }
-    onNextClick = null;
-    nextBtn = null;
-    countEl = null;
 
     var shell = document.querySelector("[data-work-stickerbook]");
     var grid = document.querySelector('[data-work-category-panel="hytale"] #models-grid');
@@ -722,20 +612,11 @@
 
     pagesHost = null;
     built = false;
-    currentPage = 0;
-    pageCount = 0;
-    pageData = [];
-  }
-
-  function getActivePage() {
-    if (!pagesHost) return null;
-    return pagesHost.querySelector(".work-stickerbook__page.is-active");
   }
 
   window.WorkStickerbook = {
     build: build,
     teardown: teardown,
-    getActivePage: getActivePage,
     isBuilt: function () {
       return built;
     },

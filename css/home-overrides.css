@@ -40,37 +40,37 @@
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    --c-white: var(--step-01);
-    --c-white-rgb: 254, 240, 254;
-    --c-yellow: var(--step-01);
-    --c-yellow-rgb: 254, 240, 254;
+    --c-white: var(--pk-heading);
+    --c-white-rgb: 255, 255, 255;
+    --c-yellow: var(--pk-bg);
+    --c-yellow-rgb: 0, 0, 0;
     --c-black: var(--pk-bg);
-    --c-black-rgb: 14, 11, 20;
+    --c-black-rgb: 0, 0, 0;
     --c-stone: var(--pk-surface);
-    --c-stone-rgb: 22, 18, 28;
-    --c-grey: var(--step-03);
-    --c-grey-rgb: 240, 158, 251;
-    --c-brown: var(--step-03);
-    --c-brown-rgb: 240, 158, 251;
-    --c-stroke: var(--step-06);
-    --c-stroke-rgb: 178, 75, 251;
-    --c-red: var(--step-03);
-    --c-red-rgb: 240, 158, 251;
+    --c-stone-rgb: 10, 10, 10;
+    --c-grey: var(--pk-text);
+    --c-grey-rgb: 168, 168, 168;
+    --c-brown: var(--pk-text-muted);
+    --c-brown-rgb: 130, 130, 130;
+    --c-stroke: var(--pk-soft);
+    --c-stroke-rgb: 34, 34, 34;
+    --c-red: var(--pk-text);
+    --c-red-rgb: 168, 168, 168;
     --c-purple: var(--pk-soft);
-    --c-purple-rgb: 240, 137, 254;
+    --c-purple-rgb: 34, 34, 34;
     --aimy-surface: var(--pk-surface);
     --aimy-surface-deep: var(--pk-bg);
-    --aimy-ink: var(--step-02);
-    --aimy-ink-soft: var(--step-03);
+    --aimy-ink: var(--pk-text);
+    --aimy-ink-soft: var(--pk-text-muted);
     --aimy-primary: var(--pk-primary);
-    --aimy-secondary: var(--step-02);
-    --aimy-tertiary: var(--step-08);
+    --aimy-secondary: var(--pk-text);
+    --aimy-tertiary: var(--pk-heading);
     --aimy-accent: var(--pk-accent);
-    --aimy-ink-on-dark: var(--step-01);
+    --aimy-ink-on-dark: var(--pk-heading);
     --aimy-glass: color-mix(in srgb, var(--step-06) 35%, transparent);
     --aimy-glass-strong: color-mix(in srgb, var(--step-06) 50%, transparent);
-    --aimy-field-line: color-mix(in srgb, var(--step-02) 28%, transparent);
-    --aimy-field-placeholder: color-mix(in srgb, var(--step-02) 45%, transparent);
+    --aimy-field-line: color-mix(in srgb, var(--pk-text) 28%, transparent);
+    --aimy-field-placeholder: color-mix(in srgb, var(--pk-text-muted) 85%, transparent);
   }
 }
 
@@ -112,14 +112,14 @@ html:has([data-spa-host]) body {
 @media (prefers-color-scheme: dark) {
   html:has([data-spa-host]),
   html:has([data-spa-host]) body {
-    background-color: var(--c-black) !important;
-    color: var(--c-yellow);
+    background-color: var(--pk-bg) !important;
+    color: var(--pk-text);
   }
 
   html:has(body.spa-view-start),
   body.spa-view-start {
-    background-color: #E7CBFF !important;
-    color: var(--c-black);
+    background-color: var(--pk-bg) !important;
+    color: var(--pk-text);
   }
 }
 

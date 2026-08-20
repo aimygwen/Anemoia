@@ -1,0 +1,75 @@
+/**
+ * spa-sub-back.css — shared sub-page Back control (Work categories, Insights logs).
+ */
+.spa-sub-back {
+  position: fixed;
+  top: calc(
+    var(--aimy-chrome-top, 24px) + (var(--aimy-brand-size, 72px) - var(--aimy-menu-size, 44px)) / 2
+  );
+  left: var(--aimy-chrome-left, 24px);
+  z-index: calc(var(--pk-z, 2147483600) + 6);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  height: var(--aimy-menu-size, 44px);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: color-mix(in srgb, var(--pk-text) 72%, transparent);
+  font-family: var(--spa-font-sans, "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif) !important;
+  font-size: clamp(0.7rem, 1.5vw, 0.78rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease, color 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.spa-sub-back.is-visible {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.spa-sub-back[hidden] {
+  display: none !important;
+}
+
+.spa-sub-back:hover,
+.spa-sub-back:focus-visible {
+  color: var(--pk-heading);
+  outline: none;
+}
+
+.spa-sub-back:focus-visible {
+  outline: 2px solid var(--step-04);
+  outline-offset: 3px;
+}
+
+.spa-sub-back__arrow {
+  display: inline-block;
+  font-size: 1.1em;
+  line-height: 1;
+  transform: translateX(0);
+  transition: transform 0.25s ease;
+}
+
+.spa-sub-back:hover .spa-sub-back__arrow,
+.spa-sub-back:focus-visible .spa-sub-back__arrow {
+  transform: translateX(-3px);
+}
+
+/* Light-on-dark sub-pages (e.g. Insights Workspace log) */
+.spa-sub-back[data-spa-sub-back-tone="light"] {
+  color: color-mix(in srgb, var(--step-01) 78%, transparent);
+  text-shadow: 0 1px 14px color-mix(in srgb, var(--step-08) 45%, transparent);
+}
+
+.spa-sub-back[data-spa-sub-back-tone="light"]:hover,
+.spa-sub-back[data-spa-sub-back-tone="light"]:focus-visible {
+  color: var(--step-01);
+}

@@ -22,6 +22,12 @@ LEGAL_PAGES = {
 
 
 class SPARequestHandler(http.server.SimpleHTTPRequestHandler):
+    def end_headers(self):
+        path_only = self.path.split("?", 1)[0].lower()
+        if path_only.endswith(".glb"):
+            self.send_header("Cache-Control", "no-store, must-revalidate")
+        super().end_headers()
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=ROOT, **kwargs)
 

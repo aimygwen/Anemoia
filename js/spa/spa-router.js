@@ -5,8 +5,8 @@
 (function () {
   "use strict";
 
-  var VERSION = "spa-16";
-  var IMPRINT_CANONICAL = "./imprint.html?v=imprint-ins-5";
+  var VERSION = "spa-18";
+  var IMPRINT_CANONICAL = "./imprint.html?v=imprint-ins-48";
   var VIEWS = ["start", "work", "insights", "me", "contact"];
   var INSIGHTS_LOGS = ["identity", "workspace", "hytale"];
   var WORK_CATEGORIES = ["lowpoly", "hytale", "stills", "motion"];
@@ -180,10 +180,14 @@
       return Promise.resolve();
     }
     if (route.view === "work") {
-      route.query.category = normalizeCategory(route.query.category);
+      var workCat = normalizeCategory(route.query.category);
+      if (workCat) route.query.category = workCat;
+      else delete route.query.category;
     }
     if (route.view === "insights") {
-      route.query.log = normalizeLog(route.query.log);
+      var logId = normalizeLog(route.query.log);
+      if (logId) route.query.log = logId;
+      else delete route.query.log;
     }
     var prior = window.AimySpaState ? window.AimySpaState.get() : null;
     if (window.AimySpaState) {

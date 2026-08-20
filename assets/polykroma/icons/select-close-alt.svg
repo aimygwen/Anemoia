@@ -2,7 +2,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="100%" height="100%" viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
     <g transform="matrix(1.40625,0,0,1.40625,-2.78125,-16.84375)">
-        <path d="M77,119L77,151L45,151L45,119L77,119ZM77,87L109,87L109,119L77,119L77,87ZM109,119L141,119L141,151L109,151L109,119ZM77,87L45,87L45,55L77,55L77,87ZM109,87L109,55L141,55L141,87L109,87Z"/>
+        <path d="M85,91L117,91L117,123L85,123L85,91ZM57,59L89,59L89,91L57,91L57,59ZM105,59L137,59L137,91L105,91L105,59ZM57,123L89,123L89,155L57,155L57,123ZM105,123L137,123L137,155L105,155L105,123Z"/>
     </g>
     <g id="Background">
     </g>

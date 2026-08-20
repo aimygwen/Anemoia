@@ -1,12 +1,4 @@
-/* spa-contact.css — Contact view */
-
-@font-face {
-  font-family: "Athemi";
-  src: url("../../fonts/athemi.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+/* spa-contact.css — Contact view (editorial hero + rotating tagline) */
 
 @font-face {
   font-family: "Voyage";
@@ -17,12 +9,23 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Newpixel";
+  src: url("../../fonts/newpixel.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 body.contact-page-body {
-  --contact-display: "Athemi", "Voyage", "Instrument Serif", Georgia, serif;
+  --contact-display: "Voyage", "Instrument Serif", Georgia, serif;
+  --contact-pixel: "Newpixel", "Courier New", monospace;
   --contact-ui: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
   --contact-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --contact-headline: clamp(2.75rem, 9.5vw, 6.25rem);
-  --contact-email: clamp(1.05rem, 2.8vw, 1.45rem);
+  --contact-gutter: 10vw;
+  --contact-content: 80vw;
+  --contact-hero-base: clamp(2.65rem, 8.8vw, 6.35rem);
+  --contact-hero-fit: var(--contact-hero-base);
 
   color: var(--pk-heading);
   background: var(--pk-bg);
@@ -49,177 +52,312 @@ body.contact-page-body .spa-view[data-spa-view="contact"] {
 .contact-stage {
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
   box-sizing: border-box;
   height: 100dvh;
   max-height: 100dvh;
   overflow: hidden;
   padding:
-    calc(var(--pk-header-h, 72px) + clamp(1rem, 3vh, 2rem))
-    clamp(1.25rem, 5vw, 2.5rem)
-    clamp(2.5rem, 7vh, 4rem);
+    calc(var(--pk-header-h, 72px) + clamp(0.75rem, 2.5vh, 1.5rem))
+    var(--contact-gutter)
+    clamp(1.35rem, 4vh, 2.35rem);
 }
 
 .contact-stage__inner {
   position: relative;
   z-index: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  width: min(100%, 46rem);
-  gap: clamp(1.75rem, 4.5vh, 3rem);
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(0.85rem, 2.2vh, 1.35rem);
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
 }
 
-.contact-headline {
+.contact-hero {
   margin: 0;
+  width: 100%;
   font-family: var(--contact-display) !important;
-  font-size: var(--contact-headline);
+  font-size: var(--contact-hero-fit, var(--contact-hero-base));
   font-weight: 400;
-  line-height: 0.98;
-  letter-spacing: -0.02em;
+  line-height: 0.96;
+  letter-spacing: -0.028em;
   color: var(--pk-heading);
+  text-align: left;
 }
 
-.contact-headline__line {
+.contact-hero__line {
+  display: block;
+  width: 100%;
+  max-width: none;
+  white-space: nowrap;
+}
+
+.contact-hero__row {
   display: block;
 }
 
-.contact-headline__line--accent {
-  margin-top: 0.06em;
-  color: var(--pk-accent);
+.contact-hero__line-text {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: var(--contact-hero-fit, var(--contact-hero-base));
 }
 
-.contact-email-wrap {
-  width: min(100%, 34rem);
+.contact-hero__em {
+  display: inline;
+  font-style: italic;
+  font-weight: 400;
 }
 
-.contact-email {
-  position: relative;
+.contact-hero__row--reach {
   display: flex;
-  flex-direction: column;
+  flex-wrap: nowrap;
   align-items: center;
-  justify-content: center;
-  gap: 0.35rem;
+  justify-content: flex-start;
+  gap: calc(var(--contact-hero-fit, var(--contact-hero-base)) * 0.1);
   width: 100%;
-  min-height: clamp(4.25rem, 11vw, 5.5rem);
-  padding:
-    clamp(0.95rem, 2.4vw, 1.25rem)
-    clamp(1.25rem, 4vw, 2rem);
-  border-radius: 1.35rem;
-  border: 1px solid color-mix(in srgb, var(--step-04) 38%, transparent);
-  background: var(--pk-surface);
-  box-shadow: 0 18px 42px color-mix(in srgb, var(--step-07) 8%, transparent);
-  text-decoration: none !important;
-  color: var(--pk-heading) !important;
-  transition:
-    transform 0.55s var(--contact-ease),
-    border-color 0.45s var(--contact-ease),
-    box-shadow 0.55s var(--contact-ease),
-    background 0.45s var(--contact-ease);
+  margin-top: clamp(0.35rem, 1.2vh, 0.65rem);
 }
 
-.contact-email:hover,
-.contact-email:focus-visible {
-  transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--step-05) 42%, transparent);
-  box-shadow: 0 24px 52px color-mix(in srgb, var(--step-06) 14%, transparent);
-  background: var(--pk-hover);
-}
-
-.contact-email:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--step-05) 55%, transparent);
-  outline-offset: 4px;
-}
-
-.contact-email__value {
-  font-family: var(--contact-ui) !important;
-  font-size: var(--contact-email);
-  font-weight: 500;
+.contact-hero__same {
+  display: inline-block;
+  flex: 0 0 auto;
+  font-family: var(--contact-pixel) !important;
+  font-size: calc(var(--contact-hero-fit, var(--contact-hero-base)) * 0.9);
+  font-weight: 400;
+  line-height: 0.98;
   letter-spacing: 0.01em;
-  line-height: 1.2;
+  color: var(--pk-heading);
+  white-space: nowrap;
 }
 
-.contact-email__hint {
-  font-family: var(--contact-ui) !important;
-  font-size: clamp(0.72rem, 1.8vw, 0.82rem);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--pk-text) 62%, transparent);
-  opacity: 0;
-  transform: translateY(4px);
+.contact-hero__email {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--contact-hero-fit, var(--contact-hero-base)) * 0.2);
+  flex: 0 0 auto;
+  margin-left: auto;
+  min-width: 0;
+  font-family: var(--contact-display) !important;
+  font-size: calc(var(--contact-hero-fit, var(--contact-hero-base)) * 0.9);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  color: var(--pk-accent) !important;
+  text-decoration: none !important;
   transition:
-    opacity 0.4s var(--contact-ease),
-    transform 0.4s var(--contact-ease);
+    color 0.45s var(--contact-ease),
+    opacity 0.45s var(--contact-ease);
 }
 
-.contact-email:hover .contact-email__hint,
-.contact-email:focus-visible .contact-email__hint {
+.contact-hero__email-lead {
+  flex: 0 0 auto;
+  color: var(--pk-heading) !important;
+  white-space: pre;
+}
+
+.contact-hero__email-text {
+  white-space: nowrap;
+  transition: opacity 0.45s var(--contact-ease);
+}
+
+.contact-hero__email:hover,
+.contact-hero__email:focus-visible {
+  color: var(--pk-primary) !important;
+  opacity: 0.96;
+}
+
+.contact-hero__email:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--step-05) 45%, transparent);
+  outline-offset: 6px;
+  border-radius: 0.15em;
+}
+
+.contact-hero__email-arrow {
+  display: block;
+  width: calc(var(--contact-hero-fit, var(--contact-hero-base)) * 0.68);
+  height: calc(var(--contact-hero-fit, var(--contact-hero-base)) * 0.68);
+  flex: 0 0 auto;
+  object-fit: contain;
+  opacity: 0.92;
+  filter: brightness(0) saturate(100%);
+}
+
+.contact-hero__row--tagline {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  gap: calc(var(--contact-hero-fit, var(--contact-hero-base)) * 0.22);
+  width: 100%;
+  font-family: var(--contact-display) !important;
+  font-size: var(--contact-hero-fit, var(--contact-hero-base)) !important;
+  font-weight: 400;
+  line-height: 0.96;
+  letter-spacing: -0.028em;
+  margin-top: clamp(0.2rem, 0.8vh, 0.45rem);
+}
+
+.contact-hero__for,
+.contact-hero__word {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-size: inherit !important;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+.contact-hero__slot {
+  display: inline-grid;
+  flex: 0 0 auto;
+  vertical-align: baseline;
+  font-size: inherit !important;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+.contact-hero__slot-sizer,
+.contact-hero__slot-word {
+  grid-area: 1 / 1;
+  align-self: baseline;
+  white-space: nowrap;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-style: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+.contact-hero__slot-sizer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.contact-hero__slot-word {
+  position: relative;
+  display: inline-block;
+  text-transform: none;
+  color: var(--pk-accent) !important;
+  text-decoration: none !important;
+  transition:
+    color 0.45s var(--contact-ease),
+    opacity 0.55s var(--contact-ease),
+    transform 0.55s var(--contact-ease);
+}
+
+.contact-hero__slot-word:hover,
+.contact-hero__slot-word:focus-visible {
+  color: var(--pk-primary) !important;
+}
+
+.contact-hero__slot-word:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--step-05) 45%, transparent);
+  outline-offset: 4px;
+  border-radius: 0.12em;
+}
+
+.contact-hero__slot-word.is-out {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.contact-hero__slot-word.is-in {
   opacity: 1;
   transform: translateY(0);
+}
+
+.contact-discord {
+  margin: clamp(0.35rem, 1vh, 0.65rem) 0 0;
+  font-family: var(--contact-ui) !important;
+  font-size: clamp(0.82rem, 1.7vw, 0.95rem);
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--pk-text) 72%, transparent);
+}
+
+.contact-discord__link {
+  color: var(--pk-heading) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 0.18em;
+  transition: color 0.35s var(--contact-ease);
+}
+
+.contact-discord__link:hover,
+.contact-discord__link:focus-visible {
+  color: var(--pk-accent) !important;
+}
+
+.contact-discord__link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--step-05) 40%, transparent);
+  outline-offset: 3px;
+  border-radius: 0.15rem;
 }
 
 .contact-social {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: clamp(0.65rem, 2vw, 1rem);
+  justify-content: flex-start;
+  gap: clamp(1rem, 3vw, 2.25rem);
   width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  padding-top: clamp(0.75rem, 2vh, 1.25rem);
 }
 
 .contact-social__link {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  min-height: 2.85rem;
-  padding: 0.45rem 0.95rem 0.45rem 0.75rem;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--pk-border) 65%, transparent);
-  background: color-mix(in srgb, var(--pk-surface) 82%, transparent);
-  color: var(--pk-heading) !important;
+  gap: 0.45rem;
+  padding: 0.2rem 0.15rem;
+  border: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--pk-heading) 72%, transparent) !important;
   text-decoration: none !important;
-  font-family: var(--contact-ui) !important;
-  font-size: clamp(0.82rem, 1.9vw, 0.92rem);
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  font-family: var(--contact-display) !important;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
   transition:
-    transform 0.45s var(--contact-ease),
-    border-color 0.35s ease,
-    background 0.35s ease,
-    color 0.35s ease;
+    color 0.35s var(--contact-ease),
+    transform 0.35s var(--contact-ease);
 }
 
 .contact-social__link svg {
-  width: 1.15rem;
-  height: 1.15rem;
-  flex: 0 0 1.15rem;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 1rem;
+  opacity: 0.72;
 }
 
 .contact-social__link:hover,
 .contact-social__link:focus-visible {
-  transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--step-05) 38%, transparent);
-  background: color-mix(in srgb, var(--pk-hover) 88%, transparent);
-  color: var(--pk-heading) !important;
+  color: var(--pk-accent) !important;
+  transform: translateY(-1px);
 }
 
 .contact-social__link:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--step-05) 45%, transparent);
-  outline-offset: 3px;
+  outline: 2px solid color-mix(in srgb, var(--step-05) 40%, transparent);
+  outline-offset: 4px;
+  border-radius: 0.2rem;
 }
 
 .contact-social__label {
-  line-height: 1;
+  line-height: 1.1;
 }
 
 [data-contact-reveal] {
   opacity: 0;
-  transform: translateY(22px);
+  transform: translateY(18px);
   transition:
-    opacity 0.85s var(--contact-ease),
-    transform 0.85s var(--contact-ease);
+    opacity 0.9s var(--contact-ease),
+    transform 0.9s var(--contact-ease);
 }
 
 .contact-stage.is-ready [data-contact-reveal] {
@@ -227,63 +365,63 @@ body.contact-page-body .spa-view[data-spa-view="contact"] {
   transform: none;
 }
 
-.contact-stage.is-ready [data-contact-reveal]:nth-child(1) {
+.contact-stage.is-ready .contact-hero__line[data-contact-reveal] {
   transition-delay: 0.04s;
 }
 
-.contact-stage.is-ready .contact-email-wrap[data-contact-reveal] {
-  transition-delay: 0.14s;
+.contact-stage.is-ready .contact-hero__row--reach[data-contact-reveal] {
+  transition-delay: 0.1s;
+}
+
+.contact-stage.is-ready .contact-hero__row--tagline[data-contact-reveal] {
+  transition-delay: 0.18s;
+}
+
+.contact-stage.is-ready .contact-discord[data-contact-reveal] {
+  transition-delay: 0.3s;
 }
 
 .contact-stage.is-ready .contact-social[data-contact-reveal] {
-  transition-delay: 0.24s;
+  transition-delay: 0.36s;
 }
 
-@media (max-width: 640px) {
-  .contact-headline {
-    letter-spacing: -0.015em;
+@media (max-width: 720px) {
+  .contact-hero__row--reach {
+    flex-direction: row;
+    align-items: center;
   }
 
-  .contact-social__label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+  .contact-hero__email {
+    margin-left: auto;
+    align-self: flex-end;
+  }
+
+  .contact-hero__email-text {
     white-space: nowrap;
-    border: 0;
-  }
-
-  .contact-social__link {
-    padding: 0.65rem;
-    min-width: 2.85rem;
-    justify-content: center;
   }
 
   .contact-social__link svg {
-    width: 1.25rem;
-    height: 1.25rem;
-    flex-basis: 1.25rem;
+    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   [data-contact-reveal],
-  .contact-email,
+  .contact-hero__email,
   .contact-social__link,
-  .contact-email__hint {
+  .contact-discord__link,
+  .contact-hero__slot-word {
     transition: none !important;
     animation: none !important;
   }
 
-  [data-contact-reveal] {
+  [data-contact-reveal],
+  .contact-hero__slot-word {
     opacity: 1;
     transform: none;
   }
 
-  .contact-email__hint {
+  .contact-hero__slot-word.is-out {
     opacity: 1;
     transform: none;
   }

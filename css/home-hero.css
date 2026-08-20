@@ -259,9 +259,13 @@ body.spa-view-start {
 }
 
 @media (prefers-color-scheme: dark) {
+  .c-welcome[data-aimy-splash-only] {
+    --aimy-splash-ground: var(--pk-bg);
+  }
+
   html:has(body.spa-view-start),
   body.spa-view-start,
   .c-welcome[data-aimy-splash-only] {
-    background-color: #E7CBFF !important;
+    background-color: var(--pk-bg) !important;
   }
 }

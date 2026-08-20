@@ -87,7 +87,7 @@ html.page-loading .insights-page-body {
   html:has(body.insights-page-body) body.insights-page-body {
     --ins-paper: oklch(0 0 0);
     --ins-ink: var(--pk-heading);
-    --ins-muted: color-mix(in srgb, var(--pk-heading) 58%, transparent);
+    --ins-muted: var(--pk-text);
     --ins-pink: color-mix(in srgb, var(--step-03) 88%, var(--pk-heading));
     --ins-pink-soft: color-mix(in srgb, var(--step-02) 92%, var(--pk-heading));
     --ins-pink-deep: color-mix(in srgb, var(--step-03) 72%, var(--pk-heading));
@@ -893,46 +893,28 @@ html.page-loading .insights-page-body {
   overflow: visible;
 }
 
-.ins-logo-pin-inner .brand-logo-dark,
-.ins-logo-pin-inner .brand-logo-dark * {
-  fill: var(--aimy-primary);
-  color: var(--aimy-primary);
-}
-
-.ins-logo-pin-inner .brand-logo-light,
-.ins-logo-pin-inner .brand-logo-light * {
-  fill: var(--aimy-secondary);
-  color: var(--aimy-secondary);
-}
-
-.ins-logo-pin-inner .brand-logo-mid,
-.ins-logo-pin-inner .brand-logo-mid * {
-  fill: var(--aimy-tertiary);
-  color: var(--aimy-tertiary);
-}
-
 /*
  * Insights chrome hovers stay in soft pink only —
  * override global multi-hue logo / coin rainbows.
  */
-.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-logo-dark,
-.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-logo-dark *,
-.insights-page-body .ins-logo-pin-inner:hover .brand-logo-dark,
-.insights-page-body .ins-logo-pin-inner:hover .brand-logo-dark * {
+.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-dark,
+.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-dark *,
+.insights-page-body .ins-logo-pin-inner:hover .brand-mark .brand-logo-dark,
+.insights-page-body .ins-logo-pin-inner:hover .brand-mark .brand-logo-dark * {
   animation: ins-pink-fill 3s linear infinite;
 }
 
-.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-logo-light,
-.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-logo-light *,
-.insights-page-body .ins-logo-pin-inner:hover .brand-logo-light,
-.insights-page-body .ins-logo-pin-inner:hover .brand-logo-light * {
+.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-light,
+.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-light *,
+.insights-page-body .ins-logo-pin-inner:hover .brand-mark .brand-logo-light,
+.insights-page-body .ins-logo-pin-inner:hover .brand-mark .brand-logo-light * {
   animation: ins-pink-fill-soft 3s linear infinite;
 }
 
-.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-logo-mid,
-.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-logo-mid *,
-.insights-page-body .ins-logo-pin-inner:hover .brand-logo-mid,
-.insights-page-body .ins-logo-pin-inner:hover .brand-logo-mid * {
+.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-mid,
+.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-mid *,
+.insights-page-body .ins-logo-pin-inner:hover .brand-mark .brand-logo-mid,
+.insights-page-body .ins-logo-pin-inner:hover .brand-mark .brand-logo-mid * {
   animation: ins-pink-fill-deep 3s linear infinite;
 }
 
@@ -1416,55 +1398,6 @@ body.ins-logs-choose {
 .ins-logs-canvas {
   position: relative;
   width: 100%;
-}
-
-/* Back — fixed in header chrome row (mirrors menu coin geometry) */
-.ins-log-back {
-  position: fixed;
-  top: calc(
-    var(--aimy-chrome-top) + (var(--aimy-brand-size) - var(--aimy-menu-size)) / 2
-  );
-  left: var(--aimy-chrome-left);
-  z-index: calc(var(--pk-z, 2147483600) + 6);
-  display: none;
-  align-items: center;
-  height: var(--aimy-menu-size);
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  font-family: var(--ins-sans);
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ins-muted);
-  cursor: pointer;
-  pointer-events: auto;
-  -webkit-tap-highlight-color: transparent;
-}
-
-body.insights-page-body.ins-logs-open .ins-log-back:not([hidden]) {
-  display: flex;
-}
-
-.ins-log-back:hover,
-.ins-log-back:focus-visible {
-  color: var(--ins-ink);
-}
-
-.ins-log-back:focus-visible {
-  outline: 2px solid var(--step-04);
-  outline-offset: 3px;
-}
-
-body.insights-page-body.ins-logs-open[data-ins-active-log="workspace"] .ins-log-back {
-  color: color-mix(in srgb, var(--step-01) 78%, transparent);
-  text-shadow: 0 1px 14px color-mix(in srgb, var(--step-08) 45%, transparent);
-}
-
-body.insights-page-body.ins-logs-open[data-ins-active-log="workspace"] .ins-log-back:hover,
-body.insights-page-body.ins-logs-open[data-ins-active-log="workspace"] .ins-log-back:focus-visible {
-  color: var(--step-01);
 }
 
 /* Log open — edge-to-edge scroll; preserve footer peek below viewport */

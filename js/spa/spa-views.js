@@ -115,12 +115,12 @@
       },
     },
     work: {
-      partial: "./partials/view-work.html?v=spa-34",
+      partial: "./partials/view-work.html?v=spa-39",
       css: [
         "./css/spa/spa-scaffold.css?v=spa-29",
-        "./css/spa/spa-work.css?v=spa-46",
+        "./css/spa/spa-work.css?v=spa-56",
       ],
-      js: ["./js/spa/views/view-work.js?v=spa-53"],
+      js: ["./js/spa/views/view-work.js?v=spa-62"],
       mount: function (ctx) {
         resetBodyState();
         document.documentElement.classList.add("spa-route-not-start");
@@ -149,14 +149,14 @@
       css: [
         "./css/wordmark-holo.css?v=wordmark-holo-2",
         "./css/insights-poke-ref.css?v=poke-ref-11",
-        "./css/insights.css?v=insights-107",
+        "./css/insights.css?v=insights-109",
       ],
-      partial: "./partials/view-insights.html?v=insights-50",
+      partial: "./partials/view-insights.html?v=insights-51",
       js: [
         "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js",
         "./js/wordmark-holo.js?v=wordmark-holo-4",
         "./js/insights.js?v=insights-26",
-        "./js/spa/views/view-insights.js?v=insights-24",
+        "./js/spa/views/view-insights.js?v=insights-26",
       ],
       mount: function (ctx) {
         resetBodyState();
@@ -197,9 +197,9 @@
       unmount: noop,
     },
     contact: {
-      partial: "./partials/view-contact.html?v=contact-2",
-      css: ["./css/spa/spa-contact.css?v=contact-2"],
-      js: ["./js/spa/views/view-contact.js?v=contact-3"],
+      partial: "./partials/view-contact.html?v=contact-17",
+      css: ["./css/spa/spa-contact.css?v=contact-17"],
+      js: ["./js/spa/views/view-contact.js?v=contact-13"],
       mount: function (ctx) {
         resetBodyState();
         document.documentElement.classList.add("spa-route-not-start");

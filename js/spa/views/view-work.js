@@ -1,5 +1,5 @@
 /**
- * view-work.js — Work hub: deck chooser + category panels (no reveal/transition motion).
+ * view-work.js — Work hub: “I create” picker + category panels + preview reveal.
  */
 (function () {
   "use strict";
@@ -8,7 +8,27 @@
 
   var activeCategory = null;
   var mountToken = 0;
-  var deckBound = false;
+  var pickerBound = false;
+  var chooserActive = false;
+  var revealToken = 0;
+  var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var REVEAL_MS = 920;
+
+  var polRaf = 0;
+  var polImpulse = 0;
+  var polTargetY = 0;
+  var polY = 0;
+  var polVY = 0;
+  var polX = 0;
+  var polVX = 0;
+  var polRot = 0;
+  var polVRot = 0;
+  var polSkew = 0;
+  var polStretch = 1;
+  var polSquash = 1;
+  var polRunning = false;
+  var lastPolPaint = 0;
+  var activePickerEl = null;
 
   var loadedCss = Object.create(null);
   var loadedJs = Object.create(null);
@@ -67,6 +87,21 @@
     return null;
   }
 
+  function syncWorkBackChrome(category) {
+    if (!window.AimySpaSubBack) return;
+    if (!category) {
+      window.AimySpaSubBack.hide();
+      return;
+    }
+    window.AimySpaSubBack.show({
+      onClick: function () {
+        if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
+          window.AimySpa.navigate("./work");
+        }
+      },
+    });
+  }
+
   function setPhase(root, phase, category) {
     var hub = workHub(root);
     if (!hub) return;
@@ -101,6 +136,158 @@
       var id = item.getAttribute("data-work-pick");
       item.classList.toggle("is-active", !!category && id === category);
     });
+    syncPreview(root, category);
+  }
+
+  function syncPreview(root, category) {
+    if (!root) return;
+    var picker = root.querySelector("[data-work-picker]");
+    var items = pickerItems(root);
+    var activeId = category;
+
+    if (!activeId && items.length) {
+      var current = items.filter(function (item) {
+        return item.classList.contains("is-active");
+      })[0];
+      activeId = current ? current.getAttribute("data-work-pick") : items[0].getAttribute("data-work-pick");
+    }
+
+    if (picker) {
+      var prevId = picker.getAttribute("data-work-preview");
+      picker.setAttribute("data-work-preview", activeId || "hytale");
+      if (activeId && activeId !== prevId) {
+        nudgePolaroid(12, picker);
+      }
+    }
+
+    root.querySelectorAll("[data-work-preview-img]").forEach(function (img) {
+      var id = img.getAttribute("data-work-preview-img");
+      img.classList.toggle("is-active", !!activeId && id === activeId);
+    });
+  }
+
+  function resetPolaroidMotion(picker) {
+    if (!picker) return;
+    polImpulse = 0;
+    polTargetY = 0;
+    polY = 0;
+    polVY = 0;
+    polX = 0;
+    polVX = 0;
+    polRot = 0;
+    polVRot = 0;
+    polSkew = 0;
+    polStretch = 1;
+    polSquash = 1;
+    picker.style.setProperty("--work-pol-y", "0px");
+    picker.style.setProperty("--work-pol-x", "0px");
+    picker.style.setProperty("--work-pol-rot", "0deg");
+    picker.style.setProperty("--work-pol-skew", "0deg");
+    picker.style.setProperty("--work-pol-stretch", "1");
+    picker.style.setProperty("--work-pol-squash", "1");
+  }
+
+  function nudgePolaroid(delta, picker) {
+    if (reducedMotion) return;
+    picker = picker || activePickerEl;
+    if (!picker) return;
+    polImpulse += Math.max(-40, Math.min(40, delta));
+    startPolaroidLoop(picker);
+  }
+
+  function stopPolaroidLoop() {
+    polRunning = false;
+    activePickerEl = null;
+    if (polRaf) {
+      cancelAnimationFrame(polRaf);
+      polRaf = 0;
+    }
+  }
+
+  function paintPolaroid(time, picker) {
+    if (!picker || reducedMotion) return;
+    if (time - lastPolPaint < 16) return;
+    lastPolPaint = time;
+
+    var speed = polImpulse;
+    polImpulse *= 0.55;
+
+    var stiffness = 0.08;
+    var damping = 0.8;
+    var force = (polTargetY - polY) * stiffness;
+    polVY = (polVY + force) * damping;
+    polY += polVY;
+
+    if (polY > 20) polY = 20;
+    if (polY < -80) polY = -80;
+
+    var driftTarget = speed * 0.2;
+    polVX += (driftTarget - polX) * 0.05;
+    polVX *= 0.88;
+    polX += polVX;
+
+    var rotTarget = speed * 0.08;
+    polVRot += (rotTarget - polRot) * 0.06;
+    polVRot *= 0.86;
+    polRot += polVRot;
+
+    var stretchTarget = 1 + Math.max(-0.12, Math.min(0.18, -speed * 0.008));
+    var squashTarget = 1 + Math.max(-0.1, Math.min(0.08, speed * 0.005));
+    var skewTarget = Math.max(-8, Math.min(8, speed * 0.14 + polVX * 0.04));
+
+    polStretch += (stretchTarget - polStretch) * 0.2;
+    polSquash += (squashTarget - polSquash) * 0.2;
+    polSkew += (skewTarget - polSkew) * 0.18;
+
+    if (Math.abs(speed) < 0.3) {
+      polStretch += (1 - polStretch) * 0.08;
+      polSquash += (1 - polSquash) * 0.08;
+      polSkew += (0 - polSkew) * 0.1;
+    }
+
+    picker.style.setProperty("--work-pol-y", polY.toFixed(2) + "px");
+    picker.style.setProperty("--work-pol-x", polX.toFixed(2) + "px");
+    picker.style.setProperty("--work-pol-rot", polRot.toFixed(2) + "deg");
+    picker.style.setProperty("--work-pol-skew", polSkew.toFixed(2) + "deg");
+    picker.style.setProperty("--work-pol-stretch", polStretch.toFixed(3));
+    picker.style.setProperty("--work-pol-squash", polSquash.toFixed(3));
+
+    var settled =
+      Math.abs(polTargetY - polY) < 0.4 &&
+      Math.abs(polVY) < 0.2 &&
+      Math.abs(polStretch - 1) < 0.01 &&
+      Math.abs(polSkew) < 0.05 &&
+      Math.abs(speed) < 0.2;
+
+    if (settled) {
+      polRunning = false;
+      if (polRaf) {
+        cancelAnimationFrame(polRaf);
+        polRaf = 0;
+      }
+    }
+  }
+
+  function startPolaroidLoop(picker) {
+    if (reducedMotion || !picker) return;
+    activePickerEl = picker;
+    polRunning = true;
+    if (polRaf) return;
+
+    function frame(time) {
+      if (!polRunning || !activePickerEl) {
+        polRaf = 0;
+        return;
+      }
+      paintPolaroid(time, activePickerEl);
+      if (polRunning) {
+        polRaf = requestAnimationFrame(frame);
+      } else {
+        polRaf = 0;
+      }
+    }
+
+    polRaf = requestAnimationFrame(frame);
   }
 
   function syncPanels(root, category) {
@@ -143,10 +330,10 @@
   }
 
   function ensureStickerbookAssets() {
-    return loadCss("./css/work-stickerbook.css?v=stickerbook-17").then(function () {
-      return loadScript("./js/work-sticker-holo.js?v=stickerbook-17");
+    return loadCss("./css/work-stickerbook.css?v=stickerbook-18").then(function () {
+      return loadScript("./js/work-sticker-holo.js?v=stickerbook-18");
     }).then(function () {
-      return loadScript("./js/work-stickerbook.js?v=stickerbook-17");
+      return loadScript("./js/work-stickerbook.js?v=stickerbook-18");
     });
   }
 
@@ -345,76 +532,95 @@
     document.querySelectorAll(".gal-project .gal-card, .gal-project .gal-media, .gal-project img, .gal-project video").forEach(stripWorkMediaChrome);
   }
 
-  function deckItems(root) {
+  function pickerItems(root) {
     if (!root) return [];
-    return Array.prototype.slice.call(root.querySelectorAll(".work-deck__item"));
+    return Array.prototype.slice.call(root.querySelectorAll(".work-picker__item"));
   }
 
-  function isDeckPick(el) {
-    return !!(el && el.closest && el.closest(".work-deck__pick"));
+  function isPickerItem(el) {
+    return !!(el && el.closest && el.closest(".work-picker__item"));
   }
 
-  function readDeckSpread(root) {
-    var hub = root.querySelector("[data-work-hub]") || root;
-    var style = window.getComputedStyle(hub);
-    return {
-      base: parseFloat(style.getPropertyValue("--work-deck-spread-base")) || 160,
-      step: parseFloat(style.getPropertyValue("--work-deck-spread-step")) || 72,
-    };
-  }
-
-  function spreadOffset(index, activeIndex, spread) {
-    if (index === activeIndex) return 0;
-    var direction = index < activeIndex ? -1 : 1;
-    return direction * spread.base;
-  }
-
-  function resetDeckSpread(items) {
-    items.forEach(function (item) {
-      item.style.transform = "";
-    });
-  }
-
-  function clearDeckFocus(root) {
+  function clearPickerFocus(root) {
     var scroller = root && root.querySelector("[data-work-scroller]");
     if (scroller) scroller.classList.remove("has-focus");
-    var items = deckItems(root);
-    items.forEach(function (item) {
+    pickerItems(root).forEach(function (item) {
       item.classList.remove("is-active");
     });
-    resetDeckSpread(items);
+    syncPreview(root, null);
   }
 
-  function focusDeckItem(root, item) {
+  function scrollTopForItem(scroller, item) {
+    if (!scroller || !item) return 0;
+    var rail = item.parentElement;
+    var itemTop = item.offsetTop;
+    if (rail && rail !== scroller) itemTop += rail.offsetTop;
+    var target = itemTop + item.offsetHeight / 2 - scroller.clientHeight / 2;
+    var maxScroll = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
+    return Math.max(0, Math.min(maxScroll, target));
+  }
+
+  function scrollItemToCenter(scroller, item) {
+    if (!scroller || !item) return;
+    scroller.scrollTop = scrollTopForItem(scroller, item);
+  }
+
+  function focusPickerItem(root, item, options) {
+    options = options || {};
     var scroller = root.querySelector("[data-work-scroller]");
-    var items = deckItems(root);
+    var items = pickerItems(root);
     if (!scroller || !item) return;
 
     scroller.classList.add("has-focus");
-    var index = items.indexOf(item);
-    var spread = readDeckSpread(root);
-
-    items.forEach(function (el, i) {
+    items.forEach(function (el) {
       el.classList.toggle("is-active", el === item);
-      var targetScale = el === item ? 1.12 : 0.9;
-      var x = spreadOffset(i, index, spread);
-      el.style.transform = "translateX(" + x + "px) scale(" + targetScale + ")";
     });
+
+    var id = item.getAttribute("data-work-pick");
+    syncPreview(root, id);
+
+    if (options.scroll !== false) {
+      scrollItemToCenter(scroller, item);
+    }
   }
 
-  var DECK_GLIDE_DURATION = 0.52;
-  var DECK_WHEEL_MULT = 0.82;
+  function nearestPickerItem(scroller) {
+    var root = scroller.closest("[data-work-hub]") || workRoot();
+    var items = pickerItems(root);
+    if (!items.length) return null;
 
-  function createDeckGlide(scroller) {
+    var scrollerRect = scroller.getBoundingClientRect();
+    var viewportCenter = scrollerRect.top + scrollerRect.height / 2;
+    var closest = items[0];
+    var closestDist = Infinity;
+
+    items.forEach(function (item) {
+      var itemRect = item.getBoundingClientRect();
+      var itemCenter = itemRect.top + itemRect.height / 2;
+      var dist = Math.abs(itemCenter - viewportCenter);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closest = item;
+      }
+    });
+
+    return closest;
+  }
+
+  var PICKER_GLIDE_DURATION = 0.52;
+  var PICKER_WHEEL_MULT = 0.82;
+
+  function createPickerGlide(scroller, hooks) {
+    hooks = hooks || {};
     var state = {
-      target: scroller.scrollLeft,
-      current: scroller.scrollLeft,
+      target: scroller.scrollTop,
+      current: scroller.scrollTop,
       raf: null,
       last: 0,
     };
 
     function maxScroll() {
-      return Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+      return Math.max(0, scroller.scrollHeight - scroller.clientHeight);
     }
 
     function clamp(value) {
@@ -422,7 +628,7 @@
     }
 
     function sync(value) {
-      var next = clamp(value != null ? value : scroller.scrollLeft);
+      var next = clamp(value != null ? value : scroller.scrollTop);
       state.target = next;
       state.current = next;
     }
@@ -438,16 +644,19 @@
       if (!state.last) state.last = time;
       var dt = Math.min(0.064, (time - state.last) / 1000);
       state.last = time;
-      var lerp = 1 - Math.exp(-dt / DECK_GLIDE_DURATION);
+      var lerp = 1 - Math.exp(-dt / PICKER_GLIDE_DURATION);
+      var prev = state.current;
       state.current += (state.target - state.current) * lerp;
       if (Math.abs(state.target - state.current) < 0.35) {
         state.current = state.target;
       }
-      scroller.scrollLeft = state.current;
+      scroller.scrollTop = state.current;
+      if (hooks.onTick) hooks.onTick(state.current - prev);
       if (Math.abs(state.target - state.current) > 0.35) {
         state.raf = requestAnimationFrame(frame);
       } else {
         stopRaf();
+        if (hooks.onSettle) hooks.onSettle();
       }
     }
 
@@ -462,74 +671,133 @@
       start();
     }
 
-    return { push: push, sync: sync, stop: stopRaf, clamp: clamp };
+    function goTo(value) {
+      state.target = clamp(value);
+      start();
+    }
+
+    return { push: push, goTo: goTo, sync: sync, stop: stopRaf, clamp: clamp };
   }
 
-  function deckGlide(scroller) {
-    if (!scroller.__deckGlide) {
-      scroller.__deckGlide = createDeckGlide(scroller);
+  function pickerGlide(scroller, hooks) {
+    if (!scroller.__pickerGlide) {
+      scroller.__pickerGlide = createPickerGlide(scroller, hooks);
     }
-    return scroller.__deckGlide;
+    return scroller.__pickerGlide;
   }
 
   function wheelScrollDelta(event, scroller) {
     var delta = event.deltaY;
     if (event.deltaMode === 1) delta *= 18;
-    else if (event.deltaMode === 2) delta *= scroller.clientWidth;
-    return delta * DECK_WHEEL_MULT;
+    else if (event.deltaMode === 2) delta *= scroller.clientHeight;
+    return delta * PICKER_WHEEL_MULT;
   }
 
-  function bindDeck(root) {
-    if (!root || deckBound) return;
-    deckBound = true;
+  function bindPicker(root) {
+    if (!root || pickerBound) return;
+    pickerBound = true;
 
     var scroller = root.querySelector("[data-work-scroller]");
     if (!scroller) return;
-    scroller.removeAttribute("tabindex");
 
-    var glide = deckGlide(scroller);
+    var picker = root.querySelector("[data-work-picker]");
+    resetPolaroidMotion(picker);
+
     var dragging = false;
-    var dragStartX = 0;
+    var dragStartY = 0;
     var dragStartScroll = 0;
     var dragDistance = 0;
+    var lastMoveY = 0;
     var activePointer = null;
+    var scrollSyncRaf = null;
+    var snapTimer = null;
+
+    function syncFocusedItem() {
+      var item = nearestPickerItem(scroller);
+      if (!item) return;
+      focusPickerItem(root, item, { scroll: false });
+    }
+
+    function snapToNearest() {
+      var item = nearestPickerItem(scroller);
+      if (!item) return;
+      focusPickerItem(root, item, { scroll: false });
+      glide.goTo(scrollTopForItem(scroller, item));
+    }
+
+    function scheduleSnap() {
+      if (snapTimer) clearTimeout(snapTimer);
+      snapTimer = setTimeout(function () {
+        snapTimer = null;
+        snapToNearest();
+      }, 140);
+    }
+
+    function scheduleScrollSync() {
+      if (scrollSyncRaf) return;
+      scrollSyncRaf = requestAnimationFrame(function () {
+        scrollSyncRaf = null;
+        syncFocusedItem();
+      });
+    }
+
+    var glide = pickerGlide(scroller, {
+      onTick: function (delta) {
+        nudgePolaroid(delta * 0.35, picker);
+        scheduleScrollSync();
+      },
+      onSettle: function () {
+        syncFocusedItem();
+      },
+    });
 
     scroller.addEventListener(
       "wheel",
       function (event) {
         if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-        if (scroller.scrollWidth <= scroller.clientWidth + 2) return;
+        if (scroller.scrollHeight <= scroller.clientHeight + 2) return;
         event.preventDefault();
-        glide.push(wheelScrollDelta(event, scroller));
+        var delta = wheelScrollDelta(event, scroller);
+        glide.push(delta);
+        nudgePolaroid(delta * 0.12, picker);
+        scheduleScrollSync();
+        scheduleSnap();
       },
       { passive: false }
     );
 
+    scroller.addEventListener("scroll", scheduleScrollSync, { passive: true });
+
     scroller.addEventListener("pointerdown", function (event) {
       if (event.pointerType === "mouse" && event.button !== 0) return;
       glide.stop();
-      glide.sync(scroller.scrollLeft);
+      glide.sync(scroller.scrollTop);
       activePointer = event.pointerId;
       dragging = false;
       dragDistance = 0;
-      dragStartX = event.clientX;
-      dragStartScroll = scroller.scrollLeft;
+      dragStartY = event.clientY;
+      lastMoveY = event.clientY;
+      dragStartScroll = scroller.scrollTop;
     });
 
     scroller.addEventListener("pointermove", function (event) {
       if (event.pointerId !== activePointer) return;
-      var dx = event.clientX - dragStartX;
+      var dy = event.clientY - dragStartY;
       if (!dragging) {
-        if (Math.abs(dx) < 8) return;
+        if (Math.abs(dy) < 8) return;
         dragging = true;
         scroller.classList.add("is-dragging");
         try {
           scroller.setPointerCapture(event.pointerId);
         } catch (e) {}
       }
-      dragDistance = Math.max(dragDistance, Math.abs(dx));
-      scroller.scrollLeft = dragStartScroll - dx;
-      glide.sync(scroller.scrollLeft);
+      dragDistance = Math.max(dragDistance, Math.abs(dy));
+      var step = event.clientY - lastMoveY;
+      lastMoveY = event.clientY;
+      scroller.scrollTop = dragStartScroll - dy;
+      glide.sync(scroller.scrollTop);
+      nudgePolaroid(-step * 0.18, picker);
+      scheduleScrollSync();
     });
 
     function endDrag(event) {
@@ -538,37 +806,36 @@
       dragging = false;
       scroller.setAttribute("data-drag-px", String(dragDistance));
       scroller.classList.remove("is-dragging");
-      glide.sync(scroller.scrollLeft);
+      glide.sync(scroller.scrollTop);
       try {
         scroller.releasePointerCapture(event.pointerId);
       } catch (e) {}
+      scheduleScrollSync();
+      snapToNearest();
     }
 
     scroller.addEventListener("pointerup", endDrag);
     scroller.addEventListener("pointercancel", endDrag);
 
-    deckItems(root).forEach(function (item) {
-      var pick = item.querySelector(".work-deck__pick");
-      if (!pick) return;
-
-      pick.addEventListener("pointerenter", function () {
-        focusDeckItem(root, item);
+    pickerItems(root).forEach(function (item) {
+      item.addEventListener("pointerenter", function () {
+        focusPickerItem(root, item);
       });
 
-      pick.addEventListener("pointerleave", function (event) {
-        if (isDeckPick(event.relatedTarget)) return;
-        clearDeckFocus(root);
+      item.addEventListener("pointerleave", function (event) {
+        if (isPickerItem(event.relatedTarget)) return;
+        scroller.classList.remove("has-focus");
       });
 
-      pick.addEventListener("focusin", function () {
-        focusDeckItem(root, item);
-      });
-
-      pick.addEventListener("focusout", function (event) {
-        if (isDeckPick(event.relatedTarget)) return;
-        clearDeckFocus(root);
+      item.addEventListener("focusin", function () {
+        focusPickerItem(root, item);
       });
     });
+
+    var first = pickerItems(root)[0];
+    if (first) {
+      focusPickerItem(root, first, { scroll: false });
+    }
   }
 
   function setDockVisible(root, visible) {
@@ -586,46 +853,209 @@
     deck.style.visibility = "";
     deck.style.opacity = "";
     deck.style.pointerEvents = "";
-    deckItems(root).forEach(function (item) {
-      item.style.opacity = "";
-      item.style.pointerEvents = "";
-      item.style.transform = "";
-      item.querySelectorAll(".work-deck__art").forEach(function (art) {
-        art.style.opacity = "";
-      });
-    });
+    var scroller = root.querySelector("[data-work-scroller]");
+    if (scroller) {
+      scroller.classList.remove("has-focus", "is-dragging");
+      scroller.removeAttribute("data-drag-px");
+    }
   }
 
   function showChooser(root) {
     if (!root) return Promise.resolve();
 
+    revealToken++;
     var canvas = root.querySelector("[data-work-canvas]");
     var deck = root.querySelector("[data-work-deck]");
 
     syncPickButtons(root, null);
     syncPanels(root, null);
     syncDockTitle(root, null);
+    syncWorkBackChrome(null);
     setBodyModes(null);
     setDockVisible(root, false);
-    clearDeckFocus(root);
+    clearPickerFocus(root);
     haltScroll();
+    clearCanvasReveal(canvas);
+    clearPreviewRevealPin(root);
 
     if (canvas) canvas.hidden = true;
     if (deck) resetDeck(root);
+    var picker = root.querySelector("[data-work-picker]");
+    if (picker) picker.classList.remove("is-revealing");
+    resetPolaroidMotion(picker);
     setPhase(root, "choose");
+    chooserActive = true;
+
+    var first = pickerItems(root)[0];
+    if (first) focusPickerItem(root, first, { scroll: false });
 
     return Promise.resolve();
   }
 
-  function openCategory(root, category) {
-    if (!root || !category) return Promise.resolve();
+  function setRevealPhase(root, revealing) {
+    var hub = workHub(root);
+    if (!hub) return;
+    if (revealing) {
+      hub.setAttribute("data-work-phase", "revealing");
+      document.body.classList.add("spa-work-revealing");
+      document.body.classList.remove("spa-work-choose");
+    } else {
+      document.body.classList.remove("spa-work-revealing");
+    }
+  }
 
+  function clearPreviewRevealPin(root) {
+    if (!root) return;
+    var photo = root.querySelector("[data-work-preview-photo]");
+    if (!photo) return;
+    photo.style.removeProperty("position");
+    photo.style.removeProperty("left");
+    photo.style.removeProperty("top");
+    photo.style.removeProperty("width");
+    photo.style.removeProperty("height");
+    photo.style.removeProperty("z-index");
+    photo.style.removeProperty("transform");
+    photo.style.removeProperty("transform-origin");
+    photo.style.removeProperty("will-change");
+  }
+
+  function pinPreviewForReveal(root, rect) {
+    var photo = root && root.querySelector("[data-work-preview-photo]");
+    if (!photo || !rect) return;
+    photo.style.position = "fixed";
+    photo.style.left = rect.left + "px";
+    photo.style.top = rect.top + "px";
+    photo.style.width = rect.width + "px";
+    photo.style.height = rect.height + "px";
+    photo.style.zIndex = "12";
+    photo.style.transform = "rotate(-3deg)";
+    photo.style.transformOrigin = "50% 55%";
+    photo.style.willChange = "opacity";
+  }
+
+  function clearCanvasReveal(canvas) {
+    if (!canvas) return;
+    canvas.classList.remove("is-revealing");
+    canvas.style.removeProperty("--work-reveal-top");
+    canvas.style.removeProperty("--work-reveal-right");
+    canvas.style.removeProperty("--work-reveal-bottom");
+    canvas.style.removeProperty("--work-reveal-left");
+    canvas.style.removeProperty("clip-path");
+    canvas.style.removeProperty("transition");
+  }
+
+  function previewPhotoRect(root) {
+    var photo = root && root.querySelector("[data-work-preview-photo]");
+    if (!photo) return null;
+    var rect = photo.getBoundingClientRect();
+    if (rect.width < 2 || rect.height < 2) return null;
+    return rect;
+  }
+
+  function playCategoryReveal(root, category) {
+    var token = ++revealToken;
+    var picker = root.querySelector("[data-work-picker]");
     var canvas = root.querySelector("[data-work-canvas]");
     var deck = root.querySelector("[data-work-deck]");
 
     syncPanels(root, category);
+    setBodyModes(category);
+    setRevealPhase(root, true);
+    haltScroll();
+    setDockVisible(root, false);
+
+    return mountCategoryContent(category).then(function () {
+      if (token !== revealToken || !canvas) {
+        clearCanvasReveal(canvas);
+        clearPreviewRevealPin(root);
+        if (picker) picker.classList.remove("is-revealing");
+        setRevealPhase(root, false);
+        if (deck) deck.style.display = "none";
+        if (canvas) canvas.hidden = false;
+        setPhase(root, "open", category);
+        setDockVisible(root, true);
+        return;
+      }
+
+      var rect = previewPhotoRect(root);
+      if (!rect) {
+        clearCanvasReveal(canvas);
+        clearPreviewRevealPin(root);
+        if (picker) picker.classList.remove("is-revealing");
+        setRevealPhase(root, false);
+        if (deck) deck.style.display = "none";
+        canvas.hidden = false;
+        setPhase(root, "open", category);
+        setDockVisible(root, true);
+        startScroll();
+        return;
+      }
+
+      var vw = window.innerWidth || document.documentElement.clientWidth;
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+
+      canvas.hidden = false;
+      canvas.classList.add("is-revealing");
+      canvas.style.setProperty("--work-reveal-top", rect.top + "px");
+      canvas.style.setProperty("--work-reveal-right", Math.max(0, vw - rect.right) + "px");
+      canvas.style.setProperty("--work-reveal-bottom", Math.max(0, vh - rect.bottom) + "px");
+      canvas.style.setProperty("--work-reveal-left", rect.left + "px");
+
+      if (picker) {
+        picker.classList.add("is-revealing");
+        resetPolaroidMotion(picker);
+      }
+      pinPreviewForReveal(root, rect);
+
+      return new Promise(function (resolve) {
+        var finished = false;
+
+        function finish() {
+          if (finished || token !== revealToken) return;
+          finished = true;
+          clearCanvasReveal(canvas);
+          clearPreviewRevealPin(root);
+          if (picker) picker.classList.remove("is-revealing");
+          setRevealPhase(root, false);
+          if (deck) deck.style.display = "none";
+          setPhase(root, "open", category);
+          setDockVisible(root, true);
+          startScroll();
+          resolve();
+        }
+
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            if (token !== revealToken) return;
+            canvas.style.setProperty("--work-reveal-top", "0px");
+            canvas.style.setProperty("--work-reveal-right", "0px");
+            canvas.style.setProperty("--work-reveal-bottom", "0px");
+            canvas.style.setProperty("--work-reveal-left", "0px");
+          });
+        });
+
+        function onTransitionEnd(event) {
+          if (event.target !== canvas) return;
+          if (event.propertyName !== "clip-path" && event.propertyName !== "-webkit-clip-path") return;
+          canvas.removeEventListener("transitionend", onTransitionEnd);
+          finish();
+        }
+
+        canvas.addEventListener("transitionend", onTransitionEnd);
+        window.setTimeout(finish, REVEAL_MS + 120);
+      });
+    });
+  }
+
+  function openCategoryInstant(root, category) {
+    var canvas = root.querySelector("[data-work-canvas]");
+    var deck = root.querySelector("[data-work-deck]");
+
+    syncPanels(root, category);
+    setBodyModes(category);
     syncPickButtons(root, category);
     syncDockTitle(root, category);
+    syncWorkBackChrome(category);
     setDockVisible(root, true);
 
     if (deck) deck.style.display = "none";
@@ -635,10 +1065,25 @@
     return mountCategoryContent(category);
   }
 
+  function openCategory(root, category, options) {
+    if (!root || !category) return Promise.resolve();
+
+    options = options || {};
+    syncPickButtons(root, category);
+    syncDockTitle(root, category);
+    syncWorkBackChrome(category);
+
+    if (options.animate && !reducedMotion) {
+      return playCategoryReveal(root, category);
+    }
+
+    return openCategoryInstant(root, category);
+  }
+
   function bindHub(root) {
     if (!root || root.__workHubBound) return;
     root.__workHubBound = true;
-    bindDeck(root);
+    bindPicker(root);
 
     root.addEventListener(
       "wheel",
@@ -656,26 +1101,14 @@
     );
 
     root.addEventListener("click", function (e) {
-      var pickItem = e.target.closest("[data-work-pick]");
-      if (pickItem) {
-        var pickBtn = pickItem.querySelector(".work-deck__pick");
-        if (pickBtn && e.target !== pickBtn && !pickBtn.contains(e.target)) return;
-        e.preventDefault();
-        var scroller = root.querySelector("[data-work-scroller]");
-        if (scroller && Number(scroller.getAttribute("data-drag-px") || 0) >= 12) return;
-        var next = pickItem.getAttribute("data-work-pick");
-        if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
-          window.AimySpa.navigate("./work?category=" + encodeURIComponent(next));
-        }
-        return;
-      }
-
-      if (e.target.closest("[data-work-back]")) {
-        e.preventDefault();
-        if (!activeCategory) return;
-        if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
-          window.AimySpa.navigate("./work");
-        }
+      var pickLink = e.target.closest("[data-work-pick]");
+      if (!pickLink) return;
+      e.preventDefault();
+      var scroller = root.querySelector("[data-work-scroller]");
+      if (scroller && Number(scroller.getAttribute("data-drag-px") || 0) >= 12) return;
+      var next = pickLink.getAttribute("data-work-pick");
+      if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
+        window.AimySpa.navigate("./work?category=" + encodeURIComponent(next));
       }
     });
   }
@@ -697,10 +1130,13 @@
       }
 
       var flow;
+      var animateOpen = !!chooserActive && !!category && !reducedMotion;
+      chooserActive = !category;
+
       if (!category) {
         flow = showChooser(root);
       } else {
-        flow = openCategory(root, category);
+        flow = openCategory(root, category, { animate: animateOpen });
       }
 
       return flow.then(function () {
@@ -718,12 +1154,19 @@
     },
     unmount: function () {
       mountToken++;
+      revealToken++;
+      chooserActive = false;
       var root = workRoot();
       resetWorkChrome(root);
       if (root) {
         setDockVisible(root, false);
         resetDeck(root);
-        clearDeckFocus(root);
+        clearPickerFocus(root);
+        clearCanvasReveal(root && root.querySelector("[data-work-canvas]"));
+        clearPreviewRevealPin(root);
+        var picker = root.querySelector("[data-work-picker]");
+        if (picker) picker.classList.remove("is-revealing");
+        document.body.classList.remove("spa-work-revealing");
         var hub = workHub(root);
         if (hub) hub.setAttribute("data-work-phase", "choose");
         var canvas = root.querySelector("[data-work-canvas]");
@@ -744,9 +1187,11 @@
       document.body.removeAttribute("data-work-bare");
       activeCategory = null;
       haltScroll();
+      stopPolaroidLoop();
       teardownStickerbook();
       document.body.classList.remove("spa-work-choose");
       document.body.removeAttribute("data-work-layout");
+      if (window.AimySpaSubBack) window.AimySpaSubBack.hide();
     },
   };
 })();

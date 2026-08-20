@@ -6,17 +6,17 @@
 (function () {
   "use strict";
 
-  var VERSION = "branding-15";
+  var VERSION = "branding-18";
   var ASSET_DIR = "./assets/polykroma/branding/";
 
   var LAYER_FILES = {
+    "charm-shape": "charm-shape.svg",
     "charm-sclera": "charm-sclera.svg",
     "charm-iris": "charm-iris.svg",
     "charm-face": "charm-face.svg",
     "charm-hair": "charm-hair.svg",
-    "charm-lashes": "charm-lashes.svg",
     "charm-bow": "charm-bow.svg",
-    "charm-highlight": "charm-highlight.svg",
+    "charm-lashes": "charm-lashes.svg",
   };
 
   var readyResolve;
@@ -116,6 +116,45 @@
     });
   }
 
+  function prepareIrisLayer(layerEl) {
+    if (!layerEl || layerEl.querySelector(".iris-pupil")) return;
+
+    var paths = layerEl.querySelectorAll("path");
+    var sideNames = ["left", "right"];
+    var p;
+
+    for (p = 0; p < paths.length; p++) {
+      var path = paths[p];
+      var d = path.getAttribute("d") || "";
+      var parts = d.split(/(?=M)/i).filter(function (segment) {
+        return segment && segment.trim().length > 1;
+      });
+      var parent = path.parentNode;
+      if (!parent) continue;
+
+      if (parts.length < 2) {
+        var single = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        single.setAttribute("class", "iris-pupil");
+        single.setAttribute("data-iris", "left");
+        parent.insertBefore(single, path);
+        single.appendChild(path);
+        continue;
+      }
+
+      var i;
+      for (i = 0; i < parts.length; i++) {
+        var wrap = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        wrap.setAttribute("class", "iris-pupil");
+        wrap.setAttribute("data-iris", sideNames[i] || "right");
+        var pupilPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        pupilPath.setAttribute("d", parts[i].trim());
+        wrap.appendChild(pupilPath);
+        parent.insertBefore(wrap, path);
+      }
+      parent.removeChild(path);
+    }
+  }
+
   function importSvgChildren(layerEl, svgText) {
     var doc = new DOMParser().parseFromString(svgText, "image/svg+xml");
     var root = doc.documentElement;
@@ -142,15 +181,11 @@
     if (!fillRule) fillRule = root.getAttribute("fill-rule");
     if (fillRule) layerEl.setAttribute("fill-rule", fillRule);
 
-    if (key === "charm-highlight") {
-      stripPaint(layerEl, true);
-      var paths = layerEl.querySelectorAll("path");
-      for (var p = 0; p < paths.length; p++) {
-        paths[p].setAttribute("fill", "none");
-      }
-    } else {
-      stripPaint(layerEl);
+    if (key === "charm-iris") {
+      prepareIrisLayer(layerEl);
     }
+
+    stripPaint(layerEl);
 
     return true;
   }
@@ -181,6 +216,7 @@
 
     return Promise.all(jobs).then(function () {
       mark.__charmHydrated = true;
+      mark.setAttribute("data-charm-hydrated", "1");
       return mark;
     });
   }
@@ -208,13 +244,13 @@
 
     return Promise.all(jobs)
       .then(function () {
-        refreshEyes();
         if (window.AimyCharmGlass && window.AimyCharmGlass.prepareMarkStack) {
           var marks = document.querySelectorAll(".brand-mark");
           for (var m = 0; m < marks.length; m++) {
             window.AimyCharmGlass.prepareMarkStack(marks[m]);
           }
         }
+        refreshEyes();
         readyResolve();
         document.dispatchEvent(new CustomEvent("aimy-charm-mark-ready"));
       })

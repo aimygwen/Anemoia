@@ -1,0 +1,289 @@
+/**
+ * charm-mark.css — single source for Charm logo stack (header, pins, clones).
+ * Loaded after polykroma.css on every page that shows .brand-mark.
+ */
+
+:root {
+  --charm-glass-blur: 3.5px;
+  --charm-glass-saturate: 1.16;
+  --charm-glass-contrast: 1.06;
+  --charm-glass-brightness: 1.03;
+  --charm-glass-fill: color-mix(in srgb, var(--step-01) 18%, transparent);
+  --charm-glass-lens-scale: 1.028;
+  --charm-glass-lens-origin-x: 42%;
+  --charm-glass-lens-origin-y: 36%;
+  --charm-shape-mask: url("../assets/polykroma/branding/charm-shape.svg?v=branding-19");
+  --charm-hair-fill: color-mix(in srgb, var(--aimy-primary) 42%, transparent);
+  --charm-light-fill: color-mix(in srgb, var(--aimy-secondary) 48%, transparent);
+  --charm-lash-fill: var(--aimy-tertiary);
+  --charm-edge-tight: color-mix(in srgb, var(--step-01) 55%, transparent);
+  --charm-edge-soft: color-mix(in srgb, var(--step-01) 20%, transparent);
+  --charm-hover-shadow-near: 0 0.28em 0.48em color-mix(in srgb, var(--step-08) 10%, transparent);
+  --charm-hover-shadow-far: 0 0.82em 1.35em color-mix(in srgb, var(--step-08) 14%, transparent);
+}
+
+/* —— Liquid-glass shape pane (charm-glass.js) —— */
+.brand-glass-portal {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+  transform-origin: center;
+  transition: transform 0.65s cubic-bezier(0.3, 2.2, 0.4, 0.95);
+}
+
+.brand-mark:not([data-charm-hydrated="1"]) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.site-header[data-aimy-chrome] .brand-mark,
+.ins-logo-pin-inner .brand-mark,
+.lp-logo-pin-inner .brand-mark {
+  position: relative;
+  z-index: 2;
+}
+
+.site-header[data-aimy-chrome] .brand-glass-portal {
+  z-index: 2;
+}
+
+.site-header[data-aimy-chrome] .brand-mark {
+  filter: none;
+  transition: transform var(--pk-chrome-press-out);
+}
+
+.site-header[data-aimy-chrome] .brand:hover .brand-mark,
+.site-header[data-aimy-chrome] .brand:focus-visible .brand-mark {
+  filter: none;
+}
+
+.ins-logo-pin-inner,
+.lp-logo-pin-inner {
+  position: relative;
+  overflow: visible;
+}
+
+.mono-charm-glass-layer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--aimy-brand-size);
+  height: var(--aimy-brand-size);
+  margin-left: calc(var(--aimy-brand-size) * -0.5);
+  margin-top: calc(var(--aimy-brand-size) * -0.5);
+  pointer-events: none;
+  overflow: visible;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.mono-charm-glass-layer--charm-shape {
+  z-index: 0;
+  -webkit-mask-image: var(--charm-shape-mask);
+  mask-image: var(--charm-shape-mask);
+  -webkit-mask-mode: luminance;
+  mask-mode: luminance;
+  backdrop-filter:
+    blur(var(--charm-glass-blur))
+    saturate(var(--charm-glass-saturate))
+    contrast(var(--charm-glass-contrast))
+    brightness(var(--charm-glass-brightness));
+  -webkit-backdrop-filter:
+    blur(var(--charm-glass-blur))
+    saturate(var(--charm-glass-saturate))
+    contrast(var(--charm-glass-contrast))
+    brightness(var(--charm-glass-brightness));
+  background: var(--charm-glass-fill);
+}
+
+.mono-charm-glass-layer--charm-shape::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 88% 70% at 30% 22%,
+      color-mix(in srgb, var(--step-01) 36%, transparent),
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse 78% 58% at 72% 78%,
+      color-mix(in srgb, var(--step-08) 8%, transparent),
+      transparent 62%
+    );
+  mix-blend-mode: soft-light;
+}
+
+.mono-charm-glass-layer--charm-shape::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    148deg,
+    color-mix(in srgb, var(--step-01) 24%, transparent) 0%,
+    transparent 32%,
+    transparent 64%,
+    color-mix(in srgb, var(--step-06) 12%, transparent) 100%
+  );
+  mix-blend-mode: overlay;
+  box-shadow:
+    inset 0 0 0 0.5px color-mix(in srgb, var(--step-01) 34%, transparent),
+    inset 0.8px 0 0 color-mix(in srgb, var(--step-05) 12%, transparent),
+    inset -0.8px 0 0 color-mix(in srgb, var(--step-06) 11%, transparent);
+}
+
+.brand[data-mono-charm-glass-fallback] .mono-charm-glass-layer--charm-shape {
+  background: color-mix(in srgb, var(--step-01) 42%, transparent);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .brand-glass-portal {
+    display: none;
+  }
+
+  .mono-charm-glass-layer--charm-shape {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* —— Layer stack colors (same on every page) —— */
+.brand-mark .brand-layer--charm-shape,
+.brand-mark .brand-layer--charm-shape * {
+  fill: none !important;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.brand-mark .brand-layer--charm-sclera,
+.brand-mark .brand-layer--charm-sclera image,
+.brand-mark .brand-layer--charm-sclera use {
+  opacity: 1;
+}
+
+.brand-mark .brand-logo-dark,
+.brand-mark .brand-logo-dark * {
+  fill: var(--aimy-primary);
+  color: var(--aimy-primary);
+  transition: fill 0.35s ease;
+}
+
+.brand-mark .brand-logo-light,
+.brand-mark .brand-logo-light * {
+  fill: var(--aimy-secondary);
+  transition: fill 0.35s ease;
+}
+
+.brand-mark .brand-logo-mid,
+.brand-mark .brand-logo-mid * {
+  fill: var(--charm-lash-fill);
+  transition: fill 0.35s ease;
+}
+
+.brand-mark .brand-layer--charm-hair path {
+  fill: var(--charm-hair-fill);
+}
+
+.brand-mark .brand-layer--charm-sclera path,
+.brand-mark .brand-layer--charm-face path,
+.brand-mark .brand-layer--charm-bow path {
+  fill: var(--charm-light-fill);
+}
+
+.brand-mark .brand-layer--charm-iris,
+.brand-mark .brand-layer--charm-iris *,
+.brand-mark .brand-layer--charm-iris path,
+.brand-mark .brand-layer--charm-iris .iris-pupil,
+.brand-mark .brand-layer--charm-iris .iris-pupil path,
+.brand-mark .mono-charm-iris-mask-wrap,
+.brand-mark .mono-charm-iris-mask-wrap * {
+  fill: var(--charm-lash-fill);
+  fill-opacity: 1;
+  opacity: 1;
+}
+
+.brand-mark .brand-layer--charm-lashes,
+.brand-mark .brand-layer--charm-lashes *,
+.brand-mark .brand-layer--charm-lashes path {
+  fill: var(--charm-lash-fill);
+  fill-opacity: 1;
+  opacity: 1;
+}
+
+.brand-mark .brand-layer--charm-iris .iris-pupil {
+  will-change: transform;
+}
+
+.brand-mark .brand-layer--charm-highlight {
+  display: none;
+}
+
+.brand-mark .brand-layer--charm-sclera path,
+.brand-mark .brand-layer--charm-face path,
+.brand-mark .brand-layer--charm-hair path,
+.brand-mark .brand-layer--charm-bow path {
+  filter:
+    drop-shadow(0 0 0.35px var(--charm-edge-tight))
+    drop-shadow(-0.35px -0.5px 0.6px var(--charm-edge-soft));
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .brand-mark .brand-layer--charm-sclera path,
+  .brand-mark .brand-layer--charm-face path,
+  .brand-mark .brand-layer--charm-hair path,
+  .brand-mark .brand-layer--charm-bow path {
+    filter: none;
+  }
+
+  .brand-mark .brand-layer--charm-hair,
+  .brand-mark .brand-layer--charm-hair * {
+    fill: var(--aimy-primary);
+  }
+
+  .brand-mark .brand-layer--charm-sclera,
+  .brand-mark .brand-layer--charm-sclera *,
+  .brand-mark .brand-layer--charm-face,
+  .brand-mark .brand-layer--charm-face *,
+  .brand-mark .brand-layer--charm-bow,
+  .brand-mark .brand-layer--charm-bow * {
+    fill: var(--aimy-secondary);
+  }
+}
+
+.site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-dark,
+.site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-dark * {
+  animation: aimy-rainbow-fill 3s linear infinite;
+}
+
+.site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-light,
+.site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-light * {
+  animation: aimy-logo-light 3s linear infinite;
+}
+
+.site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-mid,
+.site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-mid * {
+  animation: aimy-logo-mid 3s linear infinite;
+}
+
+.ins-logo-pin-inner .brand-mark,
+.ins-logo-pin-mark {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ins-logo-pin-inner .mono-charm-glass-layer,
+.lp-logo-pin-inner .mono-charm-glass-layer {
+  width: 100%;
+  height: 100%;
+  margin-left: -50%;
+  margin-top: -50%;
+}

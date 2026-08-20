@@ -51,29 +51,49 @@
     });
   }
 
+  function spaQuerySignature(viewId, query) {
+    query = Object.assign({}, query || {});
+    if (viewId === "work" && window.AimySpa && typeof window.AimySpa.normalizeCategory === "function") {
+      var workCat = window.AimySpa.normalizeCategory(query.category);
+      if (workCat) query.category = workCat;
+      else delete query.category;
+    }
+    if (viewId === "insights" && window.AimySpa && typeof window.AimySpa.normalizeLog === "function") {
+      var logId = window.AimySpa.normalizeLog(query.log);
+      if (logId) query.log = logId;
+      else delete query.log;
+    }
+    return JSON.stringify(query);
+  }
+
   function render(route, options) {
     var viewId = route.view || "start";
     var prevView = currentView;
     var prevEl = currentEl;
     var gen = ++renderGen;
+    var nextQuerySig = spaQuerySignature(viewId, route.query || {});
+    var priorQuerySig =
+      options && options.prior ? spaQuerySignature(viewId, options.prior.query || {}) : null;
 
     if (
       !(options && options.initial) &&
       prevView === viewId &&
       options &&
       options.prior &&
-      JSON.stringify(options.prior.query || {}) === JSON.stringify(route.query || {})
+      priorQuerySig === nextQuerySig
     ) {
       return Promise.resolve();
     }
 
     /* Work chooser ↔ category — update in place, no SPA view transition. */
     if (
+      !(options && options.initial) &&
       prevView === "work" &&
       viewId === "work" &&
       options &&
       options.prior &&
-      JSON.stringify(options.prior.query || {}) !== JSON.stringify(route.query || {})
+      priorQuerySig !== nextQuerySig &&
+      (prevEl || getViewEl("work"))
     ) {
       if (window.AimySpaState) {
         window.AimySpaState.rememberScroll("work");
@@ -130,9 +150,7 @@
           var prevDef = window.AimySpaViews.get(prevView);
           if (prevDef && typeof prevDef.unmount === "function") prevDef.unmount();
         } else if (prevView === viewId && options && options.prior) {
-          var prevQuery = options.prior.query || {};
-          var nextQuery = route.query || {};
-          if (JSON.stringify(prevQuery) !== JSON.stringify(nextQuery)) {
+          if (priorQuerySig !== nextQuerySig) {
             var sameDef = window.AimySpaViews.get(viewId);
             var queryOnly = viewId === "work" || viewId === "insights";
             if (sameDef && typeof sameDef.unmount === "function" && !queryOnly) {
@@ -196,9 +214,9 @@
               window.Polyglide.to(0, { duration: 0.01 });
             }
           } else if (window.AimySpaState) {
-            var priorQuery = options && options.prior ? options.prior.query || {} : {};
-            var nextQuery = route.query || {};
-            if (JSON.stringify(priorQuery) !== JSON.stringify(nextQuery)) {
+            var priorSig =
+              options && options.prior ? spaQuerySignature(viewId, options.prior.query || {}) : null;
+            if (priorSig !== nextQuerySig) {
               window.scrollTo(0, 0);
               if (window.Polyglide && typeof window.Polyglide.to === "function") {
                 window.Polyglide.to(0, { duration: 0.01 });
@@ -256,16 +274,12 @@
     window.AimySpa.bindLinks();
 
     var route = window.AimySpa.parseLocation();
-    if (window.AimySpaState) {
-      window.AimySpaState.setView(route.view, route.query);
-    }
 
     if (route.view !== "start" && startEl) {
       startEl.hidden = true;
       startEl.classList.remove("spa-view--active");
       startEl.setAttribute("aria-hidden", "true");
       currentEl = null;
-      currentView = route.view;
     }
 
     var bootPromise;

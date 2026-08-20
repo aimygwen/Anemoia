@@ -7,9 +7,6 @@
   --mono-hair: #3d3d3d;
   --mono-lash: #4a4a4a;
   --mono-light: #e5e5e5;
-  --mono-glass-blur: 12px;
-  --aimy-charm-glass-blur: var(--mono-glass-blur);
-  --mono-glass-fill: color-mix(in srgb, var(--step-01) 42%, transparent);
   --mono-edge-glow-tight: color-mix(in srgb, var(--step-01) 50%, transparent);
   --mono-edge-glow-soft: color-mix(in srgb, var(--step-01) 16%, transparent);
 
@@ -56,21 +53,25 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --step-01: #1a1a1a;
-    --step-02: #242424;
-    --step-03: #2e2e2e;
-    --step-04: #3a3a3a;
+    color-scheme: dark;
+
+    /* Black ground + white headings + light grey copy */
+    --step-01: #000000;
+    --step-02: #0a0a0a;
+    --step-03: #141414;
+    --step-04: #222222;
     --step-05: #525252;
-    --step-06: #6b6b6b;
-    --step-07: #bdbdbd;
-    --step-08: #f0f0f0;
+    --step-06: #737373;
+    --step-07: #a8a8a8;
+    --step-08: #ffffff;
 
     --pk-bg: var(--step-01);
     --pk-surface: var(--step-02);
     --pk-hover: var(--step-03);
     --pk-border: color-mix(in srgb, var(--step-04) 70%, transparent);
-    --pk-text: var(--step-07);
     --pk-heading: var(--step-08);
+    --pk-text: var(--step-07);
+    --pk-text-muted: color-mix(in srgb, var(--step-08) 52%, transparent);
     --pk-primary: var(--step-06);
     --pk-accent: var(--step-05);
     --pk-soft: var(--step-04);
@@ -81,10 +82,68 @@
     --aimy-secondary: var(--mono-light);
     --aimy-tertiary: var(--mono-lash);
     --aimy-accent: var(--step-05);
-    --aimy-ink: var(--step-07);
+    --aimy-ink: var(--pk-text);
     --aimy-menu-coin: var(--step-06);
     --aimy-menu-coin-open: var(--step-05);
-    --aimy-chrome-ink: var(--step-07);
+    --aimy-chrome-ink: var(--pk-text);
+  }
+
+  html,
+  body,
+  #app-viewport,
+  .spa-viewport,
+  .spa-view,
+  .vault,
+  .page,
+  .work-hub,
+  .about-page-body,
+  .insights-page-body {
+    background-color: var(--pk-bg) !important;
+    color: var(--pk-text);
+  }
+
+  html:has(body.spa-view-start),
+  body.spa-view-start,
+  .c-welcome[data-aimy-splash-only],
+  .c-welcome[data-aimy-splash-only] .welcome-bg {
+    --aimy-splash-ground: var(--pk-bg);
+    background-color: var(--pk-bg) !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .work-hub__dock-title,
+  .work-picker__label,
+  .work-deck__label,
+  .ins-col-label,
+  .ins-logs-deck__pick .ins-logs-deck__title {
+    color: var(--pk-heading);
+  }
+
+  p,
+  li,
+  figcaption,
+  small,
+  .aimy-splash-tagline,
+  .ins-muted,
+  label {
+    color: var(--pk-text);
+  }
+
+  .site-header[data-aimy-chrome] .social a,
+  .site-header[data-aimy-chrome] .nav a {
+    color: var(--aimy-chrome-ink);
+  }
+
+  .spa-site-footer,
+  footer[data-spa-footer],
+  body[data-spa-host] .spa-site-footer {
+    background-color: var(--pk-bg) !important;
+    color: var(--pk-text);
   }
 }
 
@@ -93,124 +152,14 @@ body {
   background-color: var(--pk-bg) !important;
 }
 
-/* —— Charm: frosted glass greyscale overrides (structure in polykroma.css) —— */
-.site-header[data-aimy-chrome] {
-  background: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-hair path {
-  fill: color-mix(in srgb, var(--mono-hair) 42%, transparent) !important;
-}
-
-.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-base path,
-.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-face path,
-.site-header[data-aimy-chrome] .brand[data-mono-charm-glass] .brand-layer--charm-bow path {
-  fill: color-mix(in srgb, var(--mono-light) 48%, transparent) !important;
-}
-
-/* Specular edge glow — soft rim on each shape (not outline stroke) */
-.site-header[data-aimy-chrome] .brand-layer--charm-highlight {
-  display: none !important;
-}
-
-.site-header[data-aimy-chrome] .brand-layer--charm-base path,
-.site-header[data-aimy-chrome] .brand-layer--charm-face path,
-.site-header[data-aimy-chrome] .brand-layer--charm-hair path,
-.site-header[data-aimy-chrome] .brand-layer--charm-bow path {
-  filter:
-    drop-shadow(0 0 0.35px var(--mono-edge-glow-tight))
-    drop-shadow(-0.35px -0.5px 0.6px var(--mono-edge-glow-soft));
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .site-header[data-aimy-chrome] .brand-layer--charm-base path,
-  .site-header[data-aimy-chrome] .brand-layer--charm-face path,
-  .site-header[data-aimy-chrome] .brand-layer--charm-hair path,
-  .site-header[data-aimy-chrome] .brand-layer--charm-bow path {
-    filter: none;
-  }
-}
-
-/* Iris + lashes: fully opaque flat grey — lashes paint last (top-most) */
-.site-header[data-aimy-chrome] .brand-logo-mid,
-.site-header[data-aimy-chrome] .brand-logo-mid *,
-.site-header[data-aimy-chrome] .brand-layer--charm-lashes,
-.site-header[data-aimy-chrome] .brand-layer--charm-lashes *,
-.site-header[data-aimy-chrome] .brand-layer--charm-iris,
-.site-header[data-aimy-chrome] .brand-layer--charm-iris * {
-  fill: var(--mono-lash) !important;
-  fill-opacity: 1 !important;
-  opacity: 1 !important;
+/* Charm hover — flat greyscale (layer colors live in charm-mark.css) */
+.site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-dark,
+.site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-dark *,
+.site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-light,
+.site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-light *,
+.site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-mid,
+.site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-mid * {
   animation: none !important;
-}
-
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-hair,
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-hair * {
-  fill: color-mix(in srgb, var(--mono-hair) 42%, transparent) !important;
-}
-
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-lashes,
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-lashes *,
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-iris,
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-iris * {
-  fill: var(--mono-lash) !important;
-}
-
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-base,
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-base *,
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-face,
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-face *,
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-bow,
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-bow * {
-  fill: var(--mono-light) !important;
-}
-
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-iris .iris-pupil,
-.site-header[data-aimy-chrome] .brand:not([data-mono-charm-glass]) .brand-layer--charm-iris .iris-pupil * {
-  fill: var(--mono-lash) !important;
-}
-
-.site-header[data-aimy-chrome] .brand:hover .brand-logo-dark,
-.site-header[data-aimy-chrome] .brand:hover .brand-logo-dark *,
-.site-header[data-aimy-chrome] .brand:hover .brand-logo-light,
-.site-header[data-aimy-chrome] .brand:hover .brand-logo-light *,
-.site-header[data-aimy-chrome] .brand:hover .brand-logo-mid,
-.site-header[data-aimy-chrome] .brand:hover .brand-logo-mid * {
-  animation: none !important;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .brand-glass-portal {
-    display: none;
-  }
-
-  .site-header[data-aimy-chrome] .brand-layer--charm-hair,
-  .site-header[data-aimy-chrome] .brand-layer--charm-hair * {
-    fill: var(--mono-hair) !important;
-  }
-
-  .site-header[data-aimy-chrome] .brand-layer--charm-lashes,
-  .site-header[data-aimy-chrome] .brand-layer--charm-lashes *,
-  .site-header[data-aimy-chrome] .brand-layer--charm-iris,
-  .site-header[data-aimy-chrome] .brand-layer--charm-iris * {
-    fill: var(--mono-lash) !important;
-  }
-
-  .site-header[data-aimy-chrome] .brand-layer--charm-base,
-  .site-header[data-aimy-chrome] .brand-layer--charm-base *,
-  .site-header[data-aimy-chrome] .brand-layer--charm-face,
-  .site-header[data-aimy-chrome] .brand-layer--charm-face *,
-  .site-header[data-aimy-chrome] .brand-layer--charm-bow,
-  .site-header[data-aimy-chrome] .brand-layer--charm-bow * {
-    fill: var(--mono-light) !important;
-  }
-
-  .site-header[data-aimy-chrome] .brand-layer--charm-iris .iris-pupil,
-  .site-header[data-aimy-chrome] .brand-layer--charm-iris .iris-pupil * {
-    fill: var(--mono-lash) !important;
-  }
 }
 
 /* —— No gradients (flat fills) —— */
@@ -275,16 +224,18 @@ body {
   filter: none !important;
 }
 
-.c-welcome[data-aimy-splash-only],
-.c-welcome[data-aimy-splash-only] .welcome-bg {
-  --aimy-splash-ground: #E7CBFF;
-  background-color: var(--aimy-splash-ground) !important;
-  background-image: none !important;
-}
+@media (prefers-color-scheme: light) {
+  .c-welcome[data-aimy-splash-only],
+  .c-welcome[data-aimy-splash-only] .welcome-bg {
+    --aimy-splash-ground: #E7CBFF;
+    background-color: var(--aimy-splash-ground) !important;
+    background-image: none !important;
+  }
 
-html:has(body.spa-view-start),
-body.spa-view-start {
-  background-color: #E7CBFF !important;
+  html:has(body.spa-view-start),
+  body.spa-view-start {
+    background-color: #E7CBFF !important;
+  }
 }
 
 /* Splash hero photo on — mono-dev only tones chrome, not the art */
@@ -318,7 +269,7 @@ body[data-spa-host] .spa-site-footer {
   .spa-site-footer,
   footer[data-spa-footer],
   body[data-spa-host] .spa-site-footer {
-    background-color: var(--step-02) !important;
+    background-color: var(--pk-bg) !important;
   }
 }
 

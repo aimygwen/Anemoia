@@ -242,8 +242,18 @@
     clone.classList.add("ins-logo-pin-mark");
     clone.removeAttribute("width");
     clone.removeAttribute("height");
+    clone.removeAttribute("data-charm-stack-ready");
     pinHost.innerHTML = "";
     pinHost.appendChild(clone);
+
+    if (window.AimyCharmGlass) {
+      if (typeof window.AimyCharmGlass.prepareMarkStack === "function") {
+        window.AimyCharmGlass.prepareMarkStack(clone);
+      }
+      if (typeof window.AimyCharmGlass.glassifyHost === "function") {
+        window.AimyCharmGlass.glassifyHost(pinHost);
+      }
+    }
 
     if (window.AimyBrandEyes) {
       window.AimyBrandEyes.register(clone);
