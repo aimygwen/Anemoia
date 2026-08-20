@@ -238,7 +238,7 @@
     function collectRefs() {
       projects = main.querySelectorAll(".gal-project");
       dots = dotsNav.querySelectorAll("a");
-      medias = main.querySelectorAll(".gal-media:not(.gal-media--film)");
+      medias = main.querySelectorAll(".gal-media");
       wireDots();
       wireActiveDots();
     }
@@ -350,6 +350,8 @@
       lastScroll = getScrollY();
       stretch = 1;
       squash = 1;
+      skew = 0;
+      rot = 0;
       applyStretch();
       if (window.Polyglide) {
         try {
@@ -408,9 +410,13 @@
     var speed = 0;
     var stretch = 1;
     var squash = 1;
+    var skew = 0;
+    var rot = 0;
     var raf = 0;
     var lastStretch = "";
     var lastSquash = "";
+    var lastSkew = "";
+    var lastRot = "";
 
     function getScrollY() {
       if (window.__lenis && typeof window.__lenis.scroll === "number") {
@@ -422,12 +428,18 @@
     function applyStretch() {
       var s = stretch.toFixed(3);
       var q = squash.toFixed(3);
-      if (s === lastStretch && q === lastSquash) return;
+      var k = skew.toFixed(2) + "deg";
+      var r = rot.toFixed(2) + "deg";
+      if (s === lastStretch && q === lastSquash && k === lastSkew && r === lastRot) return;
       lastStretch = s;
       lastSquash = q;
+      lastSkew = k;
+      lastRot = r;
       for (var m = 0; m < medias.length; m++) {
         medias[m].style.setProperty("--gal-stretch", s);
         medias[m].style.setProperty("--gal-squash", q);
+        medias[m].style.setProperty("--gal-skew", k);
+        medias[m].style.setProperty("--gal-rot", r);
       }
     }
 
@@ -436,8 +448,15 @@
       if (open || reduced) {
         stretch += (1 - stretch) * 0.25;
         squash += (1 - squash) * 0.25;
+        skew += (0 - skew) * 0.22;
+        rot += (0 - rot) * 0.2;
         applyStretch();
-        if (Math.abs(stretch - 1) > 0.002 || Math.abs(squash - 1) > 0.002) {
+        if (
+          Math.abs(stretch - 1) > 0.002 ||
+          Math.abs(squash - 1) > 0.002 ||
+          Math.abs(skew) > 0.05 ||
+          Math.abs(rot) > 0.05
+        ) {
           raf = requestAnimationFrame(tickStretch);
         }
         return;
@@ -446,16 +465,23 @@
       var y = getScrollY();
       var dy = y - lastScroll;
       lastScroll = y;
-      speed = speed * 0.82 + dy * 0.18;
+      speed = speed * 0.78 + dy * 0.22;
 
-      var stretchTarget = 1 + Math.max(-0.1, Math.min(0.22, -speed * 0.006));
-      var squashTarget = 1 + Math.max(-0.08, Math.min(0.1, speed * 0.004));
-      stretch += (stretchTarget - stretch) * 0.22;
-      squash += (squashTarget - squash) * 0.22;
+      var stretchTarget = 1 + Math.max(-0.05, Math.min(0.07, -speed * 0.0035));
+      var squashTarget = 1 + Math.max(-0.04, Math.min(0.04, speed * 0.0025));
+      var skewTarget = Math.max(-2.5, Math.min(2.5, speed * 0.05));
+      var rotTarget = Math.max(-1, Math.min(1, speed * 0.018));
+
+      stretch += (stretchTarget - stretch) * 0.14;
+      squash += (squashTarget - squash) * 0.14;
+      skew += (skewTarget - skew) * 0.12;
+      rot += (rotTarget - rot) * 0.12;
 
       if (Math.abs(speed) < 0.25) {
-        stretch += (1 - stretch) * 0.1;
-        squash += (1 - squash) * 0.1;
+        stretch += (1 - stretch) * 0.12;
+        squash += (1 - squash) * 0.12;
+        skew += (0 - skew) * 0.14;
+        rot += (0 - rot) * 0.14;
       }
 
       applyStretch();
@@ -463,7 +489,9 @@
       if (
         Math.abs(speed) > 0.05 ||
         Math.abs(stretch - 1) > 0.002 ||
-        Math.abs(squash - 1) > 0.002
+        Math.abs(squash - 1) > 0.002 ||
+        Math.abs(skew) > 0.05 ||
+        Math.abs(rot) > 0.05
       ) {
         raf = requestAnimationFrame(tickStretch);
       }
@@ -487,6 +515,8 @@
       if (view === "films" && activeFilm >= 0) pauseFilmAt(activeFilm);
       stretch = 1;
       squash = 1;
+      skew = 0;
+      rot = 0;
       applyStretch();
 
       if (film) {

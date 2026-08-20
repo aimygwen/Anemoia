@@ -4,15 +4,31 @@
       <div class="work-picker__preview-stage" aria-hidden="true">
         <figure class="work-picker__preview-figure" data-work-preview-figure>
           <div class="work-picker__preview-photo" data-work-preview-photo>
-            <img class="work-picker__preview-img is-active" data-work-preview-img="hytale" src="./assets/content/lowpoly/hytale/Thumbnails/crossroads.jpg" alt="" decoding="async" />
-            <img class="work-picker__preview-img" data-work-preview-img="lowpoly" src="./assets/content/lowpoly/lowpoly3d.png" alt="" decoding="async" />
-            <img class="work-picker__preview-img" data-work-preview-img="stills" src="./assets/content/stills/img1.webp" alt="" decoding="async" />
+            <img class="work-picker__preview-img is-active" data-work-preview-img="hytale" src="./assets/thumbnails/hytale.jpg" alt="" decoding="async" />
+            <img class="work-picker__preview-img" data-work-preview-img="lowpoly" src="./assets/thumbnails/lowpoly.jpg" alt="" decoding="async" />
+            <img class="work-picker__preview-img" data-work-preview-img="stills" src="./assets/thumbnails/artwork.jpg" alt="" decoding="async" />
             <img class="work-picker__preview-img" data-work-preview-img="motion" src="./assets/thumbnails/tapes.jpg" alt="" decoding="async" />
           </div>
         </figure>
       </div>
       <div class="work-picker__stage">
-        <p class="work-picker__lead">I create</p>
+        <div class="work-picker__credit" aria-hidden="true">
+          <p class="work-picker__credit-kicker">made by</p>
+          <div class="work-picker__signature">
+            <svg class="work-picker__signature-svg" viewBox="0 0 479 319" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+              <g transform="matrix(1.242911,0,0,1.242911,-41.871388,-37.117612)">
+                <path d="M35,214C56.904,224.849 119.09,201.887 146.914,171.539C188.501,126.178 156.344,91.46 113.766,129.35C87.662,152.579 67.242,197.087 76,233C89.597,288.757 148.01,295.026 162,260C175.442,226.346 153.725,213.081 140.894,213.835C127.806,214.604 116.946,227.368 122,240C127.162,252.902 144.553,253.551 175.742,247.227C220.727,238.106 342.058,203.976 404,183" />
+                <path d="M416,179L417.762,178.425" />
+                <path d="M197,176C186.983,181.883 173.795,216.299 191.332,222.624C210.085,229.387 213,198 213,198C213,198 216.928,220.767 235.713,213.391C246.298,209.234 265.969,183.203 242,163" />
+                <path d="M236,187C236,187 259.457,202.314 280,178C300.543,153.686 276.775,142.128 268,158C257.712,176.608 258.893,229.275 315,180C338.97,158.949 339.209,130.286 364.12,129.066C382.008,128.191 393.681,153.695 368,172" />
+                <path d="M298,145C308.06,158.573 316.604,172.973 324,188C324,188 320.757,177.94 329.176,164.582" />
+                <g transform="matrix(0.990629,-0.13658,0.122861,0.891123,-7.60063,52.871615)">
+                  <path d="M235,144C190.838,107.496 175.996,50.706 196,39C220.709,24.541 241.73,67.473 249,136C258.091,130.86 261.095,130.425 270,131C250.577,28.76 283.55,23.006 292.305,24.397C301.941,25.928 321.5,45.438 286,133" />
+                </g>
+              </g>
+            </svg>
+          </div>
+        </div>
         <div class="work-picker__scroller" data-work-scroller data-lenis-prevent role="list" aria-label="Work categories">
           <div class="work-picker__rail">
             <a href="./work?category=hytale" class="work-picker__item is-active" data-work-pick="hytale" role="listitem"><span class="work-picker__label">Hytale</span></a>
@@ -40,15 +56,25 @@
               </div>
             </section>
             <section id="models" class="lowpoly-main-section lp-models" aria-label="Model library">
-              <div class="work-stickerbook" data-work-stickerbook hidden aria-label="Hytale sticker book">
-                <div class="work-stickerbook__pages" data-stickerbook-pages></div>
-                <div class="work-stickerbook__nav">
-                  <button type="button" class="work-stickerbook__next" data-stickerbook-next aria-label="Next sticker page">
-                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                      <path d="M5 12h12M13 7l5 5-5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </button>
-                  <span class="work-stickerbook__count" data-stickerbook-count aria-live="polite"></span>
+              <div class="hytale-sketchbook" data-hytale-sketchbook hidden aria-label="Hytale sketchbook">
+                <div class="hytale-sketchbook__canvas" data-sketchbook-canvas></div>
+                <div
+                  class="hytale-sketchbook-zoom"
+                  data-sketchbook-zoom
+                  hidden
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="Model preview"
+                >
+                  <button
+                    type="button"
+                    class="hytale-sketchbook-zoom__backdrop"
+                    data-sketchbook-zoom-close
+                    aria-label="Close preview"
+                  ></button>
+                  <figure class="hytale-sketchbook-zoom__figure">
+                    <img class="hytale-sketchbook-zoom__img" data-sketchbook-zoom-img alt="" decoding="async" />
+                  </figure>
                 </div>
               </div>
               <header class="lp-models__pack-head" data-models-pack-head aria-live="polite" hidden>
@@ -70,14 +96,16 @@
       </div>
 
       <div class="work-hub__category" data-work-category-panel="lowpoly" hidden>
-        <div class="spa-lowpoly-root spa-lowpoly-root--works active">
-          <div class="lp-universe is-active" data-lp-universe="works">
-            <section id="works" class="lowpoly-main-section lp-works" aria-label="Other lowpoly 3D works">
-              <div class="lp-works-grid-wrap">
-                <div class="bento-grid lp-works-grid" id="works-grid" aria-live="polite"></div>
-              </div>
-            </section>
-          </div>
+        <div class="work-lowpoly-soon" data-work-lowpoly-soon aria-live="polite">
+          <img
+            class="work-lowpoly-soon__mark"
+            src="./assets/polykroma/select/identity.svg?v=select-5"
+            alt=""
+            width="88"
+            height="128"
+            decoding="async"
+          />
+          <p class="work-lowpoly-soon__copy">Content is in the works!</p>
         </div>
       </div>
 

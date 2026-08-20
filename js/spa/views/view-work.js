@@ -113,6 +113,11 @@
 
   function syncCategoryScroll(category) {
     var scroll = window.AimySpaViews || {};
+    if (category === "lowpoly") {
+      if (typeof scroll.lockPageScroll === "function") scroll.lockPageScroll();
+      haltScroll();
+      return;
+    }
     if (category) {
       if (typeof scroll.unlockPageScroll === "function") scroll.unlockPageScroll();
       startScroll();
@@ -307,19 +312,25 @@
   }
 
   function setBodyModes(category) {
-    var isLowpoly = category === "hytale" || category === "lowpoly";
+    var isHytale = category === "hytale";
+    var isLowpolySoon = category === "lowpoly";
     var isGallery = category === "stills" || category === "motion";
-    document.body.classList.toggle("lowpoly-page-body", isLowpoly);
+    document.body.classList.toggle("lowpoly-page-body", isHytale);
     document.body.classList.toggle("gallery-page-body", isGallery);
-    if (category) {
+    if (isHytale) {
       document.body.setAttribute("data-work-bare", "1");
     } else {
       document.body.removeAttribute("data-work-bare");
     }
-    if (category === "hytale") {
-      document.body.setAttribute("data-work-layout", "hytale-stickerbook");
+    if (isHytale) {
+      document.body.setAttribute("data-work-layout", "hytale-sketchbook");
+    } else if (isLowpolySoon) {
+      document.body.setAttribute("data-work-layout", "lowpoly-soon");
     } else {
       document.body.removeAttribute("data-work-layout");
+      teardownStickerbook();
+    }
+    if (isLowpolySoon) {
       teardownStickerbook();
     }
     if (isGallery) {
@@ -330,10 +341,10 @@
   }
 
   function ensureStickerbookAssets() {
-    return loadCss("./css/work-stickerbook.css?v=stickerbook-18").then(function () {
-      return loadScript("./js/work-sticker-holo.js?v=stickerbook-18");
+    return loadCss("./css/work-stickerbook.css?v=sketchbook-5").then(function () {
+      return loadScript("./js/work-sticker-holo.js?v=sketchbook-5");
     }).then(function () {
-      return loadScript("./js/work-stickerbook.js?v=stickerbook-18");
+      return loadScript("./js/work-stickerbook.js?v=sketchbook-5");
     });
   }
 
@@ -370,8 +381,8 @@
   }
 
   function ensureGalleryAssets() {
-    return loadCss("./css/gallery.css?v=gallery-atelier-4").then(function () {
-      return loadScript("./js/gallery.js?v=gallery-atelier-4");
+    return loadCss("./css/gallery.css?v=gallery-atelier-8").then(function () {
+      return loadScript("./js/gallery.js?v=gallery-atelier-8");
     });
   }
 
@@ -401,7 +412,7 @@
   function markContentItems(panel) {
     if (!panel) return;
     panel.querySelectorAll(".bento-card, .gal-project").forEach(function (item) {
-      if (!item.classList.contains("work-sticker")) {
+      if (!item.classList.contains("work-sticker") && !item.classList.contains("hytale-sketchbook__sticker")) {
         item.classList.add("work-content-item");
       }
     });
@@ -414,29 +425,19 @@
     syncPanels(root, category);
     setBodyModes(category);
 
-    if (category === "hytale" || category === "lowpoly") {
-      var assetChain = category === "hytale" ? ensureStickerbookAssets() : Promise.resolve();
-      return assetChain.then(function () {
-        return ensureLowpolyAssets();
-      }).then(function () {
-        if (!window.SpaPages.lowpoly || typeof window.SpaPages.lowpoly.init !== "function") {
-          return;
-        }
-        if (!root.__lowpolyReady) {
-          document.body.setAttribute("data-lp-library-view", "grid");
-          window.SpaPages.lowpoly.init();
-          root.__lowpolyReady = true;
-        }
+    if (category === "hytale") {
+      return ensureStickerbookAssets().then(function () {
         forceWorkLibraryLayout(category);
         syncCategoryScroll(category);
-        if (category === "hytale") {
-          var hytalePanel = root.querySelector('[data-work-category-panel="hytale"]');
-          return buildStickerbookLayout(hytalePanel).then(function () {
-            markContentItems(hytalePanel);
-          });
-        }
-        markContentItems(root.querySelector('[data-work-category-panel="' + category + '"]'));
+        var hytalePanel = root.querySelector('[data-work-category-panel="hytale"]');
+        return buildStickerbookLayout(hytalePanel).then(function () {
+          markContentItems(hytalePanel);
+        });
       });
+    }
+
+    if (category === "lowpoly") {
+      return Promise.resolve();
     }
 
     if (category === "stills" || category === "motion") {
@@ -513,7 +514,7 @@
     document.body.setAttribute("data-lp-library-view", "grid");
     document.body.setAttribute("data-work-bare", "1");
     if (category === "hytale") {
-      document.body.setAttribute("data-work-layout", "hytale-stickerbook");
+      document.body.setAttribute("data-work-layout", "hytale-sketchbook");
     } else if (category) {
       document.body.removeAttribute("data-work-layout");
     }

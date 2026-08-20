@@ -27,13 +27,13 @@
 }
 
 :root {
-  /* Pastel purple family */
+  /* Pastel purple family — soft off-white hero sky */
   --paper: var(--step-01);
   --ink: var(--step-08);
-  --pink: var(--pk-soft);   /* mid lilac — primary card */
-  --peach: var(--step-02);  /* soft lavender — light card */
-  --blue: var(--step-03);   /* dusty periwinkle — deep card */
-  --sky: var(--pk-soft);
+  --pink: var(--pk-soft);
+  --peach: var(--step-02);
+  --blue: var(--step-03);
+  --sky: color-mix(in srgb, var(--step-01) 78%, var(--step-02));
   --violet-soft: var(--step-02);
   --violet-deep: var(--step-07);
 }
@@ -135,7 +135,7 @@ html.lenis-smooth {
   --polaroid-stretch: 1;
   --polaroid-squash: 1;
   position: relative;
-  min-height: 340vh;
+  min-height: 280vh;
   overflow-x: clip;
   overflow-y: visible;
   background: var(--sky);
@@ -333,22 +333,33 @@ html.lenis-smooth {
 }
 
 .about-hud-stack.is-pixel-done .about-lifebar__sharp {
-  position: relative;
   opacity: 1;
   visibility: visible;
 }
 
+.about-lifebar__portrait,
 .about-lifebar__hud {
   display: block;
   width: 100%;
   height: auto;
   user-select: none;
+  position: absolute;
+  inset: 0;
+}
+
+.about-lifebar__portrait {
+  z-index: 2;
+}
+
+.about-lifebar__hud {
+  z-index: 1;
 }
 
 .about-lifebar__hp {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 3;
 }
 
 .about-lifebar__hp-base {
@@ -419,7 +430,7 @@ html.lenis-smooth {
 
 @media (max-width: 720px) {
   .about {
-    min-height: 380vh;
+    min-height: 300vh;
   }
 
   .about-hero__name {
@@ -526,7 +537,6 @@ html.lenis-smooth {
   }
 
   .about-lifebar__sharp {
-    position: relative;
     opacity: 1 !important;
     visibility: visible !important;
   }

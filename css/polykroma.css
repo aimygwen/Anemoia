@@ -1355,8 +1355,7 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   }
 
   .pk-coin-icon--alt {
-    /* Rest slightly undersized so hover settles into a tighter cluster */
-    transform: scale(0.94);
+    transform: scale(1);
     transition:
       opacity 0.4s steps(10, end) 0.05s,
       transform 0.4s cubic-bezier(0.33, 1.2, 0.68, 1) 0.05s;
@@ -1371,7 +1370,7 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--open.pk-coin-icon--alt,
   .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--open.pk-coin-icon--alt {
     opacity: 1;
-    transform: scale(0.9);
+    transform: scale(1);
   }
 
   .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--open,
@@ -1389,7 +1388,40 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button .pk-coin-icon--close.pk-coin-icon--alt,
   .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button .pk-coin-icon--close.pk-coin-icon--alt {
     opacity: 1;
-    transform: scale(0.9);
+    transform: scale(1);
+  }
+
+  /*
+   * Select coin — keep base glyph on hover (rainbow only).
+   * Base→alt morph swaps 3 bars for a tight 2×2 grid and reads as squeezed.
+   */
+  .pk-burger-hit:hover ~ .pk-coin-button--select .pk-coin-icon,
+  .pk-burger-hit:focus-visible ~ .pk-coin-button--select .pk-coin-icon {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .pk-burger-hit:hover ~ .pk-coin-button--select .pk-coin-icon--open:not(.pk-coin-icon--alt),
+  .pk-burger-hit:focus-visible ~ .pk-coin-button--select .pk-coin-icon--open:not(.pk-coin-icon--alt) {
+    opacity: 1;
+    transform: none;
+  }
+
+  .pk-burger-hit:hover ~ .pk-coin-button--select .pk-coin-icon--open.pk-coin-icon--alt,
+  .pk-burger-hit:focus-visible ~ .pk-coin-button--select .pk-coin-icon--open.pk-coin-icon--alt {
+    opacity: 0;
+    transform: none;
+  }
+
+  .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button--select .pk-coin-icon--close:not(.pk-coin-icon--alt),
+  .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button--select .pk-coin-icon--close:not(.pk-coin-icon--alt) {
+    opacity: 1;
+    transform: none;
+  }
+
+  .pk-menu-root.is-menu-open .pk-burger-hit:hover ~ .pk-coin-button--select .pk-coin-icon--close.pk-coin-icon--alt,
+  .pk-menu-root.is-menu-open .pk-burger-hit:focus-visible ~ .pk-coin-button--select .pk-coin-icon--close.pk-coin-icon--alt {
+    opacity: 0;
+    transform: none;
   }
 }
 

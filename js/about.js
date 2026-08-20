@@ -74,14 +74,14 @@
   var HUD_W = 933;
   var HUD_H = 238;
   var HUD_PIXEL_SIZES = [40, 32, 26, 20, 16, 13, 10, 8, 6, 5, 4, 3, 2, 1];
-  var hudImages = { hud: null, hp: null, ready: 0, loaded: false };
+  var hudImages = { hud: null, hp: null, portrait: null, ready: 0, loaded: false };
 
   function bindHudImage(img, key) {
     if (!img) return;
     function assign() {
       hudImages[key] = img;
       hudImages.ready += 1;
-      if (hudImages.ready >= 2) hudImages.loaded = true;
+      if (hudImages.ready >= 3) hudImages.loaded = true;
     }
     if (img.complete && img.naturalWidth) assign();
     else img.addEventListener("load", assign, { once: true });
@@ -99,7 +99,7 @@
   }
 
   function drawHudPixelFrame(blockSize) {
-    if (!hudCanvas || !hudImages.hud || !hudImages.hp) return;
+    if (!hudCanvas || !hudImages.hud || !hudImages.hp || !hudImages.portrait) return;
     var size = resizeHudCanvas();
     if (!size) return;
 
@@ -121,6 +121,7 @@
     octx.imageSmoothingEnabled = false;
     octx.clearRect(0, 0, cols, rows);
     octx.drawImage(hudImages.hud, 0, 0, cols, rows);
+    octx.drawImage(hudImages.portrait, 0, 0, cols, rows);
     octx.drawImage(hudImages.hp, 0, 0, cols, rows);
 
     ctx.imageSmoothingEnabled = false;
@@ -214,6 +215,7 @@
     }
   }
 
+  bindHudImage(document.querySelector(".about-lifebar__portrait"), "portrait");
   bindHudImage(document.querySelector(".about-lifebar__hud"), "hud");
   bindHudImage(document.querySelector(".about-lifebar__hp-base"), "hp");
 
@@ -249,45 +251,6 @@
     }
   }
 
-  function bootAboutSlider() {
-    var sheet = document.querySelector("[data-about-sheet]");
-    var sliderRoot = sheet && sheet.querySelector("[data-ins-slider]");
-    if (!sliderRoot) return;
-
-    var slides = Array.prototype.slice.call(sliderRoot.querySelectorAll(".ins-slide"));
-    if (!slides.length) return;
-
-    var countEl = sheet.querySelector("[data-ins-count]");
-    var prevBtn = sheet.querySelector("[data-ins-prev]");
-    var nextBtn = sheet.querySelector("[data-ins-next]");
-    var index = 0;
-    var total = slides.length;
-
-    function pad(n) {
-      return (n < 10 ? "0" : "") + n;
-    }
-
-    function setIndex(next) {
-      index = ((next % total) + total) % total;
-      slides.forEach(function (slide, i) {
-        slide.classList.toggle("is-active", i === index);
-      });
-      if (countEl) countEl.textContent = pad(index + 1) + " / " + pad(total);
-    }
-
-    if (prevBtn) {
-      prevBtn.addEventListener("click", function () {
-        setIndex(index - 1);
-      });
-    }
-    if (nextBtn) {
-      nextBtn.addEventListener("click", function () {
-        setIndex(index + 1);
-      });
-    }
-
-    setIndex(0);
-  }
 
   function flatPath() {
     return (
@@ -606,7 +569,6 @@
   root.style.setProperty("--polaroid-squash", "1");
   setPath(flatPath());
   bootAboutReveals();
-  bootAboutSlider();
   syncScroll();
   if (!reduced) rafId = requestAnimationFrame(raf);
 
