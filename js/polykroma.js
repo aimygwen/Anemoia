@@ -706,7 +706,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     var base = pageBase();
     if (isSpaHost()) {
       if (view === "start") return "./";
-      return "./" + view;
+      return "/" + view;
     }
     if (view === "start") return base + "index.html";
     return base + "index.html?view=" + view;

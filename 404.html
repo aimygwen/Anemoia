@@ -5,18 +5,44 @@
   <title>Redirecting…</title>
   <script>
     (function () {
+      function siteBaseFromPath(path) {
+        var spaViews = ["work", "insights", "me", "contact", "start"];
+        path = (path || "/").replace(/\/index\.html$/i, "");
+        var segments = path.split("/").filter(Boolean);
+        var cutIdx = segments.length;
+        var i;
+
+        for (i = 0; i < segments.length; i++) {
+          if (spaViews.indexOf(segments[i].toLowerCase()) !== -1) {
+            cutIdx = i;
+            break;
+          }
+        }
+
+        if (cutIdx === 0) return "/";
+        if (cutIdx < segments.length) {
+          return "/" + segments.slice(0, cutIdx).join("/") + "/";
+        }
+
+        if (segments.length && /\.html$/i.test(segments[segments.length - 1])) {
+          if (segments.length === 1) return "/";
+          return "/" + segments.slice(0, -1).join("/") + "/";
+        }
+
+        return "/";
+      }
+
       var path = window.location.pathname || "";
       var search = window.location.search || "";
       var hash = window.location.hash || "";
-      var base = path.replace(/\/[^/]*$/, "/");
-      if (!base.endsWith("/")) base += "/";
+      var base = siteBaseFromPath(path);
       var leaf = path.replace(/\/+$/, "").split("/").pop().toLowerCase();
       if (leaf === "imprint" || leaf === "legal") {
         window.location.replace(base + "imprint.html?v=imprint-ins-48" + search + hash);
         return;
       }
       try {
-        sessionStorage.setItem("aimySpaRedirect", path + search);
+        sessionStorage.setItem("aimySpaRedirect", path + search + hash);
       } catch (e) {}
       window.location.replace(base + "index.html");
     })();

@@ -97,7 +97,7 @@
     window.AimySpaSubBack.show({
       onClick: function () {
         if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
-          window.AimySpa.navigate("./work");
+          window.AimySpa.navigate(window.AimySpa.buildUrl("work", {}));
         }
       },
     });
@@ -1106,6 +1106,7 @@
       var pickLink = e.target.closest("[data-work-pick]");
       if (!pickLink) return;
       e.preventDefault();
+      e.stopPropagation();
       var scroller = root.querySelector("[data-work-scroller]");
       if (scroller && Number(scroller.getAttribute("data-drag-px") || 0) >= 12) return;
       var next = pickLink.getAttribute("data-work-pick");

@@ -2,6 +2,42 @@
 <html class="pk-chrome-boot" lang="en">
 <head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+(function () {
+  function siteBaseFromPath(path) {
+    var spaViews = ["work", "insights", "me", "contact", "start"];
+    path = (path || "/").replace(/\/index\.html$/i, "");
+    var segments = path.split("/").filter(Boolean);
+    var cutIdx = segments.length;
+    var i;
+
+    for (i = 0; i < segments.length; i++) {
+      if (spaViews.indexOf(segments[i].toLowerCase()) !== -1) {
+        cutIdx = i;
+        break;
+      }
+    }
+
+    if (cutIdx === 0) return "/";
+    if (cutIdx < segments.length) {
+      return "/" + segments.slice(0, cutIdx).join("/") + "/";
+    }
+
+    if (segments.length && /\.html$/i.test(segments[segments.length - 1])) {
+      if (segments.length === 1) return "/";
+      return "/" + segments.slice(0, -1).join("/") + "/";
+    }
+
+    return "/";
+  }
+
+  var baseHref = siteBaseFromPath(location.pathname);
+  var baseEl = document.createElement("base");
+  baseEl.href = baseHref;
+  document.head.appendChild(baseEl);
+  window.__aimySiteBase = baseHref;
+})();
+</script>
 <title>Start — Art of Aimy Gwen</title>
 <meta name="theme-color" content="#151415">
 <meta name="color-scheme" content="dark">
@@ -60,7 +96,7 @@
 (function () {
   var path = location.pathname || "";
   var file = path.split("/").pop() || "";
-  var routeMatch = path.match(/\/(start|work|insights|me|contact)\/?$/i);
+  var routeMatch = path.match(/\/(start|work|insights|me|contact)(?:\/|$)/i);
   if (routeMatch && routeMatch[1].toLowerCase() !== "start") {
     document.documentElement.classList.add("spa-route-not-start");
   } else if (/^(lowpoly|gallery|insights|contact)\.html$/i.test(file)) {
@@ -152,18 +188,18 @@
 <script src="./js/polyglide.js?v=aug3b" defer></script>
 <script src="./js/wordmark-holo.js?v=wordmark-holo-4" defer></script>
 <script src="./js/home.js?v=home-splash-24" defer></script>
-<script type="module" src="./js/menu-select.js?v=menu-select-95"></script>
+<script type="module" src="./js/menu-select.js?v=menu-select-96"></script>
 <script src="./js/charm-mark.js?v=branding-18" defer></script>
 <script src="./js/charm-glass.js?v=mono-glass-48" defer></script>
 <script src="./js/charm-iris.js?v=branding-11" defer></script>
-  <script src="./js/polykroma.js?v=polykroma-101" defer></script>
+  <script src="./js/polykroma.js?v=polykroma-102" defer></script>
 <script src="./js/spa/spa-state.js?v=spa-11" defer></script>
-<script src="./js/spa/spa-router.js?v=spa-21" defer></script>
+<script src="./js/spa/spa-router.js?v=spa-23" defer></script>
 <script src="./js/spa/spa-transitions.js?v=spa-14" defer></script>
 <script src="./js/spa/spa-a11y.js?v=spa-11" defer></script>
-<script src="./js/spa/spa-views.js?v=spa-176" defer></script>
+<script src="./js/spa/spa-views.js?v=spa-177" defer></script>
 <script src="./js/spa/spa-prefetch.js?v=spa-2" defer></script>
-<script src="./js/spa/spa-nav.js?v=spa-12" defer></script>
+<script src="./js/spa/spa-nav.js?v=spa-13" defer></script>
 <script src="./js/spa/spa-sub-back.js?v=spa-2" defer></script>
 <script src="./js/spa/views/view-start.js?v=spa-35" defer></script>
 <script src="./js/spa/spa-shell.js?v=spa-28" defer></script>

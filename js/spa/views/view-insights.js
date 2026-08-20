@@ -41,7 +41,7 @@
     window.AimySpaSubBack.show({
       onClick: function () {
         if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
-          window.AimySpa.navigate("./insights");
+          window.AimySpa.navigate(window.AimySpa.buildUrl("insights", {}));
         }
       },
     });

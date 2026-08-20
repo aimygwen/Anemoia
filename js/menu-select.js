@@ -38,7 +38,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
     {
       id: "work",
       label: "Work",
-      href: "./work",
+      href: "/work",
       model: "./assets/polykroma/select/archive.glb?v=" + MODEL_VERSION,
     },
     {
@@ -51,7 +51,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
     {
       id: "insights",
       label: "Insights",
-      href: "./insights",
+      href: "/insights",
       model: "./assets/polykroma/select/insights.glb?v=" + MODEL_VERSION,
       hoverFlip: false,
       hitZoneScale: 0.9,

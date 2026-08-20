@@ -5,7 +5,7 @@
 (function () {
   "use strict";
 
-  var VERSION = "spa-21";
+  var VERSION = "spa-23";
   var IMPRINT_CANONICAL = "./imprint.html?v=imprint-ins-48";
   var VIEWS = ["start", "work", "insights", "me", "contact"];
   var INSIGHTS_LOGS = ["identity", "workspace", "hytale"];
@@ -24,51 +24,6 @@
   var navigating = false;
   var spaBaseCached = null;
 
-  function spaPrefixFromPath(path) {
-    path = (path || "/").replace(/\/index\.html$/i, "");
-    var m = path.match(SPA_PATH_RE);
-    if (m) {
-      var idx = path.toLowerCase().lastIndexOf("/" + m[1].toLowerCase());
-      if (idx >= 0) return path.slice(0, idx);
-    }
-    return "";
-  }
-
-  function detectSpaBase() {
-    if (spaBaseCached != null) return spaBaseCached;
-
-    var scripts = document.getElementsByTagName("script");
-    var i;
-    for (i = 0; i < scripts.length; i++) {
-      var src = scripts[i].getAttribute("src");
-      if (!src || src.indexOf("spa-router.js") === -1) continue;
-      try {
-        var scriptUrl = new URL(src, window.location.href);
-        spaBaseCached = scriptUrl.pathname.replace(/\/js\/spa\/spa-router\.js.*$/i, "") || "";
-        return spaBaseCached;
-      } catch (e) {}
-    }
-
-    spaBaseCached = spaPrefixFromPath(window.location.pathname);
-    return spaBaseCached;
-  }
-
-  function normalizePathname(pathname) {
-    pathname = (pathname || "/").replace(/\/index\.html$/i, "");
-    pathname = pathname.replace(/\/+$/, "");
-    return pathname || "/";
-  }
-
-  function resolveSpaHref(href) {
-    if (!href) return href;
-    if (/^(https?:|mailto:|tel:)/i.test(href)) return href;
-    if (href.charAt(0) === "/") return href;
-    if (href.indexOf("./") === 0) {
-      return detectSpaBase() + href.slice(1);
-    }
-    return href;
-  }
-
   var LEGACY_PATHS = {
     "index.html": "start",
     "lowpoly.html": "work",
@@ -84,8 +39,6 @@
     "lowpoly.html": "lowpoly",
     "gallery.html": "stills",
   };
-
-  var SPA_PATH_RE = /\/(start|work|insights|me|contact)(?:\/([^/?#]+))?\/?$/i;
 
   function isHost() {
     return document.body && document.body.hasAttribute("data-spa-host");
@@ -123,24 +76,108 @@
     return WORK_CATEGORIES.indexOf(c) !== -1 ? c : null;
   }
 
-  function readSearchQuery(url) {
-    var query = {};
-    url.searchParams.forEach(function (value, key) {
-      query[key] = value;
-    });
-    return query;
+  /** Site root prefix — derived from spa-router.js absolute URL (respects <base>). */
+  function detectSpaBase() {
+    if (spaBaseCached != null) return spaBaseCached;
+
+    if (typeof window.__aimySiteBase === "string") {
+      spaBaseCached = window.__aimySiteBase.replace(/\/+$/, "");
+      return spaBaseCached;
+    }
+
+    var scripts = document.getElementsByTagName("script");
+    var i;
+    for (i = 0; i < scripts.length; i++) {
+      var src = scripts[i].src || scripts[i].getAttribute("src");
+      if (!src || src.indexOf("spa-router.js") === -1) continue;
+      try {
+        var scriptUrl = src.indexOf("://") !== -1 ? new URL(src) : new URL(src, document.baseURI);
+        spaBaseCached = scriptUrl.pathname.replace(/\/js\/spa\/spa-router\.js.*$/i, "") || "";
+        return spaBaseCached;
+      } catch (e) {}
+    }
+
+    spaBaseCached = "";
+    return spaBaseCached;
+  }
+
+  function normalizePathname(pathname) {
+    pathname = (pathname || "/").replace(/\/index\.html$/i, "");
+    pathname = pathname.replace(/\/+$/, "");
+    return pathname || "/";
+  }
+
+  function stripSpaBase(pathname) {
+    var base = detectSpaBase();
+    pathname = normalizePathname(pathname);
+    if (base && pathname.indexOf(base) === 0) {
+      pathname = pathname.slice(base.length) || "/";
+    }
+    return normalizePathname(pathname);
+  }
+
+  function parseSpaSegments(pathname) {
+    var path = stripSpaBase(pathname);
+    if (path === "/") {
+      return { view: "start", sub: null };
+    }
+
+    var segments = path.split("/").filter(Boolean);
+    var viewIdx = -1;
+    var i;
+    for (i = 0; i < segments.length; i++) {
+      if (VIEWS.indexOf(segments[i].toLowerCase()) !== -1) {
+        viewIdx = i;
+      }
+    }
+
+    if (viewIdx === -1) return null;
+
+    return {
+      view: normalizeView(segments[viewIdx]),
+      sub: segments[viewIdx + 1]
+        ? decodeURIComponent(String(segments[viewIdx + 1])).toLowerCase()
+        : null,
+    };
+  }
+
+  function resolveSpaHref(href) {
+    if (!href) return href;
+    if (/^(https?:|mailto:|tel:)/i.test(href)) return href;
+    if (href.charAt(0) === "/") return href;
+    if (href.indexOf("./") === 0) {
+      return detectSpaBase() + href.slice(1);
+    }
+    return href;
+  }
+
+  function sanitizeRouteQuery(route) {
+    var clean = {};
+    if (!route || !route.query) {
+      route.query = clean;
+      return;
+    }
+
+    if (route.view === "work") {
+      var workCat = normalizeCategory(route.query.category);
+      if (workCat) clean.category = workCat;
+    } else if (route.view === "insights") {
+      var logId = normalizeLog(route.query.log);
+      if (logId) clean.log = logId;
+    }
+
+    route.query = clean;
   }
 
   function applyPathSegment(view, segment, query) {
     if (!segment) return;
-    var sub = decodeURIComponent(String(segment)).toLowerCase();
     if (view === "work") {
-      var category = normalizeCategory(sub);
+      var category = normalizeCategory(segment);
       if (category) query.category = category;
       return;
     }
     if (view === "insights") {
-      var logId = normalizeLogSlug(sub);
+      var logId = normalizeLogSlug(segment);
       if (logId) query.log = logId;
     }
   }
@@ -166,47 +203,50 @@
   function routeFromUrl(url) {
     var path = url.pathname || "";
     var file = path.split("/").pop() || "";
-    var query = readSearchQuery(url);
 
     if (/\/(imprint|legal)\/?$/i.test(path)) {
-      return { view: "start", query: query, external: IMPRINT_CANONICAL + (url.hash || "") };
+      return { view: "start", query: {}, external: IMPRINT_CANONICAL + (url.hash || "") };
     }
 
     if (LEGACY_PATHS[file]) {
       var legacyView = LEGACY_PATHS[file];
       if (legacyView === "imprint" || legacyView === "legal") {
-        return { view: "start", query: query, external: IMPRINT_CANONICAL + (url.hash || "") };
+        return { view: "start", query: {}, external: IMPRINT_CANONICAL + (url.hash || "") };
       }
       if (legacyView === "about") {
-        return { view: "start", query: query, external: "./" + file };
+        return { view: "start", query: {}, external: "./" + file };
       }
+      var legacyQuery = {};
       if (legacyView === "work" && LEGACY_WORK_CATEGORY[file]) {
-        query.category = LEGACY_WORK_CATEGORY[file];
+        legacyQuery.category = LEGACY_WORK_CATEGORY[file];
       }
-      return { view: legacyView, query: query, legacy: true };
+      return { view: legacyView, query: legacyQuery, legacy: true };
     }
 
     var qView = url.searchParams.get("view");
     if (qView) {
-      return { view: normalizeView(qView), query: query, legacy: true };
+      var viewQuery = {};
+      applyLegacySearch(url, viewQuery);
+      return { view: normalizeView(qView), query: viewQuery, legacy: true };
     }
 
-    var pathMatch = path.match(SPA_PATH_RE);
-    if (pathMatch) {
-      var view = normalizeView(pathMatch[1]);
-      applyPathSegment(view, pathMatch[2], query);
+    var parsed = parseSpaSegments(path);
+    if (parsed) {
+      var query = {};
+      applyPathSegment(parsed.view, parsed.sub, query);
       return {
-        view: view,
+        view: parsed.view,
         query: query,
         legacy: applyLegacySearch(url, query),
       };
     }
 
     if (!file || file === "index.html") {
+      var startQuery = {};
       return {
         view: "start",
-        query: query,
-        legacy: applyLegacySearch(url, query),
+        query: startQuery,
+        legacy: applyLegacySearch(url, startQuery),
       };
     }
 
@@ -241,6 +281,10 @@
     return base + "/" + parts.join("/");
   }
 
+  function pathForRoute(view, query) {
+    return normalizePathname(new URL(buildUrl(view, query), window.location.origin).pathname);
+  }
+
   function hrefToRoute(href) {
     try {
       href = resolveSpaHref(href);
@@ -262,27 +306,43 @@
     return url.searchParams.has("category") || url.searchParams.has("log") || url.searchParams.has("view");
   }
 
-  function urlsMatch(canonicalHref) {
-    var target = new URL(canonicalHref, window.location.origin);
-    var current = new URL(window.location.href);
-    return (
-      normalizePathname(target.pathname) === normalizePathname(current.pathname) &&
-      target.search === current.search &&
-      target.hash === current.hash
-    );
+  function routesEqual(a, b) {
+    if (!a || !b) return false;
+    if (a.view !== b.view) return false;
+
+    var aq = Object.assign({}, a.query || {});
+    var bq = Object.assign({}, b.query || {});
+    sanitizeRouteQuery({ view: a.view, query: aq });
+    sanitizeRouteQuery({ view: b.view, query: bq });
+
+    if (a.view === "work") {
+      return normalizeCategory(aq.category) === normalizeCategory(bq.category);
+    }
+    if (a.view === "insights") {
+      return normalizeLog(aq.log) === normalizeLog(bq.log);
+    }
+    return true;
   }
 
-  function sanitizeRouteQuery(route) {
-    if (route.view === "work") {
-      var workCat = normalizeCategory(route.query.category);
-      if (workCat) route.query.category = workCat;
-      else delete route.query.category;
+  function syncHistory(route, replace) {
+    var url = buildUrl(route.view, route.query);
+    var currentPath = normalizePathname(window.location.pathname);
+    var targetPath = pathForRoute(route.view, route.query);
+    var legacy = !!(route.legacy || locationHasLegacyQuery());
+    var pathMismatch = currentPath !== targetPath;
+
+    if (legacy || pathMismatch) {
+      window.history.replaceState({ spa: route }, "", url);
+      return true;
     }
-    if (route.view === "insights") {
-      var logId = normalizeLog(route.query.log);
-      if (logId) route.query.log = logId;
-      else delete route.query.log;
+
+    if (replace) {
+      window.history.replaceState({ spa: route }, "", url);
+      return true;
     }
+
+    window.history.pushState({ spa: route }, "", url);
+    return false;
   }
 
   function applyRoute(route, replace) {
@@ -301,21 +361,11 @@
       window.AimySpaState.setView(route.view, route.query);
     }
 
-    var url = buildUrl(route.view, route.query);
-    var needsCanonical = !!(route.legacy || locationHasLegacyQuery() || !urlsMatch(url));
-    var forceReplace = !!replace || needsCanonical;
-
-    if (needsCanonical) {
-      window.history.replaceState({ spa: route }, "", url);
-    } else if (replace) {
-      window.history.replaceState({ spa: route }, "", url);
-    } else {
-      window.history.pushState({ spa: route }, "", url);
-    }
+    var forceReplace = syncHistory(route, replace);
 
     return window.AimySpaShell.render(route, {
-      animate: !forceReplace,
-      initial: !!forceReplace,
+      animate: !forceReplace && !replace,
+      initial: !!forceReplace || !!replace,
       prior: prior,
     });
   }
@@ -362,7 +412,7 @@
       return resetStartView();
     }
 
-    return navigate("./", options);
+    return navigate(buildUrl("start", {}), options);
   }
 
   function navigate(href, options) {
@@ -370,13 +420,22 @@
       window.location.href = href;
       return Promise.resolve();
     }
+
     href = resolveSpaHref(href);
     var route = hrefToRoute(href);
     if (!route) {
       window.location.href = href;
       return Promise.resolve();
     }
+
+    sanitizeRouteQuery(route);
+
     var state = window.AimySpaState ? window.AimySpaState.get() : null;
+    if (state && routesEqual({ view: state.view, query: state.query }, route)) {
+      syncHistory(route, true);
+      return Promise.resolve();
+    }
+
     var workHubToggle = state && state.view === "work" && route.view === "work";
     var insightsLogsToggle = state && state.view === "insights" && route.view === "insights";
     var goingHome = route.view === "start";
@@ -386,6 +445,7 @@
     if (state && state.view === "start" && route.view === "start") {
       return resetStartView();
     }
+
     navigating = true;
     return applyRoute(route, !!(options && options.replace)).finally(function () {
       navigating = false;
@@ -398,9 +458,16 @@
       sessionStorage.removeItem("aimySpaRedirect");
       try {
         var redirectUrl = new URL(stored, window.location.href);
-        window.history.replaceState({}, "", redirectUrl.pathname + redirectUrl.search + redirectUrl.hash);
+        var route = routeFromUrl(redirectUrl);
+        if (route) {
+          sanitizeRouteQuery(route);
+          window.history.replaceState({ spa: route }, "", buildUrl(route.view, route.query));
+        } else {
+          window.history.replaceState({}, "", redirectUrl.pathname + redirectUrl.search + redirectUrl.hash);
+        }
       } catch (e) {}
     }
+
     var route = parseLocation();
     return applyRoute(route, replace !== false);
   }
@@ -417,6 +484,7 @@
       var anchor = e.target && e.target.closest ? e.target.closest("a[href]") : null;
       if (!anchor) return;
       if (anchor.hasAttribute("data-no-spa")) return;
+      if (anchor.hasAttribute("data-work-pick")) return;
       if (anchor.target && anchor.target !== "_self") return;
       if (anchor.hasAttribute("download")) return;
       var href = anchor.getAttribute("href");

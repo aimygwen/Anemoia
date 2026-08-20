@@ -115,12 +115,12 @@
       },
     },
     work: {
-      partial: "./partials/view-work.html?v=spa-45",
+      partial: "./partials/view-work.html?v=spa-46",
       css: [
         "./css/spa/spa-scaffold.css?v=spa-29",
         "./css/spa/spa-work.css?v=spa-67",
       ],
-      js: ["./js/spa/views/view-work.js?v=spa-73"],
+      js: ["./js/spa/views/view-work.js?v=spa-74"],
       mount: function (ctx) {
         resetBodyState();
         document.documentElement.classList.add("spa-route-not-start");
@@ -156,7 +156,7 @@
         "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js",
         "./js/wordmark-holo.js?v=wordmark-holo-4",
         "./js/insights.js?v=insights-46",
-        "./js/spa/views/view-insights.js?v=insights-30",
+        "./js/spa/views/view-insights.js?v=insights-31",
       ],
       mount: function (ctx) {
         resetBodyState();
@@ -199,7 +199,7 @@
     contact: {
       partial: "./partials/view-contact.html?v=contact-17",
       css: ["./css/spa/spa-contact.css?v=contact-17"],
-      js: ["./js/spa/views/view-contact.js?v=contact-14"],
+      js: ["./js/spa/views/view-contact.js?v=contact-15"],
       mount: function (ctx) {
         resetBodyState();
         document.documentElement.classList.add("spa-route-not-start");
