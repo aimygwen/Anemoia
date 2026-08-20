@@ -149,14 +149,14 @@
       css: [
         "./css/wordmark-holo.css?v=wordmark-holo-2",
         "./css/insights-poke-ref.css?v=poke-ref-11",
-        "./css/insights.css?v=insights-109",
+        "./css/insights.css?v=insights-142",
       ],
-      partial: "./partials/view-insights.html?v=insights-51",
+      partial: "./partials/view-insights.html?v=insights-75",
       js: [
         "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js",
         "./js/wordmark-holo.js?v=wordmark-holo-4",
-        "./js/insights.js?v=insights-26",
-        "./js/spa/views/view-insights.js?v=insights-26",
+        "./js/insights.js?v=insights-46",
+        "./js/spa/views/view-insights.js?v=insights-29",
       ],
       mount: function (ctx) {
         resetBodyState();

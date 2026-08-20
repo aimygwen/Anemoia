@@ -9,7 +9,7 @@
   var LOG_IDS = ["identity", "workspace", "hytale"];
   var LOG_LABELS = {
     identity: { title: "Vibe shit", sub: "Branding" },
-    workspace: { title: "Workspace", sub: "My desk and how I work" },
+    workspace: { title: "Artiful Min-Maxing", sub: "Gear, stack, and how I work" },
     hytale: { title: "Hytale", sub: "Models, UV mapping, and structure" },
   };
 
@@ -24,126 +24,6 @@
   var mountToken = 0;
   var deckRevealTimers = [];
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var logNextLink = null;
-  var logNextScrollRaf = 0;
-  var logNextScrollBound = false;
-
-  function restoreLogNextFooter() {
-    teardownLogNextScroll();
-
-    var dock = document.querySelector("[data-ins-log-next-dock]");
-    if (!dock) return;
-
-    var orphanLink = document.body.querySelector(":scope > [data-ins-log-next-link]");
-    if (orphanLink) {
-      orphanLink.classList.remove("ins-log__next-peek");
-      orphanLink.style.top = "";
-      orphanLink.style.bottom = "";
-      orphanLink.style.transform = "";
-      orphanLink.style.visibility = "";
-      dock.appendChild(orphanLink);
-    }
-
-    logNextLink = null;
-
-    var orphanDock = document.body.querySelector(":scope > [data-ins-log-next-dock]");
-    if (orphanDock) orphanDock.remove();
-  }
-
-  function ensureLogNextLink() {
-    if (logNextLink && document.body.contains(logNextLink)) return logNextLink;
-
-    var link = findLogNextLink();
-    if (!link) return null;
-
-    link.classList.add("ins-log__next-peek");
-    link.style.left = "50%";
-    document.body.appendChild(link);
-    logNextLink = link;
-    return logNextLink;
-  }
-
-  function findLogNextLink() {
-    return (
-      document.body.querySelector(":scope > [data-ins-log-next-link]") ||
-      document.querySelector("[data-ins-log-next-scroll] [data-ins-log-next-link]")
-    );
-  }
-
-  function getLogNextHalf() {
-    var scroll = document.querySelector("[data-ins-log-next-scroll]");
-    if (scroll && scroll.offsetHeight) return scroll.offsetHeight;
-    var link = logNextLink || findLogNextLink();
-    return link && link.offsetHeight ? link.offsetHeight * 0.5 : 0;
-  }
-
-  function syncLogNextPosition() {
-    logNextScrollRaf = 0;
-
-    var scroll = document.querySelector("[data-ins-log-next-scroll]");
-    var link = ensureLogNextLink();
-    if (!scroll || scroll.hidden || !link) return;
-
-    var anchorBottom = scroll.getBoundingClientRect().bottom;
-    var half = getLogNextHalf();
-    var vh = window.innerHeight;
-    var atEnd = anchorBottom >= vh - 2;
-
-    if (atEnd) {
-      link.style.top = "auto";
-      link.style.bottom = "0";
-      link.style.transform = "translate(-50%, 50%)";
-    } else {
-      link.style.bottom = "auto";
-      link.style.top = anchorBottom + "px";
-      link.style.transform = "translate(-50%, -50%)";
-    }
-
-    if (anchorBottom + half < 0 || anchorBottom - half > vh) {
-      link.style.visibility = "hidden";
-      link.style.pointerEvents = "none";
-      link.setAttribute("aria-hidden", "true");
-      return;
-    }
-
-    link.style.visibility = "visible";
-    link.style.pointerEvents = "auto";
-    link.setAttribute("aria-hidden", "false");
-  }
-
-  function requestLogNextPosition() {
-    if (logNextScrollRaf) return;
-    logNextScrollRaf = window.requestAnimationFrame(syncLogNextPosition);
-  }
-
-  function bindLogNextScroll() {
-    if (logNextScrollBound) return;
-    logNextScrollBound = true;
-
-    window.addEventListener("scroll", requestLogNextPosition, { passive: true });
-    window.addEventListener("resize", requestLogNextPosition, { passive: true });
-
-    if (window.__lenis && typeof window.__lenis.on === "function") {
-      window.__lenis.on("scroll", requestLogNextPosition);
-    }
-  }
-
-  function teardownLogNextScroll() {
-    if (logNextScrollRaf) {
-      window.cancelAnimationFrame(logNextScrollRaf);
-      logNextScrollRaf = 0;
-    }
-
-    if (!logNextScrollBound) return;
-    logNextScrollBound = false;
-
-    window.removeEventListener("scroll", requestLogNextPosition);
-    window.removeEventListener("resize", requestLogNextPosition);
-
-    if (window.__lenis && typeof window.__lenis.off === "function") {
-      window.__lenis.off("scroll", requestLogNextPosition);
-    }
-  }
 
   function syncLogBackChrome(visible, logId) {
     if (visible && logId) {
@@ -159,7 +39,6 @@
     }
 
     window.AimySpaSubBack.show({
-      tone: logId === "workspace" ? "light" : null,
       onClick: function () {
         if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
           window.AimySpa.navigate("./insights");
@@ -169,8 +48,6 @@
   }
 
   function syncLogNextChrome(visible, logId) {
-    restoreLogNextFooter();
-
     var scroll = document.querySelector("[data-ins-log-next-scroll]");
     if (!scroll) return;
 
@@ -186,6 +63,7 @@
     if (link && nextId) {
       link.href = "./insights?log=" + encodeURIComponent(nextId);
       link.setAttribute("data-ins-log-next", nextId);
+      link.classList.remove("is-in");
     }
     if (label && nextId && LOG_LABELS[nextId]) {
       label.textContent = LOG_LABELS[nextId].title;
@@ -194,19 +72,10 @@
     if (
       window.SpaPages &&
       window.SpaPages.insightsRuntime &&
-      typeof window.SpaPages.insightsRuntime.refreshNextHolo === "function"
+      typeof window.SpaPages.insightsRuntime.observeLogNextReveal === "function"
     ) {
-      window.SpaPages.insightsRuntime.refreshNextHolo();
+      window.SpaPages.insightsRuntime.observeLogNextReveal();
     }
-
-    ensureLogNextLink();
-    bindLogNextScroll();
-    syncLogNextPosition();
-
-    window.requestAnimationFrame(function () {
-      syncLogNextPosition();
-      if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh(true);
-    });
   }
 
   function normalizeLog(ctx) {
@@ -323,7 +192,6 @@
     setPhase(root, "open");
     syncPanels(root, logId);
     scrollToTop();
-    window.requestAnimationFrame(syncLogNextPosition);
   }
 
   function bindHub(root) {
@@ -358,7 +226,6 @@
       var logId = normalizeLog(ctx);
       mountToken++;
       bindHub(root);
-      restoreLogNextFooter();
 
       var runtime = window.SpaPages.insightsRuntime;
       if (runtime && typeof runtime.destroy === "function") {
@@ -393,7 +260,6 @@
       document.body.classList.remove("ins-logs-choose", "ins-logs-open");
       document.body.removeAttribute("data-ins-active-log");
       if (window.AimySpaSubBack) window.AimySpaSubBack.hide();
-      restoreLogNextFooter();
       var nextScroll = document.querySelector("[data-ins-log-next-scroll]");
       if (nextScroll) {
         nextScroll.hidden = true;
