@@ -4,9 +4,9 @@
 (function () {
   "use strict";
 
-  var MANIFEST_URL = "./assets/content/lowpoly/hytale/sketchbook/index.json?v=sketchbook-6";
+  var MANIFEST_URL = "./assets/content/lowpoly/hytale/sketchbook/index.json?v=sketchbook-7";
   var ASSET_BASE = "./assets/content/lowpoly/hytale/";
-  var MANIFEST_TAG = "sketchbook-6";
+  var MANIFEST_TAG = "sketchbook-7";
 
   var holoCleanups = [];
   var resizeObserver = null;
@@ -74,7 +74,7 @@
     var t = (width - narrow) / (wide - narrow);
     if (t < 0) t = 0;
     if (t > 1) t = 1;
-    return 92 + t * 128;
+    return 108 + t * 152;
   }
 
   function columnCount(innerWidth, gap, minCell) {

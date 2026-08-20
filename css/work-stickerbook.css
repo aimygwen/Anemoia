@@ -3,7 +3,7 @@
  */
 
 .hytale-sketchbook {
-  --sketch-gap: clamp(1.45rem, 1rem + 3.35vw, 3.95rem);
+  --sketch-gap: clamp(2.25rem, 1.5rem + 5.25vw, 6rem);
   --grain: url("../assets/polykroma/branding/noise.svg?v=glitter-2");
   --glitter: url("../assets/polykroma/branding/glitter.png?v=1");
   --glittersize: 25%;
