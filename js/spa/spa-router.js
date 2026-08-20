@@ -5,7 +5,7 @@
 (function () {
   "use strict";
 
-  var VERSION = "spa-23";
+  var VERSION = "spa-24";
   var IMPRINT_CANONICAL = "./imprint.html?v=imprint-ins-48";
   var VIEWS = ["start", "work", "insights", "me", "contact"];
   var INSIGHTS_LOGS = ["identity", "workspace", "hytale"];
@@ -453,22 +453,26 @@
   }
 
   function bootFromLocation(replace) {
+    var route = null;
     var stored = sessionStorage.getItem("aimySpaRedirect");
     if (stored) {
       sessionStorage.removeItem("aimySpaRedirect");
       try {
-        var redirectUrl = new URL(stored, window.location.href);
-        var route = routeFromUrl(redirectUrl);
-        if (route) {
-          sanitizeRouteQuery(route);
-          window.history.replaceState({ spa: route }, "", buildUrl(route.view, route.query));
-        } else {
-          window.history.replaceState({}, "", redirectUrl.pathname + redirectUrl.search + redirectUrl.hash);
-        }
+        route = routeFromUrl(new URL(stored, document.baseURI || window.location.href));
       } catch (e) {}
     }
 
-    var route = parseLocation();
+    if (!route) {
+      route = parseLocation();
+    } else {
+      sanitizeRouteQuery(route);
+      if (route.external) {
+        window.location.href = route.external;
+        return Promise.resolve();
+      }
+      window.history.replaceState({ spa: route }, "", buildUrl(route.view, route.query));
+    }
+
     return applyRoute(route, replace !== false);
   }
 
