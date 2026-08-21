@@ -4,15 +4,6 @@
    ---------------------------------------------------- */
 
 @font-face {
-  font-family: "Voyage";
-  src: url("../fonts/Voyage-Regular.woff2") format("woff2"),
-       url("../fonts/Voyage-Regular.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "Athemi";
   src: url("../fonts/athemi.woff") format("woff");
   font-weight: 400;
@@ -36,8 +27,8 @@
   --ins-pink-deep: color-mix(in srgb, var(--step-03) 70%, var(--step-08));
   --ins-lavender: var(--ins-pink); /* legacy alias */
   --ins-title: "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif;
-  --ins-display: "Athemi", "Bodoni Moda", "Voyage", "Instrument Serif", Georgia, serif;
-  --ins-serif: "Instrument Serif", "Voyage", Georgia, serif;
+  --ins-display: "Athemi", "Bodoni Moda", "Instrument Serif", Georgia, serif;
+  --ins-serif: "Instrument Serif", Georgia, serif;
   --ins-sans: "Plus Jakarta Sans", system-ui, sans-serif;
 
   margin: 0;

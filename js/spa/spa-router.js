@@ -5,7 +5,7 @@
 (function () {
   "use strict";
 
-  var VERSION = "spa-24";
+  var VERSION = "spa-25";
   var IMPRINT_CANONICAL = "./imprint.html?v=imprint-ins-48";
   var VIEWS = ["start", "work", "insights", "me", "contact"];
   var INSIGHTS_LOGS = ["identity", "workspace", "hytale"];
@@ -459,6 +459,17 @@
       sessionStorage.removeItem("aimySpaRedirect");
       try {
         route = routeFromUrl(new URL(stored, document.baseURI || window.location.href));
+      } catch (e) {}
+    }
+
+    if (!route) {
+      try {
+        var params = new URL(window.location.href).searchParams;
+        var qp = params.get("redirect");
+        if (qp) {
+          var qpPath = qp.charAt(0) === "/" ? qp : "/" + qp;
+          route = routeFromUrl(new URL(qpPath, document.baseURI || window.location.href));
+        }
       } catch (e) {}
     }
 

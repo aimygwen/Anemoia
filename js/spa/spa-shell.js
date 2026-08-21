@@ -273,32 +273,16 @@
     }
     window.AimySpa.bindLinks();
 
-    var storedRedirect = null;
-    try {
-      storedRedirect = sessionStorage.getItem("aimySpaRedirect");
-    } catch (e) {}
-
     var route = window.AimySpa.parseLocation();
 
-    if ((route.view !== "start" || storedRedirect) && startEl) {
+    if (route.view !== "start" && startEl) {
       startEl.hidden = true;
       startEl.classList.remove("spa-view--active");
       startEl.setAttribute("aria-hidden", "true");
       currentEl = null;
     }
 
-    var bootPromise;
-    if (route.view === "start" && !storedRedirect) {
-      bootPromise = Promise.resolve().then(function () {
-        var def = window.AimySpaViews && window.AimySpaViews.get("start");
-        if (def && typeof def.mount === "function") {
-          def.mount({ view: "start", query: route.query || {} });
-        }
-        if (window.AimySpaNav) window.AimySpaNav.syncMenu("start");
-      });
-    } else {
-      bootPromise = window.AimySpa.bootFromLocation(true);
-    }
+    var bootPromise = window.AimySpa.bootFromLocation(true);
 
     bootPromise.then(markReady);
   }

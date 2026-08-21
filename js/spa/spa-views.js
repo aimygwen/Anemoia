@@ -120,7 +120,7 @@
         "./css/spa/spa-scaffold.css?v=spa-29",
         "./css/spa/spa-work.css?v=spa-67",
       ],
-      js: ["./js/spa/views/view-work.js?v=spa-75"],
+      js: ["./js/spa/views/view-work.js?v=spa-76"],
       mount: function (ctx) {
         resetBodyState();
         document.documentElement.classList.add("spa-route-not-start");
@@ -149,7 +149,7 @@
       css: [
         "./css/wordmark-holo.css?v=wordmark-holo-2",
         "./css/insights-poke-ref.css?v=poke-ref-11",
-        "./css/insights.css?v=insights-142",
+        "./css/insights.css?v=insights-143",
       ],
       partial: "./partials/view-insights.html?v=insights-76",
       js: [
@@ -198,7 +198,7 @@
     },
     contact: {
       partial: "./partials/view-contact.html?v=contact-17",
-      css: ["./css/spa/spa-contact.css?v=contact-17"],
+      css: ["./css/spa/spa-contact.css?v=contact-18"],
       js: ["./js/spa/views/view-contact.js?v=contact-15"],
       mount: function (ctx) {
         resetBodyState();

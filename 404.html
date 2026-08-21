@@ -42,9 +42,14 @@
         return;
       }
       try {
-        sessionStorage.setItem("aimySpaRedirect", path + search + hash);
+        sessionStorage.setItem("aimySpaRedirect", location.href);
       } catch (e) {}
-      window.location.replace(base + "index.html");
+      var target = path + search + hash;
+      var redirect =
+        target && target !== "/" && !/\/index\.html$/i.test(target)
+          ? "?redirect=" + encodeURIComponent(target)
+          : "";
+      window.location.replace(base + "index.html" + redirect);
     })();
   </script>
 </head>

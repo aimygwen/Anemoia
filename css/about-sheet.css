@@ -7,8 +7,8 @@
   --ins-paper: var(--paper);
   --ins-ink: var(--ink);
   --ins-muted: color-mix(in srgb, var(--ink) 55%, transparent);
-  --ins-display: "Athemi", "Bodoni Moda", "Voyage", "Instrument Serif", Georgia, serif;
-  --ins-serif: "Instrument Serif", "Voyage", Georgia, serif;
+  --ins-display: "Athemi", "Bodoni Moda", "Instrument Serif", Georgia, serif;
+  --ins-serif: "Instrument Serif", Georgia, serif;
   --ins-sans: "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif;
   --ins-hand: "Caveat", "Athemi", cursive;
   --ins-leading: 1.68;

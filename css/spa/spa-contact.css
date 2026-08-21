@@ -1,15 +1,6 @@
 /* spa-contact.css — Contact view (editorial hero + rotating tagline) */
 
 @font-face {
-  font-family: "Voyage";
-  src: url("../../fonts/Voyage-Regular.woff2") format("woff2"),
-       url("../../fonts/Voyage-Regular.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "Newpixel";
   src: url("../../fonts/newpixel.otf") format("opentype");
   font-weight: 400;
@@ -18,7 +9,7 @@
 }
 
 body.contact-page-body {
-  --contact-display: "Voyage", "Instrument Serif", Georgia, serif;
+  --contact-display: "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif;
   --contact-pixel: "Newpixel", "Courier New", monospace;
   --contact-ui: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
   --contact-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -84,7 +75,7 @@ body.contact-page-body .spa-view[data-spa-view="contact"] {
   width: 100%;
   font-family: var(--contact-display) !important;
   font-size: var(--contact-hero-fit, var(--contact-hero-base));
-  font-weight: 400;
+  font-weight: 500;
   line-height: 0.96;
   letter-spacing: -0.028em;
   color: var(--pk-heading);

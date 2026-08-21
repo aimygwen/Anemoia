@@ -3,15 +3,6 @@
  */
 
 @font-face {
-  font-family: "Voyage";
-  src: url("../fonts/Voyage-Regular.woff2") format("woff2"),
-       url("../fonts/Voyage-Regular.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "Newpixel";
   src: url("../fonts/newpixel.otf") format("opentype");
   font-weight: normal;

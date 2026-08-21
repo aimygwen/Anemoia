@@ -2,16 +2,6 @@
  * Stills — large DOM gallery + scroll stretch.
  */
 
-@font-face {
-  font-family: "Voyage";
-  src:
-    url("../fonts/Voyage-Regular.woff2") format("woff2"),
-    url("../fonts/Voyage-Regular.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 html:has(.gallery-page-body) {
   --gal-bg: var(--step-01);
   min-height: 100%;
@@ -43,7 +33,7 @@ html.lenis-smooth {
   --gal-block-pad-y: clamp(1.35rem, 3.6vh, 2.15rem);
   --gal-block-pad-y-lg: clamp(4.5rem, 12vh, 8.5rem);
   --gal-ui: "Plus Jakarta Sans", system-ui, sans-serif;
-  --gal-display: "Voyage", "Instrument Serif", "Times New Roman", Times, serif;
+  --gal-display: "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif;
   --gal-stretch: 1;
   --gal-squash: 1;
   --gal-skew: 0deg;

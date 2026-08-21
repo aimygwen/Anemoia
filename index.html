@@ -38,6 +38,36 @@
   window.__aimySiteBase = baseHref;
 })();
 </script>
+<script>
+(function () {
+  function restoreSpaUrl(pathname, search, hash) {
+    if (!pathname || pathname === "/" || /\/index\.html$/i.test(pathname)) return false;
+    try {
+      history.replaceState(null, "", pathname + (search || "") + (hash || ""));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  var params = new URLSearchParams(location.search);
+  var qp = params.get("redirect");
+  if (qp) {
+    try {
+      var qpUrl = qp.charAt(0) === "/" ? new URL(qp, location.origin) : new URL("/" + qp, location.origin);
+      restoreSpaUrl(qpUrl.pathname, qpUrl.search, qpUrl.hash);
+    } catch (e) {}
+  }
+
+  var stored = sessionStorage.getItem("aimySpaRedirect");
+  if (stored) {
+    try {
+      var storedUrl = new URL(stored, location.origin);
+      restoreSpaUrl(storedUrl.pathname, storedUrl.search, storedUrl.hash);
+    } catch (e) {}
+  }
+})();
+</script>
 <title>Start — Art of Aimy Gwen</title>
 <meta name="theme-color" content="#151415">
 <meta name="color-scheme" content="dark">
@@ -194,15 +224,15 @@
 <script src="./js/charm-iris.js?v=branding-11" defer></script>
   <script src="./js/polykroma.js?v=polykroma-102" defer></script>
 <script src="./js/spa/spa-state.js?v=spa-11" defer></script>
-<script src="./js/spa/spa-router.js?v=spa-24" defer></script>
+<script src="./js/spa/spa-router.js?v=spa-25" defer></script>
 <script src="./js/spa/spa-transitions.js?v=spa-14" defer></script>
 <script src="./js/spa/spa-a11y.js?v=spa-11" defer></script>
-<script src="./js/spa/spa-views.js?v=spa-178" defer></script>
+<script src="./js/spa/spa-views.js?v=spa-179" defer></script>
 <script src="./js/spa/spa-prefetch.js?v=spa-2" defer></script>
 <script src="./js/spa/spa-nav.js?v=spa-13" defer></script>
 <script src="./js/spa/spa-sub-back.js?v=spa-2" defer></script>
 <script src="./js/spa/views/view-start.js?v=spa-35" defer></script>
-<script src="./js/spa/spa-shell.js?v=spa-29" defer></script>
+<script src="./js/spa/spa-shell.js?v=spa-30" defer></script>
 
 </body>
 </html>
