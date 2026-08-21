@@ -6,17 +6,15 @@
 
   window.SpaPages = window.SpaPages || {};
 
-  var LOG_IDS = ["identity", "workspace", "hytale"];
+  var LOG_IDS = ["identity", "workspace"];
   var LOG_LABELS = {
     identity: { title: "Vibe shit", sub: "Branding" },
     workspace: { title: "Artiful Min-Maxing", sub: "Gear, stack, and how I work" },
-    hytale: { title: "Hytale", sub: "Models, UV mapping, and structure" },
   };
 
   var LOG_NEXT = {
     identity: "workspace",
-    workspace: "hytale",
-    hytale: "identity",
+    workspace: "identity",
   };
 
   var DECK_REVEAL_STAGGER_MS = 120;
@@ -248,9 +246,9 @@
       }
 
       window.setTimeout(function () {
-        document.title = logId
-          ? (LOG_LABELS[logId].title || "Log") + " — Behind the madness — Aimy Gwen"
-          : "Behind the madness, Gwenuinely. — Insights — Aimy Gwen";
+        if (window.AimySpaA11y && typeof window.AimySpaA11y.setDocumentTitle === "function") {
+          window.AimySpaA11y.setDocumentTitle("insights", logId ? { log: logId } : {});
+        }
       }, 0);
     },
     unmount: function () {

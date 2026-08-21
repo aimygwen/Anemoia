@@ -7,10 +7,10 @@
 
   var NAV_ITEMS = [
     { id: "start", label: "Start", href: "./" },
-    { id: "work", label: "Work", href: "/work" },
-    { id: "insights", label: "Insights", href: "/insights" },
+    { id: "work", label: "Work", href: "./work" },
+    { id: "insights", label: "Insights", href: "./insights" },
     { id: "me", label: "Me", href: "./me" },
-    { id: "contact", label: "Contact", href: "/contact" },
+    { id: "contact", label: "Contact", href: "./contact" },
   ];
 
   function ensureHomeCharm() {

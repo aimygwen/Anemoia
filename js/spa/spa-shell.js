@@ -117,7 +117,7 @@
         }
         if (window.AimySpaNav) window.AimySpaNav.syncMenu("work");
         if (window.AimySpaA11y) {
-          window.AimySpaA11y.setDocumentTitle("work");
+          window.AimySpaA11y.setDocumentTitle("work", route.query || {});
           window.AimySpaA11y.announce("work");
         }
       });
@@ -204,7 +204,7 @@
 
           if (window.AimySpaNav) window.AimySpaNav.syncMenu(viewId);
           if (window.AimySpaA11y) {
-            window.AimySpaA11y.setDocumentTitle(viewId);
+            window.AimySpaA11y.setDocumentTitle(viewId, route.query || {});
             window.AimySpaA11y.announce(viewId);
           }
 

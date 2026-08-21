@@ -38,7 +38,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
     {
       id: "work",
       label: "Work",
-      href: "/work",
+      href: "./work",
       model: "./assets/polykroma/select/archive.glb?v=" + MODEL_VERSION,
     },
     {
@@ -51,7 +51,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
     {
       id: "insights",
       label: "Insights",
-      href: "/insights",
+      href: "./insights",
       model: "./assets/polykroma/select/insights.glb?v=" + MODEL_VERSION,
       hoverFlip: false,
       hitZoneScale: 0.9,
@@ -167,6 +167,20 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
   var hoveredIndex = -1;
   var hoverTween = null;
+
+  function itemHref(item) {
+    if (!item) return "./";
+    if (item.id === "me") return item.href;
+    if (
+      window.AimySpa &&
+      typeof window.AimySpa.isHost === "function" &&
+      window.AimySpa.isHost() &&
+      typeof window.AimySpa.buildUrl === "function"
+    ) {
+      return window.AimySpa.buildUrl(item.id, {});
+    }
+    return item.href || "./";
+  }
 
   function navigate(href) {
     if (window.__aimyCloseMenu) {
@@ -1510,7 +1524,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
   function openCurrent() {
     if (!ready) return;
-    navigate(ITEMS[index].href);
+    navigate(itemHref(ITEMS[index]));
   }
 
   function syncToView(view) {
@@ -1977,11 +1991,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
         e.stopPropagation();
         var picked = pickSlotIndex(e.clientX, e.clientY);
         if (picked < 0) return;
-        if (picked === index) {
-          openCurrent();
-          return;
-        }
-        goTo(picked, true);
+        navigate(itemHref(ITEMS[picked]));
       },
       false
     );
@@ -2015,12 +2025,9 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
         }
       });
       btn.addEventListener("click", function (e) {
+        e.preventDefault();
         e.stopPropagation();
-        if (i === index) {
-          openCurrent();
-          return;
-        }
-        goTo(i, true);
+        navigate(itemHref(ITEMS[i]));
       });
     });
 

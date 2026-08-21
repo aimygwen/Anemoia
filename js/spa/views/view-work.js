@@ -695,12 +695,29 @@
     return delta * PICKER_WHEEL_MULT;
   }
 
+  function syncPickerHrefs(root) {
+    pickerItems(root).forEach(function (item) {
+      var pick = item.getAttribute("data-work-pick");
+      if (
+        window.AimySpa &&
+        typeof window.AimySpa.buildUrl === "function"
+      ) {
+        item.setAttribute(
+          "href",
+          window.AimySpa.buildUrl("work", pick ? { category: pick } : {})
+        );
+      }
+    });
+  }
+
   function bindPicker(root) {
     if (!root || pickerBound) return;
     pickerBound = true;
 
     var scroller = root.querySelector("[data-work-scroller]");
     if (!scroller) return;
+
+    syncPickerHrefs(root);
 
     var picker = root.querySelector("[data-work-picker]");
     resetPolaroidMotion(picker);
@@ -771,6 +788,7 @@
     scroller.addEventListener("scroll", scheduleScrollSync, { passive: true });
 
     scroller.addEventListener("pointerdown", function (event) {
+      if (event.target.closest(".work-picker__item")) return;
       if (event.pointerType === "mouse" && event.button !== 0) return;
       glide.stop();
       glide.sync(scroller.scrollTop);
@@ -820,7 +838,12 @@
     scroller.addEventListener("pointercancel", endDrag);
 
     pickerItems(root).forEach(function (item) {
+      item.addEventListener("pointerdown", function (event) {
+        event.stopPropagation();
+      });
+
       item.addEventListener("pointerenter", function () {
+        if (!finePointer) return;
         focusPickerItem(root, item);
       });
 
@@ -830,7 +853,7 @@
       });
 
       item.addEventListener("focusin", function () {
-        focusPickerItem(root, item);
+        focusPickerItem(root, item, { scroll: false });
       });
     });
 
@@ -1110,6 +1133,7 @@
       var scroller = root.querySelector("[data-work-scroller]");
       if (scroller && Number(scroller.getAttribute("data-drag-px") || 0) >= 12) return;
       var next = pickLink.getAttribute("data-work-pick");
+      focusPickerItem(root, pickLink, { scroll: false });
       if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
         window.AimySpa.navigate(
           window.AimySpa.buildUrl("work", next ? { category: next } : {})
@@ -1152,9 +1176,9 @@
         } else {
           haltScroll();
         }
-        document.title = category
-          ? (CATEGORY_LABELS[category] || "Work") + " — Aimy Gwen"
-          : "Work — Aimy Gwen";
+        if (window.AimySpaA11y && typeof window.AimySpaA11y.setDocumentTitle === "function") {
+          window.AimySpaA11y.setDocumentTitle("work", category ? { category: category } : {});
+        }
       });
     },
     unmount: function () {

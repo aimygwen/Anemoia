@@ -115,12 +115,12 @@
       },
     },
     work: {
-      partial: "./partials/view-work.html?v=spa-46",
+      partial: "./partials/view-work.html?v=spa-47",
       css: [
         "./css/spa/spa-scaffold.css?v=spa-29",
         "./css/spa/spa-work.css?v=spa-67",
       ],
-      js: ["./js/spa/views/view-work.js?v=spa-76"],
+      js: ["./js/spa/views/view-work.js?v=spa-78"],
       mount: function (ctx) {
         resetBodyState();
         document.documentElement.classList.add("spa-route-not-start");
@@ -151,12 +151,12 @@
         "./css/insights-poke-ref.css?v=poke-ref-11",
         "./css/insights.css?v=insights-143",
       ],
-      partial: "./partials/view-insights.html?v=insights-76",
+      partial: "./partials/view-insights.html?v=insights-77",
       js: [
         "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js",
         "./js/wordmark-holo.js?v=wordmark-holo-4",
         "./js/insights.js?v=insights-46",
-        "./js/spa/views/view-insights.js?v=insights-31",
+        "./js/spa/views/view-insights.js?v=insights-33",
       ],
       mount: function (ctx) {
         resetBodyState();

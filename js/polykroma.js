@@ -703,10 +703,17 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
   }
 
   function menuHref(view) {
+    if (
+      isSpaHost() &&
+      window.AimySpa &&
+      typeof window.AimySpa.buildUrl === "function"
+    ) {
+      return window.AimySpa.buildUrl(view === "start" ? "start" : view, {});
+    }
     var base = pageBase();
     if (isSpaHost()) {
       if (view === "start") return "./";
-      return "/" + view;
+      return "./" + view;
     }
     if (view === "start") return base + "index.html";
     return base + "index.html?view=" + view;
@@ -1295,8 +1302,12 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       }
     }
 
+    var titleBeforeMenu = "";
+
     function openMenu() {
       if (isOpen || !canClick) return;
+      titleBeforeMenu = document.title;
+      document.title = "Select";
       canClick = false;
       isOpen = true;
       shellIgnoreUntil = performance.now() + 450;
@@ -1341,6 +1352,10 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       setSelected(-1);
 
       function finishClose() {
+        if (titleBeforeMenu && document.title === "Select") {
+          document.title = titleBeforeMenu;
+        }
+        titleBeforeMenu = "";
         if (window.AimyMenuSelect && typeof window.AimyMenuSelect.pauseMenu === "function") {
           window.AimyMenuSelect.pauseMenu();
         }

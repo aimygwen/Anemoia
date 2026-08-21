@@ -341,8 +341,7 @@
       clearStage();
       body.setAttribute("data-gal-view", view);
       if (!spaMode) {
-        document.title =
-          (view === "films" ? "Films" : "Stills") + " — Art of Aimy Gwen";
+        document.title = view === "films" ? "Stories Told in Motion" : "Moments Captured for Eternity";
       }
       setViewLinks();
       if (view === "films") buildFilms();

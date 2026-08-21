@@ -15,6 +15,13 @@ document.addEventListener("DOMContentLoaded", () => {
     policy: "Policy",
   };
 
+  const PAGE_TITLES = {
+    hub: "Yaaaaaaawn… Say Again?",
+    imprint: "The Boring Bits",
+    terms: "The Even More Boring Bits",
+    policy: "Zzz…",
+  };
+
   const VALID_PANELS = Object.keys(PANEL_TITLES);
   const revealObservers = [];
   let resizeTimer = null;
@@ -572,6 +579,14 @@ document.addEventListener("DOMContentLoaded", () => {
     boot();
   }
 
+  function syncPageTitle(phase, panelId) {
+    if (phase === "choose") {
+      document.title = PAGE_TITLES.hub;
+      return;
+    }
+    document.title = PAGE_TITLES[panelId] || PAGE_TITLES.hub;
+  }
+
   function setActivePanel(panelId, options = {}) {
     const id = normalizePanel(panelId);
     const restoreOthers = options.restoreOthers !== false;
@@ -614,6 +629,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clearPhaseTimer();
       contentReadyToken++;
       const id = setActivePanel(nextId);
+      syncPageTitle("open", id);
 
       if (updateHash) {
         const nextHash = "#" + id;
@@ -648,6 +664,7 @@ document.addEventListener("DOMContentLoaded", () => {
     syncBackChrome(open);
 
     if (!open) {
+      syncPageTitle("choose");
       teardownReveals();
 
       pickerBtns.forEach((btn) => {
@@ -675,6 +692,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const id = setActivePanel(nextId);
+    syncPageTitle("open", id);
 
     if (updateHash) {
       const nextHash = "#" + id;

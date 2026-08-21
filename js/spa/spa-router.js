@@ -5,21 +5,19 @@
 (function () {
   "use strict";
 
-  var VERSION = "spa-25";
-  var IMPRINT_CANONICAL = "./imprint.html?v=imprint-ins-48";
+  var VERSION = "spa-27";
+  var IMPRINT_CANONICAL = "./imprint.html?v=imprint-ins-49";
   var VIEWS = ["start", "work", "insights", "me", "contact"];
-  var INSIGHTS_LOGS = ["identity", "workspace", "hytale"];
+  var INSIGHTS_LOGS = ["identity", "workspace"];
   var WORK_CATEGORIES = ["lowpoly", "hytale", "stills", "motion"];
   var INSIGHTS_LOG_SLUGS = {
     identity: "vibes",
     workspace: "workspace",
-    hytale: "hytale",
   };
   var INSIGHTS_SLUG_TO_LOG = {
     vibes: "identity",
     identity: "identity",
     workspace: "workspace",
-    hytale: "hytale",
   };
   var navigating = false;
   var spaBaseCached = null;
