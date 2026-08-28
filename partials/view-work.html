@@ -6,6 +6,7 @@
           <div class="work-picker__preview-photo" data-work-preview-photo>
             <img class="work-picker__preview-img is-active" data-work-preview-img="hytale" src="./assets/thumbnails/hytale.jpg" alt="" decoding="async" />
             <img class="work-picker__preview-img" data-work-preview-img="lowpoly" src="./assets/thumbnails/lowpoly.jpg" alt="" decoding="async" />
+            <img class="work-picker__preview-img" data-work-preview-img="sculpts" src="./assets/thumbnails/sculpts.jpg" alt="" decoding="async" />
             <img class="work-picker__preview-img" data-work-preview-img="stills" src="./assets/thumbnails/artwork.jpg" alt="" decoding="async" />
             <img class="work-picker__preview-img" data-work-preview-img="motion" src="./assets/thumbnails/tapes.jpg" alt="" decoding="async" />
           </div>
@@ -33,6 +34,7 @@
           <div class="work-picker__rail">
             <a href="./work/hytale" class="work-picker__item is-active" data-work-pick="hytale" role="listitem"><span class="work-picker__label">Hytale</span></a>
             <a href="./work/lowpoly" class="work-picker__item" data-work-pick="lowpoly" role="listitem"><span class="work-picker__label">Lowpoly</span></a>
+            <a href="./work/sculpts" class="work-picker__item" data-work-pick="sculpts" role="listitem"><span class="work-picker__label">Sculpts</span></a>
             <a href="./work/stills" class="work-picker__item" data-work-pick="stills" role="listitem"><span class="work-picker__label">Artworks</span></a>
             <a href="./work/motion" class="work-picker__item" data-work-pick="motion" role="listitem"><span class="work-picker__label">Animations</span></a>
           </div>
@@ -117,6 +119,14 @@
       <div class="work-hub__category spa-work-category--gallery" data-work-category-panel="motion" hidden>
         <nav class="gal-dots" data-work-gal-dots="motion" aria-label="Motion"></nav>
         <main class="gal-projects" data-work-gal-main="motion" aria-label="Motion gallery"></main>
+      </div>
+
+      <div class="work-hub__category" data-work-category-panel="sculpts" hidden>
+        <section class="work-sculpts" aria-label="Sculpts">
+          <div class="work-sculpts__stage" data-work-sculpts-stage tabindex="0" aria-label="Sculpts gallery, scroll to explore">
+            <div class="work-sculpts__stack" data-work-sculpts-stack></div>
+          </div>
+        </section>
       </div>
     </div>
   </div>

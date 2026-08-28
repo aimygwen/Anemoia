@@ -2,7 +2,8 @@
 
 .spa-view {
   opacity: 1;
-  transform: translateY(0);
+  /* No transform here — any transform makes position:fixed stick to the view box
+     (About polaroid/curtain, Insights sticky/peek). GSAP sets transform only during transitions. */
 }
 
 .spa-view.spa-view--entering,

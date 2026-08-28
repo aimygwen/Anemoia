@@ -38,7 +38,16 @@
   }
 
   function mountPartial(viewId, el) {
-    if (el.dataset.spaMounted === "1" || viewId === "start") {
+    var def = window.AimySpaViews.get(viewId);
+    var partialUrl = (def && def.partial) || "";
+
+    if (el.dataset.spaMounted === "1" && el.dataset.spaPartialUrl === partialUrl) {
+      return window.AimySpaViews.ensureAssets(viewId).then(function () {
+        return el;
+      });
+    }
+
+    if (viewId === "start") {
       return window.AimySpaViews.ensureAssets(viewId).then(function () {
         return el;
       });
@@ -47,6 +56,7 @@
     return window.AimySpaViews.prepareView(viewId).then(function (pack) {
       el.innerHTML = pack.html;
       el.dataset.spaMounted = "1";
+      el.dataset.spaPartialUrl = partialUrl;
       return el;
     });
   }

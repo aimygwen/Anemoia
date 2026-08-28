@@ -38,8 +38,8 @@
 
     window.AimySpaSubBack.show({
       onClick: function () {
-        if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
-          window.AimySpa.navigate(window.AimySpa.buildUrl("insights", {}));
+        if (window.AimySpa && typeof window.AimySpa.goBack === "function") {
+          window.AimySpa.goBack();
         }
       },
     });
@@ -218,6 +218,11 @@
     });
   }
 
+  function deckItems(root) {
+    if (!root) return [];
+    return Array.prototype.slice.call(root.querySelectorAll("[data-ins-log-pick]"));
+  }
+
   window.SpaPages.insights = {
     mount: function (ctx) {
       var root = insRoot();
@@ -268,6 +273,37 @@
       if (runtime && typeof runtime.destroy === "function") {
         runtime.destroy();
       }
+    },
+    cycleDeck: function (dir) {
+      var root = insRoot();
+      var hub = root && root.querySelector("[data-ins-logs-hub]");
+      if (!root || !hub || hub.getAttribute("data-ins-phase") !== "choose") return false;
+      var items = deckItems(root);
+      if (!items.length) return false;
+      var idx = items.findIndex(function (el) {
+        return el.classList.contains("is-aimy-input-focus");
+      });
+      if (idx < 0) idx = 0;
+      idx = (idx + dir + items.length) % items.length;
+      items.forEach(function (el, i) {
+        el.classList.toggle("is-aimy-input-focus", i === idx);
+      });
+      var pick = items[idx].querySelector(".ins-logs-deck__pick");
+      if (pick) pick.focus({ preventScroll: true });
+      return true;
+    },
+    confirmDeck: function () {
+      var root = insRoot();
+      var hub = root && root.querySelector("[data-ins-logs-hub]");
+      if (!root || !hub || hub.getAttribute("data-ins-phase") !== "choose") return false;
+      var item =
+        root.querySelector("[data-ins-log-pick].is-aimy-input-focus") ||
+        root.querySelector("[data-ins-log-pick]");
+      if (!item) return false;
+      var logId = item.getAttribute("data-ins-log-pick");
+      if (!logId || !window.AimySpa || typeof window.AimySpa.navigate !== "function") return false;
+      window.AimySpa.navigate(window.AimySpa.buildUrl("insights", { log: logId }));
+      return true;
     },
   };
 })();

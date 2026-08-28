@@ -4,8 +4,8 @@
 (function () {
   "use strict";
 
-  var MANIFEST_URL = "./assets/content/lowpoly/hytale/sketchbook/index.json?v=sketchbook-8";
-  var ASSET_BASE = "./assets/content/lowpoly/hytale/";
+  var MANIFEST_URL = "./assets/content/hytale/sketchbook/index.json?v=sketchbook-8";
+  var ASSET_BASE = "./assets/content/hytale/";
   var MANIFEST_TAG = "sketchbook-8";
 
   var holoCleanups = [];

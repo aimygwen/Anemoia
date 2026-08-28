@@ -41,13 +41,15 @@
 
 html:has(.imprint-page-body) {
   overscroll-behavior: none;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 body.imprint-page-body {
   position: relative;
 }
 
-body.imprint-page-body > main.imprint-stage {
+body.imprint-page-body .imprint-stage {
   width: var(--imprint-content-width);
   max-width: var(--imprint-content-width);
   margin-left: var(--imprint-content-left);
@@ -198,7 +200,7 @@ body.imprint-page-body::before {
     visibility 0s linear 0.14s;
 }
 
-body.imprint-page-body > main.imprint-stage[data-imprint-phase="choose"] {
+body.imprint-page-body .imprint-stage[data-imprint-phase="choose"] {
   min-height: 100svh;
   min-height: 100dvh;
   padding-top: var(--imprint-chrome-safe);
@@ -547,7 +549,7 @@ body.imprint-reveals-ready .imprint-line__inner.is-in {
     --pl-meta-gap: clamp(0.82rem, 0.48rem + 0.66vw, 1.48rem);
   }
 
-  body.imprint-page-body > main.imprint-stage {
+  body.imprint-page-body .imprint-stage {
     padding-top: calc(var(--imprint-chrome-safe) + clamp(2rem, 1rem + 2.5vw, 4.5rem));
   }
 }

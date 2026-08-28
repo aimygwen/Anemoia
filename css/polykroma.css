@@ -391,11 +391,6 @@ html body .site-header[data-aimy-chrome]::before {
   isolation: isolate;
 }
 
-.site-header[data-aimy-chrome] .brand[data-mono-charm-glass],
-.site-header[data-aimy-chrome] .brand:has(.brand-glass-portal) {
-  isolation: auto;
-}
-
 /* —— Shared under-glow: soft circles below the mark (not centered behind) —— */
 :root {
   --pk-orb-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -509,12 +504,12 @@ html body .site-header[data-aimy-chrome]::before {
   transform: translate(-50%, -50%) scale(1.14);
 }
 
-/* Inner pane kept for glass boot — under-glow lives on link/coin pseudos */
+/* Inner pane kept for legacy markup hooks — under-glow lives on link/coin pseudos */
 .brand-charm-orb-pane {
   display: none !important;
 }
 
-/* Charm mark — css/charm-mark.css (stack, glass pane, layer colors) */
+/* Charm mark — css/charm-mark.css (stack + layer colors) */
 
 .site-header[data-aimy-chrome] .brand-mark,
 .site-header[data-aimy-chrome] .brand svg {

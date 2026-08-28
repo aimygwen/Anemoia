@@ -10,7 +10,7 @@
       "catalogId": "optional-id-for-lightbox"
     },
     {
-      "image": "lowpoly/hytale/Furnishings/boxx_purple.png",
+      "image": "hytale/Furnishings/boxx_purple.png",
       "label": "Boxx",
       "catalogId": "boxx",
       "cycleVariants": true

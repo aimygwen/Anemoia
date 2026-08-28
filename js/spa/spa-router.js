@@ -5,11 +5,10 @@
 (function () {
   "use strict";
 
-  var VERSION = "spa-27";
-  var IMPRINT_CANONICAL = "./imprint.html?v=imprint-ins-49";
-  var VIEWS = ["start", "work", "insights", "me", "contact"];
+  var VERSION = "spa-31";
+  var VIEWS = ["start", "work", "insights", "me", "contact", "imprint"];
   var INSIGHTS_LOGS = ["identity", "workspace"];
-  var WORK_CATEGORIES = ["lowpoly", "hytale", "stills", "motion"];
+  var WORK_CATEGORIES = ["lowpoly", "hytale", "stills", "motion", "sculpts"];
   var INSIGHTS_LOG_SLUGS = {
     identity: "vibes",
     workspace: "workspace",
@@ -26,7 +25,7 @@
     "index.html": "start",
     "lowpoly.html": "work",
     "gallery.html": "work",
-    "about.html": "about",
+    "about.html": "me",
     "insights.html": "insights",
     "contact.html": "contact",
     "imprint.html": "imprint",
@@ -203,16 +202,13 @@
     var file = path.split("/").pop() || "";
 
     if (/\/(imprint|legal)\/?$/i.test(path)) {
-      return { view: "start", query: {}, external: IMPRINT_CANONICAL + (url.hash || "") };
+      return { view: "imprint", query: {} };
     }
 
     if (LEGACY_PATHS[file]) {
       var legacyView = LEGACY_PATHS[file];
       if (legacyView === "imprint" || legacyView === "legal") {
-        return { view: "start", query: {}, external: IMPRINT_CANONICAL + (url.hash || "") };
-      }
-      if (legacyView === "about") {
-        return { view: "start", query: {}, external: "./" + file };
+        return { view: "imprint", query: {}, legacy: true };
       }
       var legacyQuery = {};
       if (legacyView === "work" && LEGACY_WORK_CATEGORY[file]) {
@@ -343,7 +339,8 @@
     return false;
   }
 
-  function applyRoute(route, replace) {
+  function applyRoute(route, replace, meta) {
+    meta = meta || {};
     if (!window.AimySpaShell || typeof window.AimySpaShell.render !== "function") {
       return Promise.resolve();
     }
@@ -361,11 +358,68 @@
 
     var forceReplace = syncHistory(route, replace);
 
+    if (window.AimySpaState) {
+      if (meta.initial) {
+        window.AimySpaState.resetStack(route);
+      } else if (meta.popstate) {
+        window.AimySpaState.trimStackTo(route);
+      } else if (meta.fromBack) {
+        window.AimySpaState.syncStackTop(route);
+      } else if (forceReplace || replace) {
+        window.AimySpaState.replaceRoute(route);
+      } else {
+        window.AimySpaState.pushRoute(route);
+      }
+    }
+
     return window.AimySpaShell.render(route, {
-      animate: !forceReplace && !replace,
-      initial: !!forceReplace || !!replace,
+      animate: !forceReplace && !replace && !meta.fromBack && !meta.popstate,
+      initial: !!forceReplace || !!replace || !!meta.fromBack || !!meta.popstate,
       prior: prior,
     });
+  }
+
+  function parentRoute(route) {
+    route = route || (window.AimySpaState ? window.AimySpaState.get() : { view: "start", query: {} });
+    if (route.view === "work" && route.query && route.query.category) {
+      return { view: "work", query: {} };
+    }
+    if (route.view === "insights" && route.query && route.query.log) {
+      return { view: "insights", query: {} };
+    }
+    return null;
+  }
+
+  function triggerSubBack() {
+    var el = document.querySelector("[data-spa-sub-back].is-visible");
+    if (!el) return false;
+    el.click();
+    return true;
+  }
+
+  function goBack() {
+    if (!isHost()) {
+      return Promise.resolve();
+    }
+
+    var current = window.AimySpaState ? window.AimySpaState.get() : { view: "start", query: {} };
+    var parent = parentRoute(current);
+
+    if (parent) {
+      if (window.AimySpaState) window.AimySpaState.popRoute();
+      return applyRoute(parent, true, { fromBack: true });
+    }
+
+    if (current.view === "imprint" && document.body.classList.contains("imprint-phase-open")) {
+      if (triggerSubBack()) return Promise.resolve();
+    }
+
+    var prev = window.AimySpaState ? window.AimySpaState.popRoute() : null;
+    if (prev) {
+      return applyRoute(prev, true, { fromBack: true });
+    }
+
+    return goHome();
   }
 
   function resetStartView() {
@@ -387,6 +441,7 @@
 
     if (window.AimySpaState) {
       window.AimySpaState.setView("start", {});
+      window.AimySpaState.resetStack({ view: "start", query: {} });
     }
 
     window.history.replaceState({ spa: { view: "start", query: {} } }, "", buildUrl("start", {}));
@@ -413,6 +468,17 @@
     return navigate(buildUrl("start", {}), options);
   }
 
+  function syncImprintHash(href) {
+    try {
+      var sourceUrl = new URL(href, window.location.href);
+      if (!sourceUrl.hash) return;
+      var target = buildUrl("imprint", {}) + sourceUrl.hash;
+      if (window.location.pathname + window.location.search + window.location.hash === target) return;
+      window.history.replaceState({ spa: { view: "imprint", query: {} } }, "", target);
+      window.dispatchEvent(new HashChangeEvent("hashchange"));
+    } catch (e) {}
+  }
+
   function navigate(href, options) {
     if (!isHost()) {
       window.location.href = href;
@@ -430,6 +496,7 @@
 
     var state = window.AimySpaState ? window.AimySpaState.get() : null;
     if (state && routesEqual({ view: state.view, query: state.query }, route)) {
+      if (route.view === "imprint") syncImprintHash(href);
       syncHistory(route, true);
       return Promise.resolve();
     }
@@ -443,6 +510,8 @@
     if (state && state.view === "start" && route.view === "start") {
       return resetStartView();
     }
+
+    if (route.view === "imprint") syncImprintHash(href);
 
     navigating = true;
     return applyRoute(route, !!(options && options.replace)).finally(function () {
@@ -479,15 +548,29 @@
         window.location.href = route.external;
         return Promise.resolve();
       }
-      window.history.replaceState({ spa: route }, "", buildUrl(route.view, route.query));
+      var bootUrl = buildUrl(route.view, route.query);
+      if (route.view === "imprint" && window.location.hash) {
+        bootUrl += window.location.hash;
+      }
+      window.history.replaceState({ spa: route }, "", bootUrl);
     }
 
-    return applyRoute(route, replace !== false);
+    return applyRoute(route, replace !== false, { initial: true });
   }
 
-  function onPopState() {
-    var route = parseLocation();
-    applyRoute(route, true);
+  function onPopState(e) {
+    if (!isHost()) return;
+
+    var route = e.state && e.state.spa ? e.state.spa : parseLocation();
+
+    if (!route) {
+      var current = window.AimySpaState ? window.AimySpaState.get() : { view: "start", query: {} };
+      history.pushState({ spa: current }, "", buildUrl(current.view, current.query));
+      return goBack();
+    }
+
+    sanitizeRouteQuery(route);
+    return applyRoute(route, true, { popstate: true });
   }
 
   function bindLinks() {
@@ -523,6 +606,7 @@
     logPublicSlug: logPublicSlug,
     canHandle: canHandle,
     navigate: navigate,
+    goBack: goBack,
     goHome: goHome,
     bootFromLocation: bootFromLocation,
     bindLinks: bindLinks,

@@ -10,17 +10,17 @@
   --spa-font-weight-title: 500;
 }
 
-/* Beat legacy home-overrides Newpixel on buttons / copy inside SPA views */
-body[data-spa-host] #app-viewport .spa-view,
-body[data-spa-host] #app-viewport .spa-view button,
-body[data-spa-host] #app-viewport .spa-view input,
-body[data-spa-host] #app-viewport .spa-view textarea,
-body[data-spa-host] #app-viewport .spa-view label,
-body[data-spa-host] #app-viewport .spa-view p,
-body[data-spa-host] #app-viewport .spa-view h1,
-body[data-spa-host] #app-viewport .spa-view h2,
-body[data-spa-host] #app-viewport .spa-view h3,
-body[data-spa-host] #app-viewport .spa-view a {
+/* Beat legacy home-overrides Newpixel on buttons / copy inside SPA views (not legal). */
+body[data-spa-host]:not(.imprint-page-body) #app-viewport .spa-view,
+body[data-spa-host]:not(.imprint-page-body) #app-viewport .spa-view button,
+body[data-spa-host]:not(.imprint-page-body) #app-viewport .spa-view input,
+body[data-spa-host]:not(.imprint-page-body) #app-viewport .spa-view textarea,
+body[data-spa-host]:not(.imprint-page-body) #app-viewport .spa-view label,
+body[data-spa-host]:not(.imprint-page-body) #app-viewport .spa-view p,
+body[data-spa-host]:not(.imprint-page-body) #app-viewport .spa-view h1,
+body[data-spa-host]:not(.imprint-page-body) #app-viewport .spa-view h2,
+body[data-spa-host]:not(.imprint-page-body) #app-viewport .spa-view h3,
+body[data-spa-host]:not(.imprint-page-body) #app-viewport .spa-view a {
   font-family: var(--spa-font-sans) !important;
   font-style: normal !important;
   font-synthesis: none !important;

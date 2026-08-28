@@ -8,10 +8,10 @@ window.LOWPOLY_CATALOG = {
             "title": "Crossworlds",
             "name": "Crossworlds",
             "category": "furnishings",
-            "image": "lowpoly/hytale/Thumbnails/crossroads.jpg",
-            "logo": "lowpoly/hytale/Thumbnails/crossroads_logo.png",
+            "image": "hytale/Thumbnails/crossroads.jpg",
+            "logo": "hytale/Thumbnails/crossroads_logo.png",
             "images": [
-                "lowpoly/hytale/Thumbnails/crossroads.jpg"
+                "hytale/Thumbnails/crossroads.jpg"
             ],
             "desc": "My first modpack! A beautiful, serene integration of light-dappled forest biomes, customized wooden paths, frontier crossroads signals, and cozy lighting assets designed to make your Hytale journeys feel magical.",
             "description": "My first modpack! A beautiful, serene integration of light-dappled forest biomes, customized wooden paths, frontier crossroads signals, and cozy lighting assets designed to make your Hytale journeys feel magical.",
@@ -27,10 +27,10 @@ window.LOWPOLY_CATALOG = {
             "title": "Timeless Tekk",
             "name": "Timeless Tekk",
             "category": "furnishings",
-            "image": "lowpoly/hytale/Thumbnails/timelesstekk.jpg",
-            "logo": "lowpoly/hytale/Thumbnails/timeless_tekk_logo.png",
+            "image": "hytale/Thumbnails/timelesstekk.jpg",
+            "logo": "hytale/Thumbnails/timeless_tekk_logo.png",
             "images": [
-                "lowpoly/hytale/Thumbnails/timelesstekk.jpg"
+                "hytale/Thumbnails/timelesstekk.jpg"
             ],
             "desc": "A techno-magical industrial expansion introducing steam-driven boilers, cog networks, copper tubing, and decorative factory blockouts.",
             "description": "A techno-magical industrial expansion introducing steam-driven boilers, cog networks, copper tubing, and decorative factory blockouts.",
@@ -46,10 +46,10 @@ window.LOWPOLY_CATALOG = {
             "title": "Plushies!!",
             "name": "Plushies!!",
             "category": "collectibles",
-            "image": "lowpoly/hytale/Thumbnails/plushies.jpg",
-            "logo": "lowpoly/hytale/Thumbnails/plushies_logo.png",
+            "image": "hytale/Thumbnails/plushies.jpg",
+            "logo": "hytale/Thumbnails/plushies_logo.png",
             "images": [
-                "lowpoly/hytale/Thumbnails/plushies.jpg"
+                "hytale/Thumbnails/plushies.jpg"
             ],
             "desc": "A collection of adorable, cuddle-ready lowpoly plush toys of legendary Hytale beasts, elementals, and cute forest critters.",
             "description": "A collection of adorable, cuddle-ready lowpoly plush toys of legendary Hytale beasts, elementals, and cute forest critters.",
@@ -65,9 +65,9 @@ window.LOWPOLY_CATALOG = {
             "title": "Dress Up!",
             "name": "Dress Up!",
             "category": "cosmetics",
-            "image": "lowpoly/hytale/Thumbnails/dressup.jpg",
+            "image": "hytale/Thumbnails/dressup.jpg",
             "images": [
-                "lowpoly/hytale/Thumbnails/dressup.jpg"
+                "hytale/Thumbnails/dressup.jpg"
             ],
             "desc": "A wardrobe expansion of mix-and-match outfits, accessories, and flair — from stage-ready looks to cozy streetwear sets.",
             "description": "A wardrobe expansion of mix-and-match outfits, accessories, and flair — from stage-ready looks to cozy streetwear sets.",
@@ -90,7 +90,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 1,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/bentoboxxnano.png",
+            "image": "hytale/Furnishings/bentoboxxnano.png",
             "order": 1
         },
         {
@@ -103,7 +103,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 2,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/bentoboxxlinear.png",
+            "image": "hytale/Furnishings/bentoboxxlinear.png",
             "order": 2
         },
         {
@@ -116,7 +116,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 3,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/bentoboxxcolumn.png",
+            "image": "hytale/Furnishings/bentoboxxcolumn.png",
             "order": 3
         },
         {
@@ -129,7 +129,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 4,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/bentoboxxmacro.png",
+            "image": "hytale/Furnishings/bentoboxxmacro.png",
             "order": 4
         },
         {
@@ -142,7 +142,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 5,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/tumbleboxx.png",
+            "image": "hytale/Furnishings/tumbleboxx.png",
             "order": 5
         },
         {
@@ -155,7 +155,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 6,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/qubocabinet.png",
+            "image": "hytale/Furnishings/qubocabinet.png",
             "order": 6
         },
         {
@@ -168,62 +168,62 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 7,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/boxx_purple.png",
+            "image": "hytale/Furnishings/boxx_purple.png",
             "order": 7,
             "defaultVariant": "purple",
             "variants": [
                 {
                     "id": "default",
                     "label": "Default",
-                    "image": "lowpoly/hytale/Furnishings/boxx.png",
+                    "image": "hytale/Furnishings/boxx.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "blue",
                     "label": "Blue",
-                    "image": "lowpoly/hytale/Furnishings/boxx_blue.png",
+                    "image": "hytale/Furnishings/boxx_blue.png",
                     "swatch": "#3B82F6"
                 },
                 {
                     "id": "ember",
                     "label": "Ember",
-                    "image": "lowpoly/hytale/Furnishings/boxx_ember.png",
+                    "image": "hytale/Furnishings/boxx_ember.png",
                     "swatch": "#E85D04"
                 },
                 {
                     "id": "mint",
                     "label": "Mint",
-                    "image": "lowpoly/hytale/Furnishings/boxx_mint.png",
+                    "image": "hytale/Furnishings/boxx_mint.png",
                     "swatch": "#6EE7B7"
                 },
                 {
                     "id": "orange",
                     "label": "Orange",
-                    "image": "lowpoly/hytale/Furnishings/boxx_orange.png",
+                    "image": "hytale/Furnishings/boxx_orange.png",
                     "swatch": "#F97316"
                 },
                 {
                     "id": "pale",
                     "label": "Pale",
-                    "image": "lowpoly/hytale/Furnishings/boxx_pale.png",
+                    "image": "hytale/Furnishings/boxx_pale.png",
                     "swatch": "#E8E4DC"
                 },
                 {
                     "id": "purple",
                     "label": "Purple",
-                    "image": "lowpoly/hytale/Furnishings/boxx_purple.png",
+                    "image": "hytale/Furnishings/boxx_purple.png",
                     "swatch": "#9B7EDE"
                 },
                 {
                     "id": "rose",
                     "label": "Rose",
-                    "image": "lowpoly/hytale/Furnishings/boxx_rose.png",
+                    "image": "hytale/Furnishings/boxx_rose.png",
                     "swatch": "#FF6B9D"
                 },
                 {
                     "id": "teal",
                     "label": "Teal",
-                    "image": "lowpoly/hytale/Furnishings/boxx_teal.png",
+                    "image": "hytale/Furnishings/boxx_teal.png",
                     "swatch": "#2DD4BF"
                 }
             ]
@@ -238,56 +238,56 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 8,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/mallow_purple.png",
+            "image": "hytale/Furnishings/mallow_purple.png",
             "order": 8,
             "defaultVariant": "purple",
             "variants": [
                 {
                     "id": "default",
                     "label": "Blue",
-                    "image": "lowpoly/hytale/Furnishings/mallow_blue.png",
+                    "image": "hytale/Furnishings/mallow_blue.png",
                     "swatch": "#3B82F6"
                 },
                 {
                     "id": "ember",
                     "label": "Ember",
-                    "image": "lowpoly/hytale/Furnishings/mallow_ember.png",
+                    "image": "hytale/Furnishings/mallow_ember.png",
                     "swatch": "#E85D04"
                 },
                 {
                     "id": "mint",
                     "label": "Mint",
-                    "image": "lowpoly/hytale/Furnishings/mallow_mint.png",
+                    "image": "hytale/Furnishings/mallow_mint.png",
                     "swatch": "#6EE7B7"
                 },
                 {
                     "id": "pale",
                     "label": "Pale",
-                    "image": "lowpoly/hytale/Furnishings/mallow_pale.png",
+                    "image": "hytale/Furnishings/mallow_pale.png",
                     "swatch": "#E8E4DC"
                 },
                 {
                     "id": "purple",
                     "label": "Purple",
-                    "image": "lowpoly/hytale/Furnishings/mallow_purple.png",
+                    "image": "hytale/Furnishings/mallow_purple.png",
                     "swatch": "#9B7EDE"
                 },
                 {
                     "id": "rose",
                     "label": "Rose",
-                    "image": "lowpoly/hytale/Furnishings/mallow_rose.png",
+                    "image": "hytale/Furnishings/mallow_rose.png",
                     "swatch": "#FF6B9D"
                 },
                 {
                     "id": "teal",
                     "label": "Teal",
-                    "image": "lowpoly/hytale/Furnishings/mallow_teal.png",
+                    "image": "hytale/Furnishings/mallow_teal.png",
                     "swatch": "#2DD4BF"
                 },
                 {
                     "id": "yellow",
                     "label": "Yellow",
-                    "image": "lowpoly/hytale/Furnishings/mallow_yellow.png",
+                    "image": "hytale/Furnishings/mallow_yellow.png",
                     "swatch": "#FBBF24"
                 }
             ]
@@ -302,56 +302,56 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 9,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/loom_ethereal.png",
+            "image": "hytale/Furnishings/loom_ethereal.png",
             "order": 9,
             "defaultVariant": "ethereal",
             "variants": [
                 {
                     "id": "default",
                     "label": "Blossom",
-                    "image": "lowpoly/hytale/Furnishings/loom_blossom.png",
+                    "image": "hytale/Furnishings/loom_blossom.png",
                     "swatch": "#FDA4AF"
                 },
                 {
                     "id": "boreal",
                     "label": "Boreal",
-                    "image": "lowpoly/hytale/Furnishings/loom_boreal.png",
+                    "image": "hytale/Furnishings/loom_boreal.png",
                     "swatch": "#5EEAD4"
                 },
                 {
                     "id": "cascade",
                     "label": "Cascade",
-                    "image": "lowpoly/hytale/Furnishings/loom_cascade.png",
+                    "image": "hytale/Furnishings/loom_cascade.png",
                     "swatch": "#67E8F9"
                 },
                 {
                     "id": "ember",
                     "label": "Ember",
-                    "image": "lowpoly/hytale/Furnishings/loom_ember.png",
+                    "image": "hytale/Furnishings/loom_ember.png",
                     "swatch": "#E85D04"
                 },
                 {
                     "id": "ethereal",
                     "label": "Ethereal",
-                    "image": "lowpoly/hytale/Furnishings/loom_ethereal.png",
+                    "image": "hytale/Furnishings/loom_ethereal.png",
                     "swatch": "#A5F3FC"
                 },
                 {
                     "id": "everglade",
                     "label": "Everglade",
-                    "image": "lowpoly/hytale/Furnishings/loom_everglade.png",
+                    "image": "hytale/Furnishings/loom_everglade.png",
                     "swatch": "#4ADE80"
                 },
                 {
                     "id": "hearthome",
                     "label": "Hearthome",
-                    "image": "lowpoly/hytale/Furnishings/loom_hearthome.png",
+                    "image": "hytale/Furnishings/loom_hearthome.png",
                     "swatch": "#FB923C"
                 },
                 {
                     "id": "monochrome",
                     "label": "Monochrome",
-                    "image": "lowpoly/hytale/Furnishings/loom_monochrome.png",
+                    "image": "hytale/Furnishings/loom_monochrome.png",
                     "swatch": "#A1A1AA"
                 }
             ]
@@ -366,56 +366,56 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 10,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/hangingloom_ethereal.png",
+            "image": "hytale/Furnishings/hangingloom_ethereal.png",
             "order": 10,
             "defaultVariant": "ethereal",
             "variants": [
                 {
                     "id": "default",
                     "label": "Blossom",
-                    "image": "lowpoly/hytale/Furnishings/hangingloom_blossom.png",
+                    "image": "hytale/Furnishings/hangingloom_blossom.png",
                     "swatch": "#FDA4AF"
                 },
                 {
                     "id": "boreal",
                     "label": "Boreal",
-                    "image": "lowpoly/hytale/Furnishings/hangingloom_boreal.png",
+                    "image": "hytale/Furnishings/hangingloom_boreal.png",
                     "swatch": "#5EEAD4"
                 },
                 {
                     "id": "cascade",
                     "label": "Cascade",
-                    "image": "lowpoly/hytale/Furnishings/hangingloom_cascade.png",
+                    "image": "hytale/Furnishings/hangingloom_cascade.png",
                     "swatch": "#67E8F9"
                 },
                 {
                     "id": "ember",
                     "label": "Ember",
-                    "image": "lowpoly/hytale/Furnishings/hangingloom_ember.png",
+                    "image": "hytale/Furnishings/hangingloom_ember.png",
                     "swatch": "#E85D04"
                 },
                 {
                     "id": "ethereal",
                     "label": "Ethereal",
-                    "image": "lowpoly/hytale/Furnishings/hangingloom_ethereal.png",
+                    "image": "hytale/Furnishings/hangingloom_ethereal.png",
                     "swatch": "#A5F3FC"
                 },
                 {
                     "id": "everglade",
                     "label": "Everglade",
-                    "image": "lowpoly/hytale/Furnishings/hangingloom_everglade.png",
+                    "image": "hytale/Furnishings/hangingloom_everglade.png",
                     "swatch": "#4ADE80"
                 },
                 {
                     "id": "hearthome",
                     "label": "Hearthome",
-                    "image": "lowpoly/hytale/Furnishings/hangingloom_hearthome.png",
+                    "image": "hytale/Furnishings/hangingloom_hearthome.png",
                     "swatch": "#FB923C"
                 },
                 {
                     "id": "monochrome",
                     "label": "Monochrome",
-                    "image": "lowpoly/hytale/Furnishings/hangingloom_monochrome.png",
+                    "image": "hytale/Furnishings/hangingloom_monochrome.png",
                     "swatch": "#A1A1AA"
                 }
             ]
@@ -430,56 +430,56 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 11,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/looma_ethereal.png",
+            "image": "hytale/Furnishings/looma_ethereal.png",
             "order": 11,
             "defaultVariant": "ethereal",
             "variants": [
                 {
                     "id": "default",
                     "label": "Blossom",
-                    "image": "lowpoly/hytale/Furnishings/looma_blossom.png",
+                    "image": "hytale/Furnishings/looma_blossom.png",
                     "swatch": "#FDA4AF"
                 },
                 {
                     "id": "boreal",
                     "label": "Boreal",
-                    "image": "lowpoly/hytale/Furnishings/looma_boreal.png",
+                    "image": "hytale/Furnishings/looma_boreal.png",
                     "swatch": "#5EEAD4"
                 },
                 {
                     "id": "cascade",
                     "label": "Cascade",
-                    "image": "lowpoly/hytale/Furnishings/looma_cascade.png",
+                    "image": "hytale/Furnishings/looma_cascade.png",
                     "swatch": "#67E8F9"
                 },
                 {
                     "id": "ember",
                     "label": "Ember",
-                    "image": "lowpoly/hytale/Furnishings/looma_ember.png",
+                    "image": "hytale/Furnishings/looma_ember.png",
                     "swatch": "#E85D04"
                 },
                 {
                     "id": "ethereal",
                     "label": "Ethereal",
-                    "image": "lowpoly/hytale/Furnishings/looma_ethereal.png",
+                    "image": "hytale/Furnishings/looma_ethereal.png",
                     "swatch": "#A5F3FC"
                 },
                 {
                     "id": "everglade",
                     "label": "Everglade",
-                    "image": "lowpoly/hytale/Furnishings/looma_everglade.png",
+                    "image": "hytale/Furnishings/looma_everglade.png",
                     "swatch": "#4ADE80"
                 },
                 {
                     "id": "hearthome",
                     "label": "Hearthome",
-                    "image": "lowpoly/hytale/Furnishings/looma_hearthome.png",
+                    "image": "hytale/Furnishings/looma_hearthome.png",
                     "swatch": "#FB923C"
                 },
                 {
                     "id": "monochrome",
                     "label": "Monochrome",
-                    "image": "lowpoly/hytale/Furnishings/looma_monochrome.png",
+                    "image": "hytale/Furnishings/looma_monochrome.png",
                     "swatch": "#A1A1AA"
                 }
             ]
@@ -494,56 +494,56 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 12,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/hanginglooma_ethereal.png",
+            "image": "hytale/Furnishings/hanginglooma_ethereal.png",
             "order": 12,
             "defaultVariant": "ethereal",
             "variants": [
                 {
                     "id": "default",
                     "label": "Blossom",
-                    "image": "lowpoly/hytale/Furnishings/hanginglooma_blossom.png",
+                    "image": "hytale/Furnishings/hanginglooma_blossom.png",
                     "swatch": "#FDA4AF"
                 },
                 {
                     "id": "boreal",
                     "label": "Boreal",
-                    "image": "lowpoly/hytale/Furnishings/hanginglooma_boreal.png",
+                    "image": "hytale/Furnishings/hanginglooma_boreal.png",
                     "swatch": "#5EEAD4"
                 },
                 {
                     "id": "cascade",
                     "label": "Cascade",
-                    "image": "lowpoly/hytale/Furnishings/hanginglooma_cascade.png",
+                    "image": "hytale/Furnishings/hanginglooma_cascade.png",
                     "swatch": "#67E8F9"
                 },
                 {
                     "id": "ember",
                     "label": "Ember",
-                    "image": "lowpoly/hytale/Furnishings/hanginglooma_ember.png",
+                    "image": "hytale/Furnishings/hanginglooma_ember.png",
                     "swatch": "#E85D04"
                 },
                 {
                     "id": "ethereal",
                     "label": "Ethereal",
-                    "image": "lowpoly/hytale/Furnishings/hanginglooma_ethereal.png",
+                    "image": "hytale/Furnishings/hanginglooma_ethereal.png",
                     "swatch": "#A5F3FC"
                 },
                 {
                     "id": "everglade",
                     "label": "Everglade",
-                    "image": "lowpoly/hytale/Furnishings/hanginglooma_everglade.png",
+                    "image": "hytale/Furnishings/hanginglooma_everglade.png",
                     "swatch": "#4ADE80"
                 },
                 {
                     "id": "hearthome",
                     "label": "Hearthome",
-                    "image": "lowpoly/hytale/Furnishings/hanginglooma_hearthome.png",
+                    "image": "hytale/Furnishings/hanginglooma_hearthome.png",
                     "swatch": "#FB923C"
                 },
                 {
                     "id": "monochrome",
                     "label": "Monochrome",
-                    "image": "lowpoly/hytale/Furnishings/hanginglooma_monochrome.png",
+                    "image": "hytale/Furnishings/hanginglooma_monochrome.png",
                     "swatch": "#A1A1AA"
                 }
             ]
@@ -558,62 +558,62 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 13,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/vines_ethereal.png",
+            "image": "hytale/Furnishings/vines_ethereal.png",
             "order": 13,
             "defaultVariant": "ethereal",
             "variants": [
                 {
                     "id": "default",
                     "label": "Blossom",
-                    "image": "lowpoly/hytale/Furnishings/vines_blossom.png",
+                    "image": "hytale/Furnishings/vines_blossom.png",
                     "swatch": "#FDA4AF"
                 },
                 {
                     "id": "boreal",
                     "label": "Boreal",
-                    "image": "lowpoly/hytale/Furnishings/vines_boreal.png",
+                    "image": "hytale/Furnishings/vines_boreal.png",
                     "swatch": "#5EEAD4"
                 },
                 {
                     "id": "cascade",
                     "label": "Cascade",
-                    "image": "lowpoly/hytale/Furnishings/vines_cascade.png",
+                    "image": "hytale/Furnishings/vines_cascade.png",
                     "swatch": "#67E8F9"
                 },
                 {
                     "id": "ember",
                     "label": "Ember",
-                    "image": "lowpoly/hytale/Furnishings/vines_ember.png",
+                    "image": "hytale/Furnishings/vines_ember.png",
                     "swatch": "#E85D04"
                 },
                 {
                     "id": "ethereal",
                     "label": "Ethereal",
-                    "image": "lowpoly/hytale/Furnishings/vines_ethereal.png",
+                    "image": "hytale/Furnishings/vines_ethereal.png",
                     "swatch": "#A5F3FC"
                 },
                 {
                     "id": "everglade",
                     "label": "Everglade",
-                    "image": "lowpoly/hytale/Furnishings/vines_everglade.png",
+                    "image": "hytale/Furnishings/vines_everglade.png",
                     "swatch": "#4ADE80"
                 },
                 {
                     "id": "hearthome",
                     "label": "Hearthome",
-                    "image": "lowpoly/hytale/Furnishings/vines_hearthome.png",
+                    "image": "hytale/Furnishings/vines_hearthome.png",
                     "swatch": "#FB923C"
                 },
                 {
                     "id": "lumen",
                     "label": "Lumen",
-                    "image": "lowpoly/hytale/Furnishings/vines_lumen.png",
+                    "image": "hytale/Furnishings/vines_lumen.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "monochrome",
                     "label": "Monochrome",
-                    "image": "lowpoly/hytale/Furnishings/vines_monochrome.png",
+                    "image": "hytale/Furnishings/vines_monochrome.png",
                     "swatch": "#A1A1AA"
                 }
             ]
@@ -628,62 +628,62 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 14,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/hangingvines_ethereal.png",
+            "image": "hytale/Furnishings/hangingvines_ethereal.png",
             "order": 14,
             "defaultVariant": "ethereal",
             "variants": [
                 {
                     "id": "default",
                     "label": "Blossom",
-                    "image": "lowpoly/hytale/Furnishings/hangingvines_blossom.png",
+                    "image": "hytale/Furnishings/hangingvines_blossom.png",
                     "swatch": "#FDA4AF"
                 },
                 {
                     "id": "boreal",
                     "label": "Boreal",
-                    "image": "lowpoly/hytale/Furnishings/hangingvines_boreal.png",
+                    "image": "hytale/Furnishings/hangingvines_boreal.png",
                     "swatch": "#5EEAD4"
                 },
                 {
                     "id": "cascade",
                     "label": "Cascade",
-                    "image": "lowpoly/hytale/Furnishings/hangingvines_cascade.png",
+                    "image": "hytale/Furnishings/hangingvines_cascade.png",
                     "swatch": "#67E8F9"
                 },
                 {
                     "id": "ember",
                     "label": "Ember",
-                    "image": "lowpoly/hytale/Furnishings/hangingvines_ember.png",
+                    "image": "hytale/Furnishings/hangingvines_ember.png",
                     "swatch": "#E85D04"
                 },
                 {
                     "id": "ethereal",
                     "label": "Ethereal",
-                    "image": "lowpoly/hytale/Furnishings/hangingvines_ethereal.png",
+                    "image": "hytale/Furnishings/hangingvines_ethereal.png",
                     "swatch": "#A5F3FC"
                 },
                 {
                     "id": "everglade",
                     "label": "Everglade",
-                    "image": "lowpoly/hytale/Furnishings/hangingvines_everglade.png",
+                    "image": "hytale/Furnishings/hangingvines_everglade.png",
                     "swatch": "#4ADE80"
                 },
                 {
                     "id": "hearthome",
                     "label": "Hearthome",
-                    "image": "lowpoly/hytale/Furnishings/hangingvines_hearthome.png",
+                    "image": "hytale/Furnishings/hangingvines_hearthome.png",
                     "swatch": "#FB923C"
                 },
                 {
                     "id": "lumen",
                     "label": "Lumen",
-                    "image": "lowpoly/hytale/Furnishings/hangingvines_lumen.png",
+                    "image": "hytale/Furnishings/hangingvines_lumen.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "monochrome",
                     "label": "Monochrome",
-                    "image": "lowpoly/hytale/Furnishings/hangingvines_monochrome.png",
+                    "image": "hytale/Furnishings/hangingvines_monochrome.png",
                     "swatch": "#A1A1AA"
                 }
             ]
@@ -698,62 +698,62 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 15,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/ivy_ethereal.png",
+            "image": "hytale/Furnishings/ivy_ethereal.png",
             "order": 15,
             "defaultVariant": "ethereal",
             "variants": [
                 {
                     "id": "default",
                     "label": "Blossom",
-                    "image": "lowpoly/hytale/Furnishings/ivy_blossom.png",
+                    "image": "hytale/Furnishings/ivy_blossom.png",
                     "swatch": "#FDA4AF"
                 },
                 {
                     "id": "boreal",
                     "label": "Boreal",
-                    "image": "lowpoly/hytale/Furnishings/ivy_boreal.png",
+                    "image": "hytale/Furnishings/ivy_boreal.png",
                     "swatch": "#5EEAD4"
                 },
                 {
                     "id": "cascade",
                     "label": "Cascade",
-                    "image": "lowpoly/hytale/Furnishings/ivy_cascade.png",
+                    "image": "hytale/Furnishings/ivy_cascade.png",
                     "swatch": "#67E8F9"
                 },
                 {
                     "id": "ember",
                     "label": "Ember",
-                    "image": "lowpoly/hytale/Furnishings/ivy_ember.png",
+                    "image": "hytale/Furnishings/ivy_ember.png",
                     "swatch": "#E85D04"
                 },
                 {
                     "id": "ethereal",
                     "label": "Ethereal",
-                    "image": "lowpoly/hytale/Furnishings/ivy_ethereal.png",
+                    "image": "hytale/Furnishings/ivy_ethereal.png",
                     "swatch": "#A5F3FC"
                 },
                 {
                     "id": "everglade",
                     "label": "Everglade",
-                    "image": "lowpoly/hytale/Furnishings/ivy_everglade.png",
+                    "image": "hytale/Furnishings/ivy_everglade.png",
                     "swatch": "#4ADE80"
                 },
                 {
                     "id": "hearthome",
                     "label": "Hearthome",
-                    "image": "lowpoly/hytale/Furnishings/ivy_hearthome.png",
+                    "image": "hytale/Furnishings/ivy_hearthome.png",
                     "swatch": "#FB923C"
                 },
                 {
                     "id": "lumen",
                     "label": "Lumen",
-                    "image": "lowpoly/hytale/Furnishings/ivy_lumen.png",
+                    "image": "hytale/Furnishings/ivy_lumen.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "monochrome",
                     "label": "Monochrome",
-                    "image": "lowpoly/hytale/Furnishings/ivy_monochrome.png",
+                    "image": "hytale/Furnishings/ivy_monochrome.png",
                     "swatch": "#A1A1AA"
                 }
             ]
@@ -768,7 +768,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 16,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/kohi.png",
+            "image": "hytale/Furnishings/kohi.png",
             "order": 16
         },
         {
@@ -781,7 +781,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 17,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/enkelett.png",
+            "image": "hytale/Furnishings/enkelett.png",
             "order": 17
         },
         {
@@ -794,7 +794,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 18,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/krysstva.png",
+            "image": "hytale/Furnishings/krysstva.png",
             "order": 18
         },
         {
@@ -807,68 +807,68 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 19,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/korsadtre_purple.png",
+            "image": "hytale/Furnishings/korsadtre_purple.png",
             "order": 19,
             "defaultVariant": "purple",
             "variants": [
                 {
                     "id": "default",
                     "label": "Default",
-                    "image": "lowpoly/hytale/Furnishings/korsadtre.png",
+                    "image": "hytale/Furnishings/korsadtre.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "blue",
                     "label": "Blue",
-                    "image": "lowpoly/hytale/Furnishings/korsadtre_blue.png",
+                    "image": "hytale/Furnishings/korsadtre_blue.png",
                     "swatch": "#3B82F6"
                 },
                 {
                     "id": "green",
                     "label": "Green",
-                    "image": "lowpoly/hytale/Furnishings/korsadtre_green.png",
+                    "image": "hytale/Furnishings/korsadtre_green.png",
                     "swatch": "#22C55E"
                 },
                 {
                     "id": "orange",
                     "label": "Orange",
-                    "image": "lowpoly/hytale/Furnishings/korsadtre_orange.png",
+                    "image": "hytale/Furnishings/korsadtre_orange.png",
                     "swatch": "#F97316"
                 },
                 {
                     "id": "pale",
                     "label": "Pale",
-                    "image": "lowpoly/hytale/Furnishings/korsadtre_pale.png",
+                    "image": "hytale/Furnishings/korsadtre_pale.png",
                     "swatch": "#E8E4DC"
                 },
                 {
                     "id": "pink",
                     "label": "Pink",
-                    "image": "lowpoly/hytale/Furnishings/korsadtre_pink.png",
+                    "image": "hytale/Furnishings/korsadtre_pink.png",
                     "swatch": "#FF7EB6"
                 },
                 {
                     "id": "purple",
                     "label": "Purple",
-                    "image": "lowpoly/hytale/Furnishings/korsadtre_purple.png",
+                    "image": "hytale/Furnishings/korsadtre_purple.png",
                     "swatch": "#9B7EDE"
                 },
                 {
                     "id": "rose",
                     "label": "Rose",
-                    "image": "lowpoly/hytale/Furnishings/korsadtre_rose.png",
+                    "image": "hytale/Furnishings/korsadtre_rose.png",
                     "swatch": "#FF6B9D"
                 },
                 {
                     "id": "teal",
                     "label": "Teal",
-                    "image": "lowpoly/hytale/Furnishings/korsadtre_teal.png",
+                    "image": "hytale/Furnishings/korsadtre_teal.png",
                     "swatch": "#2DD4BF"
                 },
                 {
                     "id": "yellow",
                     "label": "Yellow",
-                    "image": "lowpoly/hytale/Furnishings/korsadtre_yellow.png",
+                    "image": "hytale/Furnishings/korsadtre_yellow.png",
                     "swatch": "#FBBF24"
                 }
             ]
@@ -883,7 +883,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 20,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/monolith.png",
+            "image": "hytale/Furnishings/monolith.png",
             "order": 20
         },
         {
@@ -896,7 +896,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 21,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/minima.png",
+            "image": "hytale/Furnishings/minima.png",
             "order": 21
         },
         {
@@ -909,56 +909,56 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 22,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/qubonook_purple.png",
+            "image": "hytale/Furnishings/qubonook_purple.png",
             "order": 22,
             "defaultVariant": "purple",
             "variants": [
                 {
                     "id": "default",
                     "label": "Blue",
-                    "image": "lowpoly/hytale/Furnishings/qubonook_blue.png",
+                    "image": "hytale/Furnishings/qubonook_blue.png",
                     "swatch": "#3B82F6"
                 },
                 {
                     "id": "ember",
                     "label": "Ember",
-                    "image": "lowpoly/hytale/Furnishings/qubonook_ember.png",
+                    "image": "hytale/Furnishings/qubonook_ember.png",
                     "swatch": "#E85D04"
                 },
                 {
                     "id": "mint",
                     "label": "Mint",
-                    "image": "lowpoly/hytale/Furnishings/qubonook_mint.png",
+                    "image": "hytale/Furnishings/qubonook_mint.png",
                     "swatch": "#6EE7B7"
                 },
                 {
                     "id": "pale",
                     "label": "Pale",
-                    "image": "lowpoly/hytale/Furnishings/qubonook_pale.png",
+                    "image": "hytale/Furnishings/qubonook_pale.png",
                     "swatch": "#E8E4DC"
                 },
                 {
                     "id": "purple",
                     "label": "Purple",
-                    "image": "lowpoly/hytale/Furnishings/qubonook_purple.png",
+                    "image": "hytale/Furnishings/qubonook_purple.png",
                     "swatch": "#9B7EDE"
                 },
                 {
                     "id": "rose",
                     "label": "Rose",
-                    "image": "lowpoly/hytale/Furnishings/qubonook_rose.png",
+                    "image": "hytale/Furnishings/qubonook_rose.png",
                     "swatch": "#FF6B9D"
                 },
                 {
                     "id": "teal",
                     "label": "Teal",
-                    "image": "lowpoly/hytale/Furnishings/qubonook_teal.png",
+                    "image": "hytale/Furnishings/qubonook_teal.png",
                     "swatch": "#2DD4BF"
                 },
                 {
                     "id": "yellow",
                     "label": "Yellow",
-                    "image": "lowpoly/hytale/Furnishings/qubonook_yellow.png",
+                    "image": "hytale/Furnishings/qubonook_yellow.png",
                     "swatch": "#FBBF24"
                 }
             ]
@@ -973,56 +973,56 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 23,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/qubonookseat_purple.png",
+            "image": "hytale/Furnishings/qubonookseat_purple.png",
             "order": 23,
             "defaultVariant": "purple",
             "variants": [
                 {
                     "id": "default",
                     "label": "Blue",
-                    "image": "lowpoly/hytale/Furnishings/qubonookseat_blue.png",
+                    "image": "hytale/Furnishings/qubonookseat_blue.png",
                     "swatch": "#3B82F6"
                 },
                 {
                     "id": "ember",
                     "label": "Ember",
-                    "image": "lowpoly/hytale/Furnishings/qubonookseat_ember.png",
+                    "image": "hytale/Furnishings/qubonookseat_ember.png",
                     "swatch": "#E85D04"
                 },
                 {
                     "id": "mint",
                     "label": "Mint",
-                    "image": "lowpoly/hytale/Furnishings/qubonookseat_mint.png",
+                    "image": "hytale/Furnishings/qubonookseat_mint.png",
                     "swatch": "#6EE7B7"
                 },
                 {
                     "id": "pale",
                     "label": "Pale",
-                    "image": "lowpoly/hytale/Furnishings/qubonookseat_pale.png",
+                    "image": "hytale/Furnishings/qubonookseat_pale.png",
                     "swatch": "#E8E4DC"
                 },
                 {
                     "id": "purple",
                     "label": "Purple",
-                    "image": "lowpoly/hytale/Furnishings/qubonookseat_purple.png",
+                    "image": "hytale/Furnishings/qubonookseat_purple.png",
                     "swatch": "#9B7EDE"
                 },
                 {
                     "id": "rose",
                     "label": "Rose",
-                    "image": "lowpoly/hytale/Furnishings/qubonookseat_rose.png",
+                    "image": "hytale/Furnishings/qubonookseat_rose.png",
                     "swatch": "#FF6B9D"
                 },
                 {
                     "id": "teal",
                     "label": "Teal",
-                    "image": "lowpoly/hytale/Furnishings/qubonookseat_teal.png",
+                    "image": "hytale/Furnishings/qubonookseat_teal.png",
                     "swatch": "#2DD4BF"
                 },
                 {
                     "id": "yellow",
                     "label": "Yellow",
-                    "image": "lowpoly/hytale/Furnishings/qubonookseat_yellow.png",
+                    "image": "hytale/Furnishings/qubonookseat_yellow.png",
                     "swatch": "#FBBF24"
                 }
             ]
@@ -1037,56 +1037,56 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 24,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/muffle_lavender.png",
+            "image": "hytale/Furnishings/muffle_lavender.png",
             "order": 24,
             "defaultVariant": "lavender",
             "variants": [
                 {
                     "id": "default",
                     "label": "Blue",
-                    "image": "lowpoly/hytale/Furnishings/muffle_blue.png",
+                    "image": "hytale/Furnishings/muffle_blue.png",
                     "swatch": "#3B82F6"
                 },
                 {
                     "id": "green",
                     "label": "Green",
-                    "image": "lowpoly/hytale/Furnishings/muffle_green.png",
+                    "image": "hytale/Furnishings/muffle_green.png",
                     "swatch": "#22C55E"
                 },
                 {
                     "id": "lavender",
                     "label": "Lavender",
-                    "image": "lowpoly/hytale/Furnishings/muffle_lavender.png",
+                    "image": "hytale/Furnishings/muffle_lavender.png",
                     "swatch": "#B794F4"
                 },
                 {
                     "id": "orange",
                     "label": "Orange",
-                    "image": "lowpoly/hytale/Furnishings/muffle_orange.png",
+                    "image": "hytale/Furnishings/muffle_orange.png",
                     "swatch": "#F97316"
                 },
                 {
                     "id": "pale",
                     "label": "Pale",
-                    "image": "lowpoly/hytale/Furnishings/muffle_pale.png",
+                    "image": "hytale/Furnishings/muffle_pale.png",
                     "swatch": "#E8E4DC"
                 },
                 {
                     "id": "rose",
                     "label": "Rose",
-                    "image": "lowpoly/hytale/Furnishings/muffle_rose.png",
+                    "image": "hytale/Furnishings/muffle_rose.png",
                     "swatch": "#FF6B9D"
                 },
                 {
                     "id": "teal",
                     "label": "Teal",
-                    "image": "lowpoly/hytale/Furnishings/muffle_teal.png",
+                    "image": "hytale/Furnishings/muffle_teal.png",
                     "swatch": "#2DD4BF"
                 },
                 {
                     "id": "yellow",
                     "label": "Yellow",
-                    "image": "lowpoly/hytale/Furnishings/muffle_yellow.png",
+                    "image": "hytale/Furnishings/muffle_yellow.png",
                     "swatch": "#FBBF24"
                 }
             ]
@@ -1101,74 +1101,74 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 25,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/pixxel_purple.png",
+            "image": "hytale/Furnishings/pixxel_purple.png",
             "order": 25,
             "defaultVariant": "purple",
             "variants": [
                 {
                     "id": "default",
                     "label": "Blue",
-                    "image": "lowpoly/hytale/Furnishings/pixxel_blue.png",
+                    "image": "hytale/Furnishings/pixxel_blue.png",
                     "swatch": "#3B82F6"
                 },
                 {
                     "id": "glitch",
                     "label": "Glitch",
-                    "image": "lowpoly/hytale/Furnishings/pixxel_glitch.png",
+                    "image": "hytale/Furnishings/pixxel_glitch.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "green",
                     "label": "Green",
-                    "image": "lowpoly/hytale/Furnishings/pixxel_green.png",
+                    "image": "hytale/Furnishings/pixxel_green.png",
                     "swatch": "#22C55E"
                 },
                 {
                     "id": "luckybox",
                     "label": "Luckybox",
-                    "image": "lowpoly/hytale/Furnishings/pixxel_luckybox.png",
+                    "image": "hytale/Furnishings/pixxel_luckybox.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "origin",
                     "label": "Origin",
-                    "image": "lowpoly/hytale/Furnishings/pixxel_origin.png",
+                    "image": "hytale/Furnishings/pixxel_origin.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "pale",
                     "label": "Pale",
-                    "image": "lowpoly/hytale/Furnishings/pixxel_pale.png",
+                    "image": "hytale/Furnishings/pixxel_pale.png",
                     "swatch": "#E8E4DC"
                 },
                 {
                     "id": "pink",
                     "label": "Pink",
-                    "image": "lowpoly/hytale/Furnishings/pixxel_pink.png",
+                    "image": "hytale/Furnishings/pixxel_pink.png",
                     "swatch": "#FF7EB6"
                 },
                 {
                     "id": "purple",
                     "label": "Purple",
-                    "image": "lowpoly/hytale/Furnishings/pixxel_purple.png",
+                    "image": "hytale/Furnishings/pixxel_purple.png",
                     "swatch": "#9B7EDE"
                 },
                 {
                     "id": "scarlet",
                     "label": "Scarlet",
-                    "image": "lowpoly/hytale/Furnishings/pixxel_scarlet.png",
+                    "image": "hytale/Furnishings/pixxel_scarlet.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "teal",
                     "label": "Teal",
-                    "image": "lowpoly/hytale/Furnishings/pixxel_teal.png",
+                    "image": "hytale/Furnishings/pixxel_teal.png",
                     "swatch": "#2DD4BF"
                 },
                 {
                     "id": "yellow",
                     "label": "Yellow",
-                    "image": "lowpoly/hytale/Furnishings/pixxel_yellow.png",
+                    "image": "hytale/Furnishings/pixxel_yellow.png",
                     "swatch": "#FBBF24"
                 }
             ]
@@ -1183,7 +1183,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 26,
             "category": "misc",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Misc/arcade_vortex.png",
+            "image": "hytale/Misc/arcade_vortex.png",
             "order": 26
         },
         {
@@ -1196,7 +1196,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 27,
             "category": "misc",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Misc/arcade_bitrush.png",
+            "image": "hytale/Misc/arcade_bitrush.png",
             "order": 27
         },
         {
@@ -1209,50 +1209,50 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 28,
             "category": "misc",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Misc/imirai_purple.png",
+            "image": "hytale/Misc/imirai_purple.png",
             "order": 28,
             "defaultVariant": "purple",
             "variants": [
                 {
                     "id": "default",
                     "label": "Default",
-                    "image": "lowpoly/hytale/Misc/imirai.png",
+                    "image": "hytale/Misc/imirai.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "blue",
                     "label": "Blue",
-                    "image": "lowpoly/hytale/Misc/imirai_blue.png",
+                    "image": "hytale/Misc/imirai_blue.png",
                     "swatch": "#3B82F6"
                 },
                 {
                     "id": "orange",
                     "label": "Orange",
-                    "image": "lowpoly/hytale/Misc/imirai_orange.png",
+                    "image": "hytale/Misc/imirai_orange.png",
                     "swatch": "#F97316"
                 },
                 {
                     "id": "pink",
                     "label": "Pink",
-                    "image": "lowpoly/hytale/Misc/imirai_pink.png",
+                    "image": "hytale/Misc/imirai_pink.png",
                     "swatch": "#FF7EB6"
                 },
                 {
                     "id": "purple",
                     "label": "Purple",
-                    "image": "lowpoly/hytale/Misc/imirai_purple.png",
+                    "image": "hytale/Misc/imirai_purple.png",
                     "swatch": "#9B7EDE"
                 },
                 {
                     "id": "teal",
                     "label": "Teal",
-                    "image": "lowpoly/hytale/Misc/imirai_teal.png",
+                    "image": "hytale/Misc/imirai_teal.png",
                     "swatch": "#2DD4BF"
                 },
                 {
                     "id": "yellow",
                     "label": "Yellow",
-                    "image": "lowpoly/hytale/Misc/imirai_yellow.png",
+                    "image": "hytale/Misc/imirai_yellow.png",
                     "swatch": "#FBBF24"
                 }
             ]
@@ -1267,50 +1267,50 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 29,
             "category": "misc",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Misc/miraibook_lavender.png",
+            "image": "hytale/Misc/miraibook_lavender.png",
             "order": 29,
             "defaultVariant": "lavender",
             "variants": [
                 {
                     "id": "default",
                     "label": "Default",
-                    "image": "lowpoly/hytale/Misc/miraibook.png",
+                    "image": "hytale/Misc/miraibook.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "citrus",
                     "label": "Citrus",
-                    "image": "lowpoly/hytale/Misc/miraibook_citrus.png",
+                    "image": "hytale/Misc/miraibook_citrus.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "lavender",
                     "label": "Lavender",
-                    "image": "lowpoly/hytale/Misc/miraibook_lavender.png",
+                    "image": "hytale/Misc/miraibook_lavender.png",
                     "swatch": "#B794F4"
                 },
                 {
                     "id": "midnight",
                     "label": "Midnight",
-                    "image": "lowpoly/hytale/Misc/miraibook_midnight.png",
+                    "image": "hytale/Misc/miraibook_midnight.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "rose",
                     "label": "Rose",
-                    "image": "lowpoly/hytale/Misc/miraibook_rose.png",
+                    "image": "hytale/Misc/miraibook_rose.png",
                     "swatch": "#FF6B9D"
                 },
                 {
                     "id": "skyblue",
                     "label": "Skyblue",
-                    "image": "lowpoly/hytale/Misc/miraibook_skyblue.png",
+                    "image": "hytale/Misc/miraibook_skyblue.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "starlight",
                     "label": "Starlight",
-                    "image": "lowpoly/hytale/Misc/miraibook_starlight.png",
+                    "image": "hytale/Misc/miraibook_starlight.png",
                     "swatch": "#D4D4D8"
                 }
             ]
@@ -1325,7 +1325,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 30,
             "category": "misc",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Misc/miraiclassic.png",
+            "image": "hytale/Misc/miraiclassic.png",
             "order": 30
         },
         {
@@ -1338,7 +1338,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 31,
             "category": "misc",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Misc/miraistudio.png",
+            "image": "hytale/Misc/miraistudio.png",
             "order": 31
         },
         {
@@ -1351,7 +1351,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 32,
             "category": "misc",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Misc/miraipro.png",
+            "image": "hytale/Misc/miraipro.png",
             "order": 32
         },
         {
@@ -1364,20 +1364,20 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 33,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/floatingstairs_palewood.png",
+            "image": "hytale/Furnishings/floatingstairs_palewood.png",
             "order": 33,
             "defaultVariant": "palewood",
             "variants": [
                 {
                     "id": "default",
                     "label": "Ivory",
-                    "image": "lowpoly/hytale/Furnishings/floatingstairs_ivory.png",
+                    "image": "hytale/Furnishings/floatingstairs_ivory.png",
                     "swatch": "#F0EBE3"
                 },
                 {
                     "id": "palewood",
                     "label": "Palewood",
-                    "image": "lowpoly/hytale/Furnishings/floatingstairs_palewood.png",
+                    "image": "hytale/Furnishings/floatingstairs_palewood.png",
                     "swatch": "#C4A882"
                 }
             ]
@@ -1392,20 +1392,20 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 34,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/door_palewood.png",
+            "image": "hytale/Furnishings/door_palewood.png",
             "order": 34,
             "defaultVariant": "palewood",
             "variants": [
                 {
                     "id": "default",
                     "label": "Ivory",
-                    "image": "lowpoly/hytale/Furnishings/door_ivory.png",
+                    "image": "hytale/Furnishings/door_ivory.png",
                     "swatch": "#F0EBE3"
                 },
                 {
                     "id": "palewood",
                     "label": "Palewood",
-                    "image": "lowpoly/hytale/Furnishings/door_palewood.png",
+                    "image": "hytale/Furnishings/door_palewood.png",
                     "swatch": "#C4A882"
                 }
             ]
@@ -1420,20 +1420,20 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 35,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/vistadoor_palewood.png",
+            "image": "hytale/Furnishings/vistadoor_palewood.png",
             "order": 35,
             "defaultVariant": "palewood",
             "variants": [
                 {
                     "id": "default",
                     "label": "Ivory",
-                    "image": "lowpoly/hytale/Furnishings/vistadoor_ivory.png",
+                    "image": "hytale/Furnishings/vistadoor_ivory.png",
                     "swatch": "#F0EBE3"
                 },
                 {
                     "id": "palewood",
                     "label": "Palewood",
-                    "image": "lowpoly/hytale/Furnishings/vistadoor_palewood.png",
+                    "image": "hytale/Furnishings/vistadoor_palewood.png",
                     "swatch": "#C4A882"
                 }
             ]
@@ -1448,20 +1448,20 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 36,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/horizondoor_palewood.png",
+            "image": "hytale/Furnishings/horizondoor_palewood.png",
             "order": 36,
             "defaultVariant": "palewood",
             "variants": [
                 {
                     "id": "default",
                     "label": "Ivory",
-                    "image": "lowpoly/hytale/Furnishings/horizondoor_ivory.png",
+                    "image": "hytale/Furnishings/horizondoor_ivory.png",
                     "swatch": "#F0EBE3"
                 },
                 {
                     "id": "palewood",
                     "label": "Palewood",
-                    "image": "lowpoly/hytale/Furnishings/horizondoor_palewood.png",
+                    "image": "hytale/Furnishings/horizondoor_palewood.png",
                     "swatch": "#C4A882"
                 }
             ]
@@ -1476,26 +1476,26 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 37,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/horizonpanel_palewood.png",
+            "image": "hytale/Furnishings/horizonpanel_palewood.png",
             "order": 37,
             "defaultVariant": "palewood",
             "variants": [
                 {
                     "id": "default",
                     "label": "Ebony",
-                    "image": "lowpoly/hytale/Furnishings/horizonpanel_ebony.png",
+                    "image": "hytale/Furnishings/horizonpanel_ebony.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "ivory",
                     "label": "Ivory",
-                    "image": "lowpoly/hytale/Furnishings/horizonpanel_ivory.png",
+                    "image": "hytale/Furnishings/horizonpanel_ivory.png",
                     "swatch": "#F0EBE3"
                 },
                 {
                     "id": "palewood",
                     "label": "Palewood",
-                    "image": "lowpoly/hytale/Furnishings/horizonpanel_palewood.png",
+                    "image": "hytale/Furnishings/horizonpanel_palewood.png",
                     "swatch": "#C4A882"
                 }
             ]
@@ -1510,26 +1510,26 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 38,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/horizontall_palewood.png",
+            "image": "hytale/Furnishings/horizontall_palewood.png",
             "order": 38,
             "defaultVariant": "palewood",
             "variants": [
                 {
                     "id": "default",
                     "label": "Ebony",
-                    "image": "lowpoly/hytale/Furnishings/horizontall_ebony.png",
+                    "image": "hytale/Furnishings/horizontall_ebony.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "ivory",
                     "label": "Ivory",
-                    "image": "lowpoly/hytale/Furnishings/horizontall_ivory.png",
+                    "image": "hytale/Furnishings/horizontall_ivory.png",
                     "swatch": "#F0EBE3"
                 },
                 {
                     "id": "palewood",
                     "label": "Palewood",
-                    "image": "lowpoly/hytale/Furnishings/horizontall_palewood.png",
+                    "image": "hytale/Furnishings/horizontall_palewood.png",
                     "swatch": "#C4A882"
                 }
             ]
@@ -1544,26 +1544,26 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 39,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/muntinpanel_palewood.png",
+            "image": "hytale/Furnishings/muntinpanel_palewood.png",
             "order": 39,
             "defaultVariant": "palewood",
             "variants": [
                 {
                     "id": "default",
                     "label": "Ebony",
-                    "image": "lowpoly/hytale/Furnishings/muntinpanel_ebony.png",
+                    "image": "hytale/Furnishings/muntinpanel_ebony.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "ivory",
                     "label": "Ivory",
-                    "image": "lowpoly/hytale/Furnishings/muntinpanel_ivory.png",
+                    "image": "hytale/Furnishings/muntinpanel_ivory.png",
                     "swatch": "#F0EBE3"
                 },
                 {
                     "id": "palewood",
                     "label": "Palewood",
-                    "image": "lowpoly/hytale/Furnishings/muntinpanel_palewood.png",
+                    "image": "hytale/Furnishings/muntinpanel_palewood.png",
                     "swatch": "#C4A882"
                 }
             ]
@@ -1578,26 +1578,26 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 40,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/muntintall_palewood.png",
+            "image": "hytale/Furnishings/muntintall_palewood.png",
             "order": 40,
             "defaultVariant": "palewood",
             "variants": [
                 {
                     "id": "default",
                     "label": "Ebony",
-                    "image": "lowpoly/hytale/Furnishings/muntintall_ebony.png",
+                    "image": "hytale/Furnishings/muntintall_ebony.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "ivory",
                     "label": "Ivory",
-                    "image": "lowpoly/hytale/Furnishings/muntintall_ivory.png",
+                    "image": "hytale/Furnishings/muntintall_ivory.png",
                     "swatch": "#F0EBE3"
                 },
                 {
                     "id": "palewood",
                     "label": "Palewood",
-                    "image": "lowpoly/hytale/Furnishings/muntintall_palewood.png",
+                    "image": "hytale/Furnishings/muntintall_palewood.png",
                     "swatch": "#C4A882"
                 }
             ]
@@ -1612,7 +1612,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 41,
             "category": "misc",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/fumikirisignal.png",
+            "image": "hytale/Furnishings/fumikirisignal.png",
             "order": 41
         },
         {
@@ -1625,7 +1625,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 42,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/electricpolyn.png",
+            "image": "hytale/Furnishings/electricpolyn.png",
             "order": 42
         },
         {
@@ -1638,7 +1638,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 43,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/catanery.png",
+            "image": "hytale/Furnishings/catanery.png",
             "order": 43
         },
         {
@@ -1651,7 +1651,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 44,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/modernbarrier.png",
+            "image": "hytale/Furnishings/modernbarrier.png",
             "order": 44
         },
         {
@@ -1664,7 +1664,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 45,
             "category": "misc",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Misc/yatai.png",
+            "image": "hytale/Misc/yatai.png",
             "order": 45
         },
         {
@@ -1677,32 +1677,32 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 46,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/nobori.png",
+            "image": "hytale/Furnishings/nobori.png",
             "order": 46,
             "defaultVariant": "default",
             "variants": [
                 {
                     "id": "default",
                     "label": "Default",
-                    "image": "lowpoly/hytale/Furnishings/nobori.png",
+                    "image": "hytale/Furnishings/nobori.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "pride",
                     "label": "Pride",
-                    "image": "lowpoly/hytale/Furnishings/nobori_pride.png",
+                    "image": "hytale/Furnishings/nobori_pride.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "takoyaki",
                     "label": "Takoyaki",
-                    "image": "lowpoly/hytale/Furnishings/nobori_takoyaki.png",
+                    "image": "hytale/Furnishings/nobori_takoyaki.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "trans",
                     "label": "Trans",
-                    "image": "lowpoly/hytale/Furnishings/nobori_trans.png",
+                    "image": "hytale/Furnishings/nobori_trans.png",
                     "swatch": "#D4D4D8"
                 }
             ]
@@ -1717,7 +1717,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 47,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/bistroboard.png",
+            "image": "hytale/Furnishings/bistroboard.png",
             "order": 47
         },
         {
@@ -1730,7 +1730,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 48,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/terraceparasol_white.png",
+            "image": "hytale/Furnishings/terraceparasol_white.png",
             "order": 48
         },
         {
@@ -1743,26 +1743,26 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 49,
             "category": "furnishings",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Furnishings/torii_marble.png",
+            "image": "hytale/Furnishings/torii_marble.png",
             "order": 49,
             "defaultVariant": "default",
             "variants": [
                 {
                     "id": "default",
                     "label": "Marble",
-                    "image": "lowpoly/hytale/Furnishings/torii_marble.png",
+                    "image": "hytale/Furnishings/torii_marble.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "mossy",
                     "label": "Mossy",
-                    "image": "lowpoly/hytale/Furnishings/torii_mossy.png",
+                    "image": "hytale/Furnishings/torii_mossy.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "stone",
                     "label": "Stone",
-                    "image": "lowpoly/hytale/Furnishings/torii_stone.png",
+                    "image": "hytale/Furnishings/torii_stone.png",
                     "swatch": "#D4D4D8"
                 }
             ]
@@ -1777,20 +1777,20 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 50,
             "category": "battlegear",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Battlegear/battleguitar_ethereal.png",
+            "image": "hytale/Battlegear/battleguitar_ethereal.png",
             "order": 50,
             "defaultVariant": "default",
             "variants": [
                 {
                     "id": "default",
                     "label": "Ethereal",
-                    "image": "lowpoly/hytale/Battlegear/battleguitar_ethereal.png",
+                    "image": "hytale/Battlegear/battleguitar_ethereal.png",
                     "swatch": "#A5F3FC"
                 },
                 {
                     "id": "heartwrecker",
                     "label": "Heartwrecker",
-                    "image": "lowpoly/hytale/Battlegear/battleguitar_heartwrecker.png",
+                    "image": "hytale/Battlegear/battleguitar_heartwrecker.png",
                     "swatch": "#FF6B9D"
                 }
             ]
@@ -1805,7 +1805,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 51,
             "category": "battlegear",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Battlegear/beatdaggers.png",
+            "image": "hytale/Battlegear/beatdaggers.png",
             "order": 51
         },
         {
@@ -1818,7 +1818,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 52,
             "category": "battlegear",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Battlegear/chopchop.png",
+            "image": "hytale/Battlegear/chopchop.png",
             "order": 52
         },
         {
@@ -1831,7 +1831,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 53,
             "category": "battlegear",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Battlegear/auxcable.png",
+            "image": "hytale/Battlegear/auxcable.png",
             "order": 53
         },
         {
@@ -1844,7 +1844,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 54,
             "category": "battlegear",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Battlegear/vinylshield.png",
+            "image": "hytale/Battlegear/vinylshield.png",
             "order": 54
         },
         {
@@ -1857,7 +1857,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 55,
             "category": "battlegear",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Battlegear/pokketpal.png",
+            "image": "hytale/Battlegear/pokketpal.png",
             "order": 55
         },
         {
@@ -1870,7 +1870,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 56,
             "category": "battlegear",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Battlegear/lightstick_stargazer.png",
+            "image": "hytale/Battlegear/lightstick_stargazer.png",
             "order": 56
         },
         {
@@ -1883,7 +1883,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 57,
             "category": "misc",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Misc/coins.png",
+            "image": "hytale/Misc/coins.png",
             "order": 57
         },
         {
@@ -1896,7 +1896,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 58,
             "category": "collectibles",
             "extensionPack": "plushies",
-            "image": "lowpoly/hytale/Collectibles/plushies_gwendollyn.png",
+            "image": "hytale/Collectibles/plushies_gwendollyn.png",
             "order": 58
         },
         {
@@ -1909,7 +1909,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 59,
             "category": "collectibles",
             "extensionPack": "plushies",
-            "image": "lowpoly/hytale/Collectibles/plushies_seabunny.png",
+            "image": "hytale/Collectibles/plushies_seabunny.png",
             "order": 59
         },
         {
@@ -1922,7 +1922,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 60,
             "category": "collectibles",
             "extensionPack": "plushies",
-            "image": "lowpoly/hytale/Collectibles/plushies_pomni.png",
+            "image": "hytale/Collectibles/plushies_pomni.png",
             "order": 60
         },
         {
@@ -1935,7 +1935,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 61,
             "category": "collectibles",
             "extensionPack": "plushies",
-            "image": "lowpoly/hytale/Collectibles/plushies_jax.png",
+            "image": "hytale/Collectibles/plushies_jax.png",
             "order": 61
         },
         {
@@ -1948,7 +1948,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 62,
             "category": "collectibles",
             "extensionPack": "plushies",
-            "image": "lowpoly/hytale/Collectibles/plushies_jaxblushing.png",
+            "image": "hytale/Collectibles/plushies_jaxblushing.png",
             "order": 62
         },
         {
@@ -1961,7 +1961,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 63,
             "category": "collectibles",
             "extensionPack": "plushies",
-            "image": "lowpoly/hytale/Collectibles/plushies_ribbit.png",
+            "image": "hytale/Collectibles/plushies_ribbit.png",
             "order": 63
         },
         {
@@ -1974,7 +1974,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 64,
             "category": "collectibles",
             "extensionPack": "plushies",
-            "image": "lowpoly/hytale/Collectibles/plushies_kinger.png",
+            "image": "hytale/Collectibles/plushies_kinger.png",
             "order": 64
         },
         {
@@ -1987,7 +1987,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 65,
             "category": "collectibles",
             "extensionPack": "plushies",
-            "image": "lowpoly/hytale/Collectibles/plushies_gangle.png",
+            "image": "hytale/Collectibles/plushies_gangle.png",
             "order": 65
         },
         {
@@ -2000,7 +2000,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 66,
             "category": "collectibles",
             "extensionPack": "plushies",
-            "image": "lowpoly/hytale/Collectibles/plushies_abstraction.png",
+            "image": "hytale/Collectibles/plushies_abstraction.png",
             "order": 66
         },
         {
@@ -2013,7 +2013,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 67,
             "category": "collectibles",
             "extensionPack": "plushies",
-            "image": "lowpoly/hytale/Collectibles/plushies_evilbunny.png",
+            "image": "hytale/Collectibles/plushies_evilbunny.png",
             "order": 67
         },
         {
@@ -2026,7 +2026,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 68,
             "category": "collectibles",
             "extensionPack": "plushies",
-            "image": "lowpoly/hytale/Collectibles/plushies_cutebunny.png",
+            "image": "hytale/Collectibles/plushies_cutebunny.png",
             "order": 68
         },
         {
@@ -2039,7 +2039,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 69,
             "category": "collectibles",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Collectibles/metronome_classic.png",
+            "image": "hytale/Collectibles/metronome_classic.png",
             "order": 69
         },
         {
@@ -2052,7 +2052,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 70,
             "category": "collectibles",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Collectibles/speaker_classic.png",
+            "image": "hytale/Collectibles/speaker_classic.png",
             "order": 70
         },
         {
@@ -2065,7 +2065,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 71,
             "category": "collectibles",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Collectibles/mysteriouschair.png",
+            "image": "hytale/Collectibles/mysteriouschair.png",
             "order": 71
         },
         {
@@ -2078,32 +2078,32 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 72,
             "category": "consumables",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Consumables/cocktail_azureblue.png",
+            "image": "hytale/Consumables/cocktail_azureblue.png",
             "order": 72,
             "defaultVariant": "default",
             "variants": [
                 {
                     "id": "default",
                     "label": "Azureblue",
-                    "image": "lowpoly/hytale/Consumables/cocktail_azureblue.png",
+                    "image": "hytale/Consumables/cocktail_azureblue.png",
                     "swatch": "#38BDF8"
                 },
                 {
                     "id": "cherryrose",
                     "label": "Cherryrose",
-                    "image": "lowpoly/hytale/Consumables/cocktail_cherryrose.png",
+                    "image": "hytale/Consumables/cocktail_cherryrose.png",
                     "swatch": "#FB7185"
                 },
                 {
                     "id": "mintydreams",
                     "label": "Mintydreams",
-                    "image": "lowpoly/hytale/Consumables/cocktail_mintydreams.png",
+                    "image": "hytale/Consumables/cocktail_mintydreams.png",
                     "swatch": "#5EEAD4"
                 },
                 {
                     "id": "sunkissedcitron",
                     "label": "Sunkissedcitron",
-                    "image": "lowpoly/hytale/Consumables/cocktail_sunkissedcitron.png",
+                    "image": "hytale/Consumables/cocktail_sunkissedcitron.png",
                     "swatch": "#FDE047"
                 }
             ]
@@ -2118,7 +2118,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 73,
             "category": "consumables",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Consumables/bao.png",
+            "image": "hytale/Consumables/bao.png",
             "order": 73
         },
         {
@@ -2131,7 +2131,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 74,
             "category": "consumables",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Consumables/bentobox.png",
+            "image": "hytale/Consumables/bentobox.png",
             "order": 74
         },
         {
@@ -2144,26 +2144,26 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 75,
             "category": "consumables",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Consumables/dango.png",
+            "image": "hytale/Consumables/dango.png",
             "order": 75,
             "defaultVariant": "default",
             "variants": [
                 {
                     "id": "default",
                     "label": "Default",
-                    "image": "lowpoly/hytale/Consumables/dango.png",
+                    "image": "hytale/Consumables/dango.png",
                     "swatch": "#D4D4D8"
                 },
                 {
                     "id": "peach",
                     "label": "Peach",
-                    "image": "lowpoly/hytale/Consumables/dango_peach.png",
+                    "image": "hytale/Consumables/dango_peach.png",
                     "swatch": "#FFB088"
                 },
                 {
                     "id": "sweet",
                     "label": "Image Sweet",
-                    "image": "lowpoly/hytale/Consumables/image_sweet.png",
+                    "image": "hytale/Consumables/image_sweet.png",
                     "swatch": "#F9A8D4"
                 }
             ]
@@ -2178,7 +2178,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 76,
             "category": "consumables",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Consumables/mochisundae.png",
+            "image": "hytale/Consumables/mochisundae.png",
             "order": 76
         },
         {
@@ -2191,7 +2191,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 77,
             "category": "consumables",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Consumables/pulpo.png",
+            "image": "hytale/Consumables/pulpo.png",
             "order": 77
         },
         {
@@ -2204,7 +2204,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 78,
             "category": "consumables",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Consumables/ramen.png",
+            "image": "hytale/Consumables/ramen.png",
             "order": 78
         },
         {
@@ -2217,7 +2217,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 79,
             "category": "consumables",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Consumables/sashimi.png",
+            "image": "hytale/Consumables/sashimi.png",
             "order": 79
         },
         {
@@ -2230,7 +2230,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 80,
             "category": "consumables",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Consumables/takoyaki.png",
+            "image": "hytale/Consumables/takoyaki.png",
             "order": 80
         },
         {
@@ -2243,7 +2243,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 81,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/blazer_heartwrecker.png",
+            "image": "hytale/Cosmetics/blazer_heartwrecker.png",
             "order": 81
         },
         {
@@ -2256,7 +2256,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 82,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/shorts_heartwrecker.png",
+            "image": "hytale/Cosmetics/shorts_heartwrecker.png",
             "order": 82
         },
         {
@@ -2269,7 +2269,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 83,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/headphones_bunnybeatz.png",
+            "image": "hytale/Cosmetics/headphones_bunnybeatz.png",
             "order": 83
         },
         {
@@ -2282,7 +2282,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 84,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/sweater_bunnybeatz.png",
+            "image": "hytale/Cosmetics/sweater_bunnybeatz.png",
             "order": 84
         },
         {
@@ -2295,7 +2295,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 85,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/skirt_bunnybeatz.png",
+            "image": "hytale/Cosmetics/skirt_bunnybeatz.png",
             "order": 85
         },
         {
@@ -2308,7 +2308,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 86,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/legwarmers_bunnybeatz.png",
+            "image": "hytale/Cosmetics/legwarmers_bunnybeatz.png",
             "order": 86
         },
         {
@@ -2321,7 +2321,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 87,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/gloves_bunnybeatz.png",
+            "image": "hytale/Cosmetics/gloves_bunnybeatz.png",
             "order": 87
         },
         {
@@ -2334,7 +2334,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 88,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/hat_stargazer.png",
+            "image": "hytale/Cosmetics/hat_stargazer.png",
             "order": 88
         },
         {
@@ -2347,7 +2347,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 89,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/dress_stargazer.png",
+            "image": "hytale/Cosmetics/dress_stargazer.png",
             "order": 89
         },
         {
@@ -2360,7 +2360,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 90,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/stockings_stargazer.png",
+            "image": "hytale/Cosmetics/stockings_stargazer.png",
             "order": 90
         },
         {
@@ -2373,7 +2373,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 91,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/wings_stargazer.png",
+            "image": "hytale/Cosmetics/wings_stargazer.png",
             "order": 91
         },
         {
@@ -2386,7 +2386,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 92,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/wings_heartwrecker.png",
+            "image": "hytale/Cosmetics/wings_heartwrecker.png",
             "order": 92
         },
         {
@@ -2399,7 +2399,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 93,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/wings_aether.png",
+            "image": "hytale/Cosmetics/wings_aether.png",
             "order": 93
         },
         {
@@ -2412,7 +2412,7 @@ window.LOWPOLY_CATALOG = {
             "assetNumber": 94,
             "category": "cosmetics",
             "extensionPack": null,
-            "image": "lowpoly/hytale/Cosmetics/wings_ashen.png",
+            "image": "hytale/Cosmetics/wings_ashen.png",
             "order": 94
         }
     ]

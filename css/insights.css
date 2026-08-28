@@ -62,8 +62,8 @@ html.page-loading .insights-page-body {
 /* Top-left wordmark — brand corner */
 .ins-logo { display: none; }
 
-/* Aimy chrome — step-derived ink + soft pink only (no second accent) */
-.insights-page-body {
+/* Aimy chrome — Insights-only pink family (Imprint uses global polykroma chrome). */
+.insights-page-body:not(.imprint-page-body) {
   --aimy-primary: var(--ins-ink);
   --aimy-secondary: var(--ins-pink-soft);
   --aimy-tertiary: var(--ins-pink-deep);
@@ -90,16 +90,20 @@ html.page-loading .insights-page-body {
     --ins-pink-deep: color-mix(in srgb, var(--step-03) 72%, var(--pk-heading));
     --ins-lavender: var(--ins-pink);
 
+    background-color: var(--ins-paper) !important;
+    color: var(--ins-ink);
+    color-scheme: dark;
+  }
+
+  html:has(body.insights-page-body:not(.imprint-page-body)),
+  html:has(body.insights-page-body:not(.imprint-page-body))
+    body.insights-page-body:not(.imprint-page-body) {
     --aimy-primary: var(--ins-ink);
     --aimy-secondary: var(--ins-pink-soft);
     --aimy-tertiary: var(--ins-pink-deep);
     --aimy-accent: var(--ins-pink);
     --aimy-logo-primary: var(--aimy-primary);
     --aimy-chrome-ink: var(--aimy-primary);
-
-    background-color: var(--ins-paper) !important;
-    color: var(--ins-ink);
-    color-scheme: dark;
   }
 
   .insights-page-body .ins-logs-deck {
@@ -894,29 +898,29 @@ html.page-loading .insights-page-body {
  * Insights chrome hovers stay in soft pink only —
  * override global multi-hue logo / coin rainbows.
  */
-.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-dark,
-.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-dark *,
-.insights-page-body .ins-logo-pin-inner:hover .brand-mark .brand-logo-dark,
-.insights-page-body .ins-logo-pin-inner:hover .brand-mark .brand-logo-dark * {
+.insights-page-body:not(.imprint-page-body) .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-dark,
+.insights-page-body:not(.imprint-page-body) .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-dark *,
+.insights-page-body:not(.imprint-page-body) .ins-logo-pin-inner:hover .brand-mark .brand-logo-dark,
+.insights-page-body:not(.imprint-page-body) .ins-logo-pin-inner:hover .brand-mark .brand-logo-dark * {
   animation: ins-pink-fill 3s linear infinite;
 }
 
-.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-light,
-.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-light *,
-.insights-page-body .ins-logo-pin-inner:hover .brand-mark .brand-logo-light,
-.insights-page-body .ins-logo-pin-inner:hover .brand-mark .brand-logo-light * {
+.insights-page-body:not(.imprint-page-body) .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-light,
+.insights-page-body:not(.imprint-page-body) .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-light *,
+.insights-page-body:not(.imprint-page-body) .ins-logo-pin-inner:hover .brand-mark .brand-logo-light,
+.insights-page-body:not(.imprint-page-body) .ins-logo-pin-inner:hover .brand-mark .brand-logo-light * {
   animation: ins-pink-fill-soft 3s linear infinite;
 }
 
-.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-mid,
-.insights-page-body .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-mid *,
-.insights-page-body .ins-logo-pin-inner:hover .brand-mark .brand-logo-mid,
-.insights-page-body .ins-logo-pin-inner:hover .brand-mark .brand-logo-mid * {
+.insights-page-body:not(.imprint-page-body) .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-mid,
+.insights-page-body:not(.imprint-page-body) .site-header[data-aimy-chrome] .brand:hover .brand-mark .brand-logo-mid *,
+.insights-page-body:not(.imprint-page-body) .ins-logo-pin-inner:hover .brand-mark .brand-logo-mid,
+.insights-page-body:not(.imprint-page-body) .ins-logo-pin-inner:hover .brand-mark .brand-logo-mid * {
   animation: ins-pink-fill-deep 3s linear infinite;
 }
 
-.insights-page-body .pk-burger-hit:hover ~ .pk-coin-button,
-.insights-page-body .pk-burger-hit:focus-visible ~ .pk-coin-button {
+.insights-page-body:not(.imprint-page-body) .pk-burger-hit:hover ~ .pk-coin-button,
+.insights-page-body:not(.imprint-page-body) .pk-burger-hit:focus-visible ~ .pk-coin-button {
   animation: ins-coin-pink 3s linear infinite;
 }
 

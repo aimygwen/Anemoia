@@ -6,134 +6,134 @@
     {
       "label": "Bentoboxx, Column",
       "catalogId": "bentoboxxcolumn",
-      "image": "lowpoly/hytale/Furnishings/bentoboxxcolumn.png"
+      "image": "hytale/Furnishings/bentoboxxcolumn.png"
     },
     {
       "label": "Bentoboxx, Linear",
       "catalogId": "bentoboxxlinear",
-      "image": "lowpoly/hytale/Furnishings/bentoboxxlinear.png"
+      "image": "hytale/Furnishings/bentoboxxlinear.png"
     },
     {
       "label": "Bentoboxx, Macro",
       "catalogId": "bentoboxxmacro",
-      "image": "lowpoly/hytale/Furnishings/bentoboxxmacro.png"
+      "image": "hytale/Furnishings/bentoboxxmacro.png"
     },
     {
       "label": "Bentoboxx, Nano",
       "catalogId": "bentoboxxnano",
-      "image": "lowpoly/hytale/Furnishings/bentoboxxnano.png"
+      "image": "hytale/Furnishings/bentoboxxnano.png"
     },
     {
       "label": "Boxx",
       "catalogId": "boxx",
-      "image": "lowpoly/hytale/Furnishings/boxx_purple.png",
+      "image": "hytale/Furnishings/boxx_purple.png",
       "cycleVariants": true
     },
     {
       "label": "Enkel Ett",
       "catalogId": "enkelett",
-      "image": "lowpoly/hytale/Furnishings/enkelett.png"
+      "image": "hytale/Furnishings/enkelett.png"
     },
     {
       "label": "Hanging Loom",
       "catalogId": "hangingloom",
-      "image": "lowpoly/hytale/Furnishings/hangingloom_ethereal.png",
+      "image": "hytale/Furnishings/hangingloom_ethereal.png",
       "cycleVariants": true
     },
     {
       "label": "Hanging Looma",
       "catalogId": "hanginglooma",
-      "image": "lowpoly/hytale/Furnishings/hanginglooma_ethereal.png",
+      "image": "hytale/Furnishings/hanginglooma_ethereal.png",
       "cycleVariants": true
     },
     {
       "label": "Hanging Vines",
       "catalogId": "hangingvines",
-      "image": "lowpoly/hytale/Furnishings/hangingvines_ethereal.png",
+      "image": "hytale/Furnishings/hangingvines_ethereal.png",
       "cycleVariants": true
     },
     {
       "label": "Ivy",
       "catalogId": "ivy",
-      "image": "lowpoly/hytale/Furnishings/ivy_ethereal.png",
+      "image": "hytale/Furnishings/ivy_ethereal.png",
       "cycleVariants": true
     },
     {
       "label": "Loom",
       "catalogId": "loom",
-      "image": "lowpoly/hytale/Furnishings/loom_ethereal.png",
+      "image": "hytale/Furnishings/loom_ethereal.png",
       "cycleVariants": true
     },
     {
       "label": "Looma",
       "catalogId": "looma",
-      "image": "lowpoly/hytale/Furnishings/looma_ethereal.png",
+      "image": "hytale/Furnishings/looma_ethereal.png",
       "cycleVariants": true
     },
     {
       "label": "Mallow",
       "catalogId": "mallow",
-      "image": "lowpoly/hytale/Furnishings/mallow_purple.png",
+      "image": "hytale/Furnishings/mallow_purple.png",
       "cycleVariants": true
     },
     {
       "label": "Kohi Noll",
       "catalogId": "kohi",
-      "image": "lowpoly/hytale/Furnishings/kohi.png"
+      "image": "hytale/Furnishings/kohi.png"
     },
     {
       "label": "Kryss Två",
       "catalogId": "krysstva",
-      "image": "lowpoly/hytale/Furnishings/krysstva.png"
+      "image": "hytale/Furnishings/krysstva.png"
     },
     {
       "label": "Minima Bench",
       "catalogId": "minima",
-      "image": "lowpoly/hytale/Furnishings/minima.png"
+      "image": "hytale/Furnishings/minima.png"
     },
     {
       "label": "Monolith",
       "catalogId": "monolith",
-      "image": "lowpoly/hytale/Furnishings/monolith.png"
+      "image": "hytale/Furnishings/monolith.png"
     },
     {
       "label": "Korsad Tre",
       "catalogId": "korsadtre",
-      "image": "lowpoly/hytale/Furnishings/korsadtre_purple.png",
+      "image": "hytale/Furnishings/korsadtre_purple.png",
       "cycleVariants": true
     },
     {
       "label": "Muffle",
       "catalogId": "muffle",
-      "image": "lowpoly/hytale/Furnishings/muffle_lavender.png",
+      "image": "hytale/Furnishings/muffle_lavender.png",
       "cycleVariants": true
     },
     {
       "label": "Cabinet",
       "catalogId": "qubocabinet",
-      "image": "lowpoly/hytale/Furnishings/qubocabinet.png"
+      "image": "hytale/Furnishings/qubocabinet.png"
     },
     {
       "label": "Nook Couch",
       "catalogId": "qubonook",
-      "image": "lowpoly/hytale/Furnishings/qubonook_purple.png",
+      "image": "hytale/Furnishings/qubonook_purple.png",
       "cycleVariants": true
     },
     {
       "label": "Nook Seat",
       "catalogId": "qubonookseat",
-      "image": "lowpoly/hytale/Furnishings/qubonookseat_purple.png",
+      "image": "hytale/Furnishings/qubonookseat_purple.png",
       "cycleVariants": true
     },
     {
       "label": "Tumbleboxx",
       "catalogId": "tumbleboxx",
-      "image": "lowpoly/hytale/Furnishings/tumbleboxx.png"
+      "image": "hytale/Furnishings/tumbleboxx.png"
     },
     {
       "label": "Vines",
       "catalogId": "vines",
-      "image": "lowpoly/hytale/Furnishings/vines_ethereal.png",
+      "image": "hytale/Furnishings/vines_ethereal.png",
       "cycleVariants": true
     }
   ]

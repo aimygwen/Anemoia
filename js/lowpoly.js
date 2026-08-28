@@ -62,7 +62,7 @@
 
     function isHytaleCatalogItem(item) {
         const path = String(item && item.image ? item.image : "").toLowerCase();
-        return path.indexOf("lowpoly/hytale") !== -1;
+        return path.indexOf("hytale") !== -1;
     }
 
     function categoryIcon(category) {
@@ -422,7 +422,7 @@
             }
 
             el.style.transform = `translate3d(0, 0, 0) rotate(${baseRot}deg) scale(${scale})`;
-            el.innerHTML = `<img src="${assetUrl("lowpoly/hytale/block.png")}" alt="" loading="lazy" decoding="async" width="${Math.round(baseWidth)}" height="${Math.round(baseWidth)}" />`;
+            el.innerHTML = `<img src="${assetUrl("hytale/block.png")}" alt="" loading="lazy" decoding="async" width="${Math.round(baseWidth)}" height="${Math.round(baseWidth)}" />`;
 
             container.appendChild(el);
 

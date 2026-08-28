@@ -1,10 +1,236 @@
-<section class="spa-scaffold spa-scaffold--me">
-  <header class="spa-scaffold__hero">
-    <p class="spa-scaffold__eyebrow">About</p>
-    <h1 class="spa-scaffold__title">Me</h1>
-    <p class="spa-scaffold__lede">Artist, designer, and maker of cozy violet worlds.</p>
-  </header>
-  <div class="spa-scaffold__panel">
-    <p class="spa-scaffold__placeholder">Content coming soon.</p>
-  </div>
-</section>
+  <main class="about" id="about">
+    <div class="about-underlay" aria-hidden="true">
+      <img
+        src="./assets/polaroid-about.jpg"
+        alt=""
+        width="856"
+        height="1100"
+        decoding="async"
+        fetchpriority="high"
+      />
+    </div>
+
+    <div class="scroll-curtain" data-about-curtain aria-hidden="true">
+      <svg viewBox="0 0 100 140" preserveAspectRatio="none">
+        <path class="scroll-curtain__shape" d="M0 8 C33 8 67 8 100 8 L100 140 L0 140 Z"></path>
+      </svg>
+    </div>
+
+    <div class="about-hud-stack" data-about-hud-stack aria-hidden="true">
+      <div class="about-lifebar" data-about-lifebar>
+        <div class="about-lifebar__frame">
+          <div class="about-lifebar__pixel" data-about-hud-pixel>
+            <canvas
+              class="about-lifebar__pixel-canvas"
+              data-about-hud-canvas
+              aria-hidden="true"
+            ></canvas>
+            <div class="about-lifebar__sharp" data-about-hud-sharp>
+              <img
+                class="about-lifebar__portrait"
+                src="./assets/polykroma/hud_portrait.webp?v=hud-portrait-1"
+                alt=""
+                width="933"
+                height="238"
+                decoding="async"
+              />
+              <img
+                class="about-lifebar__hud"
+                src="./assets/polykroma/hud.svg"
+                alt=""
+                width="933"
+                height="238"
+                decoding="async"
+              />
+              <div class="about-lifebar__hp" aria-hidden="true">
+                <img
+                  class="about-lifebar__hp-base"
+                  src="./assets/polykroma/hp.svg"
+                  alt=""
+                  width="933"
+                  height="238"
+                  decoding="async"
+                />
+                <div class="about-lifebar__hp-rainbow"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <section class="about-hero" data-about-hero aria-label="Amélie Gwendolyn Graebe">
+      <h1 class="visually-hidden">About Amélie Gwendolyn Graebe</h1>
+      <p class="about-hero__name about-hero__name--mark" aria-hidden="true">
+        <img
+          class="about-hero__mark"
+          src="./assets/gwendolyn.svg?v=about"
+          alt=""
+          width="2732"
+          height="2048"
+          decoding="async"
+        >
+      </p>
+    </section>
+
+    <div class="about-sheet" data-about-sheet aria-label="About Aimy">
+      <section class="ins-intro" data-ins-reveal>
+        <div class="ins-info">
+          <div class="ins-roles">
+            <p class="ins-label">Calling</p>
+            <p class="ins-roles-list">
+              Visual Artist / Lowpoly Modeler<br />
+              Hytale Creator
+            </p>
+          </div>
+        </div>
+
+        <blockquote class="ins-quote">
+          Crafting worlds of nostalgia — depth in still images, life in lowpoly art.
+        </blockquote>
+      </section>
+
+      <section class="ins-concept" data-ins-reveal>
+        <div class="ins-concept-title" aria-hidden="true">
+          <span class="ins-outline">The</span>
+          <span class="ins-fill">Backstory</span>
+        </div>
+
+        <div class="ins-concept-cols">
+          <article class="ins-col">
+            <h3 class="ins-col-label">My Roots</h3>
+            <p>
+              Growing up in a quiet countryside by a lake, I was moved by the same golden
+              sunset every evening — a warm, nostalgic hug that never left my heart.
+            </p>
+            <p>
+              PS1 games, Game Boys, and retro tech led to pixels placed one by one for fun.
+              Creating became second nature, from traditional drawings to digital canvases.
+            </p>
+          </article>
+          <article class="ins-col">
+            <h3 class="ins-col-label">Coming Back</h3>
+            <p>
+              Somewhere along the way, that feeling faded. Rediscovering old pixelated textures
+              and edgy lowpoly models gave both my life and my art a new meaning.
+            </p>
+            <p>
+              There is beauty in minimalism broken to its core — in transitions, change, and
+              the quiet spaces between moments.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="ins-bridge" data-ins-reveal aria-label="From memory to stats">
+        <p class="ins-bridge-text">
+          Every piece of art is a compilation of spent hours, fixations, and core memories —
+          the things we love become passive stats that shape how we build and why we make.
+        </p>
+      </section>
+
+      <section class="ins-track ins-track--achievements" data-ins-reveal>
+        <h2 class="ins-track-title">
+          <span class="ins-outline">Achievements</span>
+          <span class="ins-fill">Unlocked</span>
+        </h2>
+
+        <ol class="ins-chapters">
+          <li class="ins-chapter ins-achievement">
+            <div class="ins-achievement-copy">
+              <p class="ins-chapter-status">Unlocked</p>
+              <h3 class="ins-chapter-name">[ Unreasonable Dedication ]</h3>
+              <p class="ins-chapter-desc">
+                Listen to Porter Robinson's "Russian Roulette" 9,000+ times.
+              </p>
+            </div>
+          </li>
+          <li class="ins-chapter ins-achievement">
+            <div class="ins-achievement-copy">
+              <p class="ins-chapter-status">Unlocked</p>
+              <h3 class="ins-chapter-name">[ Lowpoly Survivor ]</h3>
+              <p class="ins-chapter-desc">
+                Log way too many hours in Tomb Raider I &amp; II as a kid.
+              </p>
+            </div>
+          </li>
+          <li class="ins-chapter ins-achievement">
+            <div class="ins-achievement-copy">
+              <p class="ins-chapter-status">Unlocked</p>
+              <h3 class="ins-chapter-name">[ Existential Crisis ]</h3>
+              <p class="ins-chapter-desc">
+                Watch a colorful cartoon expecting fun vibes and leave with a full-blown crisis.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section class="ins-branding" data-ins-reveal>
+        <h2 class="ins-branding-title">
+          <span class="ins-outline">Inspirations</span>
+          <span class="ins-fill">&amp; Mindset</span>
+        </h2>
+
+        <div class="ins-concept-cols ins-concept-cols--triple">
+          <article class="ins-col">
+            <h3 class="ins-col-label">Artistic Influence</h3>
+            <p>
+              My biggest inspiration is
+              <a href="https://www.vippori.com/" target="_blank" rel="noopener noreferrer">Violet Schofield</a>
+              — discovering her lowpoly work gave me a clear vision for what I wanted to build.
+            </p>
+          </article>
+          <article class="ins-col">
+            <h3 class="ins-col-label">When I feel at home</h3>
+            <p>
+              Quiet transitional moments — a long train ride with headphones, or lost places with
+              unknown history. I've always felt more at home in the dark than in daylight.
+            </p>
+          </article>
+          <article class="ins-col">
+            <h3 class="ins-col-label">Why?</h3>
+            <p>
+              The sea keeps me motivated: waves, horizon, sea breeze. Building toward that peace
+              is what keeps me moving forward every day.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="ins-closing" data-ins-reveal>
+        <h2 class="ins-closing-title ins-fill">Explore the work</h2>
+        <p class="ins-closing-lead">
+          Enough about me — take a look at what I've been making.
+        </p>
+
+        <div class="ins-links">
+          <a class="ins-link-card" href="./work/hytale">
+            <span class="ins-link-kicker">01</span>
+            <span class="ins-link-name">Hytale</span>
+            <span class="ins-link-desc">Lowpoly assets &amp; worlds</span>
+          </a>
+          <a class="ins-link-card" href="./work/stills">
+            <span class="ins-link-kicker">02</span>
+            <span class="ins-link-name">Artworks</span>
+            <span class="ins-link-desc">Illustrations &amp; stills</span>
+          </a>
+          <a class="ins-link-card" href="./insights">
+            <span class="ins-link-kicker">03</span>
+            <span class="ins-link-name">Insights</span>
+            <span class="ins-link-desc">Behind the madness</span>
+          </a>
+        </div>
+
+        <p class="ins-copy">© 2026 Aimy Gwen</p>
+      </section>
+
+      <a class="ins-next" href="./contact">
+        <span>Next</span>
+        <strong>Say hi</strong>
+      </a>
+    </div>
+
+    <p class="about-hint">scroll to explore</p>
+  </main>

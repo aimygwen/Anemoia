@@ -14,10 +14,12 @@
     "work:lowpoly": "Look at This Mesh",
     "work:stills": "Moments Captured for Eternity",
     "work:motion": "Stories Told in Motion",
+    "work:sculpts": "Forms Carved in Light",
     insights: "Gwenuine Thoughts & Brain Farts",
     "insights:identity": "Glitter, Gloss & Chaos",
     "insights:workspace": "Clean, Calm & Cozy",
     me: "Perpetrator of This Mess",
+    imprint: "Yaaaaaaawn… Say Again?",
     contact: "Let's Make a Mess.",
   };
 
@@ -26,6 +28,7 @@
     work: "Work",
     insights: "Insights",
     me: "Me",
+    imprint: "Imprint",
     contact: "Contact",
   };
 

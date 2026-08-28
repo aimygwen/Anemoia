@@ -99,7 +99,8 @@
           "spa-view-work",
           "spa-view-insights",
           "spa-view-me",
-          "spa-view-contact"
+          "spa-view-contact",
+          "spa-view-imprint"
         );
         stopScroll();
         if (window.SpaPages && window.SpaPages.start && typeof window.SpaPages.start.mount === "function") {
@@ -115,17 +116,17 @@
       },
     },
     work: {
-      partial: "./partials/view-work.html?v=spa-47",
+      partial: "./partials/view-work.html?v=spa-53",
       css: [
         "./css/spa/spa-scaffold.css?v=spa-29",
-        "./css/spa/spa-work.css?v=spa-67",
+        "./css/spa/spa-work.css?v=spa-69",
       ],
-      js: ["./js/spa/views/view-work.js?v=spa-78"],
+      js: ["./js/spa/views/view-work.js?v=spa-93"],
       mount: function (ctx) {
         resetBodyState();
         document.documentElement.classList.add("spa-route-not-start");
         document.body.classList.add("spa-view-work");
-        document.body.classList.remove("spa-view-start", "spa-view-insights", "spa-view-me", "spa-view-contact");
+        document.body.classList.remove("spa-view-start", "spa-view-insights", "spa-view-me", "spa-view-contact", "spa-view-imprint");
         if (ctx && ctx.query && ctx.query.category) {
           ensureScroll();
         } else {
@@ -149,14 +150,14 @@
       css: [
         "./css/wordmark-holo.css?v=wordmark-holo-2",
         "./css/insights-poke-ref.css?v=poke-ref-11",
-        "./css/insights.css?v=insights-143",
+        "./css/insights.css?v=insights-144",
       ],
       partial: "./partials/view-insights.html?v=insights-77",
       js: [
         "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js",
         "./js/wordmark-holo.js?v=wordmark-holo-4",
-        "./js/insights.js?v=insights-46",
-        "./js/spa/views/view-insights.js?v=insights-33",
+        "./js/insights.js?v=insights-47",
+        "./js/spa/views/view-insights.js?v=insights-35",
       ],
       mount: function (ctx) {
         resetBodyState();
@@ -166,7 +167,8 @@
           "spa-view-start",
           "spa-view-work",
           "spa-view-me",
-          "spa-view-contact"
+          "spa-view-contact",
+          "spa-view-imprint"
         );
         ensureScroll();
         if (window.SpaPages && window.SpaPages.insights && typeof window.SpaPages.insights.mount === "function") {
@@ -181,20 +183,73 @@
       },
     },
     me: {
-      partial: "./partials/view-me.html?v=spa-11",
-      css: ["./css/spa/spa-scaffold.css?v=spa-11"],
-      js: ["./js/spa/views/view-me.js?v=spa-11"],
+      partial: "./partials/view-me.html?v=me-1",
+      css: [
+        "./css/about.css?v=about-spa-2",
+        "./css/about-sheet.css?v=about-hud-stage-17",
+      ],
+      js: [
+        "./js/about.js?v=about-spa-2",
+        "./js/spa/views/view-me.js?v=me-2",
+      ],
       mount: function (ctx) {
         resetBodyState();
         document.documentElement.classList.add("spa-route-not-start");
-        document.body.classList.add("spa-view-me");
-        document.body.classList.remove("spa-view-start", "spa-view-work", "spa-view-insights", "spa-view-contact");
+        document.body.classList.add("spa-view-me", "about-page-body");
+        document.body.classList.remove(
+          "spa-view-start",
+          "spa-view-work",
+          "spa-view-insights",
+          "spa-view-contact",
+          "spa-view-imprint",
+          "imprint-page-body",
+          "insights-page-body"
+        );
         ensureScroll();
         if (window.SpaPages && window.SpaPages.me && typeof window.SpaPages.me.mount === "function") {
           window.SpaPages.me.mount(ctx);
         }
       },
-      unmount: noop,
+      unmount: function () {
+        if (window.SpaPages && window.SpaPages.me && typeof window.SpaPages.me.unmount === "function") {
+          window.SpaPages.me.unmount();
+        }
+        document.body.classList.remove("spa-view-me", "about-page-body");
+      },
+    },
+    imprint: {
+      partial: "./partials/view-imprint.html?v=imprint-1",
+      css: [
+        "./css/insights.css?v=insights-144",
+        "./css/imprint.css?v=imprint-ins-50",
+      ],
+      js: [
+        "./js/imprint.js?v=imprint-spa-2",
+        "./js/spa/views/view-imprint.js?v=imprint-1",
+      ],
+      mount: function (ctx) {
+        resetBodyState();
+        document.documentElement.classList.add("spa-route-not-start");
+        document.body.classList.add("spa-view-imprint", "imprint-page-body", "insights-page-body");
+        document.body.classList.remove(
+          "spa-view-start",
+          "spa-view-work",
+          "spa-view-insights",
+          "spa-view-me",
+          "spa-view-contact",
+          "about-page-body"
+        );
+        ensureScroll();
+        if (window.SpaPages && window.SpaPages.imprint && typeof window.SpaPages.imprint.mount === "function") {
+          window.SpaPages.imprint.mount(ctx);
+        }
+      },
+      unmount: function () {
+        if (window.SpaPages && window.SpaPages.imprint && typeof window.SpaPages.imprint.unmount === "function") {
+          window.SpaPages.imprint.unmount();
+        }
+        document.body.classList.remove("spa-view-imprint", "imprint-page-body", "insights-page-body");
+      },
     },
     contact: {
       partial: "./partials/view-contact.html?v=contact-17",
@@ -204,7 +259,7 @@
         resetBodyState();
         document.documentElement.classList.add("spa-route-not-start");
         document.body.classList.add("spa-view-contact", "contact-page-body");
-        document.body.classList.remove("spa-view-start", "spa-view-work", "spa-view-insights", "spa-view-me");
+        document.body.classList.remove("spa-view-start", "spa-view-work", "spa-view-insights", "spa-view-me", "spa-view-imprint");
         haltScroll();
         lockPageScroll();
         window.scrollTo(0, 0);
@@ -236,16 +291,18 @@
   }
 
   function fetchPartial(viewId) {
-    if (partialCache[viewId]) return Promise.resolve(partialCache[viewId]);
     var def = get(viewId);
-    if (!def.partial) return Promise.resolve("");
-    return fetch(def.partial)
+    var partialUrl = def.partial || "";
+    var cacheKey = viewId + "|" + partialUrl;
+    if (partialCache[cacheKey]) return Promise.resolve(partialCache[cacheKey]);
+    if (!partialUrl) return Promise.resolve("");
+    return fetch(partialUrl)
       .then(function (res) {
         if (!res.ok) throw new Error("partial fetch failed");
         return res.text();
       })
       .then(function (text) {
-        partialCache[viewId] = text;
+        partialCache[cacheKey] = text;
         return text;
       });
   }

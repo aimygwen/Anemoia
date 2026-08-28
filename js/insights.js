@@ -344,13 +344,8 @@
     pinHost.innerHTML = "";
     pinHost.appendChild(clone);
 
-    if (window.AimyCharmGlass) {
-      if (typeof window.AimyCharmGlass.prepareMarkStack === "function") {
-        window.AimyCharmGlass.prepareMarkStack(clone);
-      }
-      if (typeof window.AimyCharmGlass.glassifyHost === "function") {
-        window.AimyCharmGlass.glassifyHost(pinHost);
-      }
+    if (window.AimyCharmMark && typeof window.AimyCharmMark.prepareMarkStack === "function") {
+      window.AimyCharmMark.prepareMarkStack(clone);
     }
 
     if (window.AimyBrandEyes) {

@@ -17,10 +17,9 @@ Aimy Gwen's portfolio. A **static site** — vanilla HTML + CSS + JS, no build s
 - `partials/view-*.html` — fetched HTML for non-Start views (Work, Insights, Me, Contact).
 - `js/spa/` — SPA core: `spa-router.js`, `spa-shell.js`, `spa-nav.js`, `spa-state.js`, `spa-transitions.js`, `spa-a11y.js`, `spa-views.js`, `spa-prefetch.js`; view hooks in `js/spa/views/view-*.js` + `window.SpaPages.*`.
 - `css/spa/` — SPA shell, transitions, scaffold + Work hub (`?v=spa-11`).
-- `about.html` — full-page About / Me sibling (`css/about.css` + `js/about.js`; polaroid hero, scroll curtain, lifebar HUD). Coin menu Me links here until content migrates to SPA `./me`.
-- `imprint.html`, `legal.html` — full-page legal siblings (footer links, `data-no-spa`). `imprint` pairs `css/insights.css` + `css/imprint.css` + `js/imprint.js` (Insights hub typography, signature, tokens); `legal.html` redirects to imprint.
+- `about.html`, `imprint.html`, `legal.html` — **removed**; legacy bookmarks resolve via `404.html` / `spa-router.js` → `./me` / `./imprint`.
 - `css/polykroma.css` — **shared design system + chrome**. Loaded on every page. Single source for: palette tokens, fixed header/nav, Charm mascot (logo SVG layers), menu coin + overlay, page transitions. Geometry here is px-locked on purpose — don't convert to rem.
-- `css/mono-dev.css` — **temporary greyscale dev palette** (load last on `index.html` + `imprint.html`; delete when restoring color).
+- `css/mono-dev.css` — **temporary greyscale dev palette** (load last on `index.html`; delete when restoring color).
 - `js/polykroma.js` — chrome runtime: band page transition (`window.AimyPageTransition.navigate(href)`).
 - `js/polyglide.js` — shared weighted scroller (`window.Polyglide`), see below.
 - `assets/polykroma/branding/` — Charm layers (`charm-*.svg`), wordmark (`wordmark-type.svg`, `wordmark-shadow.svg`, `wordmark-outline.svg`), `signature.svg`, `noise.svg`, `prism.jpg`, `minimark.svg`.
@@ -28,7 +27,7 @@ Aimy Gwen's portfolio. A **static site** — vanilla HTML + CSS + JS, no build s
 - `css/wordmark-holo.css` + `js/wordmark-holo.js` — shared Rainbow Rare holo sticker wordmark (Start splash + Insights identity log). Class `.aimy-wordmark-holo`; boot via `window.AimyWordmarkHolo.boot()`.
 - `js/lowpoly.js`, `js/gallery.js` + matching CSS — Work category content, lazy-loaded from `view-work.js`.
 - `js/work-stickerbook.js`, `js/work-sticker-holo.js`, `css/work-stickerbook.css` — Hytale Work sticker book (holo die-cut spreads + page flip). Loaded from `view-work.js` when Work category is `hytale` (`./work/hytale`).
-- `assets/content/lowpoly/hytale/pages/` — **Hytale sticker book content** (see below). `index.json` lists page folder order; each `page-N/page.json` defines topic/title/text + sticker list. Drop PNGs into the page folder and reference by filename.
+- `assets/content/hytale/pages/` — **Hytale sticker book content** (see below). `index.json` lists page folder order; each `page-N/page.json` defines topic/title/text + sticker list. Drop PNGs into the page folder and reference by filename.
 - `js/lowpoly-catalog-data.js` — **auto-generated, do not edit** (built from a lowpoly catalog; the generator script is not in this repo).
 - `assets/` — images (page art at root, `thumbnails/`, `content/` for gallery/lowpoly media, `polykroma/` for brand assets). `fonts/`, `fav/`.
 - `preview-shots/` — reference screenshots of the home hero.
@@ -99,12 +98,12 @@ Use `--pk-*` (or the older `--aimy-*` aliases) so components flip automatically 
 ## SPA routing (vanilla Path 1)
 
 - **Host:** `index.html` only (`body[data-spa-host]`). Views live in `#app-viewport`; Start is inline, others fetch from `partials/view-*.html`.
-- **Routes:** `./` (Start), `./work`, `./work/<category>`, `./insights`, `./insights/<log>`, `./me`, `./contact`. Work categories: `lowpoly`, `hytale`, `stills`, `motion`. Insights log slugs: `vibes` (identity), `workspace`, `hytale`. Legacy `?category=` / `?log=` query URLs redirect to clean paths on load.
-- **Nav:** coin menu holds the **WebGL portfolio carousel** (Start / Work / Insights / Me / Contact) — no text nav list in the overlay. **Me** opens full-page `about.html`; Imprint/Legal live on `imprint.html` (full-page siblings).
-- **Legacy map:** old `.html` filenames (`lowpoly.html`, `gallery.html`, …) still resolve via `spa-router.js` for bookmarks — those files are gone; routing happens in the SPA. `about.html` is restored as a real page (router treats it as external, not `./me`).
+- **Routes:** `./` (Start), `./work`, `./work/<category>`, `./insights`, `./insights/<log>`, `./me`, `./contact`, `./imprint` (`#imprint`, `#terms`, `#policy`). Work categories: `lowpoly`, `hytale`, `stills`, `motion`, `sculpts`. Insights log slugs: `vibes` (identity), `workspace`, `hytale`. Legacy `?category=` / `?log=` query URLs redirect to clean paths on load.
+- **Nav:** coin menu holds the **WebGL portfolio carousel** (Start / Work / Insights / Me / Contact) — no text nav list in the overlay. **Me** → `./me`; Imprint/Legal → `./imprint` in-app (footer/menu).
+- **Legacy map:** old `.html` filenames (`lowpoly.html`, `gallery.html`, `about.html`, `imprint.html`, …) still resolve via `spa-router.js` for bookmarks.
 - **Transitions:** in-app navigations on the host bypass full-page `AimyPageTransition`; coin menu calls `AimySpa.navigate()` when the href is routable.
 - **Deploy:** root `404.html` stores the requested path and redirects to `index.html` for clean URLs on GitHub Pages. Local dev uses `scripts/dev-server.py` (via `npm run dev`) for the same reload behavior.
-- **Work hub:** `partials/view-work.html` — scrollable **work-deck** chooser (Hytale / Lowpoly / Stills / Motion) + docked title + category panels. Lazy-loads `lowpoly.*` / `gallery.*` on first category visit via `view-work.js`. **Hytale** uses the sticker book (`work-stickerbook.*`) instead of the catalog grid — Polyglide scroll, bottom-right page flip, content driven by `assets/content/lowpoly/hytale/pages/`.
+- **Work hub:** `partials/view-work.html` — scrollable **work-deck** chooser (Hytale / Lowpoly / Stills / Motion / Sculpts) + docked title + category panels. Lazy-loads `lowpoly.*` / `gallery.*` / `work-sculpts.*` on first category visit via `view-work.js`. **Hytale** uses the sticker book (`work-stickerbook.*`) instead of the catalog grid — Polyglide scroll, bottom-right page flip, content driven by `assets/content/hytale/pages/`. **Sculpts** uses `work-sculpts.js` + `assets/content/sculpts/manifest.json` — borderless images in a horizontal scroll rail.
 
 ### Hytale sticker book pages
 
@@ -114,7 +113,7 @@ Curate spreads without touching JS:
 2. **`pages/page-N/page.json`** — per-spread config:
    - `topic`, `title`, `lede`, `body` — optional intro copy above the sticker grid
    - `stickers[]` — `{ "image", "label", "catalogId"? }` per sticker
-3. **Images** — drop PNGs into `page-N/` and reference `"my-sticker.png"`, or point at catalog assets: `"lowpoly/hytale/Furnishings/bentoboxxnano.png"`. Set `catalogId` to open the lowpoly lightbox on click.
+3. **Images** — drop PNGs into `page-N/` and reference `"my-sticker.png"`, or point at catalog assets: `"hytale/Furnishings/bentoboxxnano.png"`. Set `catalogId` to open the lowpoly lightbox on click.
 4. **Empty pages** — spreads with no stickers are skipped until you add at least one entry.
 5. **Template** — copy `page.example.json` when adding a new folder; add the folder id to `index.json`.
 

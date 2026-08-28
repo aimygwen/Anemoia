@@ -1,6 +1,6 @@
 /**
  * Charm iris — pupils look toward the cursor, clamped inside each eye socket.
- * Iris clipped to charm-sclera eye sockets (charm-glass.js).
+ * Iris clipped to sclera eye sockets (charm-mark.js prepareMarkStack).
  * Supports marks added later (e.g. Insights logo-focus fly clone).
  */
 (function () {

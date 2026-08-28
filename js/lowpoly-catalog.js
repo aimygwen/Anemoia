@@ -17,12 +17,12 @@
     };
 
     const CATEGORY_ICONS = {
-        furnishings: "lowpoly/hytale/furnishings.svg",
-        battlegear: "lowpoly/hytale/battlegear.svg",
-        cosmetics: "lowpoly/hytale/cosmetics.svg",
-        collectibles: "lowpoly/hytale/collectibles.svg",
-        consumables: "lowpoly/hytale/consumables.svg",
-        misc: "lowpoly/hytale/misc.svg",
+        furnishings: "hytale/furnishings.svg",
+        battlegear: "hytale/battlegear.svg",
+        cosmetics: "hytale/cosmetics.svg",
+        collectibles: "hytale/collectibles.svg",
+        consumables: "hytale/consumables.svg",
+        misc: "hytale/misc.svg",
     };
 
     const CATEGORY_ICON_PATHS = {

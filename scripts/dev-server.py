@@ -11,14 +11,24 @@ from __future__ import annotations
 import http.server
 import os
 import sys
+from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_PORT = 7100
 DEFAULT_HOST = "127.0.0.1"
-LEGAL_PAGES = {
-    "imprint": "imprint.html",
-    "legal": "imprint.html",
-}
+
+# Legacy filenames → SPA (matches spa-router.js LEGACY_PATHS + GitHub Pages 404 behavior)
+LEGACY_SPA_HTML = frozenset(
+    {
+        "about.html",
+        "imprint.html",
+        "legal.html",
+        "lowpoly.html",
+        "gallery.html",
+        "insights.html",
+        "contact.html",
+    }
+)
 
 
 class SPARequestHandler(http.server.SimpleHTTPRequestHandler):
@@ -35,12 +45,6 @@ class SPARequestHandler(http.server.SimpleHTTPRequestHandler):
         path_only = self.path.split("?", 1)[0]
         local_path = self.translate_path(path_only)
 
-        leaf = path_only.rstrip("/").split("/")[-1].lower()
-        if leaf in LEGAL_PAGES:
-            query = self.path.partition("?")[2]
-            self.path = "/" + LEGAL_PAGES[leaf] + ("?" + query if query else "")
-            return super().do_GET()
-
         if os.path.isdir(local_path):
             index_path = os.path.join(local_path, "index.html")
             if os.path.isfile(index_path):
@@ -50,6 +54,17 @@ class SPARequestHandler(http.server.SimpleHTTPRequestHandler):
             return super().do_GET()
 
         basename = os.path.basename(path_only.rstrip("/"))
+        basename_lower = basename.lower()
+
+        if basename_lower in LEGACY_SPA_HTML:
+            query = self.path.partition("?")[2]
+            redirect_target = path_only + ("?" + query if query else "")
+            spa_query = "redirect=" + quote(redirect_target, safe="")
+            if query:
+                spa_query = query + "&" + spa_query
+            self.path = "/index.html?" + spa_query
+            return super().do_GET()
+
         if basename and "." in basename:
             return super().do_GET()
 
@@ -81,7 +96,7 @@ def main() -> int:
         return 1
 
     print("Anemoia SPA dev server: http://%s:%d/" % (host, port))
-    print("Reload works on /work, /insights, /me, /contact.")
+    print("Reload works on /work, /insights, /me, /contact, /imprint.")
     print("(Do not use `python3 -m http.server` — it 404s on SPA routes.)")
     try:
         server.serve_forever()

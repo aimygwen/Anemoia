@@ -1,0 +1,17 @@
+{
+  "topic": "Hytale",
+  "title": "Featured Works",
+  "lede": "Personal favorites — the most complex and characterful pieces from the library.",
+  "stickers": [
+    { "image": "hytale/Misc/torii_vermillion.png", "label": "Torii, Vermillion", "catalogId": "torii", "size": "hero" },
+    { "image": "hytale/Misc/arcade_vortex.png", "label": "Arcade Vortex", "catalogId": "arcade_vortex" },
+    { "image": "hytale/Misc/yatai.png", "label": "Yatai", "catalogId": "yatai" },
+    { "image": "hytale/Misc/imirai_purple.png", "label": "iMirai, Purple", "catalogId": "imirai" },
+    { "image": "hytale/Battlegear/battleguitar_heartwrecker.png", "label": "Battleguitar, Heartwrecker", "catalogId": "battleguitar" },
+    { "image": "hytale/Furnishings/fumikirisignal.png", "label": "Crossroads Signal", "catalogId": "fumikirisignal" },
+    { "image": "hytale/Furnishings/looma_ethereal.png", "label": "Looma, Ethereal", "catalogId": "looma" },
+    { "image": "hytale/Furnishings/mallow_purple.png", "label": "Mallow, Purple", "catalogId": "mallow" },
+    { "image": "hytale/Furnishings/tumbleboxx.png", "label": "Tumbleboxx", "catalogId": "tumbleboxx" },
+    { "image": "hytale/Collectibles/plushies_jaxblushing.png", "label": "Blushing Jax Plush", "catalogId": "plushies_jaxblushing" }
+  ]
+}

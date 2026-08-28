@@ -269,9 +269,17 @@
       var legalUrl = new URL(href, window.location.href);
       var legalPath = legalUrl.pathname.toLowerCase();
       if (legalPath.indexOf("imprint") !== -1 || legalPath.indexOf("legal") !== -1) {
-        legalUrl.pathname = legalUrl.pathname.replace(/\/[^/]*$/, "/imprint.html");
-        legalUrl.searchParams.set("v", "imprint-ins-48");
-        window.location.replace(legalUrl.pathname + legalUrl.search + legalUrl.hash);
+        if (isSpaHost() && window.AimySpa && typeof window.AimySpa.navigate === "function") {
+          var panel = (legalUrl.hash || "").replace(/^#/, "");
+          var target = "./imprint";
+          if (panel && ["imprint", "terms", "policy"].indexOf(panel) !== -1) {
+            target += "#" + panel;
+          } else if (legalUrl.hash) {
+            target += legalUrl.hash;
+          }
+          return window.AimySpa.navigate(target);
+        }
+        window.location.replace(normalizeLegalHref(href));
         return;
       }
     } catch (e) {}
@@ -397,15 +405,9 @@
     return /imprint|legal/i.test(window.location.pathname || "");
   }
 
-  /* Hide chrome until reveal boots — legal pages skip the fly-in entirely. */
+  /* Hide chrome until reveal boots */
   if (document.documentElement) {
-    if (isLegalPage()) {
-      document.documentElement.classList.add("pk-chrome-boot", "pk-chrome-ready", "pk-chrome-settled");
-      bootedReveal = true;
-      chromeSettled = true;
-    } else {
-      document.documentElement.classList.add("pk-chrome-boot");
-    }
+    document.documentElement.classList.add("pk-chrome-boot");
   }
 
   function getScrollY() {
@@ -436,15 +438,6 @@
     var html = document.documentElement;
     if (!html.classList.contains("pk-chrome-boot")) {
       html.classList.add("pk-chrome-boot");
-    }
-
-    if (
-      document.body &&
-      (document.body.classList.contains("imprint-page-body") ||
-        /imprint|legal/i.test(window.location.pathname || ""))
-    ) {
-      html.classList.add("pk-chrome-ready", "pk-chrome-settled");
-      return;
     }
 
     var settleMs =
@@ -589,13 +582,13 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
   var IMPRINT_PAGE_TAG = "imprint-ins-48";
 
   function imprintPageHref() {
-    return "./imprint.html?v=" + IMPRINT_PAGE_TAG;
+    return "./imprint";
   }
 
   function isLegalHref(href) {
     try {
       var path = new URL(href, window.location.href).pathname.toLowerCase();
-      return path.indexOf("imprint") !== -1 || path.indexOf("legal") !== -1;
+      return /\/(imprint|legal)(?:\/|$|\.html)/.test(path) || path.indexOf("imprint.html") !== -1;
     } catch (e) {
       return false;
     }
@@ -604,9 +597,13 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
   function normalizeLegalHref(href) {
     try {
       var url = new URL(href, window.location.href);
-      url.pathname = url.pathname.replace(/\/[^/]*$/, "/imprint.html");
-      url.searchParams.set("v", IMPRINT_PAGE_TAG);
-      return url.pathname + url.search + url.hash;
+      var base = pageBase();
+      var hash = url.hash || "";
+      var panel = hash.replace(/^#/, "");
+      if (panel && ["imprint", "terms", "policy"].indexOf(panel) !== -1) {
+        return base + "imprint#" + panel;
+      }
+      return base + "imprint" + hash;
     } catch (e) {
       return imprintPageHref();
     }
@@ -1131,7 +1128,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     }
 
     function animateMenuMotion(open, onDone) {
-      if (!hasGsap || reducedMotion || isLegalPage()) {
+      if (!hasGsap || reducedMotion) {
         if (open) {
           if (menuVeil) {
             menuVeil.style.opacity = "1";
@@ -1395,12 +1392,12 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     }
 
     function goTo(href) {
-      if (isLegalHref(href)) {
-        window.location.replace(normalizeLegalHref(href));
-        return;
-      }
       if (window.AimySpa && typeof window.AimySpa.canHandle === "function" && window.AimySpa.canHandle(href)) {
         window.AimySpa.navigate(href);
+        return;
+      }
+      if (isLegalHref(href)) {
+        window.location.replace(normalizeLegalHref(href));
         return;
       }
       if (window.AimyPageTransition && typeof window.AimyPageTransition.navigate === "function") {
@@ -1521,11 +1518,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     document.addEventListener("keydown", function (e) {
       if (!isOpen) return;
 
-      if (e.key === "Escape") {
-        e.preventDefault();
-        if (canClick) closeMenu();
-        return;
-      }
+      if (e.key === "Escape") return;
 
       if (menuCarouselWrap) return;
 
@@ -1575,6 +1568,11 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     }
 
     window.__aimyCloseMenu = closeMenu;
+    window.__aimyOpenMenu = openMenu;
+    window.__aimyToggleMenu = toggle;
+    window.__aimyMenuIsOpen = function () {
+      return isOpen;
+    };
 
     showHits(false);
     requestAnimationFrame(draw);
@@ -1586,10 +1584,6 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       hasGsap = typeof gsap !== "undefined";
       bootMenuDom();
       if (typeof onReady === "function") onReady();
-    }
-    if (isLegalPage()) {
-      finish();
-      return;
     }
     if (typeof gsap !== "undefined" || reducedMotion) {
       finish();

@@ -44,7 +44,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
     {
       id: "me",
       label: "Me",
-      href: "./about.html",
+      href: "./me",
       model: "./assets/polykroma/select/polaroid.glb?v=" + MODEL_VERSION,
       hitZoneScale: 0.9,
     },
@@ -170,7 +170,6 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
   function itemHref(item) {
     if (!item) return "./";
-    if (item.id === "me") return item.href;
     if (
       window.AimySpa &&
       typeof window.AimySpa.isHost === "function" &&
@@ -480,7 +479,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
       return;
     }
 
-    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight" && e.key !== "ArrowUp" && e.key !== "ArrowDown") {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") {
       return;
     }
 
@@ -489,14 +488,17 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
     if (!canNavigateInput()) return;
 
-    if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+    if (e.key === "ArrowLeft") {
       engageArrow("prev");
       prev();
       return;
     }
 
-    engageArrow("next");
-    next();
+    if (e.key === "ArrowRight") {
+      engageArrow("next");
+      next();
+      return;
+    }
   }
 
   function bindMenuNavigation() {
@@ -2150,6 +2152,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
     goTo: goTo,
     next: next,
     prev: prev,
+    openCurrent: openCurrent,
     syncToView: syncToView,
     resumeMenu: resumeMenu,
     pauseMenu: pauseMenu,

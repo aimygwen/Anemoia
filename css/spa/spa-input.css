@@ -1,0 +1,24 @@
+/**
+ * spa-input.css — keyboard / gamepad focus rings for hub pickers.
+ */
+
+.work-picker__item.is-aimy-input-focus,
+.ins-logs-deck__item.is-aimy-input-focus,
+.imprint-picker__btn.is-aimy-input-focus {
+  outline: 2px solid var(--pk-accent);
+  outline-offset: 4px;
+}
+
+.work-picker__item.is-aimy-input-focus.is-active,
+.ins-logs-deck__item.is-aimy-input-focus .ins-logs-deck__card,
+.imprint-picker__btn.is-aimy-input-focus.is-active {
+  outline-color: var(--pk-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-picker__item.is-aimy-input-focus,
+  .ins-logs-deck__item.is-aimy-input-focus,
+  .imprint-picker__btn.is-aimy-input-focus {
+    outline-width: 3px;
+  }
+}

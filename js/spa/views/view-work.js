@@ -39,6 +39,7 @@
     lowpoly: "Lowpoly",
     stills: "Stills",
     motion: "Motion",
+    sculpts: "Sculpts",
   };
 
   function loadCss(href) {
@@ -96,8 +97,8 @@
     }
     window.AimySpaSubBack.show({
       onClick: function () {
-        if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
-          window.AimySpa.navigate(window.AimySpa.buildUrl("work", {}));
+        if (window.AimySpa && typeof window.AimySpa.goBack === "function") {
+          window.AimySpa.goBack();
         }
       },
     });
@@ -114,7 +115,7 @@
 
   function syncCategoryScroll(category) {
     var scroll = window.AimySpaViews || {};
-    if (category === "lowpoly") {
+    if (category === "lowpoly" || category === "sculpts") {
       if (typeof scroll.lockPageScroll === "function") scroll.lockPageScroll();
       haltScroll();
       return;
@@ -315,10 +316,11 @@
   function setBodyModes(category) {
     var isHytale = category === "hytale";
     var isLowpolySoon = category === "lowpoly";
+    var isSculpts = category === "sculpts";
     var isGallery = category === "stills" || category === "motion";
     document.body.classList.toggle("lowpoly-page-body", isHytale);
     document.body.classList.toggle("gallery-page-body", isGallery);
-    if (isHytale) {
+    if (isHytale || isSculpts) {
       document.body.setAttribute("data-work-bare", "1");
     } else {
       document.body.removeAttribute("data-work-bare");
@@ -327,6 +329,8 @@
       document.body.setAttribute("data-work-layout", "hytale-sketchbook");
     } else if (isLowpolySoon) {
       document.body.setAttribute("data-work-layout", "lowpoly-soon");
+    } else if (isSculpts) {
+      document.body.setAttribute("data-work-layout", "sculpts");
     } else {
       document.body.removeAttribute("data-work-layout");
       teardownStickerbook();
@@ -387,6 +391,12 @@
     });
   }
 
+  function ensureSculptsAssets() {
+    return loadCss("./css/work-sculpts.css?v=sculpts-12").then(function () {
+      return loadScript("./js/work-sculpts.js?v=sculpts-12");
+    });
+  }
+
   function startScroll() {
     if (!window.Polyglide) return;
     if (window.__lenis && typeof window.Polyglide.start === "function") {
@@ -406,6 +416,11 @@
     if (category === "stills" || category === "motion") {
       if (window.SpaPages.gallery && typeof window.SpaPages.gallery.unmount === "function") {
         window.SpaPages.gallery.unmount();
+      }
+    }
+    if (category === "sculpts") {
+      if (window.WorkSculpts && typeof window.WorkSculpts.teardown === "function") {
+        window.WorkSculpts.teardown();
       }
     }
   }
@@ -456,6 +471,17 @@
         });
         markContentItems(root.querySelector('[data-work-category-panel="' + category + '"]'));
         startScroll();
+      });
+    }
+
+    if (category === "sculpts") {
+      return ensureSculptsAssets().then(function () {
+        syncCategoryScroll(category);
+        var sculptsPanel = root.querySelector('[data-work-category-panel="sculpts"]');
+        if (!window.WorkSculpts || typeof window.WorkSculpts.mount !== "function") {
+          return;
+        }
+        return window.WorkSculpts.mount(sculptsPanel);
       });
     }
 
@@ -840,6 +866,7 @@
     pickerItems(root).forEach(function (item) {
       item.addEventListener("pointerdown", function (event) {
         event.stopPropagation();
+        if (scroller) scroller.setAttribute("data-drag-px", "0");
       });
 
       item.addEventListener("pointerenter", function () {
@@ -989,7 +1016,11 @@
     haltScroll();
     setDockVisible(root, false);
 
-    return mountCategoryContent(category).then(function () {
+    return mountCategoryContent(category)
+      .catch(function () {
+        /* Still open the panel if lazy assets fail. */
+      })
+      .then(function () {
       if (token !== revealToken || !canvas) {
         clearCanvasReveal(canvas);
         clearPreviewRevealPin(root);
@@ -1012,7 +1043,7 @@
         canvas.hidden = false;
         setPhase(root, "open", category);
         setDockVisible(root, true);
-        startScroll();
+        syncCategoryScroll(category);
         return;
       }
 
@@ -1045,7 +1076,7 @@
           if (deck) deck.style.display = "none";
           setPhase(root, "open", category);
           setDockVisible(root, true);
-          startScroll();
+          syncCategoryScroll(category);
           resolve();
         }
 
@@ -1142,6 +1173,11 @@
     });
   }
 
+  function hubIsChooser(root) {
+    var hub = workHub(root);
+    return !!(hub && hub.getAttribute("data-work-phase") === "choose");
+  }
+
   window.SpaPages.work = {
     mount: function (ctx) {
       var root = workRoot();
@@ -1155,6 +1191,11 @@
         teardownCategory(activeCategory);
         if (activeCategory === "hytale") {
           teardownStickerbook();
+        }
+        if (activeCategory === "sculpts") {
+          if (window.WorkSculpts && typeof window.WorkSculpts.teardown === "function") {
+            window.WorkSculpts.teardown();
+          }
         }
       }
 
@@ -1221,6 +1262,40 @@
       document.body.classList.remove("spa-work-choose");
       document.body.removeAttribute("data-work-layout");
       if (window.AimySpaSubBack) window.AimySpaSubBack.hide();
+    },
+    cyclePicker: function (dir) {
+      var root = workRoot();
+      if (!root || !hubIsChooser(root)) return false;
+      var items = pickerItems(root);
+      if (!items.length) return false;
+      var idx = -1;
+      var i;
+      for (i = 0; i < items.length; i++) {
+        if (items[i].classList.contains("is-aimy-input-focus") || items[i].classList.contains("is-active")) {
+          idx = i;
+          if (items[i].classList.contains("is-aimy-input-focus")) break;
+        }
+      }
+      if (idx < 0) idx = 0;
+      idx = (idx + dir + items.length) % items.length;
+      items.forEach(function (el, j) {
+        el.classList.toggle("is-aimy-input-focus", j === idx);
+      });
+      focusPickerItem(root, items[idx], { scroll: true });
+      return true;
+    },
+    confirmPicker: function () {
+      var root = workRoot();
+      if (!root || !hubIsChooser(root)) return false;
+      var active =
+        root.querySelector("[data-work-pick].is-aimy-input-focus") ||
+        root.querySelector("[data-work-pick].is-active");
+      if (!active) return false;
+      var next = active.getAttribute("data-work-pick");
+      if (window.AimySpa && typeof window.AimySpa.navigate === "function") {
+        window.AimySpa.navigate(window.AimySpa.buildUrl("work", next ? { category: next } : {}));
+      }
+      return true;
     },
   };
 })();

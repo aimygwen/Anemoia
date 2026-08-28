@@ -84,30 +84,7 @@ html.lenis-smooth {
   border: 0;
 }
 
-/* Chrome tuned to the pastel-violet page */
-.about-page-body {
-  --aimy-chrome-ink: var(--ink);
-  --aimy-primary: var(--ink);
-  --aimy-secondary: var(--violet-soft);
-  --aimy-tertiary: var(--violet-deep);
-  --aimy-accent: var(--pink);
-  --aimy-menu-coin: var(--pink);
-  --aimy-menu-coin-open: var(--blue);
-  --aimy-r1: var(--pk-soft);
-  --aimy-r2: var(--step-02);
-  --aimy-r3: var(--step-03);
-  --aimy-r4: var(--pk-soft);
-}
-
-.about-page-body .site-header[data-aimy-chrome] {
-  --aimy-chrome-ink: var(--ink);
-  --aimy-primary: var(--ink);
-  will-change: auto;
-}
-
-.about-page-body .site-header[data-aimy-chrome] .aimy-chrome-type-logo {
-  display: none !important;
-}
+/* Page content palette — chrome tokens stay on polykroma :root (+ mono-dev when loaded). */
 
 .about {
   --menu-reveal: 0;
@@ -130,6 +107,15 @@ html.lenis-smooth {
   overflow-x: clip;
   overflow-y: visible;
   background: var(--sky);
+}
+
+/* SPA — keep .about-sheet top margin from collapsing out of the view (empty page / off-screen fixed layers). */
+body.about-page-body .about {
+  display: flow-root;
+}
+
+body.about-page-body .spa-view[data-spa-view="me"] {
+  transform: none;
 }
 
 .scene-noise {
@@ -455,17 +441,6 @@ html.lenis-smooth {
     --sky: var(--pk-bg);
     --violet-soft: var(--pk-surface);
     --violet-deep: var(--step-03);
-    --aimy-chrome-ink: var(--pk-text);
-    --aimy-primary: var(--pk-primary);
-    --aimy-secondary: var(--pk-text);
-    --aimy-tertiary: var(--pk-heading);
-    --aimy-accent: var(--pk-accent);
-    --aimy-menu-coin: var(--pk-primary);
-    --aimy-menu-coin-open: var(--pk-accent);
-    --aimy-r1: color-mix(in srgb, var(--step-07) 70%, var(--step-08));
-    --aimy-r2: color-mix(in srgb, var(--step-06) 45%, var(--step-08));
-    --aimy-r3: color-mix(in srgb, var(--step-07) 55%, var(--step-08));
-    --aimy-r4: color-mix(in srgb, var(--step-06) 35%, var(--step-08));
     color: var(--ink);
     background: var(--sky);
   }
@@ -477,9 +452,8 @@ html.lenis-smooth {
     color: var(--pk-heading);
   }
 
-  .about-page-body .site-header[data-aimy-chrome] {
-    --aimy-chrome-ink: var(--pk-text);
-    --aimy-primary: var(--pk-primary);
+  .about-page-body .site-header[data-aimy-chrome] .aimy-chrome-type-logo {
+    display: none !important;
   }
 
   .about {

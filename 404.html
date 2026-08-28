@@ -6,7 +6,7 @@
   <script>
     (function () {
       function siteBaseFromPath(path) {
-        var spaViews = ["work", "insights", "me", "contact", "start"];
+        var spaViews = ["work", "insights", "me", "contact", "imprint", "start"];
         path = (path || "/").replace(/\/index\.html$/i, "");
         var segments = path.split("/").filter(Boolean);
         var cutIdx = segments.length;
@@ -37,10 +37,6 @@
       var hash = window.location.hash || "";
       var base = siteBaseFromPath(path);
       var leaf = path.replace(/\/+$/, "").split("/").pop().toLowerCase();
-      if (leaf === "imprint" || leaf === "legal") {
-        window.location.replace(base + "imprint.html?v=imprint-ins-48" + search + hash);
-        return;
-      }
       try {
         sessionStorage.setItem("aimySpaRedirect", location.href);
       } catch (e) {}
