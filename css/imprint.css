@@ -12,9 +12,9 @@
 }
 
 :root {
-  --imprint-chrome-safe: calc(
+  --imprint-chrome-safe: var(--pk-view-header-h, calc(
     var(--aimy-chrome-top, 28px) + var(--aimy-brand-size, 72px) + var(--aimy-pad-y, 28px)
-  );
+  ));
   --imprint-content-left: 5vw;
   --imprint-content-width: 90vw;
   --pl-pad-top: clamp(1.25rem, 3.5vh, 2rem);

@@ -16,7 +16,7 @@
   --work-picker-rail-pad-x: clamp(0.75rem, 2.8vw, 2rem);
   --work-picker-rail-pad-b: clamp(1rem, 3.5vh, 2.35rem);
   --work-dock-title: clamp(0.6875rem, 1.6vw, 0.8125rem);
-  --work-dock-top: calc(var(--aimy-chrome-top, 24px) + var(--aimy-brand-size, 72px) + 0.28rem);
+  --work-dock-top: var(--pk-view-dock-top, calc(var(--aimy-chrome-top, 24px) + var(--aimy-brand-size, 72px) + 0.28rem));
   --work-media-size: clamp(118px, 16vw, 210px);
   --work-media-gap: clamp(2.75rem, 9vh, 5.5rem);
 

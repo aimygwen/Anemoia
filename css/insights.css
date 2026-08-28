@@ -15,9 +15,9 @@
   /* Step-derived stage + one soft pink accent */
   --ins-gutter: 10vw;
   --ins-content: 80vw;
-  --ins-chrome-h: calc(
+  --ins-chrome-h: var(--pk-view-header-h, calc(
     var(--aimy-chrome-top, 28px) + var(--aimy-brand-size, 72px) + var(--aimy-pad-y, 28px)
-  );
+  ));
   --ins-log-top: calc(var(--ins-chrome-h) + clamp(1.25rem, 3.5vh, 2.5rem));
   --ins-paper: var(--step-01);
   --ins-ink: var(--step-08);

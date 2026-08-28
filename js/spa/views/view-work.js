@@ -370,7 +370,7 @@
   function ensureLowpolyAssets() {
     window.LOWPOLY_ASSET_BASE = "./assets/content/";
     window.LOWPOLY_CATALOG_URL = "./assets/content/lowpoly/catalog.json";
-    return loadCss("./css/lowpoly.css?v=lowpoly-rail-44")
+    return loadCss("./css/lowpoly.css?v=lowpoly-rail-45")
       .then(function () {
         return loadCss("./css/lowpoly-aimy.css?v=branding-3");
       })
