@@ -132,6 +132,9 @@
   } else if (/^(lowpoly|gallery|insights|contact)\.html$/i.test(file)) {
     document.documentElement.classList.add("spa-route-not-start");
   }
+  if (routeMatch && routeMatch[1].toLowerCase() === "imprint") {
+    document.documentElement.classList.add("spa-route-imprint");
+  }
 })();
 </script>
 <link rel="preload" as="image" href="./assets/splash1.png?v=home-splash-25">
@@ -142,7 +145,7 @@
 <link rel="stylesheet" href="./css/spa/spa-sub-back.css?v=spa-2" />
 <link rel="stylesheet" href="./css/spa/spa-input.css?v=spa-input-1" />
 <link rel="stylesheet" href="./css/menu-carousel.css?v=menu-carousel-42">
-<link rel="stylesheet" href="./css/home-overrides.css?v=home-splash-22">
+<link rel="stylesheet" href="./css/home-overrides.css?v=home-splash-23">
 <link rel="stylesheet" href="./css/home-hero.css?v=home-splash-32">
 <link rel="stylesheet" href="./css/wordmark-holo.css?v=wordmark-holo-2">
 <link rel="stylesheet" href="./css/mono-dev.css?v=mono-dev-47">
@@ -228,7 +231,7 @@
 <script src="./js/spa/spa-router.js?v=spa-31" defer></script>
 <script src="./js/spa/spa-transitions.js?v=spa-14" defer></script>
 <script src="./js/spa/spa-a11y.js?v=spa-14" defer></script>
-<script src="./js/spa/spa-views.js?v=spa-201" defer></script>
+<script src="./js/spa/spa-views.js?v=spa-202" defer></script>
 <script src="./js/spa/spa-prefetch.js?v=spa-2" defer></script>
 <script src="./js/spa/spa-nav.js?v=spa-14" defer></script>
 <script src="./js/spa/spa-sub-back.js?v=spa-2" defer></script>

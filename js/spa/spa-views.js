@@ -229,7 +229,7 @@
       ],
       mount: function (ctx) {
         resetBodyState();
-        document.documentElement.classList.add("spa-route-not-start");
+        document.documentElement.classList.add("spa-route-not-start", "spa-route-imprint");
         document.body.classList.add("spa-view-imprint", "imprint-page-body", "insights-page-body");
         document.body.classList.remove(
           "spa-view-start",
@@ -248,6 +248,7 @@
         if (window.SpaPages && window.SpaPages.imprint && typeof window.SpaPages.imprint.unmount === "function") {
           window.SpaPages.imprint.unmount();
         }
+        document.documentElement.classList.remove("spa-route-imprint");
         document.body.classList.remove("spa-view-imprint", "imprint-page-body", "insights-page-body");
       },
     },
