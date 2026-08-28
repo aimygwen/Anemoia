@@ -370,9 +370,9 @@
   function ensureLowpolyAssets() {
     window.LOWPOLY_ASSET_BASE = "./assets/content/";
     window.LOWPOLY_CATALOG_URL = "./assets/content/lowpoly/catalog.json";
-    return loadCss("./css/lowpoly.css?v=lowpoly-rail-43")
+    return loadCss("./css/lowpoly.css?v=lowpoly-rail-44")
       .then(function () {
-        return loadCss("./css/lowpoly-aimy.css?v=branding-2");
+        return loadCss("./css/lowpoly-aimy.css?v=branding-3");
       })
       .then(function () {
         return loadScript("./js/lowpoly-catalog-data.js?v=lowpoly-rail-43");
@@ -386,13 +386,13 @@
   }
 
   function ensureGalleryAssets() {
-    return loadCss("./css/gallery.css?v=gallery-atelier-9").then(function () {
+    return loadCss("./css/gallery.css?v=gallery-atelier-10").then(function () {
       return loadScript("./js/gallery.js?v=gallery-atelier-9");
     });
   }
 
   function ensureSculptsAssets() {
-    return loadCss("./css/work-sculpts.css?v=sculpts-12").then(function () {
+      return loadCss("./css/work-sculpts.css?v=sculpts-13").then(function () {
       return loadScript("./js/work-sculpts.js?v=sculpts-12");
     });
   }

@@ -3,7 +3,7 @@
  */
 
 .spa-view[data-spa-view="work"] {
-  background-color: var(--pk-bg);
+  background: transparent;
   min-height: calc(100dvh - var(--pk-header-h, 72px));
 }
 
@@ -81,7 +81,7 @@ body.spa-view-work.spa-work-choose #app-viewport {
   min-height: inherit;
   height: 100%;
   isolation: isolate;
-  background: var(--pk-bg);
+  background: transparent;
 }
 
 .work-picker__preview-stage {

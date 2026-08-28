@@ -37,15 +37,12 @@ body.spa-view-start {
   background-color: var(--aimy-splash-ground, #E7CBFF) !important;
 }
 
-html.spa-route-not-start:has(body.spa-view-work),
-html.spa-route-not-start:has(body.spa-view-insights),
-html.spa-route-not-start:has(body.spa-view-me),
-html.spa-route-not-start:has(body.spa-view-contact),
 html.spa-route-not-start:has(body.spa-view-work) body,
 html.spa-route-not-start:has(body.spa-view-insights) body,
 html.spa-route-not-start:has(body.spa-view-me) body,
 html.spa-route-not-start:has(body.spa-view-contact) body {
-  background-color: var(--pk-bg) !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 html.spa-route-not-start .c-welcome[data-aimy-splash-only],
@@ -183,8 +180,8 @@ body.spa-view-start .site-header[data-aimy-chrome] .aimy-chrome-type-logo {
 
 .aimy-splash-tagline {
   position: absolute;
-  left: max(clamp(1rem, 3vw, 2rem), env(safe-area-inset-left, 0px));
-  bottom: max(clamp(1rem, 3vh, 2rem), env(safe-area-inset-bottom, 0px));
+  left: max(clamp(1rem, 3vw, 2rem), var(--pk-safe-left));
+  bottom: max(clamp(1rem, 3vh, 2rem), var(--pk-safe-bottom));
   z-index: 4;
   margin: 0;
   max-width: min(22rem, 58vw);

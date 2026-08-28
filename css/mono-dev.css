@@ -21,6 +21,14 @@
   --step-08: #141414;
 
   --pk-bg: var(--step-01);
+  --pk-bg-radial-center: color-mix(in srgb, var(--step-01) 96%, var(--step-02));
+  --pk-bg-radial-edge: color-mix(in srgb, var(--step-01) 90%, var(--step-07));
+  --pk-bg-radial: radial-gradient(
+    ellipse 120% 105% at 50% 44%,
+    var(--pk-bg-radial-center) 0%,
+    var(--pk-bg-radial-center) 58%,
+    var(--pk-bg-radial-edge) 100%
+  );
   --pk-surface: var(--step-02);
   --pk-hover: var(--step-03);
   --pk-text: var(--step-07);
@@ -66,6 +74,14 @@
     --step-08: #ffffff;
 
     --pk-bg: var(--step-01);
+    --pk-bg-radial-center: var(--step-01);
+    --pk-bg-radial-edge: var(--step-03);
+    --pk-bg-radial: radial-gradient(
+      ellipse 120% 105% at 50% 44%,
+      var(--pk-bg-radial-center) 0%,
+      var(--pk-bg-radial-center) 55%,
+      var(--pk-bg-radial-edge) 100%
+    );
     --pk-surface: var(--step-02);
     --pk-hover: var(--step-03);
     --pk-border: color-mix(in srgb, var(--step-04) 70%, transparent);
@@ -88,7 +104,15 @@
     --aimy-chrome-ink: var(--pk-text);
   }
 
-  html,
+  html {
+    background-color: var(--pk-bg-radial-edge) !important;
+    background-image: var(--pk-bg-radial) !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    color: var(--pk-text);
+  }
+
   body,
   #app-viewport,
   .spa-viewport,
@@ -97,9 +121,14 @@
   .page,
   .work-hub,
   .about-page-body,
-  .insights-page-body {
-    background-color: var(--pk-bg) !important;
+  .insights-page-body:not(.imprint-page-body) {
+    background: transparent !important;
+    background-color: transparent !important;
     color: var(--pk-text);
+  }
+
+  body.imprint-page-body {
+    background-color: var(--pk-bg) !important;
   }
 
   html:has(body.spa-view-start),
@@ -147,9 +176,16 @@
   }
 }
 
-html,
 body {
-  background-color: var(--pk-bg) !important;
+  background-color: transparent !important;
+}
+
+html {
+  background-color: var(--pk-bg-radial-edge) !important;
+  background-image: var(--pk-bg-radial) !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
 }
 
 /* Charm hover — flat greyscale (layer colors live in charm-mark.css) */
@@ -307,13 +343,10 @@ body[data-spa-host] .spa-site-footer {
 }
 
 /* Non-Start SPA views — splash node stays in DOM; override any :has([data-aimy-splash-only]) tint. */
-html.spa-route-not-start:has(body.spa-view-work),
-html.spa-route-not-start:has(body.spa-view-insights),
-html.spa-route-not-start:has(body.spa-view-me),
-html.spa-route-not-start:has(body.spa-view-contact),
 html.spa-route-not-start:has(body.spa-view-work) body,
 html.spa-route-not-start:has(body.spa-view-insights) body,
 html.spa-route-not-start:has(body.spa-view-me) body,
 html.spa-route-not-start:has(body.spa-view-contact) body {
-  background-color: var(--pk-bg) !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }

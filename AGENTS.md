@@ -65,7 +65,8 @@ Use `--pk-*` (or the older `--aimy-*` aliases) so components flip automatically 
 
 | Token | Light mode | Dark mode |
 |-------|------------|-----------|
-| `--pk-bg` | `--step-01` | `oklch(from --step-08 0.105 0.014 h)` — off-black ground |
+| `--pk-bg` | `--step-01` | `oklch(0 0 0)` — flat ground fallback / UI fills |
+| `--pk-bg-radial` | light center `--step-01`, edge `color-mix(--step-01, --step-07)` | dark center `oklch(0 0 0)`, edge `oklch(from --step-08 …)` — fixed `html` vignette |
 | `--pk-surface` | `--step-02` | `oklch(from --step-08 0.148 0.02 h)` — elevated panel |
 | `--pk-hover` | `--step-03` | `oklch(from --step-08 0.188 0.026 h)` |
 | `--pk-border` | `--pk-soft` | `color-mix(--step-06 30%, transparent)` |

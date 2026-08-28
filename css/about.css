@@ -35,7 +35,6 @@
 
 html {
   min-height: 100%;
-  background: var(--sky);
   scroll-behavior: auto;
   overscroll-behavior: none;
   overflow-x: clip;
@@ -43,7 +42,7 @@ html {
 
 html:has(.about-page-body),
 body.about-page-body {
-  background: var(--sky) !important;
+  background: transparent !important;
 }
 
 .about-page-body {
@@ -52,7 +51,7 @@ body.about-page-body {
   min-height: 100%;
   overflow-x: hidden;
   color: var(--ink);
-  background: var(--sky);
+  background: transparent;
   font-family: Arial, Helvetica, sans-serif;
   overscroll-behavior: none;
   -webkit-font-smoothing: antialiased;
@@ -106,7 +105,7 @@ html.lenis-smooth {
   min-height: 280vh;
   overflow-x: clip;
   overflow-y: visible;
-  background: var(--sky);
+  background: transparent;
 }
 
 /* SPA — keep .about-sheet top margin from collapsing out of the view (empty page / off-screen fixed layers). */
@@ -241,7 +240,7 @@ body.about-page-body .spa-view[data-spa-view="me"] {
   pointer-events: none;
   opacity: var(--hero-identity);
   left: calc(
-    (1 - var(--hud-pin)) * 50% + var(--hud-pin) * max(var(--aimy-chrome-left, 1rem), env(safe-area-inset-left, 0px))
+    (1 - var(--hud-pin)) * 50% + var(--hud-pin) * max(var(--aimy-chrome-left, 1rem), var(--pk-safe-left))
   );
   top: calc(
     (1 - var(--hud-pin)) * 46% + var(--hud-pin) * (var(--aimy-chrome-top) + var(--aimy-brand-size) + 0.15rem)
@@ -429,7 +428,7 @@ body.about-page-body .spa-view[data-spa-view="me"] {
 
 @media (prefers-color-scheme: dark) {
   html:has(.about-page-body) {
-    background: var(--pk-bg);
+    background: transparent;
   }
 
   .about-page-body {
@@ -438,11 +437,11 @@ body.about-page-body .spa-view[data-spa-view="me"] {
     --pink: color-mix(in srgb, var(--step-06) 38%, var(--pk-bg));
     --peach: var(--pk-surface);
     --blue: color-mix(in srgb, var(--step-06) 28%, var(--pk-bg));
-    --sky: var(--pk-bg);
+    --sky: transparent;
     --violet-soft: var(--pk-surface);
     --violet-deep: var(--step-03);
     color: var(--ink);
-    background: var(--sky);
+    background: transparent;
   }
 
   .about-page-body h1,
@@ -457,7 +456,7 @@ body.about-page-body .spa-view[data-spa-view="me"] {
   }
 
   .about {
-    background: var(--sky);
+    background: transparent;
   }
 
   .about-hero__mark {

@@ -71,7 +71,7 @@ body.spa-view-work[data-work-layout="sculpts"] .work-sculpts {
   outline: none;
   z-index: 0;
   touch-action: none;
-  background: var(--pk-bg);
+  background: transparent;
 }
 
 .work-sculpts__stage::before {

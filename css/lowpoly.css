@@ -89,7 +89,7 @@
     transform: translateY(30px);
     transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
-    padding: clamp(2rem, 4vw, 3rem) var(--page-pad-x) env(safe-area-inset-bottom, 0px) var(--page-pad-x);
+    padding: clamp(2rem, 4vw, 3rem) var(--page-pad-x) var(--pk-safe-bottom) var(--page-pad-x);
     max-width: min(1600px, 100%);
     margin: 0 auto;
     position: relative;
@@ -117,7 +117,7 @@
     max-width: min(960px, 100%);
     margin: 0 auto 3rem auto;
     padding:
-        calc(clamp(5rem, 9vw, 7.5rem) + env(safe-area-inset-top, 0px))
+        calc(clamp(5rem, 9vw, 7.5rem) + var(--pk-safe-top))
         var(--page-pad-x)
         0;
     box-sizing: border-box;
@@ -210,7 +210,7 @@
     max-width: none;
     width: 100%;
     padding-top: 0;
-    padding-bottom: calc(7.5rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(7.5rem + var(--pk-safe-bottom));
 }
 
 #models.lp-models.lowpoly-main-section {
@@ -1852,7 +1852,7 @@ body.lightbox-open .brand {
     .lightbox--asset .lb-content,
     .lightbox--extension .lb-content {
         --lb-chrome-clear: calc(
-            var(--aimy-chrome-top, max(0.75rem, env(safe-area-inset-top, 0px)))
+            var(--aimy-chrome-top, max(0.75rem, var(--pk-safe-top)))
             + var(--aimy-brand-size, 70px)
             + 0.65rem
         );
@@ -1997,7 +1997,7 @@ body.lightbox-open .brand {
         margin: 0;
         padding:
             1.1rem clamp(1rem, 4vw, 1.35rem)
-            calc(2.15rem + env(safe-area-inset-bottom, 0px));
+            calc(2.15rem + var(--pk-safe-bottom));
         background: transparent !important;
         box-shadow: none !important;
         border: none !important;
@@ -2169,7 +2169,7 @@ body.lightbox-open .brand {
     left: 50%;
     right: auto;
     top: auto;
-    bottom: calc(2.85rem + env(safe-area-inset-bottom, 0px));
+    bottom: calc(2.85rem + var(--pk-safe-bottom));
     /* Above card hover lifts (≤10); below lightbox (1000); never over logo */
     z-index: 80;
     padding: 0.55rem 0.65rem;
@@ -2281,7 +2281,7 @@ body.lightbox-open .filter-bar.is-visible {
         gap: 0.5rem;
         border-radius: 999px;
         max-width: calc(100vw - 1.25rem);
-        bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
+        bottom: calc(2.5rem + var(--pk-safe-bottom));
     }
     .filter-bar::-webkit-scrollbar { display: none; }
     .filter-pill {

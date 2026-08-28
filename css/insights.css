@@ -33,12 +33,16 @@
 
   margin: 0;
   color: var(--ins-ink);
-  background: var(--ins-paper);
+  background: transparent;
   font-family: var(--ins-sans);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   overscroll-behavior: none;
   color-scheme: light dark;
+}
+
+body.imprint-page-body.insights-page-body {
+  background: var(--ins-paper);
 }
 
 html:has(.insights-page-body) {
@@ -80,8 +84,9 @@ html.page-loading .insights-page-body {
 }
 
 @media (prefers-color-scheme: dark) {
-  html:has(body.insights-page-body),
-  html:has(body.insights-page-body) body.insights-page-body {
+  html:has(body.insights-page-body:not(.imprint-page-body)),
+  html:has(body.insights-page-body:not(.imprint-page-body))
+    body.insights-page-body:not(.imprint-page-body) {
     --ins-paper: oklch(0 0 0);
     --ins-ink: var(--pk-heading);
     --ins-muted: var(--pk-text);
@@ -90,9 +95,14 @@ html.page-loading .insights-page-body {
     --ins-pink-deep: color-mix(in srgb, var(--step-03) 72%, var(--pk-heading));
     --ins-lavender: var(--ins-pink);
 
-    background-color: var(--ins-paper) !important;
+    background-color: transparent !important;
     color: var(--ins-ink);
     color-scheme: dark;
+  }
+
+  html:has(body.imprint-page-body),
+  html:has(body.imprint-page-body) body.imprint-page-body {
+    background-color: var(--ins-paper) !important;
   }
 
   html:has(body.insights-page-body:not(.imprint-page-body)),

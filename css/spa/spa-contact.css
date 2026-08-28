@@ -19,7 +19,7 @@ body.contact-page-body {
   --contact-hero-fit: var(--contact-hero-base);
 
   color: var(--pk-heading);
-  background: var(--pk-bg);
+  background: transparent;
   overflow: hidden;
   height: 100%;
   min-height: 100dvh;

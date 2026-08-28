@@ -64,8 +64,8 @@ html:has(.lowpoly-page-body) {
   --lp-space-4: 2rem;
   --lp-space-5: 3.25rem;
   --lp-space-6: 5rem;
-  --lp-dock-inset: calc(2.85rem + env(safe-area-inset-bottom, 0px));
-  --lp-dock-clearance: calc(7.5rem + env(safe-area-inset-bottom, 0px));
+  --lp-dock-inset: calc(2.85rem + var(--pk-safe-bottom));
+  --lp-dock-clearance: calc(7.5rem + var(--pk-safe-bottom));
   --lp-lb-actions-bottom: clamp(1.5rem, 4vh, 2.5rem);
   --lp-lb-meta-inset-x: clamp(2rem, 5.5vw, 4rem);
   --lp-lb-meta-inset-y: clamp(2rem, 5.5vh, 3.75rem);
@@ -330,7 +330,7 @@ html:has(.lowpoly-page-body) {
   background: transparent;
   margin: 0;
   padding:
-    calc(clamp(7.5rem, 18vh, 10rem) + env(safe-area-inset-top, 0px))
+    calc(clamp(7.5rem, 18vh, 10rem) + var(--pk-safe-top))
     0
     clamp(1.5rem, 4vh, 2.25rem);
 }
@@ -432,11 +432,11 @@ html:has(.lowpoly-page-body) {
 }
 
 .lp-polybi-logo__nav--prev {
-  left: max(0.25rem, calc(env(safe-area-inset-left, 0px) + 0.15rem));
+  left: max(0.25rem, calc(var(--pk-safe-left) + 0.15rem));
 }
 
 .lp-polybi-logo__nav--next {
-  right: max(0.25rem, calc(env(safe-area-inset-right, 0px) + 0.15rem));
+  right: max(0.25rem, calc(var(--pk-safe-right) + 0.15rem));
 }
 
 .lp-polybi-logo__nav-icon {
@@ -596,7 +596,7 @@ body[data-lp-universe="works"] [data-lp-hero-art="hytale"] {
   padding:
     0
     0
-    env(safe-area-inset-bottom, 0px);
+    var(--pk-safe-bottom);
   max-width: none;
   width: 100%;
   margin-left: 0;
@@ -812,7 +812,7 @@ body.lightbox-open .filter-bar.is-visible {
 
 @media (max-width: 768px) {
   .filter-bar {
-    --lp-dock-inset: calc(2.5rem + env(safe-area-inset-bottom, 0px));
+    --lp-dock-inset: calc(2.5rem + var(--pk-safe-bottom));
     width: auto;
     max-width: calc(100vw - 1.25rem);
     flex-wrap: nowrap;
@@ -1806,7 +1806,7 @@ body.lightbox-open .filter-bar.is-visible {
     margin: 0 !important;
     padding:
       var(--lp-space-3) var(--lp-lb-pad-x)
-      calc(var(--lp-space-4) + env(safe-area-inset-bottom, 0px)) !important;
+      calc(var(--lp-space-4) + var(--pk-safe-bottom)) !important;
     background: transparent !important;
     box-shadow: none !important;
     border: none !important;
@@ -1915,7 +1915,7 @@ body.lightbox-open .filter-bar.is-visible {
   padding:
     clamp(2rem, 5vh, 3rem)
     var(--page-pad-x)
-    calc(clamp(2rem, 4vh, 3rem) + env(safe-area-inset-bottom, 0px));
+    calc(clamp(2rem, 4vh, 3rem) + var(--pk-safe-bottom));
   display: flex;
   flex-direction: column;
   align-items: center;

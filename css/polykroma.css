@@ -36,6 +36,11 @@ html {
   min-height: 100%;
   overflow-x: clip;
   -webkit-text-size-adjust: 100%;
+  background-color: var(--pk-bg-radial-edge);
+  background-image: var(--pk-bg-radial);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 body {
@@ -44,6 +49,8 @@ body {
   width: 100%;
   min-height: 100%;
   overflow-x: clip;
+  background: transparent;
+  color: var(--pk-text);
 }
 
 :root {
@@ -61,6 +68,14 @@ body {
 
   /* Semantic aliases */
   --pk-bg: var(--step-01);
+  --pk-bg-radial-center: color-mix(in srgb, var(--step-01) 97%, var(--step-02));
+  --pk-bg-radial-edge: color-mix(in srgb, var(--step-01) 86%, var(--step-08));
+  --pk-bg-radial: radial-gradient(
+    ellipse 120% 105% at 50% 44%,
+    var(--pk-bg-radial-center) 0%,
+    var(--pk-bg-radial-center) 58%,
+    var(--pk-bg-radial-edge) 100%
+  );
   --pk-surface: var(--step-02);
   --pk-hover: var(--step-03);
   --pk-border: var(--pk-soft);
@@ -105,10 +120,14 @@ body {
   --aimy-social-gap: clamp(14px, 1.5vw, 20px);
   --aimy-menu-size: clamp(44px, 3.8vw, 56px);
   --aimy-menu-gap: 36px;
-  --aimy-chrome-top: max(var(--aimy-pad-y), env(safe-area-inset-top, 0px));
-  --aimy-chrome-bottom: max(var(--aimy-pad-y), env(safe-area-inset-bottom, 0px));
-  --aimy-chrome-right: max(var(--aimy-pad-x), env(safe-area-inset-right, 0px));
-  --aimy-chrome-left: max(var(--aimy-pad-x), env(safe-area-inset-left, 0px));
+  --pk-safe-top: env(safe-area-inset-top, 0px);
+  --pk-safe-right: env(safe-area-inset-right, 0px);
+  --pk-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --pk-safe-left: env(safe-area-inset-left, 0px);
+  --aimy-chrome-top: max(var(--aimy-pad-y), var(--pk-safe-top));
+  --aimy-chrome-bottom: max(var(--aimy-pad-y), var(--pk-safe-bottom));
+  --aimy-chrome-right: max(var(--aimy-pad-x), var(--pk-safe-right));
+  --aimy-chrome-left: max(var(--aimy-pad-x), var(--pk-safe-left));
   --aimy-chrome-edge-inset-top: calc(
     var(--aimy-chrome-top) + (var(--aimy-brand-size) - var(--aimy-menu-size)) / 2
   );
@@ -224,6 +243,14 @@ body {
      * Pure black ground + white headings / light grey body copy.
      */
     --pk-bg: oklch(0 0 0);
+    --pk-bg-radial-center: oklch(0 0 0);
+    --pk-bg-radial-edge: oklch(from var(--step-08) 0.07 0.006 h);
+    --pk-bg-radial: radial-gradient(
+      ellipse 120% 105% at 50% 44%,
+      var(--pk-bg-radial-center) 0%,
+      var(--pk-bg-radial-center) 55%,
+      var(--pk-bg-radial-edge) 100%
+    );
     --pk-surface: oklch(from var(--step-08) 0.055 0.005 h);
     --pk-hover: oklch(from var(--step-08) 0.1 0.008 h);
     --pk-border: color-mix(in srgb, var(--step-06) 22%, transparent);
@@ -271,10 +298,17 @@ body {
     --polykroma-menu-veil-fill: color-mix(in srgb, var(--pk-bg) 92%, transparent);
   }
 
-  html,
-  body {
-    background-color: var(--pk-bg);
+  html {
+    background-color: var(--pk-bg-radial-edge);
+    background-image: var(--pk-bg-radial);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
     color: var(--pk-text);
+  }
+
+  body {
+    background: transparent;
   }
 
   h1,
@@ -1481,7 +1515,7 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   padding:
     calc(var(--aimy-chrome-top, 24px) + var(--aimy-brand-size, 72px) + clamp(2rem, 5.5vh, 4rem))
     var(--aimy-chrome-right, 40px)
-    max(32px, env(safe-area-inset-bottom, 0px))
+    max(32px, var(--pk-safe-bottom))
     var(--aimy-chrome-left, 40px);
   background: transparent;
   pointer-events: none;
@@ -1851,9 +1885,9 @@ html.pk-menu-open body {
     align-items: center;
     padding:
       calc(var(--aimy-chrome-top, 24px) + var(--aimy-brand-size, 72px) + clamp(1.5rem, 4.5vh, 3rem))
-      max(var(--aimy-chrome-right, 40px), env(safe-area-inset-right, 0px))
-      max(24px, env(safe-area-inset-bottom, 0px))
-      max(var(--aimy-chrome-left, 40px), env(safe-area-inset-left, 0px));
+      max(var(--aimy-chrome-right, 40px), var(--pk-safe-right))
+      max(24px, var(--pk-safe-bottom))
+      max(var(--aimy-chrome-left, 40px), var(--pk-safe-left));
   }
 
   .pk-menu-panel {
@@ -2222,5 +2256,15 @@ body[data-spa-host] .aimy-pt {
   .aimy-pt__logo {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/* Mobile: full-bleed under notch / Dynamic Island / home indicator */
+@media (max-width: 820px) {
+  :root {
+    --pk-safe-top: 0px;
+    --pk-safe-right: 0px;
+    --pk-safe-bottom: 0px;
+    --pk-safe-left: 0px;
   }
 }
