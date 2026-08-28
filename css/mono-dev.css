@@ -106,11 +106,13 @@
 
   html {
     background-color: var(--pk-bg-radial-edge) !important;
-    background-image: var(--pk-bg-radial) !important;
-    background-repeat: no-repeat !important;
-    background-size: cover !important;
-    background-attachment: fixed !important;
+    background-image: none !important;
     color: var(--pk-text);
+  }
+
+  html::before {
+    background-color: var(--pk-bg-radial-edge) !important;
+    background-image: var(--pk-bg-radial) !important;
   }
 
   body,
@@ -182,10 +184,7 @@ body {
 
 html {
   background-color: var(--pk-bg-radial-edge) !important;
-  background-image: var(--pk-bg-radial) !important;
-  background-repeat: no-repeat !important;
-  background-size: cover !important;
-  background-attachment: fixed !important;
+  background-image: none !important;
 }
 
 /* Charm hover — flat greyscale (layer colors live in charm-mark.css) */

@@ -392,7 +392,7 @@
   }
 
   function ensureSculptsAssets() {
-      return loadCss("./css/work-sculpts.css?v=sculpts-14").then(function () {
+      return loadCss("./css/work-sculpts.css?v=sculpts-15").then(function () {
       return loadScript("./js/work-sculpts.js?v=sculpts-12");
     });
   }

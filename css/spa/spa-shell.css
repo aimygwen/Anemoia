@@ -63,7 +63,7 @@ body[data-spa-host] .site-header[data-aimy-chrome] .spa-primary-nav {
 body[data-spa-host] {
   display: flex;
   flex-direction: column;
-  min-height: var(--pk-screen-h, 100vh);
+  min-height: var(--pk-screen-h, 100lvh);
   margin: 0;
   padding: 0;
   width: 100%;
@@ -71,7 +71,7 @@ body[data-spa-host] {
 
 body[data-spa-host] #app-viewport {
   flex: 1 0 auto;
-  min-height: var(--pk-screen-h, 100vh);
+  min-height: var(--pk-screen-h, 100lvh);
 }
 
 /* Header wordmark lives on Start splash only — coin menu + dock titles elsewhere. */

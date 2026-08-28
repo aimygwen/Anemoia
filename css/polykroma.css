@@ -33,21 +33,36 @@ html {
   margin: 0;
   padding: 0;
   width: 100%;
-  min-height: var(--pk-screen-h, 100vh);
+  min-height: 100vh;
+  min-height: 100lvh;
   overflow-x: clip;
   -webkit-text-size-adjust: 100%;
+  background-color: var(--pk-bg-radial-edge);
+}
+
+/* Fixed layer — iOS ignores background-attachment:fixed in safe areas; extend through insets */
+html::before {
+  content: "";
+  position: fixed;
+  z-index: -9999;
+  top: calc(-1 * env(safe-area-inset-top, 0px));
+  right: calc(-1 * env(safe-area-inset-right, 0px));
+  bottom: calc(-1 * env(safe-area-inset-bottom, 0px));
+  left: calc(-1 * env(safe-area-inset-left, 0px));
   background-color: var(--pk-bg-radial-edge);
   background-image: var(--pk-bg-radial);
   background-repeat: no-repeat;
   background-size: cover;
-  background-attachment: fixed;
+  background-position: center;
+  pointer-events: none;
 }
 
 body {
   margin: 0;
   padding: 0;
   width: 100%;
-  min-height: var(--pk-screen-h, 100vh);
+  min-height: 100vh;
+  min-height: 100lvh;
   overflow-x: clip;
   background: transparent;
   color: var(--pk-text);
@@ -132,9 +147,9 @@ body {
   /* Fixed header overlays content — never subtract from viewport height */
   --pk-header-h: 0px;
   --pk-screen-h: 100vh;
-  --pk-screen-h: 100dvh;
+  --pk-screen-h: 100lvh;
   --pk-screen-w: 100vw;
-  --pk-screen-w: 100dvw;
+  --pk-screen-w: 100lvw;
   --aimy-chrome-top: max(var(--aimy-pad-y), var(--pk-chrome-safe-top));
   --aimy-chrome-bottom: max(var(--aimy-pad-y), var(--pk-chrome-safe-bottom));
   --aimy-chrome-right: max(var(--aimy-pad-x), var(--pk-chrome-safe-right));
@@ -313,11 +328,12 @@ body {
 
   html {
     background-color: var(--pk-bg-radial-edge);
-    background-image: var(--pk-bg-radial);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
     color: var(--pk-text);
+  }
+
+  html::before {
+    background-color: var(--pk-bg-radial-edge);
+    background-image: var(--pk-bg-radial);
   }
 
   body {

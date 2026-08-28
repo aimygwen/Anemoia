@@ -13,15 +13,15 @@ body.spa-view-work[data-work-layout="sculpts"] #app-viewport,
 body.spa-view-work[data-work-layout="sculpts"] .spa-view[data-spa-view="work"] {
   overflow: hidden;
   overscroll-behavior: none;
-  min-height: var(--pk-screen-h, 100vh) !important;
-  height: var(--pk-screen-h, 100vh);
+  min-height: var(--pk-screen-h, 100lvh) !important;
+  height: var(--pk-screen-h, 100lvh);
 }
 
 body.spa-view-work[data-work-layout="sculpts"] .work-hub {
   /* Header is position:fixed — do not subtract --pk-header-h or a strip appears below. */
-  height: var(--pk-screen-h, 100vh);
+  height: var(--pk-screen-h, 100lvh);
   min-height: 0;
-  max-height: var(--pk-screen-h, 100vh);
+  max-height: var(--pk-screen-h, 100lvh);
   overflow: hidden;
 }
 
@@ -47,7 +47,7 @@ body.spa-view-work[data-work-layout="sculpts"] .work-sculpts {
 }
 
 .work-sculpts {
-  --sculpt-vh: var(--pk-screen-h, 100vh);
+  --sculpt-vh: var(--pk-screen-h, 100lvh);
   --sculpt-drift: 1.15s;
   --sculpt-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --sculpt-deep-scale: 0.64;
@@ -161,7 +161,7 @@ body.spa-view-work[data-work-layout="sculpts"] .work-sculpts {
 
 @media (max-width: 820px) {
   .work-sculpts {
-    --sculpt-vh: var(--pk-screen-h, 100vh);
+    --sculpt-vh: var(--pk-screen-h, 100lvh);
   }
 }
 

@@ -121,7 +121,7 @@
         "./css/spa/spa-scaffold.css?v=spa-30",
         "./css/spa/spa-work.css?v=spa-72",
       ],
-      js: ["./js/spa/views/view-work.js?v=spa-96"],
+      js: ["./js/spa/views/view-work.js?v=spa-97"],
       mount: function (ctx) {
         resetBodyState();
         document.documentElement.classList.add("spa-route-not-start");

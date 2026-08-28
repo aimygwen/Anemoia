@@ -76,11 +76,13 @@
 
 html:has([data-spa-host]) {
   background-color: var(--pk-bg-radial-edge) !important;
-  background-image: var(--pk-bg-radial) !important;
-  background-repeat: no-repeat !important;
-  background-size: cover !important;
-  background-attachment: fixed !important;
+  background-image: none !important;
   color: var(--c-black);
+}
+
+html:has([data-spa-host])::before {
+  background-color: var(--pk-bg-radial-edge);
+  background-image: var(--pk-bg-radial);
 }
 
 html:has([data-spa-host]) body {
@@ -120,11 +122,13 @@ html:has([data-spa-host]) body {
 @media (prefers-color-scheme: dark) {
   html:has([data-spa-host]) {
     background-color: var(--pk-bg-radial-edge) !important;
-    background-image: var(--pk-bg-radial) !important;
-    background-repeat: no-repeat !important;
-    background-size: cover !important;
-    background-attachment: fixed !important;
+    background-image: none !important;
     color: var(--pk-text);
+  }
+
+  html:has([data-spa-host])::before {
+    background-color: var(--pk-bg-radial-edge);
+    background-image: var(--pk-bg-radial);
   }
 
   html:has([data-spa-host]) body {

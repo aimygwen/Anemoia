@@ -28,12 +28,12 @@ body[data-spa-host]:not(.imprint-page-body) #app-viewport .spa-view a {
 
 .spa-viewport {
   position: relative;
-  min-height: var(--pk-screen-h, 100vh);
+  min-height: var(--pk-screen-h, 100lvh);
 }
 
 .spa-view {
   width: 100%;
-  min-height: var(--pk-screen-h, 100vh);
+  min-height: var(--pk-screen-h, 100lvh);
 }
 
 .spa-view[hidden] {
@@ -44,18 +44,19 @@ body[data-spa-host]:not(.spa-view-start) .page.home-page {
   /* legacy hook if start markup remains in DOM while hidden */
 }
 
-/* Touch / narrow — true fullscreen canvas (JS sets --pk-screen-h from innerHeight on iOS) */
+/* Touch / narrow — 100lvh extends under Safari chrome */
 @media (max-width: 932px), ((hover: none) and (pointer: coarse)) {
   html,
   body[data-spa-host] {
     width: 100%;
-    min-height: var(--pk-screen-h, 100vh);
+    min-height: var(--pk-screen-h, 100lvh);
     padding: 0 !important;
+    margin: 0 !important;
   }
 
   body[data-spa-host] #app-viewport {
     width: 100%;
-    min-height: var(--pk-screen-h, 100vh);
+    min-height: var(--pk-screen-h, 100lvh);
     max-height: none;
     padding: 0 !important;
     margin: 0 !important;
@@ -71,7 +72,7 @@ body[data-spa-host]:not(.spa-view-start) .page.home-page {
   body[data-spa-host] .spa-view[data-spa-view="imprint"],
   body.spa-view-start .c-welcome[data-aimy-splash-only],
   body.spa-view-start .c-welcome[data-aimy-splash-only] .-w {
-    min-height: var(--pk-screen-h, 100vh);
+    min-height: var(--pk-screen-h, 100lvh);
   }
 
   body[data-spa-host] .spa-view[data-spa-view="work"] .work-hub[data-work-phase="choose"],
@@ -80,8 +81,8 @@ body[data-spa-host]:not(.spa-view-start) .page.home-page {
   body.contact-page-body .contact-stage,
   body.contact-page-body #app-viewport,
   body.contact-page-body .spa-view[data-spa-view="contact"] {
-    min-height: var(--pk-screen-h, 100vh);
-    height: var(--pk-screen-h, 100vh);
+    min-height: var(--pk-screen-h, 100lvh);
+    height: var(--pk-screen-h, 100lvh);
     max-height: none;
   }
 }
