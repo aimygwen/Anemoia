@@ -33,7 +33,7 @@ html {
   margin: 0;
   padding: 0;
   width: 100%;
-  min-height: 100%;
+  min-height: var(--pk-screen-h, 100vh);
   overflow-x: clip;
   -webkit-text-size-adjust: 100%;
   background-color: var(--pk-bg-radial-edge);
@@ -47,7 +47,7 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
-  min-height: 100%;
+  min-height: var(--pk-screen-h, 100vh);
   overflow-x: clip;
   background: transparent;
   color: var(--pk-text);
@@ -124,17 +124,23 @@ body {
   --pk-chrome-safe-right: env(safe-area-inset-right, 0px);
   --pk-chrome-safe-bottom: env(safe-area-inset-bottom, 0px);
   --pk-chrome-safe-left: env(safe-area-inset-left, 0px);
-  /* Page content insets — zeroed on mobile for edge-to-edge layouts */
-  --pk-safe-top: env(safe-area-inset-top, 0px);
-  --pk-safe-right: env(safe-area-inset-right, 0px);
-  --pk-safe-bottom: env(safe-area-inset-bottom, 0px);
-  --pk-safe-left: env(safe-area-inset-left, 0px);
+  /* Page content — never inset for safe areas (logo + menu use --pk-chrome-safe-* only) */
+  --pk-safe-top: 0px;
+  --pk-safe-right: 0px;
+  --pk-safe-bottom: 0px;
+  --pk-safe-left: 0px;
+  /* Fixed header overlays content — never subtract from viewport height */
+  --pk-header-h: 0px;
+  --pk-screen-h: 100vh;
+  --pk-screen-h: 100dvh;
+  --pk-screen-w: 100vw;
+  --pk-screen-w: 100dvw;
   --aimy-chrome-top: max(var(--aimy-pad-y), var(--pk-chrome-safe-top));
   --aimy-chrome-bottom: max(var(--aimy-pad-y), var(--pk-chrome-safe-bottom));
   --aimy-chrome-right: max(var(--aimy-pad-x), var(--pk-chrome-safe-right));
   --aimy-chrome-left: max(var(--aimy-pad-x), var(--pk-chrome-safe-left));
-  --pk-view-header-h: calc(var(--aimy-chrome-top) + var(--aimy-brand-size) + var(--aimy-pad-y));
-  --pk-view-dock-top: calc(var(--aimy-chrome-top) + var(--aimy-brand-size) + 0.28rem);
+  --pk-view-header-h: calc(var(--aimy-pad-y) + var(--aimy-brand-size) + var(--aimy-pad-y));
+  --pk-view-dock-top: calc(var(--aimy-pad-y) + var(--aimy-brand-size) + 0.28rem);
   --aimy-chrome-edge-inset-top: calc(
     var(--aimy-chrome-top) + (var(--aimy-brand-size) - var(--aimy-menu-size)) / 2
   );
@@ -1514,8 +1520,7 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   position: relative;
   z-index: 2;
   width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: var(--pk-screen-h, 100vh);
   display: none;
   align-items: flex-start;
   justify-content: flex-start;
@@ -1547,8 +1552,8 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
 .pk-menu:has(.pk-menu-carousel-wrap) {
   align-items: stretch;
   justify-content: stretch;
-  height: 100dvh;
-  min-height: 100dvh;
+  height: var(--pk-screen-h, 100vh);
+  min-height: var(--pk-screen-h, 100vh);
   overflow: visible;
   padding: 0;
   background: var(--polykroma-menu-bg);
@@ -1558,8 +1563,8 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   width: 100%;
   max-width: none;
   flex: 1 1 auto;
-  height: 100dvh;
-  min-height: 100dvh;
+  height: var(--pk-screen-h, 100vh);
+  min-height: var(--pk-screen-h, 100vh);
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -2263,17 +2268,5 @@ body[data-spa-host] .aimy-pt {
   .aimy-pt__logo {
     animation: none !important;
     transition: none !important;
-  }
-}
-
-/* Mobile: full-bleed content under notch / home bar — chrome (logo + menu) keeps safe-area */
-@media (max-width: 820px) {
-  :root {
-    --pk-safe-top: 0px;
-    --pk-safe-right: 0px;
-    --pk-safe-bottom: 0px;
-    --pk-safe-left: 0px;
-    --pk-view-header-h: calc(var(--aimy-pad-y) + var(--aimy-brand-size) + var(--aimy-pad-y));
-    --pk-view-dock-top: calc(var(--aimy-pad-y) + var(--aimy-brand-size) + 0.28rem);
   }
 }

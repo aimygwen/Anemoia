@@ -1859,9 +1859,9 @@ body.lightbox-open .brand {
         gap: 0;
         width: 100%;
         max-width: none;
-        min-height: 100dvh;
-        height: 100dvh;
-        max-height: 100dvh;
+        min-height: var(--pk-screen-h, 100vh);
+        height: var(--pk-screen-h, 100vh);
+        max-height: var(--pk-screen-h, 100vh);
         margin: 0;
         padding: 0;
         overflow: hidden;

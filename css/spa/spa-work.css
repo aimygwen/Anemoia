@@ -4,7 +4,7 @@
 
 .spa-view[data-spa-view="work"] {
   background: transparent;
-  min-height: calc(100dvh - var(--pk-header-h, 72px));
+  min-height: var(--pk-screen-h, 100vh);
 }
 
 .work-hub {
@@ -23,12 +23,12 @@
   max-width: none;
   margin: 0;
   padding: 0;
-  min-height: calc(100vh - var(--pk-header-h, 72px));
+  min-height: var(--pk-screen-h, 100vh);
 }
 
 .work-hub[data-work-phase="choose"] {
-  min-height: calc(100dvh - var(--pk-header-h, 72px));
-  height: calc(100dvh - var(--pk-header-h, 72px));
+  min-height: var(--pk-screen-h, 100vh);
+  height: var(--pk-screen-h, 100vh);
   overflow: hidden;
   overscroll-behavior: none;
 }
@@ -60,7 +60,7 @@ body.spa-view-work.spa-work-choose #app-viewport {
 .work-deck {
   position: relative;
   box-sizing: border-box;
-  min-height: calc(100vh - var(--pk-header-h, 72px));
+  min-height: var(--pk-screen-h, 100vh);
   overflow: hidden;
 }
 
@@ -186,7 +186,7 @@ body.spa-view-work.spa-work-choose #app-viewport {
   inset: 0;
   z-index: 5;
   display: block !important;
-  min-height: 100dvh;
+  min-height: var(--pk-screen-h, 100vh);
   padding:
     calc(var(--work-dock-top) + 1.85rem)
     0
@@ -407,7 +407,7 @@ body.spa-view-work.spa-work-choose #app-viewport {
 
 .work-hub__canvas {
   position: relative;
-  min-height: calc(100dvh - var(--pk-header-h, 72px));
+  min-height: var(--pk-screen-h, 100vh);
   padding:
     calc(var(--work-dock-top) + 1.85rem)
     0
@@ -795,9 +795,9 @@ body.spa-view-work[data-work-layout="lowpoly-soon"] #app-viewport {
 }
 
 body.spa-view-work[data-work-layout="lowpoly-soon"] .work-hub {
-  height: calc(100dvh - var(--pk-header-h, 72px));
+  height: var(--pk-screen-h, 100vh);
   min-height: 0;
-  max-height: calc(100dvh - var(--pk-header-h, 72px));
+  max-height: var(--pk-screen-h, 100vh);
   overflow: hidden;
 }
 

@@ -3,7 +3,7 @@
 .spa-scaffold {
   max-width: var(--spa-viewport-max, 72rem);
   margin: 0 auto;
-  padding: calc(var(--pk-header-h, 72px) + 1.5rem) var(--spa-view-pad, 1.5rem) 4rem;
+  padding: calc(var(--pk-view-header-h, 6.5rem) + 1.5rem) var(--spa-view-pad, 1.5rem) 4rem;
 }
 
 .spa-scaffold__hero {

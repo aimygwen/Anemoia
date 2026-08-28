@@ -19,7 +19,7 @@
 .hytale-sketchbook__canvas {
   position: relative;
   width: 100%;
-  min-height: calc(100dvh - var(--pk-header-h, 72px) - var(--sketch-gap) * 2);
+  min-height: var(--pk-screen-h, 100vh);
   box-sizing: border-box;
 }
 

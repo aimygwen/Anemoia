@@ -104,8 +104,7 @@ body.imprint-page-body::before {
   left: 0;
   top: var(--imprint-chrome-safe);
   width: 100vw;
-  height: calc(100svh - var(--imprint-chrome-safe));
-  height: calc(100dvh - var(--imprint-chrome-safe));
+  height: var(--pk-screen-h, 100vh);
   z-index: 1;
   pointer-events: auto;
 }
@@ -115,8 +114,7 @@ body.imprint-page-body::before {
   left: 0;
   top: var(--imprint-chrome-safe);
   width: 100vw;
-  height: calc(100svh - var(--imprint-chrome-safe));
-  height: calc(100dvh - var(--imprint-chrome-safe));
+  height: var(--pk-screen-h, 100vh);
   z-index: 1;
   opacity: 0;
   visibility: hidden;
@@ -201,8 +199,7 @@ body.imprint-page-body::before {
 }
 
 body.imprint-page-body .imprint-stage[data-imprint-phase="choose"] {
-  min-height: 100svh;
-  min-height: 100dvh;
+  min-height: var(--pk-screen-h, 100vh);
   padding-top: var(--imprint-chrome-safe);
 }
 

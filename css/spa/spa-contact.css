@@ -22,7 +22,7 @@ body.contact-page-body {
   background: transparent;
   overflow: hidden;
   height: 100%;
-  min-height: 100dvh;
+  min-height: var(--pk-screen-h, 100vh);
 }
 
 html:has(body.contact-page-body) {
@@ -34,8 +34,8 @@ html:has(body.contact-page-body) {
 body.contact-page-body #app-viewport,
 body.contact-page-body .spa-viewport,
 body.contact-page-body .spa-view[data-spa-view="contact"] {
-  height: 100dvh;
-  max-height: 100dvh;
+  height: var(--pk-screen-h, 100vh);
+  max-height: var(--pk-screen-h, 100vh);
   min-height: 0;
   overflow: hidden;
 }
@@ -47,11 +47,11 @@ body.contact-page-body .spa-view[data-spa-view="contact"] {
   align-items: stretch;
   justify-content: space-between;
   box-sizing: border-box;
-  height: 100dvh;
-  max-height: 100dvh;
+  height: var(--pk-screen-h, 100vh);
+  max-height: var(--pk-screen-h, 100vh);
   overflow: hidden;
   padding:
-    calc(var(--pk-header-h, 72px) + clamp(0.75rem, 2.5vh, 1.5rem))
+    calc(var(--pk-view-dock-top, 6.5rem) + clamp(0.75rem, 2.5vh, 1.5rem))
     var(--contact-gutter)
     clamp(1.35rem, 4vh, 2.35rem);
 }

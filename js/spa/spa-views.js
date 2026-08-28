@@ -118,10 +118,10 @@
     work: {
       partial: "./partials/view-work.html?v=spa-53",
       css: [
-        "./css/spa/spa-scaffold.css?v=spa-29",
-        "./css/spa/spa-work.css?v=spa-71",
+        "./css/spa/spa-scaffold.css?v=spa-30",
+        "./css/spa/spa-work.css?v=spa-72",
       ],
-      js: ["./js/spa/views/view-work.js?v=spa-95"],
+      js: ["./js/spa/views/view-work.js?v=spa-96"],
       mount: function (ctx) {
         resetBodyState();
         document.documentElement.classList.add("spa-route-not-start");
@@ -150,7 +150,7 @@
       css: [
         "./css/wordmark-holo.css?v=wordmark-holo-2",
         "./css/insights-poke-ref.css?v=poke-ref-11",
-        "./css/insights.css?v=insights-146",
+        "./css/insights.css?v=insights-147",
       ],
       partial: "./partials/view-insights.html?v=insights-77",
       js: [
@@ -220,8 +220,8 @@
     imprint: {
       partial: "./partials/view-imprint.html?v=imprint-1",
       css: [
-        "./css/insights.css?v=insights-146",
-        "./css/imprint.css?v=imprint-ins-51",
+        "./css/insights.css?v=insights-147",
+        "./css/imprint.css?v=imprint-ins-52",
       ],
       js: [
         "./js/imprint.js?v=imprint-spa-2",
@@ -254,7 +254,7 @@
     },
     contact: {
       partial: "./partials/view-contact.html?v=contact-17",
-      css: ["./css/spa/spa-contact.css?v=contact-19"],
+      css: ["./css/spa/spa-contact.css?v=contact-20"],
       js: ["./js/spa/views/view-contact.js?v=contact-15"],
       mount: function (ctx) {
         resetBodyState();

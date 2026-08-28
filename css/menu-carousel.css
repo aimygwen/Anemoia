@@ -24,7 +24,7 @@ html.pk-menu-open .pk-menu-select__labels {
   position: fixed;
   inset: 0;
   width: 100vw;
-  height: 100dvh;
+  height: var(--pk-screen-h, 100vh);
   z-index: 1;
   margin: 0;
   padding: 0;
@@ -40,7 +40,7 @@ html.pk-menu-open .pk-menu-select__labels {
   position: fixed;
   inset: 0;
   width: 100vw;
-  height: 100dvh;
+  height: var(--pk-screen-h, 100vh);
   padding: 0;
   background: var(--polykroma-menu-bg);
   overflow: visible;

@@ -2,6 +2,28 @@
 <html class="pk-chrome-boot" lang="en">
 <head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>
+(function () {
+  function syncScreenMetrics() {
+    var h = window.innerHeight || document.documentElement.clientHeight || 0;
+    var w = window.innerWidth || document.documentElement.clientWidth || 0;
+    var root = document.documentElement;
+    if (!h) return;
+    root.style.setProperty("--vh", h * 0.01 + "px");
+    root.style.setProperty("--pk-screen-h", h + "px");
+    root.style.setProperty("--pk-screen-w", w + "px");
+  }
+
+  syncScreenMetrics();
+  window.addEventListener("resize", syncScreenMetrics, { passive: true });
+  window.addEventListener("orientationchange", syncScreenMetrics, { passive: true });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", syncScreenMetrics, { passive: true });
+  }
+})();
+</script>
 <script>
 (function () {
   function siteBaseFromPath(path) {
@@ -106,7 +128,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Caveat:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./css/polykroma.css?v=polykroma-137" />
+<link rel="stylesheet" href="./css/polykroma.css?v=polykroma-138" />
 <link rel="stylesheet" href="./css/charm-mark.css?v=charm-mark-22" />
 <style id="aimy-splash-critical">
   @media (prefers-color-scheme: light) {
@@ -139,14 +161,14 @@
 </script>
 <link rel="preload" as="image" href="./assets/splash1.png?v=home-splash-25">
 <link rel="preload" as="image" href="./assets/splash2.png?v=home-splash-25">
-<link rel="stylesheet" href="./css/spa/spa-tokens.css?v=spa-13" />
-<link rel="stylesheet" href="./css/spa/spa-shell.css?v=spa-18" />
+<link rel="stylesheet" href="./css/spa/spa-tokens.css?v=spa-14" />
+<link rel="stylesheet" href="./css/spa/spa-shell.css?v=spa-19" />
 <link rel="stylesheet" href="./css/spa/spa-transitions.css?v=spa-15" />
 <link rel="stylesheet" href="./css/spa/spa-sub-back.css?v=spa-2" />
 <link rel="stylesheet" href="./css/spa/spa-input.css?v=spa-input-1" />
-<link rel="stylesheet" href="./css/menu-carousel.css?v=menu-carousel-42">
+<link rel="stylesheet" href="./css/menu-carousel.css?v=menu-carousel-43">
 <link rel="stylesheet" href="./css/home-overrides.css?v=home-splash-25">
-<link rel="stylesheet" href="./css/home-hero.css?v=home-splash-35">
+<link rel="stylesheet" href="./css/home-hero.css?v=home-splash-36">
 <link rel="stylesheet" href="./css/wordmark-holo.css?v=wordmark-holo-2">
 <link rel="stylesheet" href="./css/mono-dev.css?v=mono-dev-51">
 
@@ -231,7 +253,7 @@
 <script src="./js/spa/spa-router.js?v=spa-31" defer></script>
 <script src="./js/spa/spa-transitions.js?v=spa-14" defer></script>
 <script src="./js/spa/spa-a11y.js?v=spa-14" defer></script>
-<script src="./js/spa/spa-views.js?v=spa-205" defer></script>
+<script src="./js/spa/spa-views.js?v=spa-206" defer></script>
 <script src="./js/spa/spa-prefetch.js?v=spa-2" defer></script>
 <script src="./js/spa/spa-nav.js?v=spa-14" defer></script>
 <script src="./js/spa/spa-sub-back.js?v=spa-2" defer></script>

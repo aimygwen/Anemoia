@@ -346,7 +346,7 @@
   }
 
   function ensureStickerbookAssets() {
-    return loadCss("./css/work-stickerbook.css?v=sketchbook-8").then(function () {
+    return loadCss("./css/work-stickerbook.css?v=sketchbook-9").then(function () {
       return loadScript("./js/work-sticker-holo.js?v=sketchbook-8");
     }).then(function () {
       return loadScript("./js/work-stickerbook.js?v=sketchbook-8");
@@ -370,7 +370,7 @@
   function ensureLowpolyAssets() {
     window.LOWPOLY_ASSET_BASE = "./assets/content/";
     window.LOWPOLY_CATALOG_URL = "./assets/content/lowpoly/catalog.json";
-    return loadCss("./css/lowpoly.css?v=lowpoly-rail-45")
+    return loadCss("./css/lowpoly.css?v=lowpoly-rail-46")
       .then(function () {
         return loadCss("./css/lowpoly-aimy.css?v=branding-3");
       })
@@ -392,7 +392,7 @@
   }
 
   function ensureSculptsAssets() {
-      return loadCss("./css/work-sculpts.css?v=sculpts-13").then(function () {
+      return loadCss("./css/work-sculpts.css?v=sculpts-14").then(function () {
       return loadScript("./js/work-sculpts.js?v=sculpts-12");
     });
   }

@@ -19,8 +19,7 @@
   --hero-hand-tilt: 3.4deg;
   --hero-hand-depth: 58px;
   position: relative;
-  min-height: 100svh;
-  min-height: 100vh;
+  min-height: var(--pk-screen-h, 100vh);
   overflow: hidden !important;
   isolation: isolate;
   background-color: var(--aimy-splash-ground) !important;
@@ -53,10 +52,8 @@ html.spa-route-not-start .page.home-page {
 
 .c-welcome[data-aimy-splash-only] .-w {
   position: relative;
-  height: 100svh;
-  height: 100vh;
-  min-height: 100svh;
-  min-height: 100vh;
+  height: var(--pk-screen-h, 100vh);
+  min-height: var(--pk-screen-h, 100vh);
   overflow: hidden;
 }
 

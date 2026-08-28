@@ -26,45 +26,14 @@ body[data-spa-host]:not(.imprint-page-body) #app-viewport .spa-view a {
   font-synthesis: none !important;
 }
 
-/* Mobile — edge-to-edge app canvas; logo + menu coin stay in safe-area via --pk-chrome-safe-* */
-@media (max-width: 820px) {
-  html,
-  body[data-spa-host],
-  body[data-spa-host] #app-viewport,
-  body[data-spa-host] .spa-viewport,
-  body[data-spa-host] .spa-view {
-    min-height: 100dvh;
-  }
-
-  body[data-spa-host] .spa-view[data-spa-view="work"],
-  body[data-spa-host] .spa-view[data-spa-view="work"] .work-hub,
-  body[data-spa-host] .spa-view[data-spa-view="insights"],
-  body[data-spa-host] .spa-view[data-spa-view="me"],
-  body[data-spa-host] .spa-view[data-spa-view="contact"] {
-    min-height: 100dvh;
-  }
-
-  body[data-spa-host] .spa-view[data-spa-view="work"] .work-hub[data-work-phase="choose"],
-  body[data-spa-host] .spa-view[data-spa-view="work"] .work-category-panel {
-    min-height: 100dvh;
-    height: 100dvh;
-    max-height: 100dvh;
-  }
-
-  body.spa-view-start .c-welcome[data-aimy-splash-only],
-  body.spa-view-start .c-welcome[data-aimy-splash-only] .-w {
-    min-height: 100dvh;
-    height: 100dvh;
-  }
-}
-
 .spa-viewport {
   position: relative;
-  min-height: calc(100vh - var(--pk-header-h, 72px));
+  min-height: var(--pk-screen-h, 100vh);
 }
 
 .spa-view {
   width: 100%;
+  min-height: var(--pk-screen-h, 100vh);
 }
 
 .spa-view[hidden] {
@@ -73,4 +42,46 @@ body[data-spa-host]:not(.imprint-page-body) #app-viewport .spa-view a {
 
 body[data-spa-host]:not(.spa-view-start) .page.home-page {
   /* legacy hook if start markup remains in DOM while hidden */
+}
+
+/* Touch / narrow — true fullscreen canvas (JS sets --pk-screen-h from innerHeight on iOS) */
+@media (max-width: 932px), ((hover: none) and (pointer: coarse)) {
+  html,
+  body[data-spa-host] {
+    width: 100%;
+    min-height: var(--pk-screen-h, 100vh);
+    padding: 0 !important;
+  }
+
+  body[data-spa-host] #app-viewport {
+    width: 100%;
+    min-height: var(--pk-screen-h, 100vh);
+    max-height: none;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  body[data-spa-host] .spa-viewport,
+  body[data-spa-host] .spa-view,
+  body[data-spa-host] .spa-view[data-spa-view="work"],
+  body[data-spa-host] .spa-view[data-spa-view="work"] .work-hub,
+  body[data-spa-host] .spa-view[data-spa-view="insights"],
+  body[data-spa-host] .spa-view[data-spa-view="me"],
+  body[data-spa-host] .spa-view[data-spa-view="contact"],
+  body[data-spa-host] .spa-view[data-spa-view="imprint"],
+  body.spa-view-start .c-welcome[data-aimy-splash-only],
+  body.spa-view-start .c-welcome[data-aimy-splash-only] .-w {
+    min-height: var(--pk-screen-h, 100vh);
+  }
+
+  body[data-spa-host] .spa-view[data-spa-view="work"] .work-hub[data-work-phase="choose"],
+  body[data-spa-host] .spa-view[data-spa-view="work"] .work-category-panel,
+  body[data-spa-host] .spa-view[data-spa-view="work"] .work-hub[data-work-layout="sculpts"],
+  body.contact-page-body .contact-stage,
+  body.contact-page-body #app-viewport,
+  body.contact-page-body .spa-view[data-spa-view="contact"] {
+    min-height: var(--pk-screen-h, 100vh);
+    height: var(--pk-screen-h, 100vh);
+    max-height: none;
+  }
 }
