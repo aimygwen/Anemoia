@@ -16,6 +16,12 @@
   --charm-hair-fill: color-mix(in srgb, var(--aimy-primary) 42%, transparent);
   --charm-light-fill: color-mix(in srgb, var(--aimy-secondary) 48%, transparent);
   --charm-lash-fill: var(--aimy-tertiary);
+  --charm-redesign-ink-on-light: var(--aimy-chrome-ink-on-light, oklch(0 0 0));
+  --charm-redesign-ink-on-dark: var(--aimy-chrome-ink-on-dark, color-mix(in srgb, var(--step-01) 94%, transparent));
+  --charm-redesign-ink: var(--charm-redesign-ink-on-light);
+  --charm-redesign-hover-scale: 1.035;
+  --charm-redesign-hover-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --charm-redesign-hover-shadow: 0 0.14em 0.38em color-mix(in srgb, var(--step-08) 9%, transparent);
   --charm-edge-tight: color-mix(in srgb, var(--step-01) 55%, transparent);
   --charm-edge-soft: color-mix(in srgb, var(--step-01) 20%, transparent);
   --charm-hover-shadow-near: 0 0.28em 0.48em color-mix(in srgb, var(--step-08) 10%, transparent);
@@ -51,12 +57,13 @@
 
 .site-header[data-aimy-chrome] .brand-mark {
   filter: none;
-  transition: transform var(--pk-chrome-press-out);
+  transition:
+    transform var(--pk-chrome-press-out),
+    filter 0.42s var(--charm-redesign-hover-ease);
 }
 
-.site-header[data-aimy-chrome] .brand:hover .brand-mark,
-.site-header[data-aimy-chrome] .brand:focus-visible .brand-mark {
-  filter: none;
+.site-header[data-aimy-chrome] .brand-mark[data-charm-redesign="1"] {
+  overflow: visible;
 }
 
 .ins-logo-pin-inner,
@@ -167,6 +174,16 @@
 .brand-mark .brand-layer--charm-sclera image,
 .brand-mark .brand-layer--charm-sclera use {
   opacity: 1;
+  pointer-events: none;
+}
+
+/* Sclera is mask-only (see charm-glass.js); never paint the whites on screen */
+.brand-mark .brand-layer--charm-sclera path,
+.brand-mark .brand-layer--charm-sclera clipPath path {
+  fill: transparent !important;
+  fill-opacity: 0 !important;
+  opacity: 0 !important;
+  filter: none !important;
 }
 
 .brand-mark .brand-logo-dark,
@@ -192,7 +209,6 @@
   fill: var(--charm-hair-fill);
 }
 
-.brand-mark .brand-layer--charm-sclera path,
 .brand-mark .brand-layer--charm-face path,
 .brand-mark .brand-layer--charm-bow path {
   fill: var(--charm-light-fill);
@@ -222,21 +238,90 @@
   will-change: transform;
 }
 
+/* Charm Redesign — bow, irises, lashes only; ink is Midnight Eclipse */
+.brand-mark[data-charm-redesign="1"] .brand-layer--charm-iris path,
+.brand-mark[data-charm-redesign="1"] .brand-layer--charm-iris .iris-pupil,
+.brand-mark[data-charm-redesign="1"] .mono-charm-iris-mask-wrap path,
+.brand-mark[data-charm-redesign="1"] .brand-layer--charm-lashes path,
+.brand-mark[data-charm-redesign="1"] .brand-layer--charm-bow path {
+  fill: var(--charm-redesign-ink) !important;
+  fill-opacity: 1 !important;
+  opacity: 1 !important;
+  color: var(--charm-redesign-ink);
+}
+
+/* Redesign mark — quiet lift + soft shadow (no color FX) */
+.site-header[data-aimy-chrome] .brand:hover .brand-mark[data-charm-redesign="1"],
+.site-header[data-aimy-chrome] .brand:focus-visible .brand-mark[data-charm-redesign="1"],
+.ins-logo-pin:hover .brand-mark[data-charm-redesign="1"],
+.ins-logo-pin:focus-within .brand-mark[data-charm-redesign="1"],
+.lp-logo-pin:hover .brand-mark[data-charm-redesign="1"],
+.lp-logo-pin:focus-within .brand-mark[data-charm-redesign="1"] {
+  transform: scale(var(--charm-redesign-hover-scale));
+  filter: drop-shadow(var(--charm-redesign-hover-shadow));
+}
+
+.ins-logo-pin-inner .brand-mark[data-charm-redesign="1"],
+.lp-logo-pin-inner .brand-mark[data-charm-redesign="1"] {
+  transition:
+    transform var(--pk-chrome-press-out),
+    filter 0.42s var(--charm-redesign-hover-ease);
+}
+
+.site-header[data-aimy-chrome] .brand:active .brand-mark[data-charm-redesign="1"] {
+  transform: scale(var(--pk-chrome-press-scale));
+  filter: none;
+}
+
+.site-header[data-aimy-chrome] .brand:hover .brand-mark[data-charm-redesign="1"] .brand-logo-mid,
+.site-header[data-aimy-chrome] .brand:hover .brand-mark[data-charm-redesign="1"] .brand-logo-mid *,
+.site-header[data-aimy-chrome] .brand:hover .brand-mark[data-charm-redesign="1"] .brand-logo-dark,
+.site-header[data-aimy-chrome] .brand:hover .brand-mark[data-charm-redesign="1"] .brand-logo-dark *,
+.site-header[data-aimy-chrome] .brand:hover .brand-mark[data-charm-redesign="1"] .brand-logo-light,
+.site-header[data-aimy-chrome] .brand:hover .brand-mark[data-charm-redesign="1"] .brand-logo-light *,
+.site-header[data-aimy-chrome] .brand:focus-visible .brand-mark[data-charm-redesign="1"] .brand-logo-mid,
+.site-header[data-aimy-chrome] .brand:focus-visible .brand-mark[data-charm-redesign="1"] .brand-logo-mid *,
+.site-header[data-aimy-chrome] .brand:focus-visible .brand-mark[data-charm-redesign="1"] .brand-logo-dark,
+.site-header[data-aimy-chrome] .brand:focus-visible .brand-mark[data-charm-redesign="1"] .brand-logo-dark *,
+.site-header[data-aimy-chrome] .brand:focus-visible .brand-mark[data-charm-redesign="1"] .brand-logo-light,
+.site-header[data-aimy-chrome] .brand:focus-visible .brand-mark[data-charm-redesign="1"] .brand-logo-light * {
+  animation: none !important;
+}
+
+.site-header[data-aimy-chrome].is-on-light,
+[data-chrome-surface="light"] .brand-mark[data-charm-redesign="1"] {
+  --charm-redesign-ink: var(--charm-redesign-ink-on-light);
+}
+
+.site-header[data-aimy-chrome].is-on-dark,
+[data-chrome-surface="dark"] .brand-mark[data-charm-redesign="1"] {
+  --charm-redesign-ink: var(--charm-redesign-ink-on-dark);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --charm-redesign-hover-scale: 1;
+  }
+
+  .site-header[data-aimy-chrome] .brand:hover .brand-mark[data-charm-redesign="1"],
+  .site-header[data-aimy-chrome] .brand:focus-visible .brand-mark[data-charm-redesign="1"] {
+    filter: none;
+  }
+}
+
 .brand-mark .brand-layer--charm-highlight {
   display: none;
 }
 
-.brand-mark .brand-layer--charm-sclera path,
-.brand-mark .brand-layer--charm-face path,
-.brand-mark .brand-layer--charm-hair path,
-.brand-mark .brand-layer--charm-bow path {
+.brand-mark:not([data-charm-redesign="1"]) .brand-layer--charm-face path,
+.brand-mark:not([data-charm-redesign="1"]) .brand-layer--charm-hair path,
+.brand-mark:not([data-charm-redesign="1"]) .brand-layer--charm-bow path {
   filter:
     drop-shadow(0 0 0.35px var(--charm-edge-tight))
     drop-shadow(-0.35px -0.5px 0.6px var(--charm-edge-soft));
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .brand-mark .brand-layer--charm-sclera path,
   .brand-mark .brand-layer--charm-face path,
   .brand-mark .brand-layer--charm-hair path,
   .brand-mark .brand-layer--charm-bow path {
@@ -248,8 +333,6 @@
     fill: var(--aimy-primary);
   }
 
-  .brand-mark .brand-layer--charm-sclera,
-  .brand-mark .brand-layer--charm-sclera *,
   .brand-mark .brand-layer--charm-face,
   .brand-mark .brand-layer--charm-face *,
   .brand-mark .brand-layer--charm-bow,

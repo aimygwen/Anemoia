@@ -7,9 +7,12 @@
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var booted = false;
   var resizeHandler = null;
-  var wordmarkHoloCleanup = null;
   var splashParallaxCleanup = null;
+  var startScrollCleanup = null;
+  var splashScrollLagCleanup = null;
   var revealFallbackId = 0;
+  /* Fraction of scrollY added as downward translate — wordmark + divider lag vs sky/Lisa. */
+  var HERO_SCROLL_LAG = 0.52;
 
   function setViewportUnits() {
     var h = window.innerHeight || 1;
@@ -81,6 +84,8 @@
   function bootSplashReveal(onComplete) {
     var splash = document.querySelector("[data-aimy-splash]");
     var tagline = document.querySelector(".aimy-splash-tagline");
+    var divider = document.querySelector(".aimy-splash-divider");
+    var stepBeyond = document.querySelector(".aimy-splash-step-beyond");
 
     if (!splash) {
       onComplete();
@@ -90,11 +95,15 @@
     clearRevealFallback();
     splash.classList.remove("is-revealed");
     if (tagline) tagline.classList.remove("is-revealed");
+    if (divider) divider.classList.remove("is-revealed");
+    if (stepBeyond) stepBeyond.classList.remove("is-revealed");
 
     function applyReveal() {
       if (reduced) {
         splash.classList.add("is-revealed");
         if (tagline) tagline.classList.add("is-revealed");
+        if (divider) divider.classList.add("is-revealed");
+        if (stepBeyond) stepBeyond.classList.add("is-revealed");
         onComplete();
         return;
       }
@@ -102,6 +111,8 @@
       splash.classList.add("is-revealed");
       window.setTimeout(function () {
         if (tagline) tagline.classList.add("is-revealed");
+        if (divider) divider.classList.add("is-revealed");
+        if (stepBeyond) stepBeyond.classList.add("is-revealed");
         onComplete();
       }, 520);
     }
@@ -145,10 +156,6 @@
     var lastMy = "";
     var frameBudget = 0;
 
-    var handAmp = 1.85;
-    var lastHandMx = "";
-    var lastHandMy = "";
-
     function tick(now) {
       if (!frameBudget) frameBudget = now;
       if (now - frameBudget < 32) {
@@ -167,15 +174,6 @@
         root.style.setProperty("--my", my);
         lastMx = mx;
         lastMy = my;
-      }
-
-      var handMx = (rendered.x * handAmp).toFixed(3);
-      var handMy = (rendered.y * handAmp).toFixed(3);
-      if (handMx !== lastHandMx || handMy !== lastHandMy) {
-        root.style.setProperty("--hand-mx", handMx);
-        root.style.setProperty("--hand-my", handMy);
-        lastHandMx = handMx;
-        lastHandMy = handMy;
       }
 
       if (
@@ -206,8 +204,6 @@
     document.documentElement.addEventListener("pointerleave", onPointerLeave);
     root.style.setProperty("--mx", "0");
     root.style.setProperty("--my", "0");
-    root.style.setProperty("--hand-mx", "0");
-    root.style.setProperty("--hand-my", "0");
 
     splashParallaxCleanup = function () {
       window.removeEventListener("pointermove", onPointerMove);
@@ -215,23 +211,7 @@
       if (rafId) cancelAnimationFrame(rafId);
       root.style.setProperty("--mx", "0");
       root.style.setProperty("--my", "0");
-      root.style.removeProperty("--hand-mx");
-      root.style.removeProperty("--hand-my");
     };
-  }
-
-  function bootWordmarkHolo() {
-    if (!window.AimyWordmarkHolo || typeof window.AimyWordmarkHolo.boot !== "function") {
-      return;
-    }
-    wordmarkHoloCleanup = window.AimyWordmarkHolo.boot({
-      id: "start",
-      root: document,
-      wrap: "[data-aimy-splash-only] .aimy-wordmark-holo-wrap",
-      wordmark: "[data-aimy-splash-only] [data-aimy-wordmark-holo]",
-      track: "viewport",
-      stickerOpacity: 0.78,
-    });
   }
 
   function bootAimyChrome() {
@@ -248,9 +228,6 @@
     var welcome = document.querySelector(".c-welcome[data-aimy-splash-only]");
     if (!welcome) return;
 
-    header.classList.add("is-on-light");
-    header.classList.remove("is-on-dark");
-
     function revealChrome() {
       if (
         window.Polykroma &&
@@ -263,6 +240,106 @@
     }
 
     revealChrome();
+  }
+
+  function readSplashScrollY() {
+    var lenis = window.__lenis;
+    if (lenis) {
+      if (typeof lenis.scroll === "number") return lenis.scroll;
+      if (typeof lenis.animatedScroll === "number") return lenis.animatedScroll;
+    }
+    return window.scrollY || 0;
+  }
+
+  function bootSplashScrollLag() {
+    if (splashScrollLagCleanup) {
+      splashScrollLagCleanup();
+      splashScrollLagCleanup = null;
+    }
+    if (reduced) return;
+
+    var splash = document.querySelector(".c-welcome[data-aimy-splash-only]");
+    if (!splash) return;
+
+    var lenisHandler = null;
+
+    function apply() {
+      var shift = readSplashScrollY() * HERO_SCROLL_LAG;
+      splash.style.setProperty("--hero-scroll-shift", shift.toFixed(2) + "px");
+    }
+
+    function attachLenis() {
+      var lenis = window.__lenis;
+      if (!lenis || typeof lenis.on !== "function") {
+        window.requestAnimationFrame(attachLenis);
+        return;
+      }
+      lenisHandler = apply;
+      lenis.on("scroll", lenisHandler);
+      apply();
+    }
+
+    splash.style.setProperty("--hero-scroll-shift", "0px");
+    attachLenis();
+
+    splashScrollLagCleanup = function () {
+      var lenis = window.__lenis;
+      if (lenis && lenisHandler && typeof lenis.off === "function") {
+        lenis.off("scroll", lenisHandler);
+      }
+      lenisHandler = null;
+      splash.style.removeProperty("--hero-scroll-shift");
+    };
+  }
+
+  function bootStartScroll() {
+    if (startScrollCleanup) {
+      startScrollCleanup();
+      startScrollCleanup = null;
+    }
+    if (splashScrollLagCleanup) {
+      splashScrollLagCleanup();
+      splashScrollLagCleanup = null;
+    }
+
+    var target = document.getElementById("step-beyond");
+    var link = document.querySelector("[data-aimy-step-beyond]");
+    if (!target) return;
+
+    unlockSplashScroll();
+
+    if (window.Polyglide && typeof window.Polyglide.boot === "function") {
+      window.Polyglide.boot({ force: true });
+    }
+
+    if (window.Polykroma && typeof window.Polykroma.bootChromeSurface === "function") {
+      window.Polykroma.bootChromeSurface();
+    }
+
+    bootSplashScrollLag();
+
+    if (!link) return;
+
+    function onStepBeyondClick(event) {
+      event.preventDefault();
+      if (window.Polyglide && typeof window.Polyglide.to === "function") {
+        window.Polyglide.to(target, { offset: 0 });
+        return;
+      }
+      target.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+    }
+
+    link.addEventListener("click", onStepBeyondClick);
+    startScrollCleanup = function () {
+      link.removeEventListener("click", onStepBeyondClick);
+      if (splashScrollLagCleanup) {
+        splashScrollLagCleanup();
+        splashScrollLagCleanup = null;
+      }
+      if (window.Polyglide && typeof window.Polyglide.destroy === "function") {
+        window.Polyglide.destroy();
+      }
+    };
   }
 
   function isSpaHost() {
@@ -286,13 +363,11 @@
       resizeHandler = setViewportUnits;
       window.addEventListener("resize", resizeHandler, { passive: true });
     }
-    lockSplashScroll();
-
     bootAimyChrome();
 
     bootSplashReveal(function () {
       bootSplashParallax();
-      bootWordmarkHolo();
+      bootStartScroll();
       document.documentElement.classList.add("-loaded", "-ready");
     });
   }
@@ -304,12 +379,13 @@
       splashParallaxCleanup();
       splashParallaxCleanup = null;
     }
-    if (wordmarkHoloCleanup) {
-      wordmarkHoloCleanup();
-      wordmarkHoloCleanup = null;
+    if (startScrollCleanup) {
+      startScrollCleanup();
+      startScrollCleanup = null;
     }
-    if (window.AimyWordmarkHolo && typeof window.AimyWordmarkHolo.teardown === "function") {
-      window.AimyWordmarkHolo.teardown("start");
+    if (splashScrollLagCleanup) {
+      splashScrollLagCleanup();
+      splashScrollLagCleanup = null;
     }
     document.body.classList.remove("spa-view-start");
     unlockSplashScroll();
@@ -319,7 +395,6 @@
     boot: boot,
     teardown: teardown,
     bootSplashParallax: bootSplashParallax,
-    bootWordmarkHolo: bootWordmarkHolo,
     lockScroll: lockSplashScroll,
     unlockScroll: unlockSplashScroll,
   };

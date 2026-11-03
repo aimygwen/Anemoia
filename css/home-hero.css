@@ -1,23 +1,21 @@
 /**
- * home-hero.css — Start splash: top-half hero crop, pointer parallax, load reveal.
- *
- * Art is scaled ~2× viewport height so the waist lands on the bottom edge:
- * top half fully visible, bottom half clipped below the fold.
+ * home-hero.css — Start splash: hub skybox + figure, pointer parallax, load reveal.
  */
 
 .c-welcome[data-aimy-splash-only] {
-  --aimy-splash-ground: #E7CBFF;
-  --hero-art-shift-y: 5.5vh;
-  --hero-art-height: 172vh;
-  --hero-art-width: min(94vw, calc(var(--hero-art-height) * 0.72));
-  --hero-art-scale: 0.935;
-  --hero-logo-width: min(58vw, 34rem);
-  --hero-logo-scale: 1.08;
-  --hero-wordmark-opacity: 0.86;
-  --hero-hand-shift-x: 18px;
-  --hero-hand-shift-y: 14px;
-  --hero-hand-tilt: 3.4deg;
-  --hero-hand-depth: 58px;
+  --aimy-splash-ground: var(--step-01);
+  --hero-figure-anchor-x: 66.666%;
+  --hero-figure-height: min(98vh, 82vw);
+  --hero-figure-bottom: clamp(-2.75rem, -4.5vh, -1rem);
+  --hero-figure-max-width: 62vw;
+  --hero-figure-scale: 1.085;
+  --hero-wordmark-width: min(96vw, 88rem);
+  --hero-wordmark-max-height: 38vh;
+  --hero-sky-parallax-x: 14px;
+  --hero-sky-parallax-y: 10px;
+  --hero-figure-parallax-x: 12px;
+  --hero-figure-parallax-y: 6px;
+  /* --hero-scroll-shift: set from home.js on this section (scroll lag, not pointer). */
   position: relative;
   min-height: var(--pk-screen-h, 100vh);
   overflow: hidden !important;
@@ -28,12 +26,7 @@
 
 html:has(body.spa-view-start),
 body.spa-view-start {
-  background-color: var(--aimy-splash-ground, #E7CBFF) !important;
-}
-
-html:has(body.spa-view-start),
-body.spa-view-start {
-  background-color: var(--aimy-splash-ground, #E7CBFF) !important;
+  background-color: var(--aimy-splash-ground, var(--step-01)) !important;
 }
 
 html.spa-route-not-start:has(body.spa-view-work) body,
@@ -68,16 +61,14 @@ body.spa-view-start .site-header[data-aimy-chrome] .aimy-chrome-type-logo {
   right: 0 !important;
   top: 0 !important;
   bottom: 0 !important;
-  transform-style: preserve-3d;
-  perspective: 1000px;
   translate: none !important;
   width: 100% !important;
   height: 100% !important;
   display: block !important;
-  transform-origin: 50% 78% !important;
+  transform-origin: 50% 50% !important;
   z-index: 2 !important;
   pointer-events: none !important;
-  overflow: visible !important;
+  overflow: hidden !important;
   opacity: 0;
   transform: translate3d(0, 12px, 0) scale(1.01) !important;
   will-change: transform, opacity;
@@ -91,88 +82,65 @@ body.spa-view-start .site-header[data-aimy-chrome] .aimy-chrome-type-logo {
     transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__logo {
+.c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__sky {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  display: block !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  z-index: 0 !important;
+  transform: translate3d(
+      calc(var(--mx, 0) * var(--hero-sky-parallax-x)),
+      calc(var(--my, 0) * var(--hero-sky-parallax-y)),
+      0
+    )
+    scale(1.06) !important;
+  will-change: transform;
+}
+
+.c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__wordmark {
   position: absolute !important;
   left: 50% !important;
   top: 50% !important;
-  bottom: auto !important;
-  translate: -50% -50% !important;
-  width: var(--hero-logo-width) !important;
-  height: auto !important;
-  margin: 0 !important;
-  z-index: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  pointer-events: none !important;
-  transform-origin: center center !important;
-  transform-style: preserve-3d;
-  transform: scale(var(--hero-logo-scale)) translateZ(0) !important;
-  opacity: var(--hero-wordmark-opacity, 0.86);
-}
-
-.c-welcome[data-aimy-splash-only] .aimy-wordmark-holo {
-  width: 100%;
-  --card-opacity: 0.78;
-}
-
-.c-welcome[data-aimy-splash-only] .aimy-wordmark-holo-wrap {
-  width: 100%;
-  pointer-events: none;
-}
-
-.c-welcome[data-aimy-splash-only] .aimy-wordmark-holo .aimy-type-logo__sticker {
-  width: 100%;
-}
-
-.c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__logo .aimy-type-logo__stage {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1557 / 1318;
-  transform-style: preserve-3d;
-  transform: none !important;
-}
-
-.c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__base,
-.c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__hand {
-  position: absolute !important;
-  display: block !important;
-  left: 50% !important;
   right: auto !important;
-  top: var(--hero-art-shift-y) !important;
   bottom: auto !important;
-  width: var(--hero-art-width) !important;
-  height: var(--hero-art-height) !important;
+  width: var(--hero-wordmark-width) !important;
+  height: auto !important;
+  max-height: var(--hero-wordmark-max-height) !important;
   max-width: none !important;
-  max-height: none !important;
   margin: 0 !important;
-  translate: -50% 0 !important;
+  display: block !important;
   object-fit: contain !important;
-  object-position: center top !important;
-  transform-origin: 50% 18% !important;
-  backface-visibility: hidden !important;
-}
-
-.c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__hand {
-  z-index: 2 !important;
-  transform:
-    translate3d(
-      calc(var(--hand-mx, var(--mx, 0)) * -1 * var(--hero-hand-shift-x)),
-      calc(var(--hand-my, var(--my, 0)) * -1 * var(--hero-hand-shift-y)),
-      var(--hero-hand-depth)
-    )
-    rotateX(calc(var(--hand-my, var(--my, 0)) * -1 * var(--hero-hand-tilt)))
-    rotateY(calc(var(--hand-mx, var(--mx, 0)) * var(--hero-hand-tilt)))
-    scale(var(--hero-art-scale)) !important;
-}
-
-.c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__base {
+  object-position: center center !important;
   z-index: 1 !important;
-  transform:
-    translate3d(calc(var(--mx, 0) * -4px), calc(var(--my, 0) * -3px), 36px)
-    rotateX(calc(var(--my, 0) * -0.9deg))
-    rotateY(calc(var(--mx, 0) * 0.9deg))
-    scale(var(--hero-art-scale)) !important;
+  translate: -50% calc(-50% + var(--hero-scroll-shift, 0px)) !important;
+  transform-origin: center center !important;
+  pointer-events: none !important;
+  will-change: translate;
+}
+
+.c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__figure {
+  position: absolute !important;
+  left: var(--hero-figure-anchor-x) !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: var(--hero-figure-bottom) !important;
+  height: var(--hero-figure-height) !important;
+  width: auto !important;
+  max-width: var(--hero-figure-max-width) !important;
+  margin: 0 !important;
+  display: block !important;
+  object-fit: contain !important;
+  object-position: bottom center !important;
+  z-index: 2 !important;
+  translate: calc(-50% + var(--mx, 0) * -1 * var(--hero-figure-parallax-x))
+    calc(var(--my, 0) * -1 * var(--hero-figure-parallax-y)) !important;
+  scale: var(--hero-figure-scale) !important;
+  transform-origin: bottom center !important;
+  backface-visibility: hidden !important;
 }
 
 .aimy-splash-tagline {
@@ -202,29 +170,87 @@ body.spa-view-start .site-header[data-aimy-chrome] .aimy-chrome-type-logo {
   transform: translateY(0);
 }
 
+.c-welcome[data-aimy-splash-only] .aimy-splash-divider {
+  --aimy-splash-divider-ink: oklch(0 0 0);
+  --aimy-splash-divider-y: 75%;
+  position: absolute;
+  left: 50%;
+  top: var(--aimy-splash-divider-y);
+  bottom: auto;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.625rem, 2.2vw, 1.125rem);
+  width: min(90vw, 44rem);
+  margin: 0;
+  translate: -50% calc(-50% + 8px + var(--hero-scroll-shift, 0px));
+  pointer-events: none;
+  opacity: 0;
+  will-change: translate, opacity;
+  transition:
+    opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.35s,
+    translate 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.35s;
+}
+
+.c-welcome[data-aimy-splash-only] .aimy-splash-divider.is-revealed {
+  opacity: 1;
+  translate: -50% calc(-50% + var(--hero-scroll-shift, 0px));
+  transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.35s;
+}
+
+.c-welcome[data-aimy-splash-only][data-header-color="light"] .aimy-splash-divider.is-revealed .aimy-splash-divider__line {
+  filter: drop-shadow(0 0.5px 1.5px color-mix(in srgb, oklch(0 0 0) 14%, transparent));
+}
+
+.c-welcome[data-aimy-splash-only] .aimy-splash-divider__line {
+  flex: 1 1 0;
+  min-width: 2rem;
+  height: 2px;
+  border: 0;
+  border-radius: 999px;
+}
+
+.c-welcome[data-aimy-splash-only] .aimy-splash-divider__line--start {
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--aimy-splash-divider-ink) 88%
+  );
+}
+
+.c-welcome[data-aimy-splash-only] .aimy-splash-divider__line--end {
+  background: linear-gradient(
+    to left,
+    transparent 0%,
+    var(--aimy-splash-divider-ink) 88%
+  );
+}
+
+.c-welcome[data-aimy-splash-only] .aimy-splash-divider__mark {
+  flex: 0 0 auto;
+  display: block;
+  width: clamp(0.875rem, 2.35vw, 1.125rem);
+  height: auto;
+  object-fit: contain;
+}
+
 @media (min-width: 1024px) {
   .c-welcome[data-aimy-splash-only] {
-    --hero-art-shift-y: 6.5vh;
-    --hero-art-height: 174vh;
-    --hero-art-width: min(92vw, calc(var(--hero-art-height) * 0.72));
-    --hero-logo-width: min(52vw, 36rem);
-    --hero-logo-scale: 1.02;
-    --hero-hand-shift-x: 20px;
-    --hero-hand-shift-y: 16px;
-    --hero-hand-tilt: 3.8deg;
+    --hero-figure-height: min(94vh, 72vw);
+    --hero-figure-max-width: 52vw;
+    --hero-wordmark-width: min(94vw, 92rem);
+    --hero-wordmark-max-height: 40vh;
   }
 }
 
 @media (max-width: 767px) {
   .c-welcome[data-aimy-splash-only] {
-    --hero-art-shift-y: 5vh;
-    --hero-art-height: 166vh;
-    --hero-art-width: min(96vw, calc(var(--hero-art-height) * 0.72));
-    --hero-logo-width: min(88vw, 26rem);
-    --hero-logo-scale: 0.96;
-    --hero-hand-shift-x: 16px;
-    --hero-hand-shift-y: 13px;
-    --hero-hand-tilt: 3deg;
+    --hero-figure-anchor-x: 68%;
+    --hero-figure-height: min(80vh, 92vw);
+    --hero-figure-max-width: 72vw;
+    --hero-wordmark-width: min(98vw, 100%);
+    --hero-wordmark-max-height: 32vh;
   }
 }
 
@@ -237,19 +263,209 @@ body.spa-view-start .site-header[data-aimy-chrome] .aimy-chrome-type-logo {
     transform: translate3d(0, 0, 0) scale(1) !important;
   }
 
-  .c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__base,
-  .c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__hand {
-    transform: scale(var(--hero-art-scale)) !important;
+  .c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__sky {
+    transform: scale(1.06) !important;
   }
 
-  .aimy-splash-tagline {
+  .c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__wordmark {
+    translate: -50% -50% !important;
+    will-change: auto;
+  }
+
+  .c-welcome[data-aimy-splash-only] .aimy-splash-divider,
+  .c-welcome[data-aimy-splash-only] .aimy-splash-divider.is-revealed {
+    translate: -50% -50% !important;
+    will-change: auto;
+  }
+
+  .c-welcome[data-aimy-splash-only] .-w .stone .aimy-hero-splash__figure {
+    translate: -50% 0 !important;
+    scale: var(--hero-figure-scale) !important;
+  }
+
+  .aimy-splash-tagline,
+  .c-welcome[data-aimy-splash-only] .aimy-splash-divider {
     transition: none;
+    opacity: 1;
+    translate: -50% -50%;
+  }
+
+  .c-welcome[data-aimy-splash-only] .aimy-splash-divider__line {
+    filter: none;
   }
 }
 
-body.spa-view-start {
-  overflow: hidden;
+html:has(body.spa-view-start) {
   overscroll-behavior: none;
+}
+
+.page.home-page {
+  background-color: var(--aimy-splash-ground, var(--step-01));
+}
+
+.aimy-splash-step-beyond {
+  position: absolute;
+  left: 50%;
+  bottom: max(clamp(1rem, 3vh, 1.75rem), var(--pk-safe-bottom));
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  translate: -50% 0;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.48s,
+    transform 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.48s;
+}
+
+.aimy-splash-step-beyond.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.aimy-splash-step-beyond__link {
+  pointer-events: auto;
+  color: oklch(0 0 0);
+  text-decoration: none;
+  border-radius: 999px;
+  transition: color 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
+}
+
+.aimy-splash-step-beyond__link:hover {
+  opacity: 0.72;
+}
+
+.aimy-splash-step-beyond__link:focus-visible {
+  outline: 2px solid color-mix(in srgb, oklch(0 0 0) 35%, transparent);
+  outline-offset: 3px;
+}
+
+.aimy-splash-step-beyond__pill {
+  display: inline-block;
+  padding: 0.42em 1.45em;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--spa-font-sans, "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif);
+  font-size: clamp(0.6875rem, 1.55vw, 0.8125rem);
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: 0.1em;
+  text-transform: none;
+}
+
+.aimy-splash-step-beyond__chev {
+  font-family: var(--spa-font-sans, "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif);
+  font-size: 0.6875rem;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: oklch(0 0 0);
+  opacity: 0.62;
+  pointer-events: none;
+}
+
+.aimy-start-beyond {
+  --aimy-start-beyond-bg: oklch(from var(--step-08) 0.13 0.014 h);
+  --aimy-start-beyond-bg-soft: oklch(from var(--step-08) 0.17 0.016 h);
+  --ins-ink: var(--step-01);
+  --ins-muted: color-mix(in srgb, var(--step-02) 58%, transparent);
+  --ins-title: "DM Sans", "Plus Jakarta Sans", system-ui, sans-serif;
+  --ins-sans: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  background-color: var(--aimy-start-beyond-bg);
+  background-image: radial-gradient(
+    120% 85% at 50% 38%,
+    var(--aimy-start-beyond-bg-soft) 0%,
+    var(--aimy-start-beyond-bg) 72%
+  );
+  color: var(--ins-ink);
+  min-height: var(--pk-screen-h, 100vh);
+  scroll-margin-top: 0;
+}
+
+.aimy-start-beyond__inner.ins-logs-hub__center {
+  box-sizing: border-box;
+  min-height: inherit;
+  width: 100%;
+  padding:
+    clamp(3.5rem, 11vh, 5.5rem)
+    max(clamp(1.75rem, 6.5vw, 3.25rem), var(--pk-safe-left))
+    clamp(3.5rem, 11vh, 5.5rem)
+    max(clamp(1.75rem, 6.5vw, 3.25rem), var(--pk-safe-right));
+}
+
+.aimy-start-beyond .ins-logs-hub__head {
+  width: 100%;
+  max-width: min(34rem, 100%);
+  margin-inline: auto;
+  padding-inline: clamp(0.5rem, 2vw, 1.25rem);
+  box-sizing: border-box;
+}
+
+.aimy-start-beyond .ins-logs-hub__kicker {
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  margin-bottom: clamp(0.75rem, 1.8vh, 1rem);
+}
+
+.aimy-start-beyond .ins-logs-hub__title {
+  font-size: clamp(1.875rem, 5.25vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.022em;
+}
+
+.aimy-start-beyond .ins-logs-hub__title-the {
+  font-size: 0.94em;
+}
+
+.aimy-start-beyond .ins-logs-hub__lede {
+  font-size: clamp(0.9375rem, 1.75vw, 1.0625rem);
+  line-height: 1.62;
+  max-width: min(30rem, 100%);
+  margin-inline: auto;
+  padding-inline: clamp(0.25rem, 1.5vw, 0.75rem);
+}
+
+.aimy-start-beyond .ins-logs-hub__signature-wrap {
+  width: min(100%, 26rem);
+  margin-top: clamp(1.15rem, 2.8vh, 1.75rem);
+  gap: clamp(0.75rem, 2vw, 1.15rem);
+}
+
+body[data-spa-host] #app-viewport .aimy-start-beyond .ins-logs-hub__title-the {
+  font-family: "Newpixel", "Courier New", monospace !important;
+  font-weight: 400 !important;
+  font-synthesis: none !important;
+}
+
+.aimy-start-beyond .ins-signature--hub.aimy-anemoia-hub__yokhea {
+  width: clamp(1rem, 2.8vw, 1.35rem);
+  padding: 0;
+}
+
+.aimy-start-beyond .aimy-anemoia-hub__yokhea-mark {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.9;
+  filter: brightness(0) saturate(100%) invert(1);
+}
+
+.aimy-start-beyond .ins-logs-hub__lede + .ins-logs-hub__lede {
+  margin-top: clamp(0.85rem, 2vh, 1.15rem);
+}
+
+.aimy-start-beyond .aimy-anemoia-hub__status {
+  margin-top: clamp(1.5rem, 3.5vh, 2.25rem);
+  margin-bottom: 0;
+  padding-inline: clamp(0.25rem, 1.5vw, 0.75rem);
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -398,6 +398,8 @@
   var chromeSettled = false;
   var menuBooted = false;
   var socialSync = null;
+  var chromeSurfaceCleanup = null;
+  var lenisSurfaceBound = false;
 
   function isLegalPage() {
     var body = document.body;
@@ -492,6 +494,121 @@
       .then(function () {
         afterPaint(reveal);
       });
+  }
+
+  function applyChromeSurface(header, mode) {
+    var isDark = mode === "dark";
+    header.classList.toggle("is-on-light", !isDark);
+    header.classList.toggle("is-on-dark", isDark);
+  }
+
+  function chromeSurfaceAtPoint(clientX, clientY, options) {
+    options = options || {};
+    var header =
+      options.header ||
+      document.querySelector(".site-header[data-aimy-chrome]");
+    var skipHeader = options.skipHeader !== false;
+    var skipMenuUi = options.skipMenuUi !== false;
+    var stack =
+      typeof document.elementsFromPoint === "function"
+        ? document.elementsFromPoint(clientX, clientY)
+        : [document.elementFromPoint(clientX, clientY)];
+
+    var surface = "light";
+    for (var i = 0; i < stack.length; i++) {
+      var node = stack[i];
+      if (!node || node.nodeType !== 1) continue;
+      if (
+        node.closest &&
+        node.closest(
+          ".pk-coin-rings-stage, .pk-coin-rings__canvas, .pk-burger-hit, .pk-coin-button"
+        )
+      ) {
+        continue;
+      }
+      if (skipMenuUi && node.closest && node.closest(".pk-nav-shell, .pk-menu, .pk-menu-panel")) {
+        continue;
+      }
+      if (skipHeader && header && (node === header || header.contains(node))) {
+        continue;
+      }
+      if (node.closest && node.closest(".menu-overlay, .pk-menu-shell, .pk-menu-open")) {
+        continue;
+      }
+      var tagged = node.closest("[data-chrome-surface]");
+      if (tagged) {
+        surface =
+          tagged.getAttribute("data-chrome-surface") === "dark" ? "dark" : "light";
+        break;
+      }
+    }
+
+    return surface;
+  }
+
+  function measureChromeSurface(header) {
+    if (!header) return;
+    var anchor = header.querySelector(".brand") || header;
+    var rect = anchor.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
+    var x = Math.round(rect.left + rect.width * 0.5);
+    var y = Math.round(rect.top + rect.height * 0.68);
+    applyChromeSurface(header, chromeSurfaceAtPoint(x, y, { header: header }));
+  }
+
+  function bootChromeSurface(options) {
+    if (chromeSurfaceCleanup) {
+      chromeSurfaceCleanup();
+      chromeSurfaceCleanup = null;
+      lenisSurfaceBound = false;
+    }
+
+    var header =
+      (options && options.header) ||
+      document.querySelector(".site-header[data-aimy-chrome]");
+    if (!header) return;
+
+    var ticking = false;
+    function requestMeasure() {
+      if (ticking) return;
+      ticking = true;
+      global.requestAnimationFrame(function () {
+        ticking = false;
+        measureChromeSurface(header);
+      });
+    }
+
+    function bindLenisSurface() {
+      if (lenisSurfaceBound) return;
+      if (global.__lenis && typeof global.__lenis.on === "function") {
+        global.__lenis.on("scroll", requestMeasure);
+        lenisSurfaceBound = true;
+      }
+    }
+
+    measureChromeSurface(header);
+    global.addEventListener("scroll", requestMeasure, { passive: true });
+    global.addEventListener("resize", requestMeasure, { passive: true });
+
+    bindLenisSurface();
+    var tries = 0;
+    var poll = global.setInterval(function () {
+      bindLenisSurface();
+      tries += 1;
+      if (lenisSurfaceBound || tries > 80) global.clearInterval(poll);
+    }, 50);
+
+    chromeSurfaceCleanup = function () {
+      global.removeEventListener("scroll", requestMeasure);
+      global.removeEventListener("resize", requestMeasure);
+      global.clearInterval(poll);
+      if (lenisSurfaceBound && global.__lenis && typeof global.__lenis.off === "function") {
+        global.__lenis.off("scroll", requestMeasure);
+      }
+      lenisSurfaceBound = false;
+      header.classList.remove("is-on-light", "is-on-dark");
+    };
   }
 
   function bootSocialsScroll(options) {
@@ -611,42 +728,6 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
 
   function pageBase() {
     return "./";
-  }
-
-  function selectButtonSrc() {
-    return pageBase() + "assets/polykroma/select/select-button.svg?v=select-2";
-  }
-
-  function selectLayer(layer) {
-    return (
-      '<img class="pk-select-layer pk-select-layer--' +
-      layer +
-      '" src="' +
-      selectButtonSrc() +
-      '" alt="" decoding="async" draggable="false" />'
-    );
-  }
-
-  function selectCoinMarkup() {
-    return (
-      '  <span class="pk-coin-state">' +
-      '    <span class="pk-coin pk-coin--select">' +
-      '      <span class="pk-select-stack" aria-hidden="true">' +
-      selectLayer("edge") +
-      selectLayer("face") +
-      selectLayer("icon") +
-      "      </span>" +
-      '      <span class="pk-coin-glyphs pk-coin-glyphs--front">' +
-      coinIconOpen() +
-      coinIconClose() +
-      "      </span>" +
-      '      <span class="pk-coin-glyphs pk-coin-glyphs--back">' +
-      coinIconOpen() +
-      coinIconClose() +
-      "      </span>" +
-      "    </span>" +
-      "  </span>"
-    );
   }
 
   function isNewSiteRoot() {
@@ -873,11 +954,12 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     root.innerHTML =
       '<button type="button" class="pk-burger-hit pk-burger-in on" aria-label="Open menu" aria-expanded="false" aria-controls="pk-site-menu"></button>' +
       '<button type="button" class="pk-burger-hit pk-burger-out" aria-label="Close menu" aria-expanded="true" aria-controls="pk-site-menu"></button>' +
-      '<div class="pk-coin-button pk-coin-button--select" aria-hidden="true">' +
-      selectCoinMarkup() +
+      '<div class="pk-coin-rings-stage" aria-hidden="true">' +
+      '  <canvas class="pk-coin-rings__canvas" aria-hidden="true"></canvas>' +
       "</div>" +
+      '<div class="pk-coin-button pk-coin-button--rings" aria-hidden="true"></div>' +
       '<div class="pk-nav-shell" id="pk-nav-shell" hidden>' +
-      '  <div class="pk-menu-veil" aria-hidden="true">' +
+      '  <div class="pk-menu-veil" aria-hidden="true" data-chrome-surface="light">' +
       '    <div class="pk-menu-veil-wash"></div>' +
       "  </div>" +
       '  <nav class="pk-menu" id="pk-site-menu" aria-label="Site menu" role="dialog" aria-modal="true">' +
@@ -1307,6 +1389,12 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       document.title = "Select";
       canClick = false;
       isOpen = true;
+      if (
+        window.AimyMenuCoinRings &&
+        typeof window.AimyMenuCoinRings.playOpen === "function"
+      ) {
+        window.AimyMenuCoinRings.playOpen();
+      }
       shellIgnoreUntil = performance.now() + 450;
       lastFocus = document.activeElement;
       root.classList.add("is-menu-open");
@@ -1344,6 +1432,12 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
       var restoreFocus = !opts || opts.restoreFocus !== false;
       canClick = false;
       isOpen = false;
+      if (
+        window.AimyMenuCoinRings &&
+        typeof window.AimyMenuCoinRings.playClose === "function"
+      ) {
+        window.AimyMenuCoinRings.playClose();
+      }
       root.classList.remove("is-menu-open");
       showHits(false);
       setSelected(-1);
@@ -1458,23 +1552,44 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
 
     updateCoinScrollTurn(coinLastScroll);
 
-    function syncCoinMotion(time) {
-      if (reducedMotion) {
-        coin.style.transform = "rotateX(-7deg) rotateY(8deg)";
-        return;
-      }
-      coinRendered.x += (coinPointer.x - coinRendered.x) * 0.075;
-      coinRendered.y += (coinPointer.y - coinRendered.y) * 0.075;
-      coinScrollVelocity += (coinScrollImpulse - coinScrollVelocity) * 0.14;
-      coinScrollImpulse *= 0.8;
+    if (
+      window.AimyMenuCoinRings &&
+      typeof window.AimyMenuCoinRings.boot === "function"
+    ) {
+      window.AimyMenuCoinRings.boot({
+        coinButton: coinButton,
+        menuRoot: root,
+        hitIn: hitIn,
+        hitOut: hitOut,
+        reducedMotion: reducedMotion,
+      });
+    }
 
-      var idleX = Math.sin(time * 0.0005) * 23 * (1 - coinHover);
-      var idleY = Math.cos(time * 0.0005) * 23 * (1 - coinHover);
-      var scrollTilt = Math.max(-32, Math.min(32, coinScrollVelocity * 0.55));
-      var rx = idleX - coinRendered.y * 40 * coinHover + scrollTilt;
-      var ry = coinScrollTurn + idleY + coinRendered.x * 40 * coinHover;
-      var next =
-        "rotateX(" + rx.toFixed(2) + "deg) " + "rotateY(" + ry.toFixed(2) + "deg)";
+    function syncCoinMotion(time) {
+      if (!coin) return;
+      var rx;
+      var ry;
+      var next;
+
+      if (reducedMotion) {
+        rx = -7;
+        ry = 8;
+        next = "rotateX(" + rx + "deg) rotateY(" + ry + "deg)";
+      } else {
+        coinRendered.x += (coinPointer.x - coinRendered.x) * 0.075;
+        coinRendered.y += (coinPointer.y - coinRendered.y) * 0.075;
+        coinScrollVelocity += (coinScrollImpulse - coinScrollVelocity) * 0.14;
+        coinScrollImpulse *= 0.8;
+
+        var idleX = Math.sin(time * 0.0005) * 23 * (1 - coinHover);
+        var idleY = Math.cos(time * 0.0005) * 23 * (1 - coinHover);
+        var scrollTilt = Math.max(-32, Math.min(32, coinScrollVelocity * 0.55));
+        rx = idleX - coinRendered.y * 40 * coinHover + scrollTilt;
+        ry = coinScrollTurn + idleY + coinRendered.x * 40 * coinHover;
+        next =
+          "rotateX(" + rx.toFixed(2) + "deg) " + "rotateY(" + ry.toFixed(2) + "deg)";
+      }
+
       if (next !== lastCoinTransform) {
         lastCoinTransform = next;
         coin.style.transform = next;
@@ -1610,6 +1725,7 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
 
   function boot(options) {
     bootSocialsScroll(options);
+    bootChromeSurface(options);
     bootOverlayMenu(function () {
       bootChromeReveal(options);
     });
@@ -1619,12 +1735,15 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     version: VERSION,
     boot: boot,
     bootSocialsScroll: bootSocialsScroll,
+    bootChromeSurface: bootChromeSurface,
     bootChromeReveal: bootChromeReveal,
     bootOverlayMenu: bootOverlayMenu,
+    chromeSurfaceAtPoint: chromeSurfaceAtPoint,
   };
 
   function start() {
     var splashOnly = document.querySelector("[data-aimy-splash-only]");
+    bootChromeSurface();
     if (splashOnly) {
       bootSocialsScroll();
       bootOverlayMenu(function () {

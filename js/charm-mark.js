@@ -1,23 +1,25 @@
 /**
  * charm-mark.js
  * Hydrates .brand-mark layers from assets/polykroma/branding/charm-*.svg
- * so SVG edits in branding/ appear on the site without duplicating paths in HTML.
+ * and Charm Redesign/Charm.svg (bow, eyes: sclera / iris / lashes).
  */
 (function () {
   "use strict";
 
-  var VERSION = "branding-18";
+  var SVG_NS = "http://www.w3.org/2000/svg";
+  var VERSION = "branding-25";
   var ASSET_DIR = "./assets/polykroma/branding/";
+  var REDesign_FILE = "Charm Redesign/Charm.svg";
+  var IRIS_SPLIT_X = 1000;
 
-  var LAYER_FILES = {
-    "charm-shape": "charm-shape.svg",
-    "charm-sclera": "charm-sclera.svg",
-    "charm-iris": "charm-iris.svg",
-    "charm-face": "charm-face.svg",
-    "charm-hair": "charm-hair.svg",
-    "charm-bow": "charm-bow.svg",
-    "charm-lashes": "charm-lashes.svg",
+  var REDesign_PARTS = {
+    "charm-bow": "Bow",
+    "charm-sclera": "Sclera",
+    "charm-iris": "Iris",
+    "charm-lashes": "Lashes",
   };
+
+  var redesignDocPromise = null;
 
   var readyResolve;
   var ready = new Promise(function (resolve) {
@@ -116,6 +118,169 @@
     });
   }
 
+  function fetchRedesignDoc() {
+    if (!redesignDocPromise) {
+      redesignDocPromise = fetch(
+        ASSET_DIR + encodeURI(REDesign_FILE) + "?v=" + VERSION
+      ).then(function (res) {
+        if (!res.ok) throw new Error("Charm redesign SVG");
+        return res.text();
+      }).then(function (text) {
+        var doc = new DOMParser().parseFromString(text, "image/svg+xml");
+        if (doc.querySelector("parsererror")) throw new Error("Charm redesign parse");
+        return doc;
+      });
+    }
+    return redesignDocPromise;
+  }
+
+  function queryId(root, id) {
+    if (!root) return null;
+    return root.querySelector('[id="' + id + '"]');
+  }
+
+  function extractRedesignLayerSvg(doc, layerKey) {
+    var part = REDesign_PARTS[layerKey];
+    if (!part) return null;
+
+    var charm = queryId(doc.documentElement, "Charm");
+    if (!charm) return null;
+
+    var svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("xmlns", SVG_NS);
+    svg.setAttribute(
+      "viewBox",
+      doc.documentElement.getAttribute("viewBox") || "0 0 2000 2000"
+    );
+
+    var wrap = document.createElementNS(SVG_NS, "g");
+    wrap.setAttribute("id", "Charm");
+
+    if (part === "Bow") {
+      var bow = queryId(charm, "Bow");
+      if (!bow) return null;
+      wrap.appendChild(bow.cloneNode(true));
+    } else {
+      var eyes = queryId(charm, "Eyes");
+      if (!eyes) return null;
+      var eyesClone = document.createElementNS(SVG_NS, "g");
+      eyesClone.setAttribute("id", "Eyes");
+      if (eyes.getAttribute("transform")) {
+        eyesClone.setAttribute("transform", eyes.getAttribute("transform"));
+      }
+      var partEl = queryId(eyes, part);
+      if (!partEl) return null;
+      eyesClone.appendChild(partEl.cloneNode(true));
+      wrap.appendChild(eyesClone);
+    }
+
+    svg.appendChild(wrap);
+    return new XMLSerializer().serializeToString(svg);
+  }
+
+  function splitPathSegments(d) {
+    return (d || "").split(/(?=M)/i).filter(function (segment) {
+      return segment && segment.trim().length > 1;
+    });
+  }
+
+  function measureSegmentCentroidX(d, irisRoot) {
+    var probe = document.createElementNS(SVG_NS, "svg");
+    probe.setAttribute("viewBox", "0 0 2000 2000");
+    probe.setAttribute("width", "0");
+    probe.setAttribute("height", "0");
+    probe.style.position = "absolute";
+    probe.style.visibility = "hidden";
+    probe.style.pointerEvents = "none";
+
+    var chain = document.createElementNS(SVG_NS, "g");
+    if (irisRoot.getAttribute("transform")) {
+      chain.setAttribute("transform", irisRoot.getAttribute("transform"));
+    }
+    var path = document.createElementNS(SVG_NS, "path");
+    path.setAttribute("d", d.trim());
+    chain.appendChild(path);
+    probe.appendChild(chain);
+    document.body.appendChild(probe);
+
+    var bb;
+    try {
+      bb = path.getBBox();
+    } catch (e) {
+      bb = { x: 0, width: 0 };
+    }
+
+    probe.parentNode.removeChild(probe);
+    return bb.x + bb.width * 0.5;
+  }
+
+  function prepareRedesignScleraLayer(layerEl) {
+    if (!layerEl || layerEl.querySelector("clipPath")) return;
+
+    var scleraPath =
+      layerEl.querySelector('[id$="Sclera"]') ||
+      layerEl.querySelector("path#Sclera") ||
+      layerEl.querySelector("#Eyes path");
+
+    if (!scleraPath || scleraPath.tagName !== "path") return;
+
+    var host =
+      scleraPath.parentNode && scleraPath.parentNode.getAttribute("id") &&
+      scleraPath.parentNode.getAttribute("id").indexOf("Sclera") !== -1
+        ? scleraPath.parentNode
+        : null;
+
+    if (!host) {
+      host = document.createElementNS(SVG_NS, "g");
+      host.setAttribute("id", "Sclera");
+      scleraPath.parentNode.insertBefore(host, scleraPath);
+      host.appendChild(scleraPath);
+    }
+
+    var clip = document.createElementNS(SVG_NS, "clipPath");
+    clip.setAttribute("id", "_clip1");
+    clip.appendChild(scleraPath.cloneNode(true));
+
+    while (host.firstChild) host.removeChild(host.firstChild);
+    host.appendChild(clip);
+  }
+
+  function prepareRedesignIrisLayer(layerEl) {
+    if (!layerEl || layerEl.querySelector(".iris-pupil")) return;
+
+    var irisRoot =
+      layerEl.querySelector('[id$="Iris"]') || layerEl.querySelector("#Iris");
+    if (!irisRoot) {
+      prepareIrisLayer(layerEl);
+      return;
+    }
+
+    var leftWrap = document.createElementNS(SVG_NS, "g");
+    leftWrap.setAttribute("class", "iris-pupil");
+    leftWrap.setAttribute("data-iris", "left");
+    var rightWrap = document.createElementNS(SVG_NS, "g");
+    rightWrap.setAttribute("class", "iris-pupil");
+    rightWrap.setAttribute("data-iris", "right");
+
+    var paths = irisRoot.querySelectorAll("path");
+    var p;
+    for (p = 0; p < paths.length; p++) {
+      var parts = splitPathSegments(paths[p].getAttribute("d"));
+      var i;
+      for (i = 0; i < parts.length; i++) {
+        var cx = measureSegmentCentroidX(parts[i], irisRoot);
+        var pupilPath = document.createElementNS(SVG_NS, "path");
+        pupilPath.setAttribute("d", parts[i].trim());
+        if (cx < IRIS_SPLIT_X) leftWrap.appendChild(pupilPath);
+        else rightWrap.appendChild(pupilPath);
+      }
+    }
+
+    while (irisRoot.firstChild) irisRoot.removeChild(irisRoot.firstChild);
+    irisRoot.appendChild(leftWrap);
+    irisRoot.appendChild(rightWrap);
+  }
+
   function prepareIrisLayer(layerEl) {
     if (!layerEl || layerEl.querySelector(".iris-pupil")) return;
 
@@ -181,8 +346,12 @@
     if (!fillRule) fillRule = root.getAttribute("fill-rule");
     if (fillRule) layerEl.setAttribute("fill-rule", fillRule);
 
+    if (key === "charm-sclera") {
+      prepareRedesignScleraLayer(layerEl);
+    }
+
     if (key === "charm-iris") {
-      prepareIrisLayer(layerEl);
+      prepareRedesignIrisLayer(layerEl);
     }
 
     stripPaint(layerEl);
@@ -190,19 +359,19 @@
     return true;
   }
 
-  function fetchLayer(file) {
-    return fetch(ASSET_DIR + file + "?v=" + VERSION).then(function (res) {
-      if (!res.ok) throw new Error("charm layer " + file);
-      return res.text();
-    });
-  }
-
   function hydrateLayer(layerEl) {
     var key = layerKey(layerEl);
-    if (!key || !LAYER_FILES[key]) return Promise.resolve(false);
-    return fetchLayer(LAYER_FILES[key]).then(function (text) {
-      return importSvgChildren(layerEl, text);
-    });
+    if (!key) return Promise.resolve(false);
+
+    if (REDesign_PARTS[key]) {
+      return fetchRedesignDoc().then(function (doc) {
+        var text = extractRedesignLayerSvg(doc, key);
+        if (!text) throw new Error("charm redesign layer " + key);
+        return importSvgChildren(layerEl, text);
+      });
+    }
+
+    return Promise.resolve(false);
   }
 
   function hydrateMark(mark) {
@@ -219,6 +388,30 @@
       mark.setAttribute("data-charm-hydrated", "1");
       return mark;
     });
+  }
+
+  function flattenRedesignLensWrap(mark) {
+    if (!mark || mark.getAttribute("data-charm-redesign") !== "1") return;
+
+    var stack = mark.querySelector(".brand-mark-stack");
+    if (!stack) return;
+
+    var wrap = stack.querySelector(".charm-lens-ink-wrap");
+    if (wrap) {
+      var sharp = wrap.querySelector(".charm-lens-ink-sharp") || wrap;
+      var layers = sharp.querySelectorAll(
+        ".brand-layer--charm-iris, .brand-layer--charm-bow, .brand-layer--charm-lashes"
+      );
+      var i;
+      for (i = 0; i < layers.length; i++) {
+        stack.insertBefore(layers[i], wrap);
+      }
+      wrap.parentNode.removeChild(wrap);
+    }
+
+    var defs = mark.querySelector(".charm-lens-aberr-defs");
+    if (defs && defs.parentNode) defs.parentNode.removeChild(defs);
+
   }
 
   function refreshEyes() {
@@ -249,6 +442,10 @@
           for (var m = 0; m < marks.length; m++) {
             window.AimyCharmGlass.prepareMarkStack(marks[m]);
           }
+        }
+        var hydrated = document.querySelectorAll(".brand-mark");
+        for (var h = 0; h < hydrated.length; h++) {
+          flattenRedesignLensWrap(hydrated[h]);
         }
         refreshEyes();
         readyResolve();

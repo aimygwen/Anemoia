@@ -10,11 +10,8 @@
     ".site-header[data-aimy-chrome] .brand, .ins-logo-pin-inner, .lp-logo-pin-inner";
   var BLUR_LAYERS = ["charm-shape"];
   var LAYER_STACK = [
-    "charm-shape",
     "charm-sclera",
     "charm-iris",
-    "charm-face",
-    "charm-hair",
     "charm-bow",
     "charm-lashes",
   ];
@@ -122,33 +119,34 @@
   }
 
   function buildTransformChain(scleraLayer, clipPathEl) {
-    var charmRoot =
-      scleraLayer.querySelector("[id*='Charm']") || scleraLayer.firstElementChild;
-    var scleraNode = clipPathEl && clipPathEl.parentNode;
+    var anchors = [];
+    var node = clipPathEl ? clipPathEl.parentNode : null;
 
-    var outer = document.createElementNS(SVG_NS, "g");
-    if (charmRoot && charmRoot.getAttribute("transform")) {
-      outer.setAttribute("transform", charmRoot.getAttribute("transform"));
+    while (node && node !== scleraLayer) {
+      if (node.getAttribute && node.getAttribute("transform")) {
+        anchors.push(node);
+      }
+      node = node.parentNode;
     }
+    anchors.reverse();
 
-    var inner = document.createElementNS(SVG_NS, "g");
-    if (
-      scleraNode &&
-      scleraNode !== charmRoot &&
-      scleraNode.getAttribute &&
-      scleraNode.getAttribute("transform")
-    ) {
-      inner.setAttribute("transform", scleraNode.getAttribute("transform"));
+    var rootG = document.createElementNS(SVG_NS, "g");
+    var cursor = rootG;
+    var i;
+
+    for (i = 0; i < anchors.length; i++) {
+      var nest = document.createElementNS(SVG_NS, "g");
+      nest.setAttribute("transform", anchors[i].getAttribute("transform"));
+      cursor.appendChild(nest);
+      cursor = nest;
     }
 
     var paths = clipPathEl.querySelectorAll("path");
-    var i;
     for (i = 0; i < paths.length; i++) {
-      inner.appendChild(paths[i].cloneNode(true));
+      cursor.appendChild(paths[i].cloneNode(true));
     }
 
-    outer.appendChild(inner);
-    return outer;
+    return rootG;
   }
 
   function buildIrisScleraClip(mark, slot) {
@@ -170,10 +168,20 @@
     mask.setAttribute("id", maskId);
     mask.setAttribute("maskUnits", "userSpaceOnUse");
     mask.setAttribute("maskContentUnits", "userSpaceOnUse");
+    var vb = mark.getAttribute("viewBox");
+    var maskW = "2000";
+    var maskH = "2000";
+    if (vb) {
+      var vbParts = vb.trim().split(/\s+/);
+      if (vbParts.length === 4) {
+        maskW = vbParts[2];
+        maskH = vbParts[3];
+      }
+    }
     mask.setAttribute("x", "0");
     mask.setAttribute("y", "0");
-    mask.setAttribute("width", "2048");
-    mask.setAttribute("height", "2048");
+    mask.setAttribute("width", maskW);
+    mask.setAttribute("height", maskH);
 
     var maskContent = buildTransformChain(scleraLayer, clipPathEl);
     var paths = maskContent.querySelectorAll("path");
@@ -263,6 +271,11 @@
     if (!mark) return;
 
     prepareMarkStack(mark);
+
+    if (!mark.querySelector(".brand-layer--charm-shape")) {
+      cleanupGlassPortal(host, mark);
+      return;
+    }
 
     if (!supportsBlur()) return;
 

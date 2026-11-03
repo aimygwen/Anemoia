@@ -75,14 +75,14 @@
 }
 
 html:has([data-spa-host]) {
-  background-color: var(--pk-bg-radial-edge) !important;
+  background-color: var(--step-01) !important;
   background-image: none !important;
   color: var(--c-black);
 }
 
 html:has([data-spa-host])::before {
-  background-color: var(--pk-bg-radial-edge);
-  background-image: var(--pk-bg-radial);
+  background-color: var(--step-01);
+  background-image: none;
 }
 
 html:has([data-spa-host]) body {
@@ -127,8 +127,8 @@ html:has([data-spa-host]) body {
   }
 
   html:has([data-spa-host])::before {
-    background-color: var(--pk-bg-radial-edge);
-    background-image: var(--pk-bg-radial);
+    background-color: var(--pk-bg);
+    background-image: none;
   }
 
   html:has([data-spa-host]) body {
