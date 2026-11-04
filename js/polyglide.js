@@ -54,6 +54,19 @@
     global.__lenis = lenis;
     document.documentElement.classList.add("lenis", "lenis-smooth");
 
+    if (
+      global.Polykroma &&
+      typeof global.Polykroma.bindLenisChromeScroll === "function"
+    ) {
+      global.Polykroma.bindLenisChromeScroll(lenis);
+    }
+    if (
+      global.Polykroma &&
+      typeof global.Polykroma.remeasureChromeSurface === "function"
+    ) {
+      global.Polykroma.remeasureChromeSurface();
+    }
+
     function raf(time) {
       if (global.__lenis !== lenis) return;
       lenis.raf(time);

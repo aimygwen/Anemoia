@@ -392,7 +392,7 @@
 (function (global) {
   "use strict";
 
-  var VERSION = "polykroma-95";
+  var VERSION = "polykroma-158";
   var bootedSocials = false;
   var bootedReveal = false;
   var chromeSettled = false;
@@ -400,6 +400,8 @@
   var socialSync = null;
   var chromeSurfaceCleanup = null;
   var lenisSurfaceBound = false;
+  var chromeMeasurePending = false;
+  var chromeMeasureHeader = null;
 
   function isLegalPage() {
     var body = document.body;
@@ -502,6 +504,140 @@
     header.classList.toggle("is-on-dark", isDark);
   }
 
+  function parseColorToRgb(str) {
+    if (!str) return null;
+    var s = String(str).trim();
+    if (!s || s === "transparent") return null;
+
+    var srgb = s.match(
+      /color\(\s*srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+))?/i
+    );
+    if (srgb) {
+      var srgbAlpha = srgb[4] != null ? +srgb[4] : 1;
+      if (srgbAlpha < 0.04) return null;
+      return {
+        r: Math.round(+srgb[1] * 255),
+        g: Math.round(+srgb[2] * 255),
+        b: Math.round(+srgb[3] * 255),
+        a: srgbAlpha,
+      };
+    }
+
+    var oklab = s.match(/oklab\(\s*([\d.]+)/i);
+    if (oklab) {
+      var labL = Math.max(0, Math.min(1, +oklab[1]));
+      var labV = Math.round(labL * 255);
+      return { r: labV, g: labV, b: labV, a: 1 };
+    }
+
+    var oklch = s.match(/oklch\(\s*([\d.]+)/i);
+    if (oklch) {
+      var chL = Math.max(0, Math.min(1.2, +oklch[1]));
+      var chV = Math.round(Math.min(255, chL * 255));
+      return { r: chV, g: chV, b: chV, a: 1 };
+    }
+
+    var m = s.match(
+      /rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,\s/]+([\d.]+))?/
+    );
+    if (m) {
+      var alpha = m[4] != null ? +m[4] : 1;
+      if (alpha < 0.04) return null;
+      return { r: +m[1], g: +m[2], b: +m[3], a: alpha };
+    }
+
+    try {
+      var ctx = parseColorToRgb._ctx;
+      if (!ctx) {
+        var canvas = document.createElement("canvas");
+        ctx = canvas.getContext("2d");
+        parseColorToRgb._ctx = ctx;
+      }
+      ctx.fillStyle = "#010101";
+      ctx.fillStyle = s;
+      var hex = ctx.fillStyle;
+      if (hex && hex.charAt(0) === "#") {
+        var raw = hex.slice(1);
+        if (raw.length === 3) {
+          raw = raw
+            .split("")
+            .map(function (ch) {
+              return ch + ch;
+            })
+            .join("");
+        }
+        return {
+          r: parseInt(raw.slice(0, 2), 16),
+          g: parseInt(raw.slice(2, 4), 16),
+          b: parseInt(raw.slice(4, 6), 16),
+          a: 1,
+        };
+      }
+    } catch (e) {}
+
+    return null;
+  }
+
+  function surfaceFromBackgroundRgb(rgb) {
+    if (!rgb) return null;
+    var lum = (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255;
+    return lum < 0.55 ? "dark" : "light";
+  }
+
+  function inferSurfaceFromNode(node) {
+    if (!node || node.nodeType !== 1) return null;
+
+    var tagged = node.closest && node.closest("[data-chrome-surface]");
+    if (tagged) {
+      return tagged.getAttribute("data-chrome-surface") === "dark" ? "dark" : "light";
+    }
+
+    var cursor = node;
+    var depth = 0;
+    while (cursor && depth < 32) {
+      var st = getComputedStyle(cursor);
+      var rgb = parseColorToRgb(st.backgroundColor);
+      if (rgb) {
+        var alpha = rgb.a != null ? rgb.a : 1;
+        if (alpha > 0.12) {
+          var sum = rgb.r + rgb.g + rgb.b;
+          if (alpha > 0.45 || sum > 24) {
+            var surf = surfaceFromBackgroundRgb(rgb);
+            if (surf) return surf;
+          }
+        }
+      }
+      cursor = cursor.parentElement;
+      depth += 1;
+    }
+
+    return null;
+  }
+
+  function scheduleChromeMeasure(header) {
+    if (header) chromeMeasureHeader = header;
+    header =
+      chromeMeasureHeader ||
+      document.querySelector(".site-header[data-aimy-chrome]");
+    if (!header) return;
+
+    if (chromeMeasurePending) return;
+    chromeMeasurePending = true;
+    global.requestAnimationFrame(function () {
+      chromeMeasurePending = false;
+      measureChromeSurface(header);
+    });
+  }
+
+  function bindLenisChromeScroll(lenis, header) {
+    if (!lenis || typeof lenis.on !== "function") return;
+    if (lenis.__pkChromeSurfaceBound) return;
+    lenis.__pkChromeSurfaceBound = true;
+    lenis.on("scroll", function () {
+      scheduleChromeMeasure(header);
+    });
+  }
+
   function chromeSurfaceAtPoint(clientX, clientY, options) {
     options = options || {};
     var header =
@@ -535,10 +671,9 @@
       if (node.closest && node.closest(".menu-overlay, .pk-menu-shell, .pk-menu-open")) {
         continue;
       }
-      var tagged = node.closest("[data-chrome-surface]");
-      if (tagged) {
-        surface =
-          tagged.getAttribute("data-chrome-surface") === "dark" ? "dark" : "light";
+      var inferred = inferSurfaceFromNode(node);
+      if (inferred) {
+        surface = inferred;
         break;
       }
     }
@@ -546,15 +681,57 @@
     return surface;
   }
 
+  function getHeaderChromeSurface(header) {
+    header =
+      header || document.querySelector(".site-header[data-aimy-chrome]");
+    if (!header) return "light";
+    if (header.classList.contains("is-on-dark")) return "dark";
+    if (header.classList.contains("is-on-light")) return "light";
+    return "light";
+  }
+
   function measureChromeSurface(header) {
     if (!header) return;
-    var anchor = header.querySelector(".brand") || header;
-    var rect = anchor.getBoundingClientRect();
-    if (!rect.width || !rect.height) return;
+    var surfaces = [];
 
-    var x = Math.round(rect.left + rect.width * 0.5);
-    var y = Math.round(rect.top + rect.height * 0.68);
-    applyChromeSurface(header, chromeSurfaceAtPoint(x, y, { header: header }));
+    var brand = header.querySelector(".brand") || header;
+    var brandRect = brand.getBoundingClientRect();
+    if (brandRect.width && brandRect.height) {
+      surfaces.push(
+        chromeSurfaceAtPoint(
+          Math.round(brandRect.left + brandRect.width * 0.5),
+          Math.round(brandRect.top + brandRect.height * 0.68),
+          { header: header, skipHeader: true, skipMenuUi: true }
+        )
+      );
+    }
+
+    var menuHit =
+      document.querySelector(".pk-burger-hit") ||
+      document.querySelector(".pk-burger-hit--out");
+    if (menuHit) {
+      var menuRect = menuHit.getBoundingClientRect();
+      if (menuRect.width && menuRect.height) {
+        surfaces.push(
+          chromeSurfaceAtPoint(
+            Math.round(menuRect.left + menuRect.width * 0.5),
+            Math.round(menuRect.top + menuRect.height * 0.5),
+            { header: header, skipHeader: true, skipMenuUi: true }
+          )
+        );
+      }
+    }
+
+    if (!surfaces.length) return;
+
+    var mode = "light";
+    for (var i = 0; i < surfaces.length; i += 1) {
+      if (surfaces[i] === "dark") {
+        mode = "dark";
+        break;
+      }
+    }
+    applyChromeSurface(header, mode);
   }
 
   function bootChromeSurface(options) {
@@ -569,44 +746,34 @@
       document.querySelector(".site-header[data-aimy-chrome]");
     if (!header) return;
 
-    var ticking = false;
     function requestMeasure() {
-      if (ticking) return;
-      ticking = true;
-      global.requestAnimationFrame(function () {
-        ticking = false;
-        measureChromeSurface(header);
-      });
+      scheduleChromeMeasure(header);
     }
 
     function bindLenisSurface() {
       if (lenisSurfaceBound) return;
       if (global.__lenis && typeof global.__lenis.on === "function") {
-        global.__lenis.on("scroll", requestMeasure);
+        bindLenisChromeScroll(global.__lenis, header);
         lenisSurfaceBound = true;
       }
     }
 
+    chromeMeasureHeader = header;
     measureChromeSurface(header);
     global.addEventListener("scroll", requestMeasure, { passive: true });
     global.addEventListener("resize", requestMeasure, { passive: true });
 
     bindLenisSurface();
-    var tries = 0;
     var poll = global.setInterval(function () {
       bindLenisSurface();
-      tries += 1;
-      if (lenisSurfaceBound || tries > 80) global.clearInterval(poll);
-    }, 50);
+    }, 500);
 
     chromeSurfaceCleanup = function () {
       global.removeEventListener("scroll", requestMeasure);
       global.removeEventListener("resize", requestMeasure);
       global.clearInterval(poll);
-      if (lenisSurfaceBound && global.__lenis && typeof global.__lenis.off === "function") {
-        global.__lenis.off("scroll", requestMeasure);
-      }
       lenisSurfaceBound = false;
+      chromeMeasureHeader = null;
       header.classList.remove("is-on-light", "is-on-dark");
     };
   }
@@ -1155,22 +1322,13 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     }
 
     function setPageFrost(on) {
-      var targets = pageFrostTargets();
-      for (var i = 0; i < targets.length; i++) {
-        var el = targets[i];
-        el.style.transition = on
-          ? "filter 1.45s cubic-bezier(0.16, 1, 0.3, 1)"
-          : "filter 1.05s cubic-bezier(0.4, 0, 0.2, 1)";
-        el.style.filter = on ? "blur(11px)" : "blur(0px)";
-      }
+      /* Frost lives on .pk-menu-veil backdrop-filter — avoid double-blurring the page. */
       if (!on) {
-        window.setTimeout(function () {
-          var again = pageFrostTargets();
-          for (var j = 0; j < again.length; j++) {
-            again[j].style.removeProperty("filter");
-            again[j].style.removeProperty("transition");
-          }
-        }, 1100);
+        var targets = pageFrostTargets();
+        for (var j = 0; j < targets.length; j++) {
+          targets[j].style.removeProperty("filter");
+          targets[j].style.removeProperty("transition");
+        }
       }
     }
 
@@ -1563,6 +1721,9 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
         hitOut: hitOut,
         reducedMotion: reducedMotion,
       });
+      scheduleChromeMeasure(
+        document.querySelector(".site-header[data-aimy-chrome]")
+      );
     }
 
     function syncCoinMotion(time) {
@@ -1739,6 +1900,12 @@ var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matche
     bootChromeReveal: bootChromeReveal,
     bootOverlayMenu: bootOverlayMenu,
     chromeSurfaceAtPoint: chromeSurfaceAtPoint,
+    getHeaderChromeSurface: getHeaderChromeSurface,
+    remeasureChromeSurface: function () {
+      scheduleChromeMeasure();
+    },
+    bindLenisChromeScroll: bindLenisChromeScroll,
+    parseColorToRgb: parseColorToRgb,
   };
 
   function start() {

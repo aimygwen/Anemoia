@@ -7,7 +7,7 @@
   "use strict";
 
   var SVG_NS = "http://www.w3.org/2000/svg";
-  var VERSION = "branding-25";
+  var VERSION = "branding-28";
   var ASSET_DIR = "./assets/polykroma/branding/";
   var REDesign_FILE = "Charm Redesign/Charm.svg";
   var IRIS_SPLIT_X = 1000;
@@ -258,27 +258,46 @@
     var leftWrap = document.createElementNS(SVG_NS, "g");
     leftWrap.setAttribute("class", "iris-pupil");
     leftWrap.setAttribute("data-iris", "left");
+    leftWrap.setAttribute("fill-rule", "evenodd");
     var rightWrap = document.createElementNS(SVG_NS, "g");
     rightWrap.setAttribute("class", "iris-pupil");
     rightWrap.setAttribute("data-iris", "right");
+    rightWrap.setAttribute("fill-rule", "evenodd");
 
-    var paths = irisRoot.querySelectorAll("path");
+    var paths = Array.prototype.slice.call(irisRoot.querySelectorAll("path"));
     var p;
-    for (p = 0; p < paths.length; p++) {
-      var parts = splitPathSegments(paths[p].getAttribute("d"));
+    for (p = 0; p < paths.length; p += 1) {
+      var d = paths[p].getAttribute("d") || "";
+      var parts = splitPathSegments(d);
+      var bySide = { left: [], right: [] };
       var i;
-      for (i = 0; i < parts.length; i++) {
-        var cx = measureSegmentCentroidX(parts[i], irisRoot);
-        var pupilPath = document.createElementNS(SVG_NS, "path");
-        pupilPath.setAttribute("d", parts[i].trim());
-        if (cx < IRIS_SPLIT_X) leftWrap.appendChild(pupilPath);
-        else rightWrap.appendChild(pupilPath);
+
+      for (i = 0; i < parts.length; i += 1) {
+        var seg = parts[i].trim();
+        var cx = measureSegmentCentroidX(seg, irisRoot);
+        var side = cx < IRIS_SPLIT_X ? "left" : "right";
+        bySide[side].push(seg);
+      }
+
+      if (bySide.left.length) {
+        var leftPath = document.createElementNS(SVG_NS, "path");
+        leftPath.setAttribute("d", bySide.left.join(" "));
+        leftWrap.appendChild(leftPath);
+      }
+      if (bySide.right.length) {
+        var rightPath = document.createElementNS(SVG_NS, "path");
+        rightPath.setAttribute("d", bySide.right.join(" "));
+        rightWrap.appendChild(rightPath);
       }
     }
 
+    var transform = irisRoot.getAttribute("transform");
     while (irisRoot.firstChild) irisRoot.removeChild(irisRoot.firstChild);
+    if (transform) irisRoot.setAttribute("transform", transform);
+    irisRoot.setAttribute("fill-rule", "evenodd");
     irisRoot.appendChild(leftWrap);
     irisRoot.appendChild(rightWrap);
+    layerEl.setAttribute("fill-rule", "evenodd");
   }
 
   function prepareIrisLayer(layerEl) {

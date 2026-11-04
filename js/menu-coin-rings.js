@@ -32,9 +32,6 @@
   var baseState = {};
   var inkMix = { value: 0 };
   var noiseAmpMul = { value: 1 };
-  var inkProbeLight = null;
-  var inkProbeDark = null;
-  var closedSurface = "light";
   var lineW = 0;
   var lineH = 0;
   var lineA = [];
@@ -114,50 +111,74 @@
         inset +
         "px;z-index:calc(var(--pk-z, 2147483600) + 5);";
     }
+
+    document.documentElement.style.setProperty("--aimy-menu-hit-inset", inset + "px");
+    document.documentElement.style.setProperty("--aimy-menu-hit-size", size + "px");
   }
 
-  function parseComputedRgb(cssColor) {
-    var m = cssColor.match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
+  function resolveColorToRgb(cssColor) {
+    if (
+      global.Polykroma &&
+      typeof global.Polykroma.parseColorToRgb === "function"
+    ) {
+      var parsed = global.Polykroma.parseColorToRgb(cssColor);
+      if (parsed) {
+        return { r: parsed.r, g: parsed.g, b: parsed.b };
+      }
+    }
+
+    var m = String(cssColor || "").match(
+      /rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/
+    );
     if (!m) return { r: 0, g: 0, b: 0 };
     return { r: +m[1], g: +m[2], b: +m[3] };
   }
 
-  function readChromeInks() {
-    if (!inkProbeLight || !inkProbeDark) {
-      return {
-        onLight: { r: 0, g: 0, b: 0 },
-        onDark: { r: 242, g: 240, b: 248 },
-      };
-    }
-    return {
-      onLight: parseComputedRgb(getComputedStyle(inkProbeLight).color),
-      onDark: parseComputedRgb(getComputedStyle(inkProbeDark).color),
-    };
+  function readCssVarAsRgb(varName) {
+    var probe = document.createElement("div");
+    probe.setAttribute("aria-hidden", "true");
+    probe.style.cssText =
+      "position:fixed;left:-9999px;top:0;pointer-events:none;background-color:var(" +
+      varName +
+      ");";
+    document.body.appendChild(probe);
+    var rgb = resolveColorToRgb(getComputedStyle(probe).backgroundColor);
+    probe.parentNode.removeChild(probe);
+    return rgb || { r: 0, g: 0, b: 0 };
   }
 
-  function inkForSurface(surface) {
-    var inks = readChromeInks();
-    return surface === "dark" ? inks.onDark : inks.onLight;
+  function readHeaderChromeInk() {
+    var header = document.querySelector(".site-header[data-aimy-chrome]");
+    if (header) {
+      var logoPath =
+        header.querySelector(
+          '.brand-mark[data-charm-redesign="1"] .brand-layer--charm-lashes path'
+        ) ||
+        header.querySelector(
+          '.brand-mark[data-charm-redesign="1"] .brand-layer--charm-bow path'
+        ) ||
+        header.querySelector('.brand-mark[data-charm-redesign="1"] .brand-layer--charm-iris path');
+      if (logoPath) {
+        var fromLogo = resolveColorToRgb(getComputedStyle(logoPath).fill);
+        if (fromLogo) return fromLogo;
+      }
+      if (header.classList.contains("is-on-dark")) {
+        return readCssVarAsRgb("--aimy-chrome-ink-on-dark");
+      }
+      if (header.classList.contains("is-on-light")) {
+        return readCssVarAsRgb("--aimy-chrome-ink-on-light");
+      }
+    }
+    return readCssVarAsRgb("--aimy-chrome-ink-on-light");
   }
 
-  function measureMenuSurface() {
-    var x = state.burgerPosition.x / dpi;
-    var y = state.burgerPosition.y / dpi;
-    if (
-      global.Polykroma &&
-      typeof global.Polykroma.chromeSurfaceAtPoint === "function"
-    ) {
-      return global.Polykroma.chromeSurfaceAtPoint(x, y, {
-        skipHeader: true,
-        skipMenuUi: !ringsOpen,
-      });
-    }
-    return "light";
+  function readOpenMenuInk() {
+    return readCssVarAsRgb("--aimy-chrome-ink-on-light");
   }
 
   function strokeColorNow() {
-    var closed = inkForSurface(closedSurface);
-    var open = inkForSurface("light");
+    var closed = readHeaderChromeInk();
+    var open = readOpenMenuInk();
     var m = inkMix.value;
     return {
       r: Math.round(closed.r * (1 - m) + open.r * m),
@@ -186,9 +207,6 @@
 
   function draw() {
     if (!ctx) return;
-    if (!ringsOpen) {
-      closedSurface = measureMenuSurface();
-    }
     var stroke = strokeColorNow();
 
     ctx.clearRect(0, 0, cw, ch);
@@ -422,18 +440,6 @@
     if (!canvas) return;
     ctx = canvas.getContext("2d");
     if (!ctx) return;
-
-    var inkProbe = document.createElement("div");
-    inkProbe.setAttribute("aria-hidden", "true");
-    inkProbe.style.cssText =
-      "position:fixed;left:-9999px;top:0;visibility:hidden;pointer-events:none;";
-    inkProbeLight = document.createElement("span");
-    inkProbeLight.style.color = "var(--aimy-chrome-ink-on-light)";
-    inkProbeDark = document.createElement("span");
-    inkProbeDark.style.color = "var(--aimy-chrome-ink-on-dark)";
-    inkProbe.appendChild(inkProbeLight);
-    inkProbe.appendChild(inkProbeDark);
-    document.body.appendChild(inkProbe);
 
     document.body.classList.add("pk-menu-rings-chiara");
     resizeCanvas();

@@ -6,7 +6,7 @@
 .pk-menu-carousel-wrap,
 .pk-menu-group--carousel,
 .pk-menu-panel:has(.pk-menu-carousel-wrap) {
-  background: var(--polykroma-menu-bg);
+  background: transparent;
   overflow: visible;
 }
 
@@ -42,7 +42,7 @@ html.pk-menu-open .pk-menu-select__labels {
   width: 100vw;
   height: var(--pk-screen-h, 100vh);
   padding: 0;
-  background: var(--polykroma-menu-bg);
+  background: transparent;
   overflow: visible;
   pointer-events: none;
 }
@@ -54,17 +54,8 @@ html.pk-menu-open .pk-menu-select__labels {
 }
 
 .pk-menu-select__stage::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background: radial-gradient(
-    ellipse 88% 72% at 50% 48%,
-    color-mix(in srgb, var(--step-05) 6%, transparent) 0%,
-    transparent 74%
-  );
-  opacity: 0.35;
+  content: none;
+  display: none;
 }
 
 .pk-menu-select__viewport {
@@ -152,7 +143,7 @@ html.pk-menu-open .pk-menu-select__labels {
   right: 10%;
   bottom: 0;
   height: 1px;
-  background: color-mix(in srgb, var(--step-06) 52%, transparent);
+  background: color-mix(in srgb, var(--aimy-chrome-ink-on-light) 38%, transparent);
   transform: scaleX(0);
   transform-origin: center;
   transition: transform 0.28s ease;

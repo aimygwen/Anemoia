@@ -241,6 +241,7 @@
 /* Charm Redesign — bow, irises, lashes only; ink is Midnight Eclipse */
 .brand-mark[data-charm-redesign="1"] .brand-layer--charm-iris path,
 .brand-mark[data-charm-redesign="1"] .brand-layer--charm-iris .iris-pupil,
+.brand-mark[data-charm-redesign="1"] .brand-layer--charm-iris .iris-pupil path,
 .brand-mark[data-charm-redesign="1"] .mono-charm-iris-mask-wrap path,
 .brand-mark[data-charm-redesign="1"] .brand-layer--charm-lashes path,
 .brand-mark[data-charm-redesign="1"] .brand-layer--charm-bow path {
@@ -248,6 +249,10 @@
   fill-opacity: 1 !important;
   opacity: 1 !important;
   color: var(--charm-redesign-ink);
+}
+
+.brand-mark[data-charm-redesign="1"] .brand-layer--charm-iris .iris-pupil {
+  fill-rule: evenodd;
 }
 
 /* Redesign mark — quiet lift + soft shadow (no color FX) */

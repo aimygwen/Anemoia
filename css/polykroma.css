@@ -131,7 +131,9 @@ body {
   --aimy-social-size: 20px;
   --aimy-social-gap: clamp(14px, 1.5vw, 20px);
   --aimy-menu-size: clamp(58px, 5.1vw, 76px);
-  --aimy-menu-gap: 36px;
+  --aimy-menu-gap: var(--aimy-social-gap);
+  --aimy-menu-hit-inset: 0px;
+  --aimy-menu-hit-size: var(--aimy-menu-size);
   --pk-chrome-safe-top: env(safe-area-inset-top, 0px);
   --pk-chrome-safe-right: env(safe-area-inset-right, 0px);
   --pk-chrome-safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -202,9 +204,17 @@ body {
   --polykroma-menu-font: "Plump Prose", Georgia, "Times New Roman", serif;
 
   /*
-   * Full-screen menu wash — step-02 tint so it reads over the page (step-01 alone vanishes).
+   * Full-screen menu frost — achromatic grey veil + backdrop blur (see .pk-menu-veil).
    */
-  --polykroma-menu-veil-fill: color-mix(in srgb, var(--step-02) 92%, transparent);
+  --polykroma-menu-veil-grey: color-mix(
+    in oklch,
+    oklch(from var(--step-08) l 0 h) 46%,
+    oklch(from var(--step-01) l 0 h)
+  );
+  --polykroma-menu-veil-fill: color-mix(in srgb, var(--polykroma-menu-veil-grey) 50%, transparent);
+  --polykroma-menu-veil-blur: 22px;
+  --polykroma-menu-veil-saturate: 1;
+  --polykroma-menu-veil-brightness: 1;
 
   /*
    * Menu link geometry — Plump Prose reads larger than Newpixel at the same px.
@@ -320,7 +330,14 @@ body {
     --polykroma-menu-rule: color-mix(in srgb, var(--step-01) 22%, transparent);
     --polykroma-menu-on-block: var(--pk-heading);
     --polykroma-menu-block: var(--pk-bg);
-    --polykroma-menu-veil-fill: color-mix(in srgb, var(--pk-bg) 92%, transparent);
+    --polykroma-menu-veil-grey: color-mix(
+      in oklch,
+      oklch(from var(--step-08) l 0 h) 52%,
+      oklch(from var(--step-01) l 0 h)
+    );
+    --polykroma-menu-veil-fill: color-mix(in srgb, var(--polykroma-menu-veil-grey) 50%, transparent);
+    --polykroma-menu-veil-saturate: 1;
+    --polykroma-menu-veil-brightness: 1;
   }
 
   html {
@@ -652,7 +669,8 @@ html body .site-header[data-aimy-chrome]::before {
 .site-header[data-aimy-chrome] .nav a:hover,
 .site-header[data-aimy-chrome] .social a:hover {
   transform: scale(1.12);
-  animation: aimy-rainbow 3s linear infinite;
+  animation: none;
+  color: var(--aimy-chrome-ink);
   background: none !important;
   background-image: none !important;
 }
@@ -1068,7 +1086,11 @@ body.pk-menu-enabled .site-header[data-aimy-chrome] .social {
 }
 
 body.pk-menu-rings-chiara.pk-menu-enabled .site-header[data-aimy-chrome] .social {
-  margin-right: calc(clamp(5.5rem, 8vw, 7.5rem) + var(--aimy-menu-gap));
+  /* Menu hit is viewport-fixed (right: --aimy-menu-hit-inset); socials sit in padded header. */
+  margin-right: calc(
+    var(--aimy-menu-hit-inset) + var(--aimy-menu-hit-size) + var(--aimy-menu-gap) -
+      var(--aimy-chrome-right)
+  );
 }
 
 html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] {
@@ -1191,7 +1213,16 @@ html.pk-menu-open body.pk-menu-enabled .site-header[data-aimy-chrome] .brand {
   --pk-block: var(--polykroma-menu-block);
   font-size: var(--polykroma-menu-root-font-size);
   pointer-events: none;
-  color: var(--aimy-logo-primary, var(--aimy-primary));
+  color: var(--aimy-chrome-ink-on-light);
+}
+
+html.pk-menu-open .pk-menu-root {
+  --pk-link: var(--aimy-chrome-ink-on-light);
+  --pk-link-soft: color-mix(in srgb, var(--aimy-chrome-ink-on-light) 68%, transparent);
+  --pk-link-muted: color-mix(in srgb, var(--aimy-chrome-ink-on-light) 82%, transparent);
+  --pk-heading: var(--aimy-chrome-ink-on-light);
+  --pk-text: var(--aimy-chrome-ink-on-light);
+  color: var(--aimy-chrome-ink-on-light);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -1561,6 +1592,13 @@ body.pk-menu-rings-chiara .pk-coin-button--rings {
 .pk-nav-shell.is-open {
   pointer-events: auto;
   cursor: default;
+  --pk-link: var(--aimy-chrome-ink-on-light);
+  --pk-link-soft: color-mix(in srgb, var(--aimy-chrome-ink-on-light) 68%, transparent);
+  --pk-link-muted: color-mix(in srgb, var(--aimy-chrome-ink-on-light) 82%, transparent);
+  --pk-heading: var(--aimy-chrome-ink-on-light);
+  --pk-text: var(--aimy-chrome-ink-on-light);
+  --polykroma-menu-select-arrow: color-mix(in srgb, var(--aimy-chrome-ink-on-light) 52%, transparent);
+  --polykroma-menu-select-arrow-hover: var(--aimy-chrome-ink-on-light);
 }
 
 /*
@@ -1576,13 +1614,29 @@ body.pk-menu-rings-chiara .pk-coin-button--rings {
   visibility: hidden;
   opacity: 0;
   background: var(--polykroma-menu-veil-fill);
+  -webkit-backdrop-filter:
+    blur(var(--polykroma-menu-veil-blur))
+    saturate(var(--polykroma-menu-veil-saturate))
+    brightness(var(--polykroma-menu-veil-brightness));
+  backdrop-filter:
+    blur(var(--polykroma-menu-veil-blur))
+    saturate(var(--polykroma-menu-veil-saturate))
+    brightness(var(--polykroma-menu-veil-brightness));
   transform: scale(1.045);
   transform-origin: center center;
-  will-change: opacity, transform;
+  will-change: opacity, transform, backdrop-filter;
 }
 
 .pk-nav-shell.is-open .pk-menu-veil {
   visibility: visible;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .pk-menu-veil {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    --polykroma-menu-veil-fill: color-mix(in srgb, var(--polykroma-menu-veil-grey) 78%, transparent);
+  }
 }
 
 .pk-menu-veil-wash {
@@ -1629,7 +1683,7 @@ body.pk-menu-rings-chiara .pk-coin-button--rings {
   min-height: var(--pk-screen-h, 100vh);
   overflow: visible;
   padding: 0;
-  background: var(--polykroma-menu-bg);
+  background: transparent;
 }
 
 .pk-menu-panel:has(.pk-menu-carousel-wrap) {
@@ -1644,7 +1698,7 @@ body.pk-menu-rings-chiara .pk-coin-button--rings {
   justify-content: flex-end;
   text-align: center;
   pointer-events: none;
-  background: var(--polykroma-menu-bg);
+  background: transparent;
 }
 
 .pk-menu-group {
@@ -1952,7 +2006,21 @@ html body .pk-menu-root .pk-menu-link:focus-visible .pk-menu-link__block,
   background: transparent;
   border-color: transparent;
   transform: scale(1.12);
-  animation: aimy-rainbow 2.2s linear infinite;
+  animation: none;
+}
+
+html.pk-menu-open .pk-menu-link:hover,
+html.pk-menu-open .pk-menu-link:focus-visible,
+html.pk-menu-open .pk-menu-link:hover .pk-menu-link__index,
+html.pk-menu-open .pk-menu-link:focus-visible .pk-menu-link__index {
+  animation: none;
+  color: var(--aimy-chrome-ink-on-light);
+}
+
+html.pk-menu-open .pk-menu-link:hover .pk-menu-link__wipe,
+html.pk-menu-open .pk-menu-link:focus-visible .pk-menu-link__wipe {
+  animation: none;
+  background: color-mix(in srgb, var(--aimy-chrome-ink-on-light) 12%, transparent);
 }
 
 .pk-menu-social:hover .pk-menu-social__icon,
@@ -2121,6 +2189,11 @@ html.pk-menu-open body {
   .pk-coin-icon {
     transition: none;
     animation: none !important;
+  }
+
+  .pk-menu-veil {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   .pk-menu-veil,
